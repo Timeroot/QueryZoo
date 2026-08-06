@@ -355,6 +355,7 @@ Sherstov21:
   title: "Algorithmic polynomials"
   venue: "SIAM Journal on Computing 49(6)"
   year: 2020
+  arxiv: "1801.04607"
   note: "Near-optimal approximate degree upper bounds for surjectivity, element distinctness, etc."
 
 Meiburg26:
@@ -804,12 +805,21 @@ OSSS05:
   arxiv: "cs/0508071"
   note: "The OSSS inequality: Var(f) <= sum_i delta_i(T) Inf_i(f); implies I(f) >= Var(f)^2 ... and D(f) >= Var(f)/max_i Inf_i."
 
-STV17:
+Sanyal19:
   authors: [Sanyal, S.]
   title: "Fourier sparsity and dimension"
   venue: "Theory of Computing 15(11)"
   year: 2019
   note: "D(f) = O(sqrt(spar(f)) log spar(f)) for the parity decision tree / Fourier sparsity line of work."
+
+STV17:
+  authors: ["Shpilka, A.", "Tal, A.", "Volk, B. L."]
+  title: "On the structure of Boolean functions with small spectral norm"
+  venue: "Computational Complexity 26(1):229-273 (ITCS 2014)"
+  year: 2017
+  eccc: "TR13-049"
+  doi: "10.1007/s00037-015-0110-y"
+  note: "Structure theorems for small spectral norm; parity decision tree size at most 2^A n^{2A} with A = L1(f), shown tight by [CMS19]."
 
 GopalanEtAl16:
   authors: [Gopalan, P., O'Donnell, R., Servedio, R., Shpilka, A., Wimmer, K.]
@@ -831,7 +841,7 @@ MinskyPapert69:
   title: "Perceptrons"
   venue: "MIT Press, Cambridge MA"
   year: 1969
-  note: "Origin of sign/threshold degree. sdeg(AND_n o OR_n) = Omega(n^{1/3}); the first threshold-degree lower bound."
+  note: "Origin of sign/threshold degree. The theorem is deg_pm(AND_m o OR_b) = Omega(min{m, sqrt b}); maximised at b = m^2, giving sdeg = Theta(N^{1/3}) for the one-in-a-box function on N = m^3 bits."
 
 BBGJK21:
   aliases: ["BBG+22"]
@@ -1110,3 +1120,635 @@ Sherstov14onesided:
   year: 2014
   doi: "10.1145/2591796.2591871"
   note: "Systematic use of one-sided approximate degree (deg_+) for AC^0 lower bounds."
+
+# ---------------------------------------------------------------------
+# Named problems: surjectivity, k-distinctness, triangle, RFS.
+# ---------------------------------------------------------------------
+
+BeameMachmouchi12:
+  authors: ["Beame, P.", "Machmouchi, W."]
+  title: "The quantum query complexity of AC^0"
+  venue: "Quantum Information and Computation 12(7-8):670-676"
+  year: 2012
+  arxiv: "1008.2422"
+  note: "Omega(n/log n) quantum queries for an AC^0 function; Omega(n) element queries for ONTO."
+
+Sherstov18asymmetry:
+  authors: ["Sherstov, A. A."]
+  title: "The power of asymmetry in constant-depth circuits"
+  venue: "SIAM Journal on Computing 47(6):2362-2434 (FOCS 2015)"
+  year: 2018
+  eccc: "TR15-147"
+  note: "Remark 3.4 states a confidence, not a theorem, that the log factor in the AC^0 quantum bound can be removed."
+
+BunThaler21largeerror:
+  authors: ["Bun, M.", "Thaler, J."]
+  title: "The large-error approximate degree of AC^0"
+  venue: "Theory of Computing 17(7):1-46 (APPROX/RANDOM 2019)"
+  year: 2021
+  doi: "10.4086/toc.2021.v017a007"
+  note: "Threshold degree of surjectivity: Theta-tilde(min{R, sqrt N})."
+
+SherstovThaler23:
+  authors: ["Sherstov, A. A.", "Thaler, J."]
+  title: "Vanishing-error approximate degree and QMA complexity"
+  venue: "Chicago Journal of Theoretical Computer Science 2023, article 3"
+  year: 2023
+  arxiv: "1909.07498"
+  note: "eps-dependence: SURJ is Theta-tilde(n^{3/4} log^{1/4}(1/eps)), ED is Theta(n^{2/3} log^{1/3}(1/eps))."
+
+Belovs12kdist:
+  authors: ["Belovs, A."]
+  title: "Learning-graph-based quantum algorithm for k-distinctness"
+  venue: "FOCS 2012"
+  year: 2012
+  arxiv: "1205.1534"
+
+Belovs26kdist:
+  authors: ["Belovs, A."]
+  title: "Tight quantum lower bound for k-distinctness"
+  year: 2026
+  arxiv: "2604.05133"
+  note: "Preprint. Closes k-distinctness for constant k and alphabet Omega(n^2) via a compressed-oracle framework that subsumes the polynomial method."
+
+MTZ20:
+  authors: ["Mande, N. S.", "Thaler, J.", "Zhu, S."]
+  title: "Improved approximate degree bounds for k-distinctness"
+  venue: "TQC 2020, LIPIcs 158, 2:1-2:22"
+  year: 2020
+  arxiv: "2002.08389"
+  doi: "10.4230/LIPIcs.TQC.2020.2"
+
+AaronsonShi04:
+  authors: ["Aaronson, S.", "Shi, Y."]
+  title: "Quantum lower bounds for the collision and the element distinctness problems"
+  venue: "Journal of the ACM 51(4):595-605"
+  year: 2004
+  doi: "10.1145/1008731.1008735"
+  note: "The polynomial-method lower bounds Omega(n^{1/3}) and Omega(n^{2/3}), for range Omega(n^2)."
+
+Ambainis05smallrange:
+  authors: ["Ambainis, A."]
+  title: "Polynomial degree and lower bounds in quantum complexity: collision and element distinctness with small range"
+  venue: "Theory of Computing 1(3):37-46"
+  year: 2005
+  arxiv: "quant-ph/0305179"
+  doi: "10.4086/toc.2005.v001a003"
+
+Kutin05:
+  authors: ["Kutin, S."]
+  title: "Quantum lower bound for the collision problem with small range"
+  venue: "Theory of Computing 1(2):29-36"
+  year: 2005
+  arxiv: "quant-ph/0304162"
+  doi: "10.4086/toc.2005.v001a002"
+
+BHT98:
+  authors: ["Brassard, G.", "Hoyer, P.", "Tapp, A."]
+  title: "Quantum cryptanalysis of hash and claw-free functions"
+  venue: "LATIN 1998"
+  year: 1998
+  arxiv: "quant-ph/9705002"
+  note: "The O(n^{1/3}) collision-finding algorithm."
+
+MSS07:
+  authors: ["Magniez, F.", "Santha, M.", "Szegedy, M."]
+  title: "Quantum algorithms for the triangle problem"
+  venue: "SIAM Journal on Computing 37(2):413-424 (SODA 2005)"
+  year: 2007
+  arxiv: "quant-ph/0310134"
+
+Belovs12span:
+  authors: ["Belovs, A."]
+  title: "Span programs for functions with constant-sized 1-certificates"
+  venue: "STOC 2012"
+  year: 2012
+  arxiv: "1105.4024"
+  note: "Learning graphs; Theorem 8 gives O(m^{35/27}) for triangle finding."
+
+LMS13:
+  authors: ["Lee, T.", "Magniez, F.", "Santha, M."]
+  title: "Improved quantum query algorithms for triangle finding and associativity testing"
+  venue: "SODA 2013, pp. 1486-1502; Algorithmica 77:459-486 (2017)"
+  year: 2013
+  arxiv: "1210.1014"
+  note: "Theorem 7: O(m^{9/7}). Not arXiv:1109.5135, which gives only m^{35/27} for the triangle."
+
+JKM13:
+  authors: ["Jeffery, S.", "Kothari, R.", "Magniez, F."]
+  title: "Nested quantum walks with quantum data structures"
+  venue: "SODA 2013, pp. 1474-1485"
+  year: 2013
+  arxiv: "1210.1199"
+
+LeGall14:
+  authors: ["Le Gall, F."]
+  title: "Improved quantum algorithm for triangle finding via combinatorial arguments"
+  venue: "FOCS 2014"
+  year: 2014
+  arxiv: "1407.0085"
+  note: "Theorem 1.1: O-tilde(m^{5/4}), and it finds the triangle."
+
+CLM20:
+  authors: ["Carette, T.", "Lauriere, M.", "Magniez, F."]
+  title: "Extended learning graphs for triangle finding"
+  venue: "Algorithmica 82:1989-2005"
+  year: 2020
+  arxiv: "1609.07786"
+  note: "Current record: O(m^{5/4}) with no logarithmic factors."
+
+BelovsRosmanis14:
+  authors: ["Belovs, A.", "Rosmanis, A."]
+  title: "On the power of non-adaptive learning graphs"
+  venue: "Computational Complexity 23(2):323-354 (CCC 2013)"
+  year: 2014
+  arxiv: "1210.3279"
+  note: "Prop. 13: Omega(m^{9/7}/sqrt(log m)) for the triangle certificate structure -- a barrier for non-adaptive learning graphs, unconditional only for triangle sum."
+
+BalodisIraids15:
+  authors: ["Balodis, K.", "Iraids, J."]
+  title: "Quantum lower bound for graph collision implies lower bound for triangle detection"
+  year: 2015
+  arxiv: "1507.03885"
+
+CGP26:
+  authors: ["Cornelissen, A.", "Gilani, A.", "Patro, S."]
+  title: "Quantum algorithms for path and cycle containment problems"
+  year: 2026
+  arxiv: "2605.09017"
+  note: "Preprint. Lemma 3.3/3.4: R(Subgraph^H) = Theta(m^2), Q = Omega(m), and detection equals finding up to constants."
+
+Bollobas76:
+  authors: ["Bollobas, B."]
+  title: "Complete subgraphs are elusive"
+  venue: "Journal of Combinatorial Theory Series B 21:1-7"
+  year: 1976
+  doi: "10.1016/0095-8956(76)90021-6"
+  note: "Containing a K_k is evasive for every m; hence D(triangle) = C(m,2) exactly."
+
+CKS02:
+  authors: ["Chakrabarti, A.", "Khot, S.", "Shi, Y."]
+  title: "Evasiveness of subgraph containment and related properties"
+  venue: "SIAM Journal on Computing 31(3):866-875"
+  year: 2002
+  doi: "10.1137/S0097539700382005"
+
+Aaronson03rfs:
+  authors: ["Aaronson, S."]
+  title: "Quantum lower bound for recursive Fourier sampling"
+  venue: "Quantum Information and Computation 3(2):165-174"
+  year: 2003
+  arxiv: "quant-ph/0209060"
+
+McKague12:
+  authors: ["McKague, M."]
+  title: "Interactive proofs for BQP via self-tested graph states"
+  venue: "Chicago Journal of Theoretical Computer Science 2012, article 6"
+  year: 2012
+  note: "Section 1.1 gives the implementable per-node-secret restatement of recursive Fourier sampling."
+
+# ---------------------------------------------------------------------
+# Welded trees, local search, Fourier fishing, ordered search
+# ---------------------------------------------------------------------
+
+CCDFGS03:
+  authors: ["Childs, A. M.", "Cleve, R.", "Deotto, E.", "Farhi, E.", "Gutmann, S.", "Spielman, D. A."]
+  title: "Exponential algorithmic speedup by a quantum walk"
+  venue: "STOC 2003, pp. 59-68"
+  year: 2003
+  arxiv: "quant-ph/0209131"
+  doi: "10.1145/780542.780552"
+  note: "Introduces the welded (glued) trees problem and the continuous-time quantum walk that traverses it; Thm. 9 is the classical 2^{n/6} lower bound."
+
+FennerZhang03:
+  authors: ["Fenner, S.", "Zhang, Y."]
+  title: "A note on the classical lower bound for a hybrid quantum-classical algorithm"
+  venue: "arXiv preprint"
+  year: 2003
+  arxiv: "quant-ph/0312230"
+  note: "Improves the welded-trees classical lower bound to 2^{n/3}."
+
+Liu17thesis:
+  authors: ["Liu, R. P."]
+  title: "Some upper and lower bounds regarding query complexity"
+  venue: "MMath thesis, University of Waterloo (Combinatorics & Optimization)"
+  year: 2017
+  url: "https://uwspace.uwaterloo.ca/handle/10012/12078"
+  note: "Chapter 4 gives a matching classical algorithm and lower bound for the glued-trees label-detection problem, tight up to a log factor in the input size."
+
+JefferyZur25:
+  authors: ["Jeffery, S.", "Zur, S."]
+  title: "Multidimensional quantum walks, with application to k-distinctness"
+  venue: "STOC 2023, pp. 1125-1130; journal version in TheoretiCS"
+  year: 2025
+  arxiv: "2208.13492"
+  doi: "10.1145/3564246.3585158"
+  note: "Extends the electric network framework; solves welded trees in O(n) queries and O(n^2) time, and gives an O~(n^{3/4 - 1/(4(2^k-1))})-time k-distinctness algorithm."
+
+LiLiLuo24:
+  authors: ["Li, G.", "Li, L.", "Luo, J."]
+  title: "Recovering the original simplicity: succinct and exact quantum algorithm for the welded tree problem"
+  venue: "SODA 2024, pp. 2454-2480; Algorithmica 87 (2025)"
+  year: 2024
+  arxiv: "2304.08395"
+  doi: "10.1137/1.9781611977912.87"
+  note: "A plain coined quantum walk run for a classically precomputed number of steps, plus exact amplitude amplification: zero error in O(n^{1.5} log n) queries."
+
+Belovs24welded:
+  authors: ["Belovs, A."]
+  title: "Global phase helps in quantum search: yet another look at the welded tree problem"
+  venue: "arXiv preprint"
+  year: 2024
+  arxiv: "2404.19476"
+  note: "A two-page proof of the optimal linear hitting time, via transducers and a modified electric quantum walk."
+
+ChildsCoudronGilani23:
+  authors: ["Childs, A. M.", "Coudron, M.", "Gilani, A. S."]
+  title: "Quantum algorithms and the power of forgetting"
+  venue: "ITCS 2023, 37:1-37:22"
+  year: 2023
+  arxiv: "2211.12447"
+  doi: "10.4230/LIPIcs.ITCS.2023.37"
+  note: "The path-finding version of welded trees is hard for any quantum algorithm that only queries a connected subgraph containing the entrance."
+
+AtiaChakraborty21:
+  authors: ["Atia, Y.", "Chakraborty, S."]
+  title: "Improved upper bounds for the hitting times of quantum walks"
+  venue: "Physical Review A 104:032215"
+  year: 2021
+  arxiv: "2005.04062"
+  doi: "10.1103/PhysRevA.104.032215"
+
+Aldous83:
+  authors: ["Aldous, D."]
+  title: "Minimization algorithms and random walk on the d-cube"
+  venue: "Annals of Probability 11(2):403-413"
+  year: 1983
+  doi: "10.1214/aop/1176993605"
+  note: "The generic O(sqrt(N*Delta)) randomized local-search algorithm, and a 2^{n/2-o(n)} lower bound on the cube."
+
+LTT89:
+  authors: ["Llewellyn, D. C.", "Tovey, C.", "Trick, M."]
+  title: "Local optimization on graphs"
+  venue: "Discrete Applied Mathematics 23(2):157-178"
+  year: 1989
+  doi: "10.1016/0166-218X(89)90005-9"
+  note: "Characterises deterministic local-search complexity by vertex cuts; erratum in DAM 46:93-94 (1993)."
+
+LlewellynTovey93:
+  authors: ["Llewellyn, D. C.", "Tovey, C."]
+  title: "Dividing and conquering the square"
+  venue: "Discrete Applied Mathematics 43(2):131-153"
+  year: 1993
+  doi: "10.1016/0166-218X(93)90074-X"
+
+Zhang09localsearch:
+  authors: ["Zhang, S."]
+  title: "Tight bounds for randomized and quantum local search"
+  venue: "SIAM Journal on Computing 39(3):948-977 (STACS 2006)"
+  year: 2009
+  arxiv: "quant-ph/0504085"
+  doi: "10.1137/06066775X"
+  note: "Settles the cube (R = Theta(2^{n/2} sqrt n), Q = Theta(2^{n/3} n^{1/6})) and the grid for d >= 4 (randomized) and d >= 5 (quantum)."
+
+SunYao09:
+  authors: ["Sun, X.", "Yao, A. C.-C."]
+  title: "On the quantum query complexity of local search in two and three dimensions"
+  venue: "Algorithmica 55(3):576-600 (FOCS 2006)"
+  year: 2009
+  doi: "10.1007/s00453-008-9169-z"
+
+SanthaSzegedy09:
+  authors: ["Santha, M.", "Szegedy, M."]
+  title: "Quantum and classical query complexities of local search are polynomially related"
+  venue: "Algorithmica 55(3):557-575 (STOC 2004)"
+  year: 2009
+  note: "D(LS_G) = O(Q(LS_G)^19) for every graph G, via the separation number; the exponent is not claimed to be optimal."
+
+Verhoeven06:
+  authors: ["Verhoeven, Y. F."]
+  title: "Enhanced algorithms for local search"
+  venue: "Information Processing Letters 97(5):171-176"
+  year: 2006
+  doi: "10.1016/j.ipl.2005.11.001"
+  note: "O(sqrt k log log k) quantum local search on the two-dimensional grid, via graph genus."
+
+BranzeiChooRecker24:
+  authors: ["Branzei, S.", "Choo, D.", "Recker, N. J."]
+  title: "The sharp power law of local search on expanders"
+  venue: "SODA 2024, pp. 1792-1809"
+  year: 2024
+  arxiv: "2305.08269"
+  doi: "10.1137/1.9781611977912.71"
+  note: "Randomized local search on constant-degree expanders is Omega(sqrt n / log n), matching Aldous up to a log."
+
+BranzeiRecker24:
+  authors: ["Branzei, S.", "Recker, N. J."]
+  title: "A note on quantum lower bounds for local search via congestion and expansion"
+  venue: "arXiv preprint"
+  year: 2024
+  arxiv: "2412.13345"
+  note: "Q(LS_G) = Omega(n^{3/4}/sqrt g) with g the vertex congestion; Omega(n^{1/4}/sqrt(log n)) on constant-degree expanders, improving Santha-Szegedy's n^{1/8}/log n."
+
+AaronsonChen17:
+  authors: ["Aaronson, S.", "Chen, L."]
+  title: "Complexity-theoretic foundations of quantum supremacy experiments"
+  venue: "CCC 2017, 22:1-22:67"
+  year: 2017
+  arxiv: "1612.05903"
+  doi: "10.4230/LIPIcs.CCC.2017.22"
+  note: "Section 6 settles Fourier fishing and Fourier sampling: R = Omega(N/log N) for the relation, Theta(N) for sampling, against one quantum query."
+
+HNS02:
+  authors: ["Hoyer, P.", "Neerbek, J.", "Shi, Y."]
+  title: "Quantum complexities of ordered searching, sorting, and element distinctness"
+  venue: "Algorithmica 34(4):429-448 (ICALP 2001)"
+  year: 2002
+  arxiv: "quant-ph/0102078"
+  doi: "10.1007/s00453-002-0976-3"
+  note: "Q(ordered search) >= (ln n - 1)/pi, by a weighted all-pairs inner-product argument."
+
+CCKS25:
+  authors: ["Carolan, J.", "Childs, A. M.", "Kovacs-Deak, M.", "Schaeffer, L."]
+  title: "Translation-invariant quantum algorithms for ordered search are optimal"
+  venue: "ACM Transactions on Quantum Computing"
+  year: 2025
+  arxiv: "2503.21090"
+  doi: "10.1145/3800579"
+  note: "Every bounded-error k-query ordered-search algorithm can be made translation-invariant and workspace-free; an LP search then gives an exact 5-query algorithm for 7265 items, i.e. 0.390 log_2 n."
+
+CLP07:
+  authors: ["Childs, A. M.", "Landahl, A. J.", "Parrilo, P. A."]
+  title: "Quantum algorithms for the ordered search problem via semidefinite programming"
+  venue: "Physical Review A 75:032335"
+  year: 2007
+  arxiv: "quant-ph/0608161"
+  doi: "10.1103/PhysRevA.75.032335"
+  note: "Exact 4-query algorithm for 605 items, 0.433 log_2 n. Brookes, Jacokes and Landahl had reached 4 log_550 n by gradient descent."
+
+FGGS99invariant:
+  authors: ["Farhi, E.", "Goldstone, J.", "Gutmann, S.", "Sipser, M."]
+  title: "Invariant quantum algorithms for insertion into an ordered list"
+  venue: "arXiv preprint"
+  year: 1999
+  arxiv: "quant-ph/9901059"
+  note: "Defines the translation-invariant class and gives the exact 3-query algorithm for 52 items, 0.526 log_2 n."
+
+FGGS98limit:
+  authors: ["Farhi, E.", "Goldstone, J.", "Gutmann, S.", "Sipser, M."]
+  title: "A limit on the speed of quantum computation for insertion into an ordered list"
+  venue: "arXiv preprint"
+  year: 1998
+  arxiv: "quant-ph/9812057"
+  note: "The log n / (2 log log n) lower bound."
+
+Ambainis99ordered:
+  authors: ["Ambainis, A."]
+  title: "A better lower bound for quantum algorithms searching an ordered list"
+  venue: "FOCS 1999, pp. 352-357"
+  year: 1999
+  arxiv: "quant-ph/9902053"
+  doi: "10.1109/SFFCS.1999.814607"
+
+BuhrmandeWolf99ordered:
+  authors: ["Buhrman, H.", "de Wolf, R."]
+  title: "A lower bound for quantum search of an ordered list"
+  venue: "Information Processing Letters 70(5):205-209"
+  year: 1999
+  doi: "10.1016/S0020-0190(99)00069-1"
+
+ChildsLee08:
+  authors: ["Childs, A. M.", "Lee, T."]
+  title: "Optimal quantum adversary lower bounds for ordered search"
+  venue: "ICALP 2008, pp. 869-880"
+  year: 2008
+  arxiv: "0708.3396"
+  doi: "10.1007/978-3-540-70575-8_71"
+  note: "The exact optimum of both the non-negative and the negative-weight adversary bound for (a symmetrised) ordered search is (ln n)/pi + O(1): the Hoyer-Neerbek-Shi bound is the ceiling of the method."
+
+BenOrHassidim08:
+  authors: ["Ben-Or, M.", "Hassidim, A."]
+  title: "Quantum search in an ordered list via adaptive learning"
+  venue: "arXiv preprint"
+  year: 2007
+  arxiv: "quant-ph/0703231"
+  note: "Expected cost below 0.32 log_2 n. The abstract says error free; section 3 allows o(1) failure probability."
+
+BunVoronova23:
+  authors: ["Bun, M.", "Voronova, N."]
+  title: "Approximate degree lower bounds for oracle identification problems"
+  venue: "TQC 2023, 1:1-1:19"
+  year: 2023
+  arxiv: "2303.03921"
+  doi: "10.4230/LIPIcs.TQC.2023.1"
+  note: "Approximate degree Omega(m / log^2 m) for ordered search on 2^m inputs, and for the k-of-n oracle identification problems."
+
+# ---------------------------------------------------------------------
+# Classical total functions: inner product, SINK, graph properties
+# ---------------------------------------------------------------------
+
+ChistopolskayaPodolskii18:
+  authors: ["Chistopolskaya, A.", "Podolskii, V. V."]
+  title: "Parity decision tree complexity is greater than granularity"
+  venue: "arXiv preprint"
+  year: 2018
+  arxiv: "1810.08668"
+  eccc: "TR18-174"
+  note: "D_xor(f) >= k+1, where 2^{-k} is the granularity of the Fourier spectrum. Pins D_xor(MAJ_n) = n - B(n) + 1 and D_xor(RMAJ_3^d) = (n+1)/2."
+
+CMS19:
+  authors: ["Chattopadhyay, A.", "Mande, N. S.", "Sherif, S."]
+  title: "The log-approximate-rank conjecture is false"
+  venue: "Journal of the ACM 67(4):23 (STOC 2019)"
+  year: 2019
+  eccc: "TR18-176"
+  doi: "10.1145/3396695"
+  note: "SINK o XOR: spectral norm O(sqrt m) but randomized communication complexity Omega(sqrt m). Also refutes Grolmusz's conjecture and the parity-measure conjecture of Tsang-Wong-Xie-Zhang."
+
+SinhadeWolf19:
+  authors: ["Sinha, M.", "de Wolf, R."]
+  title: "Exponential separation between quantum communication and logarithm of approximate rank"
+  venue: "FOCS 2019, pp. 966-981"
+  year: 2019
+  arxiv: "1811.10090"
+  doi: "10.1109/FOCS.2019.00062"
+
+ABT19:
+  authors: ["Anshu, A.", "Boddu, N. G.", "Touchette, D."]
+  title: "Quantum log-approximate-rank conjecture is also false"
+  venue: "FOCS 2019, pp. 982-994"
+  year: 2019
+  arxiv: "1811.10525"
+  doi: "10.1109/FOCS.2019.00063"
+
+DHHM06:
+  authors: ["Durr, C.", "Heiligman, M.", "Hoyer, P.", "Mhalla, M."]
+  title: "Quantum query complexity of some graph problems"
+  venue: "SIAM Journal on Computing 35(6):1310-1328 (ICALP 2004)"
+  year: 2006
+  arxiv: "quant-ph/0401091"
+  doi: "10.1137/050644719"
+  note: "Adjacency-matrix model: connectivity Theta(n^{3/2}), strong connectivity Theta(n^{3/2}), minimum spanning tree Theta(n^{3/2}), single-source shortest paths Theta(n^{3/2})."
+
+BvEBL74:
+  authors: ["Best, M. R.", "van Emde Boas, P.", "Lenstra, H. W."]
+  title: "A sharpened version of the Aanderaa-Rosenberg conjecture"
+  venue: "Mathematisch Centrum report ZW 30/74, Amsterdam"
+  year: 1974
+  note: "Source of the scorpion graphs: a nontrivial graph property decidable in O(n) queries out of binom(n,2)."
+
+RivestVuillemin76:
+  authors: ["Rivest, R. L.", "Vuillemin, J."]
+  title: "On recognizing graph properties from adjacency matrices"
+  venue: "Theoretical Computer Science 3(3):371-384"
+  year: 1976
+  doi: "10.1016/0304-3975(76)90053-0"
+  note: "Every nontrivial monotone graph property needs Omega(n^2) queries; the Aanderaa-Karp-Rosenberg conjecture asks for exactly binom(n,2)."
+
+KSS84:
+  authors: ["Kahn, J.", "Saks, M.", "Sturtevant, D."]
+  title: "A topological approach to evasiveness"
+  venue: "Combinatorica 4(4):297-306"
+  year: 1984
+  doi: "10.1007/BF02579140"
+  note: "Nontrivial monotone graph properties are evasive when the number of vertices is a prime power."
+
+LovaszYoung02:
+  authors: ["Lovasz, L.", "Young, N. E."]
+  title: "Lecture notes on evasiveness of graph properties"
+  venue: "arXiv preprint (Princeton TR 317-91, 1994)"
+  year: 2002
+  arxiv: "cs/0205031"
+
+Miller13:
+  authors: ["Miller, C. A."]
+  title: "Evasiveness of graph properties and topological fixed-point theorems"
+  venue: "Foundations and Trends in Theoretical Computer Science 7(4):337-415"
+  year: 2013
+  arxiv: "1306.0110"
+  doi: "10.1561/0400000055"
+
+ChakrabartiKhot07:
+  authors: ["Chakrabarti, A.", "Khot, S."]
+  title: "Improved lower bounds on the randomized complexity of graph properties"
+  venue: "Random Structures & Algorithms 30(3):427-440 (ICALP 2001)"
+  year: 2007
+  doi: "10.1002/rsa.20164"
+  note: "Every nontrivial monotone graph property has R = Omega(n^{4/3} log^{1/3} n); the conjecture is Omega(n^2)."
+
+Spalek08:
+  authors: ["Spalek, R."]
+  title: "The multiplicative quantum adversary"
+  venue: "CCC 2008, pp. 237-248"
+  year: 2008
+  arxiv: "quant-ph/0703237"
+  doi: "10.1109/CCC.2008.9"
+  note: "At least as strong as the additive negative-weights adversary, and unlike it survives exponentially small success probability, giving strong direct product theorems."
+
+# ---------------------------------------------------------------------------
+# Filling the empty columns: postselection and rational approximation, robust
+# quantum queries, conical juntas, recursive majority, critical block sensitivity.
+# ---------------------------------------------------------------------------
+
+Newman64:
+  authors: ["Newman, D. J."]
+  title: "Rational approximation to |x|"
+  venue: "Michigan Mathematical Journal 11(1):11-14"
+  year: 1964
+  note: "The origin of the log-degree rational approximation to the absolute value, hence of rdeg(MAJ) = O(log n). Mahadev-de Wolf reprove it from a postselected quantum algorithm."
+
+Aaronson05postbqp:
+  authors: ["Aaronson, S."]
+  title: "Quantum computing, postselection, and probabilistic polynomial-time"
+  venue: "Proceedings of the Royal Society A 461(2063):3473-3482"
+  year: 2005
+  arxiv: "quant-ph/0412187"
+  note: "PostBQP = PP. Also the first postselected query algorithm for majority, later improved to optimal by Mahadev-de Wolf."
+
+HoyerSpalek05:
+  authors: ["Hoyer, P.", "Spalek, R."]
+  title: "Lower bounds on quantum query complexity"
+  venue: "Bulletin of the EATCS 87:78-103"
+  year: 2005
+  arxiv: "quant-ph/0509153"
+  note: "Survey. Section 5 states the certificate complexity barrier in the form Adv(f) <= sqrt(C0 C1) and points out that it is the property-testing promise problems -- both certificate complexities O(1) -- on which the positive adversary collapses."
+
+Sherstov13robust:
+  authors: ["Sherstov, A. A."]
+  title: "Making polynomials robust to noise"
+  venue: "Theory of Computing 9:593-615 (STOC 2012)"
+  year: 2013
+  note: "An explicit construction of the degree-O(n) robust polynomial that Buhrman-Newman-Rohrig-de Wolf had obtained only via a quantum algorithm."
+
+GoosJayram16:
+  authors: ["Goos, M.", "Jayram, T. S."]
+  title: "A composition theorem for conical juntas"
+  venue: "CCC 2016, LIPIcs 50, 5:1-5:16"
+  year: 2016
+  eccc: "TR15-167"
+  note: "Degree lower bounds for conical juntas computing recursively defined functions: Omega~(n^0.753) for the binary AND-OR tree (answering Beame-Lawry) and Omega(2.59^h) for the height-h 3-majority tree -- the latter is still the best known randomized lower bound for recursive majority."
+
+GLMWZ16:
+  authors: ["Goos, M.", "Lovett, S.", "Meka, R.", "Watson, T.", "Zuckerman, D."]
+  title: "Rectangles are nonnegative juntas"
+  venue: "SIAM Journal on Computing 45(5):1835-1869 (STOC 2015)"
+  year: 2016
+  note: "The junta theorem: a rectangle in the domain of g^n is approximated by a conical d-junta. This is what makes conical junta degree the right query-side measure for randomized lifting."
+
+MNSSTX16:
+  authors: ["Magniez, F.", "Nayak, A.", "Santha, M.", "Sherman, J.", "Tardos, G.", "Xiao, D."]
+  title: "Improved bounds for the randomized decision tree complexity of recursive majority"
+  venue: "Random Structures & Algorithms 48(3):612-638 (ICALP 2011)"
+  year: 2016
+  arxiv: "1309.7565"
+  eccc: "TR10-192"
+  note: "R_0(3-MAJ_h) <= 1.007 * 2.64944^h by an interleaving of two recursive algorithms (Thm 4.2), and R_delta(3-MAJ_h) >= (1/2 - delta) * 2.57143^h. The lower bound has since been superseded by Goos-Jayram's Omega(2.59^h); the upper bound stands."
+
+JayramKumarSivakumar03:
+  authors: ["Jayram, T. S.", "Kumar, R.", "Sivakumar, D."]
+  title: "Two applications of information complexity"
+  venue: "STOC 2003, 673-682"
+  year: 2003
+  note: "The (1-2delta)(7/3)^h lower bound for recursive majority, and the information-complexity method that every later improvement refines."
+
+Leonardos13:
+  authors: ["Leonardos, N."]
+  title: "An improved lower bound for the randomized decision tree complexity of recursive majority"
+  venue: "ICALP 2013, LNCS 7965, 696-708"
+  year: 2013
+  note: "(1-2delta) * 2.55^h, between Jayram-Kumar-Sivakumar and Magniez et al."
+
+HuynhNordstrom12:
+  authors: ["Huynh, T.", "Nordstrom, J."]
+  title: "On the virtue of succinct proofs: amplifying communication complexity hardness to time-space trade-offs in proof complexity"
+  venue: "STOC 2012, 233-248"
+  year: 2012
+  note: "Where critical block sensitivity was introduced, as the query-side measure that survives lifting for search problems with many valid answers."
+
+# --- Pinning down the partition bound and its relaxation -------------
+# (rprt: getting the LP right, and the D-vs-prt separations.)
+
+AKK16:
+  authors: ["Ambainis, A.", "Kokainis, M.", "Kothari, R."]
+  title: "Nearly optimal separations between communication (or query) complexity and partitions"
+  venue: "CCC 2016, 4:1-4:14"
+  year: 2016
+  arxiv: "1512.01210"
+  note: "A total f with D(f) = Omega~(SP(f)^2), hence also D(f) = Omega~(prt(f)^2). Nearly matches D = O(SP^2) / D = O(prt_0 * prt_{1/3})."
+
+HarshaJainRadhakrishnan16:
+  authors: ["Harsha, P.", "Jain, R.", "Radhakrishnan, J."]
+  title: "Partition bound is quadratically tight for product distributions"
+  venue: "ICALP 2016, 135:1-135:13"
+  year: 2016
+  arxiv: "1512.01968"
+  eccc: "TR15-199"
+  note: "Under any product distribution mu, D^mu_{0.49}(f) = O((prt_{1/8}(f) * log prt_{1/8}(f))^2) -- so the partition bound is quadratically tight for product distributions, in both the communication and the query setting. The 2015 version stated this for the *relaxed* partition bound; the published version corrects it to prt."
+
+Gavinsky17quadratic:
+  authors: ["Gavinsky, D.", "Lee, T.", "Santha, M.", "Sanyal, S."]
+  title: "Quadratically tight relations for randomized query complexity"
+  venue: "Theory of Computing Systems 64:101-119 (CSR 2019)"
+  year: 2017
+  eccc: "TR17-123"
+  note: "Uses prt for the logarithm of the Jain-Klauck LP optimum, the convention this zoo follows. Also: EC <= R_0 = O(EC^2), FC <= EC <= FC^{3/2}, so EC^{2/3} <= R."

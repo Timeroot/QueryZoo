@@ -81,6 +81,28 @@ functions:
     - {measure: Fdim,   value: 'n', note: 'The Fourier support is all of $2^{[n]}$, whose $\mathbb{F}_2$-span is everything.'}
     - {measure: MaxInf, value: '2^{1-n}', note: 'By symmetry every coordinate has influence $\mathrm{I}(f)/n = 2^{1-n}$.'}
     - {measure: RS,     value: '\Theta(n)', refs: [BenDavidKothari18], note: 'At most $\mathrm{R}=\Theta(n)$. For the lower bound, take the sabotaged input with a single $\ast$ and zeros elsewhere: the value is undetermined, and finding the $\ast$ among $n$ positions needs $\Omega(n)$ queries.'}
+    - {measure: CA, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{RC}(f) \le \mathrm{CA}(f) \le \mathrm{fbs}(f)$, with $\mathrm{RC}(f) = \Theta(n)$ and $\mathrm{fbs}(f) = n$ here.'}
+    - {measure: CGpub, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{RC}(f) \le \mathrm{CG}^{\mathrm{pub}}(f) \le \mathrm{fbs}(f)$, with $\mathrm{RC}(f) = \Theta(n)$ and $\mathrm{fbs}(f) = n$ here.'}
+    - {measure: CGstar, value: '\Theta(n)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: CGns, value: '\Theta(n)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: Advpm, value: '\Theta(\sqrt{n})', note: 'Sandwiched: $\lambda(f) \le \mathrm{Adv}^{\pm}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with $\lambda(f) = \sqrt{n}$ and $\mathrm{Q}_{\varepsilon}(f) = \Theta(\sqrt{n})$ here.'}
+    - {measure: gamma2, value: '\Theta(\sqrt{n})', note: '$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[gamma2]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(\sqrt{n})$ here.'}
+    - {measure: Adv, value: '\Theta(\sqrt{n})', note: 'Sandwiched: $\lambda(f) \le \mathrm{Adv}(f) \le \mathrm{Adv}^{\pm}(f)$, with $\lambda(f) = \sqrt{n}$ and $\mathrm{Adv}^{\pm}(f) = \Theta(\sqrt{n})$ here.'}
+    - {measure: MAdv, value: '\Theta(\sqrt n)', refs: [Spalek08], note: '$\mathrm{Adv}^{\pm}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$ and $\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q}_\varepsilon)$, so the multiplicative adversary is $\Theta(\mathrm{Q})$ on every function; here $\mathrm{Q} = \Theta(\sqrt n)$.'}
+    - {measure: Rbar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: R1, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: chi, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}^0(f) \le \chi(g) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: chibar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}^0(f) \le \bar{\chi}(g) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: LR, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{LR}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: Rstar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{R}^{*}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: CG, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{CG}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: prt, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{prt}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: ardeg, value: '1', refs: [MahadevdeWolf15], note: 'The single rational function $r(x) = \dfrac{n\sum_i x_i}{1 + n\sum_i x_i}$ has numerator and denominator of degree $1$, is $0$ at $0^n$, and is $\ge \tfrac{n}{n+1} \ge \tfrac23$ at every $1$-input. So one degree of freedom suffices where $\widetilde{\deg} = \Theta(\sqrt n)$ is needed for polynomials -- the cleanest illustration that rational approximation is a strictly different resource.'}
+    - {measure: PostQ, value: '\Theta(1)', refs: [MahadevdeWolf15, Aaronson05postbqp], note: '$\mathrm{PostQ}_\varepsilon = \Theta(\mathrm{rdeg}_\varepsilon)$, and $\mathrm{rdeg}_\varepsilon(\mathrm{OR}) = 1$. Postselection makes unstructured search free: prepare a uniform superposition, query once, and postselect on the answer bit being $1$.'}
+    - {measure: robustQ, value: '\Theta(\sqrt n)', refs: [HoyerMoscadeWolf03, BNRdW05], note: 'Robust Grover: search over bounded-error inputs costs $O(\sqrt n)$ with **no** log factor, by amplitude amplification around a subroutine whose error is never amplified. Classically, noisy OR costs $\Theta(n)$ either way, so the quantum speedup survives noise intact.'}
+    - {measure: degp, value: 'n \text{ for every prime } p', note: 'Over $\mathbb{F}_p$ the multilinear representation is still $1 - \prod_i(1 - x_i)$, which contains $x_1\cdots x_n$ with coefficient $(-1)^{n+1} \ne 0$. Unlike [[PARITY]], OR gets no help from small characteristic.'}
+    - {measure: D_prod, value: '\Theta(n)', note: 'Take the product distribution with each bit $1$ independently with probability $1/n$. After seeing $m$ zeros the conditional probability that a $1$ remains is $1 - (1-1/n)^{n-m}$, which is $\ge 1 - e^{-1/2} > 0.39$ for $m \le n/2$; so no depth-$n/2$ tree has error $\le 1/3$. Product distributions are already as hard as OR gets, which is not true for every function.'}
+    - {measure: rprt, value: '\Theta(n)', conf: medium, note: 'Sandwiched: $\mathrm{s}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $n$ here. The lower end is the zoo''s own observation that the [JainKlauck10] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional.'}
   witnesses:
     - {of: [C, Q],      setting: total, statement: '$\mathrm{C} = \Theta(\mathrm{Q}^2)$ -- the "$2$" in the C-vs-Q cell (usually quoted with AND).', refs: [Grover96]}
     - {of: [deg, adeg], setting: total, statement: '$\deg = \Theta(\widetilde{\deg}^2)$, matching the ABKRT upper bound $\deg = O(\widetilde{\deg}^2)$.', refs: [NS94, ABKRT21]}
@@ -141,6 +163,30 @@ functions:
     - {measure: Fdim,   value: 'n', note: 'The Fourier support spans all of $\mathbb{F}_2^n$: it contains every singleton.'}
     - {measure: Inf,    value: 'n\,2^{1-n}'}
     - {measure: MaxInf, value: '2^{1-n}'}
+    - {measure: CA, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{fbs}(f) \le \mathrm{CA}(f) \le \mathrm{RC}(f)$, with $\mathrm{fbs}(f) = n$ and $\mathrm{RC}(f) = \Theta(n)$ here.'}
+    - {measure: CGpub, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{fbs}(f) \le \mathrm{CG}^{\mathrm{pub}}(f) \le \mathrm{RC}(f)$, with $\mathrm{fbs}(f) = n$ and $\mathrm{RC}(f) = \Theta(n)$ here.'}
+    - {measure: CGstar, value: '\Theta(n)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: CGns, value: '\Theta(n)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: Rna, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{\mathrm{na}}(f) \le \mathrm{D}^{\mathrm{na}}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}^{\mathrm{na}}(f) = n$ here.'}
+    - {measure: Advpm, value: '\Theta(\sqrt{n})', note: 'Sandwiched: $\lambda(f) \le \mathrm{Adv}^{\pm}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with $\lambda(f) = \sqrt{n}$ and $\mathrm{Q}_{\varepsilon}(f) = \Theta(\sqrt{n})$ here.'}
+    - {measure: gamma2, value: '\Theta(\sqrt{n})', note: '$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[gamma2]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(\sqrt{n})$ here.'}
+    - {measure: Adv, value: '\Theta(\sqrt{n})', note: 'Sandwiched: $\lambda(f) \le \mathrm{Adv}(f) \le \mathrm{Adv}^{\pm}(f)$, with $\lambda(f) = \sqrt{n}$ and $\mathrm{Adv}^{\pm}(f) = \Theta(\sqrt{n})$ here.'}
+    - {measure: Rbar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: R1, value: 'n', note: 'Sandwiched: $\mathrm{C}^1(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: chi, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}^1(f) \le \chi(g) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: chibar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}^1(f) \le \bar{\chi}(g) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: LR, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{LR}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: Rstar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{R}^{*}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: CG, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{CG}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: MAdv, value: '\Theta(\sqrt{n})', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with both ends $\Theta(\sqrt{n})$ here.'}
+    - {measure: prt, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{prt}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: ardeg, value: '1', refs: [MahadevdeWolf15], note: 'Dual to [[OR]]: $1 - r(\bar x)$ for the same degree-$1$ rational $r$.'}
+    - {measure: PostQ, value: '\Theta(1)', refs: [MahadevdeWolf15], note: 'Dual to [[OR]].'}
+    - {measure: degp, value: 'n \text{ for every prime } p', note: '$\mathrm{AND} = \prod_i x_i$ over every field.'}
+    - {measure: rprt, value: '\Theta(n)', conf: medium, note: 'Sandwiched: $\mathrm{s}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $n$ here. The lower end is the zoo''s own observation that the [JainKlauck10] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional.'}
+    - {measure: Dmu, value: '\min\{n,\ \lceil \log(1/\varepsilon)/\log(1/p)\rceil\} \text{ under } \mu_p', note: 'The cleanest illustration of why $\mathrm{D}^{\mu}$ is a *family* of measures rather than one number. Let $\mu_p$ make each bit $1$ independently with probability $p$. Querying bits until one comes up $0$ and answering $1$ if the first $m$ are all $1$ errs with probability $p^{m}(1-p^{n-m})$, so $m = \lceil \log(1/\varepsilon)/\log(1/p)\rceil$ queries suffice; conversely, the leaf reached by the all-ones input has some depth $m_0 \le m$ and carries $\mathrm{AND}^{-1}(0)$-mass $p^{m_0} - p^{n}$ against $\mathrm{AND}^{-1}(1)$-mass $p^{n}$, so the error is at least $\min\{p^{m}-p^{n},\,p^{n}\}$. At $p = 1/2$ this is $\Theta(\log(1/\varepsilon))$; at $p = 1 - 1/n$ it is $n$. Averaging over the parameter is exactly what the zoo cannot do, which is why $\mathrm{D}^{\mu}$ is left out of the ladder ordering on the matrix page.'}
+    - {measure: D_prod, value: 'n', note: 'Take $p = 1-1/n$ in the previous line: $\log(1/p) = \Theta(1/n)$, so the bound saturates at $n$. Product distributions are already worst-case-hard for AND.'}
+    - {measure: sdeg, value: '1', note: '$\mathrm{AND}_n = \operatorname{sign}\big(\sum_i x_i - n + \tfrac12\big)$: every halfspace has threshold degree $1$. Against $\widetilde{\deg} = \Theta(\sqrt n)$ and $\deg = n$.'}
   witnesses:
     - {of: [C, Q],       setting: total, statement: '$\mathrm{C}(f)=n$, $\mathrm{Q}(f)=\Theta(\sqrt n)$: the quadratic C-vs-Q separation.', refs: [Grover96]}
     - {of: [bs, lambda], setting: total, statement: '$\mathrm{bs}=\lambda^2$.', refs: [ABKRT21]}
@@ -210,6 +256,30 @@ functions:
     - {measure: NS,     value: '\tfrac12\big(1-(1-2\delta)^n\big)', refs: [ODonnell14], note: 'Exactly: the noise flips the answer iff an odd number of bits flip. Maximally noise-sensitive.'}
     - {measure: Stab,   value: '\rho^{\,n}', refs: [ODonnell14]}
     - {measure: RS,     value: '\Theta(n)', refs: [BenDavidKothari18], note: 'At most $\mathrm{R}=n$; and a sabotaged input with a single $\ast$ hides it among $n$ positions.'}
+    - {measure: CA, value: '\Theta(n)', note: '$\mathrm{CA}(f) = \Theta(\mathrm{fbs}(f))$ for every $f$ ([[CA]] vs [[fbs]]), and $\mathrm{fbs}(f) = n$ here.'}
+    - {measure: CGpub, value: '\Theta(n)', note: '$\mathrm{CG}^{\mathrm{pub}}(f) = \Theta(\mathrm{fbs}(f))$ for every $f$ ([[CGpub]] vs [[fbs]]), and $\mathrm{fbs}(f) = n$ here.'}
+    - {measure: CGstar, value: '\Theta(n)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: CGns, value: '\Theta(n)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: Advpm, value: '\Theta(\lceil n/2 \rceil)', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \lceil n/2 \rceil$ here.'}
+    - {measure: gamma2, value: '\Theta(\lceil n/2 \rceil)', note: '$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[gamma2]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \lceil n/2 \rceil$ here.'}
+    - {measure: MAdv, value: 'n/2', refs: [Spalek08], note: '$\mathrm{Adv}^{\pm}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$ and $\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q}_\varepsilon)$, so the multiplicative adversary is $\Theta(\mathrm{Q})$ on every function; here $\mathrm{Q} = n/2$.'}
+    - {measure: Rbar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: R1, value: 'n', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: chi, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \chi(g) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: chibar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \bar{\chi}(g) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: LR, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{LR}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: Rstar, value: '\Theta(n)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{R}^{*}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: CG, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{CG}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: Adv, value: '\Theta(n)', note: 'Sandwiched: $\lambda(f) \le \mathrm{Adv}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: cjdeg, value: 'n', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{cjdeg}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: prt, value: '\Theta(n)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{prt}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: ardeg, value: 'n', refs: [MahadevdeWolf15], note: 'Rational approximation does not help at all here. Suppose $p/q$ approximates $\mathrm{PARITY}$ to within $1/3$ with $\deg p, \deg q \le d$ and $q > 0$ on the cube. Symmetrising over the slices, $P(k) - \tfrac12 Q(k)$ is a univariate polynomial of degree $\le d$ whose sign alternates at $k = 0,1,\dots,n$, so it has $\ge n$ roots and $d \ge n$. Contrast $\mathrm{rdeg}(\mathrm{MAJ}) = \Theta(\log n)$: parity is the function on which postselection buys nothing.'}
+    - {measure: PostQ, value: '\Theta(n)', refs: [MahadevdeWolf15], note: 'From $\mathrm{PostQ}_\varepsilon = \Theta(\mathrm{rdeg}_\varepsilon) = \Theta(n)$. Even $\mathsf{PostBQP}$ needs to read essentially the whole input.'}
+    - {measure: robustQ, value: '\Theta(n)', refs: [BNRdW05, FRPU94], note: 'The headline robustness result: $n$ noisy quantum queries recover all $n$ bits, so $\mathrm{Q}^{\mathrm{rob}} = O(n)$, matching $\mathrm{Q} = n/2$ up to a constant. Classically the same task costs $\Theta(n\log n)$ [FRPU94] -- noise imposes a logarithmic tax on randomized algorithms that quantum algorithms simply do not pay. An explicit degree-$O(n)$ robust polynomial was later given by [Sherstov13robust].'}
+    - {measure: degp, value: '1 \text{ if } p = 2;\ n \text{ if } p > 2', note: 'Over $\mathbb{F}_2$ parity *is* the linear form $\sum_i x_i$. For odd $p$ the multilinear representation is $\tfrac12\big(1 - \prod_i(1-2x_i)\big)$, whose top coefficient $\pm 2^{n-1}$ is a unit mod $p$, so the degree jumps back to $n$. This single function is the whole content of the $\deg_p$ column.'}
+    - {measure: Dmu, value: 'n \text{ under the uniform } \mu, \text{ for every } \varepsilon < 1/2', note: 'Every leaf of a tree of depth $< n$ leaves some coordinate unqueried, and conditioned on the queried bits the parity is still uniform on $\{0,1\}$; so any such tree errs with probability exactly $1/2$ under the uniform distribution. This is the extreme point of Yao''s principle: one distribution already witnesses the worst case, with no slack.'}
+    - {measure: D_prod, value: 'n', note: 'The uniform distribution is a product distribution, and $\mathrm{D}^{\mathrm{prod}} \le \mathrm{R} = n$.'}
+    - {measure: rprt, value: '\Theta(n)', conf: medium, note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $n$ here. The lower end is the zoo''s own observation that the [JainKlauck10] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional.'}
   witnesses:
     - {of: ['*', '*'], setting: total, statement: 'Every classical measure equals $n$, so PARITY certifies that all the "$1,1$" cells of the matrix are tight -- no measure in the left column can be asymptotically smaller than any in the top row on this family.', refs: [ABKRT21]}
     - {of: [D, PDT], setting: total, statement: '$\mathrm{D}=n$ but $\mathrm{D}^{\oplus}=1$: parity decision trees are incomparable to ordinary ones.', refs: [TsangWongXieZhang13]}
@@ -269,6 +339,26 @@ functions:
     - {measure: Stab,   value: '\tfrac{2}{\pi}\arcsin\rho + o(1)', refs: [ODonnell14], note: 'Sheppard formula, in the $n\to\infty$ limit.'}
     - {measure: spar,   value: '2^{n-1}', refs: [ODonnell14], note: 'MAJ is odd, so only odd-size sets can appear, and the standard formula for $\widehat{\mathrm{MAJ}}(S)$ is nonzero for every one of them.'}
     - {measure: Fdim,   value: 'n', note: 'The support contains every singleton (odd sets of size $1$ have nonzero coefficient), so it spans $\mathbb{F}_2^n$.'}
+    - {measure: PDT,    value: 'n - \mathrm{B}(n) + 1', refs: [ChistopolskayaPodolskii18], note: 'Exactly, where $\mathrm{B}(n)$ is the number of ones in the binary expansion of $n$. Lower bound from granularity: every Fourier coefficient of $\mathrm{MAJ}_n$ is an integer multiple of $2^{-k}$ with $k = n - \mathrm{B}(n)$, and [ChistopolskayaPodolskii18] show $\mathrm{D}^{\oplus} \ge k+1$. Parity queries buy $\mathrm{B}(n)-1$ queries off $\mathrm{D} = n$, and no more.'}
+    - {measure: CGpub, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{CA}(f) \le \mathrm{CG}^{\mathrm{pub}}(f) \le \mathrm{RC}(f)$, with both ends $\Theta(n)$ here.'}
+    - {measure: CGstar, value: '\Theta(n)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: CGns, value: '\Theta(n)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: Q0, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{Q}_{\varepsilon}(f) \le \mathrm{Q}_{0}(f) \le \mathrm{D}(f)$, with $\mathrm{Q}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: Advpm, value: '\Theta(n)', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(n)$ here.'}
+    - {measure: gamma2, value: '\Theta(n)', note: '$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[gamma2]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(n)$ here.'}
+    - {measure: MAdv, value: '\Theta(n)', refs: [Spalek08], note: '$\mathrm{Adv}^{\pm}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$ and $\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q}_\varepsilon)$, so the multiplicative adversary is $\Theta(\mathrm{Q})$ on every function; here $\mathrm{Q} = \Theta(n)$.'}
+    - {measure: R1, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: chibar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{RS}(f) \le \bar{\chi}(g) \le \mathrm{D}(f)$, with $\mathrm{RS}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: LR, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{RS}(f) \le \mathrm{LR}(f) \le \mathrm{D}(f)$, with $\mathrm{RS}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: Rstar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{Q}_{\varepsilon}(f) \le \mathrm{R}^{*}(f) \le \mathrm{D}(f)$, with $\mathrm{Q}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: CG, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{RC}(f) \le \mathrm{CG}(f) \le \mathrm{D}(f)$, with $\mathrm{RC}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: cjdeg, value: '\Theta(n)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{cjdeg}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\widetilde{\deg}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: prt, value: '\Theta(n)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{prt}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\widetilde{\deg}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: ardeg, value: '\Theta(\log n)', refs: [Newman64, MahadevdeWolf15], note: 'Newman''s degree-$O(\log(1/\varepsilon))$ rational approximation to $|x|$, rescaled to the slices $k = 0,\dots,n$, approximates the sign of $k - n/2$ with degree $O(\log n)$; the matching $\Omega(\log n)$ is in [MahadevdeWolf15]. Compare $\widetilde{\deg}(\mathrm{MAJ}) = \Theta(n)$: **rational** approximation is exponentially cheaper than polynomial approximation here, which is exactly what makes majority the canonical postselection example.'}
+    - {measure: PostQ, value: '\Theta(\log n)', refs: [MahadevdeWolf15, Aaronson05postbqp], note: 'Aaronson gave the first postselected majority algorithm; Mahadev-de Wolf made it optimal and observed that reading the algorithm backwards reproves Newman''s theorem.'}
+    - {measure: robustQ, value: '\Theta(n)', refs: [BNRdW05], note: 'Sandwiched between $\mathrm{Q} = \Theta(n)$ and the universal $O(n)$ upper bound.'}
+    - {measure: degp, value: '(n+1)/2 \text{ for } p = 2,\ n = 2^m - 1', note: 'The $\mathbb{F}_2$ multilinear expansion of the threshold $\mathrm{Th}_k^n$ is $\sum_{|S| \ge k} \binom{|S|-1}{k-1}\prod_{i \in S} x_i$. By Lucas'' theorem $\binom{s-1}{k-1}$ is odd iff the binary digits of $k-1$ are a submask of those of $s-1$; with $n = 2^m-1$ and $k = 2^{m-1}$ the only $s-1 \le n-1$ containing the mask $0\underbrace{1\cdots1}_{m-1}$ is $2^{m-1}-1$ itself, so the degree is exactly $2^{m-1} = (n+1)/2$. For $n = 3$ this is the familiar $\mathrm{MAJ}_3 = xy + yz + zx$.'}
+    - {measure: rprt, value: '\Theta(n)', conf: medium, note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\widetilde{\deg}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here. The lower end is the zoo''s own observation that the [JainKlauck10] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional.'}
   refs: [Paturi92, BBCMdW01, IJKKKSWW23]
   see_also: [THR, EH, RMAJ3, SYM]
 
@@ -300,6 +390,14 @@ functions:
     - {measure: C,      value: '\max\{k,\;n-k+1\}'}
     - {measure: odeg,   value: '\Theta(\sqrt k)', putative: true, note: 'Only the $0$-side is constrained, and it is the interval $\{0,\dots,k-1\}$: Chebyshev on $k$ points gives $O(\sqrt k)$ and Markov gives $\Omega(\sqrt k)$. Compare $\widetilde{\deg} = \Theta(\sqrt{k(n-k+1)})$ -- one-sidedness removes the whole $n-k+1$ factor.'}
     - {measure: Dna,    value: 'n'}
+    - {measure: RC, value: '\Theta(\max\{k,\;n-k+1\})', note: 'Sandwiched: $\mathrm{FC}(f) \le \mathrm{RC}(f) \le \mathrm{fbs}(f)$, with both ends $\max\{k,\;n-k+1\}$ here.'}
+    - {measure: CA, value: '\Theta(\max\{k,\;n-k+1\})', note: '$\mathrm{CA}(f) = \Theta(\mathrm{fbs}(f))$ for every $f$ ([[CA]] vs [[fbs]]), and $\mathrm{fbs}(f) = \max\{k,\;n-k+1\}$ here.'}
+    - {measure: CGpub, value: '\Theta(\max\{k,\;n-k+1\})', note: '$\mathrm{CG}^{\mathrm{pub}}(f) = \Theta(\mathrm{fbs}(f))$ for every $f$ ([[CGpub]] vs [[fbs]]), and $\mathrm{fbs}(f) = \max\{k,\;n-k+1\}$ here.'}
+    - {measure: CGstar, value: '\Theta(\max\{k,\;n-k+1\})', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: CGns, value: '\Theta(\max\{k,\;n-k+1\})', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: Advpm, value: '\Theta\!\big(\sqrt{k(n-k+1)}\big)', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta\!\big(\sqrt{k(n-k+1)}\big)$ here.'}
+    - {measure: gamma2, value: '\Theta\!\big(\sqrt{k(n-k+1)}\big)', note: '$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[gamma2]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta\!\big(\sqrt{k(n-k+1)}\big)$ here.'}
+    - {measure: MAdv, value: '\Theta\!\big(\sqrt{k(n-k+1)}\big)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with both ends $\Theta\!\big(\sqrt{k(n-k+1)}\big)$ here.'}
   refs: [Paturi92, NayakWu99]
   see_also: [OR, AND, MAJ, SYM]
 
@@ -326,6 +424,9 @@ functions:
     - {measure: D,    value: 'n \text{ (for all but trivial } f)'}
     - {measure: rdeg, value: '\Omega(\deg(f))', refs: [IJKKKSWW23], note: 'Asymptotically tight: symmetric functions cannot separate rdeg from deg.'}
     - {measure: Dna,  value: 'n', note: 'A non-degenerate symmetric function depends on every coordinate.'}
+    - {measure: Advpm, value: '\Theta\!\big(\sqrt{n(n-\Gamma(f))}\big)', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta\!\big(\sqrt{n(n-\Gamma(f))}\big)$ here.'}
+    - {measure: gamma2, value: '\Theta\!\big(\sqrt{n(n-\Gamma(f))}\big)', note: '$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[gamma2]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta\!\big(\sqrt{n(n-\Gamma(f))}\big)$ here.'}
+    - {measure: MAdv, value: '\Theta\!\big(\sqrt{n(n-\Gamma(f))}\big)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with both ends $\Theta\!\big(\sqrt{n(n-\Gamma(f))}\big)$ here.'}
   refs: [Paturi92, vzGathenRoche97, BBCMdW01, IJKKKSWW23]
   see_also: [MAJ, THR, EH, OR]
 
@@ -356,6 +457,36 @@ functions:
     - {measure: lambda, value: '\Theta(n)', refs: [IJKKKSWW23], note: 'Exactly: $n/2 \le \lambda(\overline{\mathrm{EH}}_n) \le n$.'}
     - {measure: ndeg, value: '\le n \text{ for } \mathrm{EH};\ =1 \text{ for } \overline{\mathrm{EH}}', refs: [IJKKKSWW23]}
     - {measure: Dna,    value: 'n'}
+    - {measure: bs, value: 'n', note: 'Sandwiched: $\mathrm{s}^1(f) \le \mathrm{bs}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: fbs, value: 'n', note: 'Sandwiched: $\mathrm{s}^1(f) \le \mathrm{fbs}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: C, value: 'n', note: 'Sandwiched: $\mathrm{s}^1(f) \le \mathrm{C}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: FC, value: 'n', note: 'Sandwiched: $\mathrm{s}^1(f) \le \mathrm{FC}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: bs1, value: 'n', note: 'Sandwiched: $\mathrm{s}^1(f) \le \mathrm{bs}^1(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: R, value: '\Theta(n)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{R}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\widetilde{\deg}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: R0, value: 'n', note: 'Sandwiched: $\mathrm{s}^1(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: Rna, value: '\Theta(n)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{R}^{\mathrm{na}}(f) \le \mathrm{D}^{\mathrm{na}}(f)$, with $\widetilde{\deg}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}^{\mathrm{na}}(f) = n$ here.'}
+    - {measure: QE, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{Q}_{\varepsilon}(f) \le \mathrm{Q}_{\mathrm{E}}(f) \le \mathrm{D}(f)$, with $\mathrm{Q}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: Q0, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{Q}_{\varepsilon}(f) \le \mathrm{Q}_{0}(f) \le \mathrm{D}(f)$, with $\mathrm{Q}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: Advpm, value: '\Theta(n)', note: 'Sandwiched: $\lambda(f) \le \mathrm{Adv}^{\pm}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with both ends $\Theta(n)$ here.'}
+    - {measure: gamma2, value: '\Theta(n)', note: '$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[gamma2]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(n)$ here.'}
+    - {measure: RC, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{fbs}(f) \le \mathrm{RC}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: CA, value: '\Theta(n)', note: '$\mathrm{CA}(f) = \Theta(\mathrm{fbs}(f))$ for every $f$ ([[CA]] vs [[fbs]]), and $\mathrm{fbs}(f) = n$ here.'}
+    - {measure: CGpub, value: '\Theta(n)', note: '$\mathrm{CG}^{\mathrm{pub}}(f) = \Theta(\mathrm{fbs}(f))$ for every $f$ ([[CGpub]] vs [[fbs]]), and $\mathrm{fbs}(f) = n$ here.'}
+    - {measure: CGstar, value: '\Theta(n)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: CGns, value: '\Theta(n)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: Adv, value: '\Theta(n)', note: 'Sandwiched: $\lambda(f) \le \mathrm{Adv}(f) \le \mathrm{Adv}^{\pm}(f)$, with both ends $\Theta(n)$ here.'}
+    - {measure: Rbar, value: '\Theta(n)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\widetilde{\deg}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: R1, value: '\Theta(n)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with $\widetilde{\deg}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: chi, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}^1(f) \le \chi(g) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: chibar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}^1(f) \le \bar{\chi}(g) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: LR, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{LR}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: Rstar, value: '\Theta(n)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{R}^{*}(f) \le \mathrm{D}(f)$, with $\widetilde{\deg}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: CG, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{CG}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: MAdv, value: '\Theta(n)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{MAdv}(f) \le \mathrm{D}(f)$, with $\widetilde{\deg}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: cjdeg, value: '\Theta(n)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{cjdeg}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\widetilde{\deg}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: prt, value: '\Theta(n)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{prt}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\widetilde{\deg}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: rprt, value: '\Theta(n)', conf: medium, note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\widetilde{\deg}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here. The lower end is the zoo''s own observation that the [JainKlauck10] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional.'}
+    - {measure: sdeg, value: '2', note: 'A symmetric function has threshold degree equal to the number of sign changes of its slice pattern, and $\mathrm{EH}$ changes sign twice. Explicitly $p(x) = \tfrac14 - \big(\sum_i x_i - \tfrac n2\big)^2$ is positive exactly on the middle slice. So $\mathrm{sdeg} = 2$ against $\widetilde{\deg} = \Theta(n)$. Threshold degree is not a lower bound on anything interesting on its own: [[MAJ]] does even better with $\mathrm{sdeg} = 1$, and the point of [[MinskyPapert]] is that a *small-depth* function can force $\mathrm{sdeg}$ up at all. What makes $\mathrm{EH}$ instructive is that its two sign changes are forced -- one is not enough for a non-monotone slice pattern -- so the exact value is $2$ rather than merely $O(1)$.'}
   refs: [IJKKKSWW23, Paturi92]
   see_also: [ANDEH, rdeg, SYM]
 
@@ -380,6 +511,10 @@ functions:
     - {measure: R,    value: '\Theta(n)'}
     - {measure: Dna,  value: 'n'}
     - {measure: s,    value: '\lfloor n/2 \rfloor + 1', putative: true, note: 'Coordinates below the highest $1$ are never sensitive, so at an input whose highest $1$ is at position $i$ only position $i$ and the opposite-parity positions above it can be sensitive: $\mathrm{s}(x) \le 1 + \lceil (n-i)/2\rceil$. The bound is met at $x=e_1$, where $\{1\}\cup\{j>1 : j \text{ even}\}$ is sensitive.'}
+    - {measure: Rna, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{\mathrm{na}}(f) \le \mathrm{D}^{\mathrm{na}}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}^{\mathrm{na}}(f) = n$ here.'}
+    - {measure: Rbar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: R0, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: R1, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
   witnesses:
     - {of: [D, sdeg], setting: total, statement: 'Unbounded: $\mathrm{D}=n$, $\mathrm{sdeg}=1$. Sign degree is *not* polynomially related to any other measure in the zoo.', refs: [Beigel94]}
   refs: [Beigel94, MinskyPapert69]
@@ -412,6 +547,22 @@ functions:
     - {measure: L1,     value: '2^k', note: 'Write $\mathrm{ADDR}_k = \sum_a \mathbb{1}[\mathrm{addr}=a]\cdot y_a$: each term has spectral norm $1$ and the $2^k$ terms have disjoint Fourier supports, so the norms add.'}
     - {measure: Dna,    value: 'k + 2^k', note: 'Every data bit is relevant, so a non-adaptive algorithm reads the entire table.'}
     - {measure: Rna,    value: '\Theta(2^k)', note: 'A fixed distribution over $m$ data bits contains the addressed one with probability at most $m/2^k$; otherwise the algorithm is guessing an unbiased bit.'}
+    - {measure: RC, value: '\Theta(k+1)', note: 'Sandwiched: $\mathrm{fbs}(f) \le \mathrm{RC}(f) \le \mathrm{D}(f)$, with both ends $k+1$ here.'}
+    - {measure: R0, value: 'k+1', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with both ends $k+1$ here.'}
+    - {measure: CA, value: '\Theta(k+1)', note: '$\mathrm{CA}(f) = \Theta(\mathrm{fbs}(f))$ for every $f$ ([[CA]] vs [[fbs]]), and $\mathrm{fbs}(f) = k+1$ here.'}
+    - {measure: CGpub, value: '\Theta(k+1)', note: '$\mathrm{CG}^{\mathrm{pub}}(f) = \Theta(\mathrm{fbs}(f))$ for every $f$ ([[CGpub]] vs [[fbs]]), and $\mathrm{fbs}(f) = k+1$ here.'}
+    - {measure: CGstar, value: '\Theta(k+1)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: CGns, value: '\Theta(k+1)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: Rbar, value: '\Theta(k+1)', note: 'Sandwiched: $\mathrm{s}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $k+1$ here.'}
+    - {measure: R1, value: 'k+1', note: 'Sandwiched: $\mathrm{C}^1(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with both ends $k+1$ here.'}
+    - {measure: chi, value: '\Theta(k+1)', note: 'Sandwiched: $\mathrm{s}(f) \le \chi(g) \le \mathrm{D}(f)$, with both ends $k+1$ here.'}
+    - {measure: chibar, value: '\Theta(k+1)', note: 'Sandwiched: $\mathrm{s}(f) \le \bar{\chi}(g) \le \mathrm{D}(f)$, with both ends $k+1$ here.'}
+    - {measure: LR, value: '\Theta(k+1)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{LR}(f) \le \mathrm{D}(f)$, with both ends $k+1$ here.'}
+    - {measure: Rstar, value: '\Theta(k+1)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{R}^{*}(f) \le \mathrm{D}(f)$, with both ends $k+1$ here.'}
+    - {measure: CG, value: '\Theta(k+1)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{CG}(f) \le \mathrm{D}(f)$, with both ends $k+1$ here.'}
+    - {measure: QE, value: '\Theta(k+1)', note: 'Sandwiched: $\deg(f) \le \mathrm{Q}_{\mathrm{E}}(f) \le \mathrm{D}(f)$, with both ends $k+1$ here.'}
+    - {measure: prt, value: '\Theta(k+1)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{prt}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $k+1$ here.'}
+    - {measure: rprt, value: '\Theta(k+1)', conf: medium, note: 'Sandwiched: $\mathrm{s}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $k+1$ here. The lower end is the zoo''s own observation that the [JainKlauck10] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional.'}
   refs: [GPW18, GJPW18]
   see_also: [ANDOR, pointer]
 
@@ -436,6 +587,9 @@ functions:
     - {measure: Dna, value: '2^k - 1', note: 'Every variable is relevant: for the node $v$, take the input whose walk reaches $v$ and whose two subtrees below $v$ lead to bottom bits of opposite value. So a non-adaptive algorithm must read all of them, and $\mathrm{D}^{\mathrm{na}} = 2^{\mathrm{D}}-1$ exactly -- the extreme case of the bound $\mathrm{D}^{\mathrm{na}} \le 2^{\mathrm{D}}-1$.'}
     - {measure: R,   value: '\Theta(k)', note: 'At most $\mathrm{D}=k$. For the lower bound, on a uniformly random input each of the $k$ variables on the walk is sensitive with probability $1/2$, so $\mathrm{bs} = \Omega(k)$ and $\mathrm{R} \ge \mathrm{bs}/3$.'}
     - {measure: Rna, value: '\Theta(2^k)', note: 'On a uniformly random input the bottom node reached is uniform over the $2^{k-1}$ bottom nodes, and an algorithm that has not read it is guessing an unbiased bit; a fixed set of $m$ variables contains it with probability at most $m/2^{k-1}$.'}
+    - {measure: Rbar, value: '\Theta(k)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(k)$ and $\mathrm{D}(f) = k$ here.'}
+    - {measure: R0, value: '\Theta(k)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(k)$ and $\mathrm{D}(f) = k$ here.'}
+    - {measure: R1, value: '\Theta(k)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(k)$ and $\mathrm{D}(f) = k$ here.'}
   witnesses:
     - {of: [Dna, D], setting: total, statement: '$\mathrm{D}^{\mathrm{na}} = 2^{\mathrm{D}}-1$: exactly tight against the general bound, where $\mathrm{ADDR}_k$ is loose by a factor of two.'}
     - {of: [Rna, R], setting: total, statement: '$\mathrm{R}^{\mathrm{na}} = 2^{\Theta(\mathrm{R})}$, against the general bound $\mathrm{R}^{\mathrm{na}} \le 2^{\mathrm{R}}-1$.'}
@@ -482,5 +636,17 @@ functions:
     - {measure: NS,     value: '\tfrac12 - o(1)', refs: [ODonnell14], note: 'For any fixed $\delta>0$: TRIBES is the standard example of a *noise-sensitive* monotone function, because all its influences are $O(\log n/n)$.'}
     - {measure: Inf1,   value: '\Theta(\log n)', note: 'Boolean-valued, so equal to $\mathrm{I}(f)$.'}
     - {measure: Dna,    value: 'n', note: 'Every variable is relevant.'}
+    - {measure: CA, value: '\Theta(n/\log n)', note: 'Sandwiched: $\mathrm{RC}(f) \le \mathrm{CA}(f) \le \mathrm{fbs}(f)$, with both ends $\Theta(n/\log n)$ here.'}
+    - {measure: CGpub, value: '\Theta(n/\log n)', note: 'Sandwiched: $\mathrm{RC}(f) \le \mathrm{CG}^{\mathrm{pub}}(f) \le \mathrm{fbs}(f)$, with both ends $\Theta(n/\log n)$ here.'}
+    - {measure: CGstar, value: '\Theta(n/\log n)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: CGns, value: '\Theta(n/\log n)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: Rna, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{\mathrm{na}}(f) \le \mathrm{D}^{\mathrm{na}}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}^{\mathrm{na}}(f) = n$ here.'}
+    - {measure: Advpm, value: '\Theta(\sqrt n)', note: 'Sandwiched: $\lambda(f) \le \mathrm{Adv}^{\pm}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with both ends $\Theta(\sqrt n)$ here.'}
+    - {measure: gamma2, value: '\Theta(\sqrt n)', note: '$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[gamma2]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(\sqrt n)$ here.'}
+    - {measure: Adv, value: '\Theta(\sqrt n)', note: 'Sandwiched: $\lambda(f) \le \mathrm{Adv}(f) \le \mathrm{Adv}^{\pm}(f)$, with both ends $\Theta(\sqrt n)$ here.'}
+    - {measure: Rbar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: R1, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: QE, value: '\Theta(n)', note: 'Sandwiched: $\deg(f) \le \mathrm{Q}_{\mathrm{E}}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: MAdv, value: '\Theta(\sqrt n)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with both ends $\Theta(\sqrt n)$ here.'}
   refs: [KKL88, ODonnell14, BOL85]
   see_also: [Inf, MaxInf, OR, AND]

@@ -180,7 +180,7 @@ measures:
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
   facts:
     - '$\mathrm{Adv}(f) \le \mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}(f))$.'
-    - '**Certificate complexity barrier:** $\mathrm{Adv}(f) \le \sqrt{\mathrm{C}^0(f)\,\mathrm{C}^1(f)}$ [SpalekSzegedy06, Zhang05], so the positive adversary cannot prove good bounds for e.g. element distinctness.'
+    - '**Certificate complexity barrier:** $\mathrm{Adv}(f) \le \sqrt{\mathrm{C}^0(f)\,\mathrm{C}^1(f)}$ [SpalekSzegedy06, Zhang05]. Note it is the *product* that is capped: element distinctness has $\mathrm{C}^1 = 2$ but $\mathrm{C}^0 = n$, so the barrier only says $\mathrm{Adv} = O(\sqrt n)$. It is the property-testing promise problems, with both certificate complexities $O(1)$, on which the positive adversary collapses to $\mathrm{Adv} = O(1)$ — [[Collision]], [[Simon]] [HoyerSpalek05].'
     - 'Sharper: $\mathrm{Adv}(f) \le \sqrt{\mathrm{RC}^0(f)\,\mathrm{RC}^1(f)}$, the *randomized*-certificate version of the barrier [KulkarniTal16].'
     - '$\lambda(f) \le \mathrm{Adv}(f)$ [ABKRT21 via BSS03].'
     - 'For **total search problems** $\mathrm{Adv}$ can be exponentially smaller than $\widetilde{\deg}$ [BenDavidKundu24search].'
@@ -240,10 +240,9 @@ measures:
     strong as $\mathrm{Adv}^{\pm}$ and applies to bounds with small success probability
     (strong direct product theorems), where $\mathrm{Adv}^{\pm}$ degrades.
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: partial}}
-  refs: [SpalekSzegedy06]
-  see_also: [Advpm, Adv]
-  confidence: low
-  todo: 'Add Špalek''s "The multiplicative quantum adversary" (CCC 2008) to refs.yaml and cite it here.'
+  refs: [Spalek08, SpalekSzegedy06]
+  see_also: [Advpm, Adv, Q]
+  confidence: medium
 
 - id: lambda
   name: Spectral sensitivity

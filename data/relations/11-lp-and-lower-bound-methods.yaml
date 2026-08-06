@@ -1,0 +1,460 @@
+# =====================================================================
+# RELATIONS, part 11: the LP / lower-bound-method column of the zoo.
+#
+# These are the records that let the rest of the database *infer* values
+# for the partition bound, conical junta degree, the conflict measures,
+# the composition rate and the one-sided / distributional variants.
+# Almost every one of them is a sandwich: the measure is a lower-bound
+# technique for R, so it sits between something concrete (fbs, RC, CA,
+# RS) and R itself, and is pinned wherever those two agree.
+#
+# Schema as in 01-classical-core.yaml.
+# =====================================================================
+
+relations:
+
+# ---------------------------------------------------------------------
+# The partition bound
+# ---------------------------------------------------------------------
+
+- from: prt
+  to: R
+  setting: relation
+  status: settled
+  headline: 'The partition bound is a relaxation of a randomized decision tree, so it never exceeds $\mathrm{R}$.'
+  upper:
+    - stmt: '\mathrm{prt}_{\varepsilon}(f) \le 2\,\mathrm{R}_{\varepsilon}(f)'
+      form: {exp: 1, kind: const}
+      refs: [JainKlauck10]
+      note: 'A randomized tree of depth $d$ and error $\varepsilon$ is already a feasible LP solution: put weight $\Pr[\text{leaf }\ell]$ on the subcube of $\ell$ with its label. The total weight is at most $2^{d}$ (the number of leaves) and every subcube is priced at $2^{|A|} \le 2^{d}$, so the LP optimum is at most $2^{2d}$ and its logarithm is at most $2d$. The factor $2$ is not an artefact: a *complete* tree of depth $d$ really does cost $2^d \cdot 2^d$, and by Cauchy--Schwarz $\sum_{\ell} 2^{|A_\ell|} \ge (\#\text{leaves})^2$ for any partition. [JainKlauck10, Thm 3.1] state it as $\mathrm{R}_\varepsilon(f) \ge \tfrac12 \log \mathrm{prt}^{\mathrm{LP}}_\varepsilon(f)$.'
+      conf: high
+  see_also: [prt, rprt, R, cjdeg]
+
+- from: R
+  to: prt
+  setting: total
+  status: open
+  headline: 'Whether the partition bound is tight for randomized query complexity is open; it is at least quadratically loose.'
+  lower:
+    - stmt: '\exists f \text{ total}:\ \mathrm{R}(f) \ge \mathrm{prt}(f)^{2-o(1)}'
+      form: {exp: 2, kind: const}
+      refs: [BenDavidKothari18]
+      note: 'Theorem 30, via $\mathrm{RS}(f) \ge \mathrm{prt}(f)^{2-o(1)}$ and $\mathrm{RS} \le \mathrm{R}$. So the LP genuinely loses information, and sabotage complexity is not subsumed by it.'
+      conf: high
+  lower:
+    - stmt: '\exists f \text{ total}:\ \mathrm{D}(f) = \tilde\Omega\big(\mathrm{prt}(f)^{2}\big)'
+      form: {exp: 2, kind: tilde}
+      refs: [AKK16]
+      note: 'Via subcube partition complexity, $\mathrm{prt} \le \mathrm{SP}$: [AKK16] give a total $f$ with $\mathrm{D}(f) = \tilde\Omega(\mathrm{SP}(f)^2)$. This is nearly the most that can happen, since $\mathrm{D}(f) = O(\mathrm{prt}_0(f)\,\mathrm{prt}_{1/3}(f))$ [JainKlauck10, Thm 3.7].'
+      conf: high
+  notes: |
+    No upper bound on $\mathrm{R}$ in terms of $\mathrm{prt}$ is known at all --
+    not even a polynomial one.  This is the query-complexity shadow of the
+    long-standing question of whether the partition bound characterises
+    randomized communication complexity.  What *is* known: for **product**
+    distributions the partition bound is quadratically tight,
+    $\mathrm{D}^{\mu}_{0.49}(f) = O\big((\mathrm{prt}_{1/8}(f)\log \mathrm{prt}_{1/8}(f))^{2}\big)$
+    [HarshaJainRadhakrishnan16], and for total $f$ the deterministic complexity
+    is polynomially bounded, $\mathrm{D}(f) = O(\mathrm{prt}_{1/3}(f)^3)$
+    [JainKlauck10].  So any counterexample must be a partial function, or must
+    separate $\mathrm{R}$ from $\mathrm{D}$ at the same time.
+  see_also: [prt, R, RS, D_prod, SP]
+
+- from: RC
+  to: prt
+  setting: partial
+  status: settled
+  headline: 'The partition bound subsumes randomized certificate complexity.'
+  upper:
+    - stmt: '\mathrm{RC}_{2\varepsilon/(1-2\varepsilon)}(f) \le \mathrm{prt}_{\varepsilon}(f) + \log(1/\varepsilon)'
+      form: {exp: 1, kind: const}
+      refs: [JainKlauck10]
+      note: '[JainKlauck10, Thm 3.4]: an optimal LP solution *is* a randomized verifier. To verify $x$, sample a subcube $A \ni x$ with probability proportional to $w_{A,f(x)}$ (restricted to the cheap subcubes, $2^{|A|} \le \mathrm{prt}^{\mathrm{LP}}/\varepsilon$) and check the input against it; a $y$ with $f(y) \ne f(x)$ is accepted only through subcubes that are wrong at $y$, whose total weight is $\le 2\varepsilon$. Since $\mathrm{fbs} = \Theta(\mathrm{RC})$, this also gives $\mathrm{fbs} = O(\mathrm{prt})$ and hence $\mathrm{bs} = O(\mathrm{prt})$.'
+      conf: high
+  see_also: [prt, RC, fbs, bs, CA]
+
+- from: CA
+  to: prt
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '(1-4\varepsilon)\,\mathrm{CA}(f) \le \mathrm{prt}_{\varepsilon}(f) + \log(1/\varepsilon)'
+      form: {exp: 1, kind: const}
+      refs: [JainKlauck10, CGLMSG23]
+      note: '[JainKlauck10, Thm 3.5]. The classical adversary bound -- equivalently $\mathrm{CG}^{\mathrm{pub}}$ -- is one of the weight schemes the LP optimises over: the distributions $p_x$ are read off the LP solution by sampling a cheap subcube at $x$ and then a fixed variable of it uniformly. If two inputs $x,y$ with $f(x)\ne f(y)$ overlapped too little, the hybrid input $r$ that follows whichever of $x,y$ is heavier coordinatewise would be covered with total weight $>1$, contradicting completeness.'
+      conf: high
+  see_also: [prt, CA, CGpub]
+
+- from: C
+  to: prt
+  setting: partial
+  status: settled
+  headline: 'At zero error the partition bound is at least certificate complexity, because zero error forces every subcube in the LP to be a genuine certificate.'
+  upper:
+    - stmt: '\mathrm{C}(f) \le \mathrm{prt}_{0}(f)'
+      refs: [JainKlauck10]
+      note: '[JainKlauck10, Thm 3.2]. At $\varepsilon = 0$ a subcube $A$ carrying weight under label $z$ must be a $z$-certificate: if some $x \in A$ had $f(x) \ne z$ then the correct weight at $x$ already sums to $1$, and adding $w_{A,z}>0$ would break completeness. So every subcube used at $x$ has $|A| \ge \mathrm{C}_x(f)$, and $\mathrm{prt}^{\mathrm{LP}}_0(f) \ge 2^{\mathrm{C}_x(f)}\sum_{A \ni x} w_{A,f(x)} = 2^{\mathrm{C}_x(f)}$. Note this is $\mathrm{C}$, not $\mathrm{D}$ -- the LP does not have to be consistent across inputs.'
+      conf: high
+  notes: |
+    **Deliberately kept out of the transitive closure.**  This bullet carries no
+    `form:`, because the zoo indexes $\mathrm{prt}$ at its default error
+    $\varepsilon = 1/3$ and the statement above holds only at $\varepsilon = 0$.
+    Chaining the two would give $\mathrm{C}(f) \le \mathrm{prt}(f) \le
+    2\mathrm{R}(f)$, i.e. $\mathrm{C} = O(\mathrm{R})$, which is false -- $\mathrm{C}$
+    and $\mathrm{R}$ are quadratically separated.  The honest bounded-error
+    statement is the $\mathrm{RC} \to \mathrm{prt}$ record, and $\mathrm{C}$ is
+    *not* below $\mathrm{prt}_{1/3}$.
+  see_also: [prt, C, RC, SP]
+
+- from: adeg
+  to: prt
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\widetilde{\deg}_{2\varepsilon}(f) \le \mathrm{prt}_{\varepsilon}(f) + \log(1/\varepsilon)'
+      form: {exp: 1, kind: const}
+      refs: [JainKlauck10]
+      conf: high
+      note: 'Stated natively for query complexity in [JainKlauck10, Thm 3.6], and the proof is a one-liner worth knowing: throw away every subcube with $2^{|A|} > \mathrm{prt}^{\mathrm{LP}}/\varepsilon$ (they carry total weight $\le \varepsilon$), and let $p(x) = \sum_{A \ni x} w_{A,1}$ be the sum of the surviving $1$-labelled monomials. The completeness constraint gives $p \le 1$ everywhere, correctness gives $p \ge 1-2\varepsilon$ on $f^{-1}(1)$ and $p \le 2\varepsilon$ on $f^{-1}(0)$, and $\deg p \le \log(\mathrm{prt}^{\mathrm{LP}}/\varepsilon)$.'
+  see_also: [prt, adeg]
+
+- from: rprt
+  to: prt
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{prt}_{\varepsilon}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [JainKlauck10]
+      note: 'Relaxing the completeness constraint from $\sum_{A \ni x,z} w_{A,z} = 1$ to $\le 1$ enlarges the feasible region, so the minimum can only drop. In the zero-communication reading: the prover is allowed to abort with probability up to $\varepsilon$, and may abort more often on some inputs than on others.'
+      conf: high
+  notes: |
+    The relaxation is not cosmetic in the setting it was invented for:
+    $\overline{\mathrm{prt}}$ lower-bounds *information* complexity and
+    $\mathrm{prt}$ is not known to [KLLRX15].  The compression lemma turns a
+    protocol leaking $I$ bits into a zero-communication protocol with non-abort
+    probability $\ge 2^{-O(I)}$, and there is no way to make that probability
+    come out exactly equal on every input.  In the *query* setting, though,
+    nothing seems to be lost -- see the $\mathrm{RC} \to \overline{\mathrm{prt}}$
+    record.
+  see_also: [rprt, prt]
+
+- from: RC
+  to: rprt
+  setting: partial
+  status: settled
+  headline: 'Every lower bound the partition bound subsumes survives the relaxation: the proofs of [JainKlauck10] never use completeness in the direction that is given up.'
+  upper:
+    - stmt: '\mathrm{RC}_{2\varepsilon/(1-2\varepsilon)}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) + \log(1/\varepsilon)'
+      form: {exp: 1, kind: const}
+      refs: [JainKlauck10, KLLRX15]
+      conf: medium
+      note: 'The five containments of [JainKlauck10, Thm 3] -- $\mathrm{C}$ at zero error, $\mathrm{bs}$, $\mathrm{RC}$, $\mathrm{CA}$, $\widetilde{\deg}$ -- all go through verbatim for $\overline{\mathrm{prt}}$. Four of them are primal arguments that use completeness only as $\sum_{A \ni x,z} w_{A,z} \le 1$: to say that the wrong-label weight at $x$ is at most $\varepsilon$ (Thms 3.2, 3.4), to bound the polynomial $p = \sum_A w_{A,1} m_A$ by $1$ from above (Thm 3.6), or to derive a contradiction from a hybrid input covered with weight $>1$ (Thm 3.5). The fifth, block sensitivity (Thm 3.3), is a *dual* argument, and relaxing an equality constraint to $\le$ sign-constrains its dual variable to $\varphi_x \le 0$ -- but the certificate exhibited there already has $\varphi_x = -(1-\varepsilon)\mu_x \le 0$ and $\varphi_{x^{B_i}} = -\mu_{x^{B_i}} \le 0$, with all other $\varphi$ zero, so it stays feasible. Flagged medium and stated as $\mathrm{RC}$ because this is the zoo reading the proofs of [JainKlauck10] against the LP of [KLLRX15, Def. 3.2]; no query-native write-up of $\overline{\mathrm{prt}}$ is known to us.'
+  notes: |
+    Consequence: on every function in this zoo where $\mathrm{prt}$ is pinned by
+    the sandwich $\mathrm{RC} \le \mathrm{prt} \le 2\mathrm{R}$, the same sandwich
+    pins $\overline{\mathrm{prt}}$, and the two agree up to constants.  A function
+    separating $\overline{\mathrm{prt}}$ from $\mathrm{prt}$ in the query setting
+    would be interesting and is not known to us.
+  see_also: [rprt, prt, RC, fbs, bs, CA, adeg, C]
+
+- from: adeg
+  to: rprt
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\widetilde{\deg}_{2\varepsilon}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) + \log(1/\varepsilon)'
+      form: {exp: 1, kind: const}
+      refs: [JainKlauck10, KLLRX15]
+      conf: medium
+      note: 'Same transfer as the $\mathrm{RC} \to \overline{\mathrm{prt}}$ record. The degree proof reads the approximating polynomial straight off the cheap subcubes and needs completeness only as an upper bound of $1$, which the relaxed LP still supplies.'
+  see_also: [rprt, adeg, prt]
+
+- from: C
+  to: rprt
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{C}(f) \le \overline{\mathrm{prt}}_{0}(f)'
+      refs: [JainKlauck10, KLLRX15]
+      conf: medium
+      note: 'At $\varepsilon = 0$ the argument that every weighted subcube is a genuine certificate only needs $\sum_{A \ni x,z} w_{A,z} \le 1$ against $\sum_{A \ni x} w_{A,f(x)} \ge 1$, so it survives the relaxation. See the $\mathrm{RC} \to \overline{\mathrm{prt}}$ record.'
+  notes: |
+    As with $\mathrm{C} \to \mathrm{prt}$, this bullet carries no `form:` and is
+    kept out of the closure: it is a zero-error statement, and the zoo indexes
+    $\overline{\mathrm{prt}}$ at $\varepsilon = 1/3$.
+  see_also: [rprt, C, prt]
+
+# ---------------------------------------------------------------------
+# Conical junta degree
+# ---------------------------------------------------------------------
+
+- from: cjdeg
+  to: R
+  setting: relation
+  status: gap
+  headline: 'Conical junta degree is the "nonnegative degree" shadow of a randomized decision tree; it is at most $\mathrm{R}$, and tight up to logs on AND-OR trees.'
+  upper:
+    - stmt: '\mathrm{cjdeg}_{\varepsilon}(f) \le \mathrm{R}_{\varepsilon}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [GLMWZ16, GoosJayram16]
+      note: 'Expand a depth-$d$ randomized tree over its leaves: $\sum_{\ell \text{ labelled } 1} \Pr[\ell]\cdot C_\ell$ is a nonnegative combination of conjunctions of width $\le d$ that $\varepsilon$-approximates $f$. The content of the measure is entirely in the *lower* bounds.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{cjdeg}(\mathrm{NANDtree}_d) = \tilde\Omega\big(N^{0.753\ldots}\big) = \tilde\Omega(\mathrm{R})'
+      form: {exp: 1, log: 1, kind: tilde}
+      refs: [GoosJayram16]
+      witness: NANDtree
+      note: 'The conical junta composition theorem, answering a question of Beame and Lawry. So on the binary AND-OR tree the nonnegative LP already knows the true randomized complexity, up to logarithmic factors.'
+      conf: high
+  see_also: [cjdeg, R, prt, NANDtree]
+
+- from: adeg
+  to: cjdeg
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{cjdeg}_{\varepsilon}(f)'
+      form: {exp: 1, kind: exact}
+      note: 'Drop the nonnegativity requirement: a conical junta of width $d$ *is* a real polynomial of degree $d$ that $\varepsilon$-approximates $f$.'
+      conf: high
+  see_also: [cjdeg, adeg, Q]
+
+# ---------------------------------------------------------------------
+# The conflict measures: RS <= chi <= chibar <= LR <= R
+# ---------------------------------------------------------------------
+
+- from: chi
+  to: chibar
+  setting: partial
+  status: settled
+  headline: 'Max-conflict complexity is the "adversary chooses last" version of conflict complexity, hence never smaller.'
+  upper:
+    - stmt: '\chi(g) \le \bar\chi(g)'
+      form: {exp: 1, kind: exact}
+      refs: [GLSS19]
+      note: 'In $\chi$ the hard distribution pair is fixed before the algorithm; in $\bar\chi$ it may be chosen after seeing the algorithm''s behaviour. Swapping the quantifiers can only help the adversary.'
+      conf: high
+  see_also: [chi, chibar, LR, RS]
+
+- from: chibar
+  to: LR
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\bar\chi(g) = O\big(\mathrm{LR}(g)\big)'
+      form: {exp: 1, kind: const}
+      refs: [BBGM22]
+      note: 'Both are "inner measures" for randomized composition, and linearised randomized complexity is the larger -- indeed the largest one for which $\mathrm{R}(f \circ g^n) = \Omega(\mathrm{R}(f)\cdot\,\cdot\,)$ is known.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{LR}(g) \text{ can be polynomially larger than } \bar\chi(g)'
+      refs: [BBGM22]
+      note: 'No `form:` is recorded because the exponent of the separation is not stated in a closed form. The closure already caps it: $\mathrm{LR} \le \mathrm{R} = O(\bar\chi^2)$, so the gap is at most quadratic.'
+      conf: high
+  see_also: [chibar, LR, chi, Rstar]
+
+- from: R
+  to: LR
+  setting: partial
+  status: settled
+  headline: 'Linearising the cost in the bias costs at most a square: $\mathrm{R} = O(\mathrm{LR}^2)$.'
+  upper:
+    - stmt: '\mathrm{R}(f) = O\big(\mathrm{LR}(f)^2\big)'
+      form: {exp: 2, kind: const}
+      refs: [BBGM22]
+      note: 'Equivalently $\mathrm{LR}(f) = \Omega(\sqrt{\mathrm{R}(f)})$: charging $1/\gamma$ instead of $1/\gamma^2$ for bias $\gamma$ can shrink the measure by at most a square root. Both ends are attained -- $\mathrm{LR} = \Theta(\mathrm{R})$ whenever $\mathrm{RS} = \Theta(\mathrm{R})$, and $\mathrm{LR} = \Theta(\sqrt{\mathrm{R}})$ for the gapped-majority-style partial functions.'
+      conf: high
+  see_also: [LR, R, chibar]
+
+- from: R
+  to: chibar
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{R}(g) = O\big(\bar\chi(g)^2\big)'
+      form: {exp: 2, kind: const}
+      refs: [GLSS19]
+      note: 'The $\bar\chi = \Omega(\sqrt{\mathrm{R}})$ bound, and it holds even for partial $g$ -- which is what makes $\bar\chi$ usable in composition theorems where $\mathrm{RS}$ is not.'
+      conf: high
+  see_also: [chibar, R, chi]
+
+- from: R
+  to: chi
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{R}(g) = O\big(\chi(g)^2\big)'
+      form: {exp: 2, kind: const}
+      refs: [Sanyal18]
+      conf: high
+  see_also: [chi, R]
+
+- from: RS
+  to: chibar
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{RS}(g) = O\big(\bar\chi(g)\big)'
+      form: {exp: 1, kind: const}
+      refs: [GLSS19]
+      note: 'Sabotage complexity is the weakest of the four inner measures. Together with $\bar\chi \le \mathrm{LR} \le \mathrm{R}$ this pins all three whenever $\mathrm{RS} = \Theta(\mathrm{R})$, which is the case for every symmetric function.'
+      conf: high
+  see_also: [RS, chibar, LR, chi]
+
+- from: LR
+  to: Rstar
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{LR}(f) = O\big(\mathrm{R}^{*}(f)\big)'
+      form: {exp: 1, kind: const}
+      refs: [BBGM22]
+      note: 'Linearised randomized complexity lower-bounds the asymptotic composition rate. Whether it *equals* it is the open problem posed in that paper.'
+      conf: high
+  see_also: [LR, Rstar, R]
+
+- from: Rstar
+  to: R
+  setting: total
+  status: settled
+  headline: 'The composition rate never exceeds $\mathrm{R}$, and equals it whenever $\mathrm{R}$ composes.'
+  upper:
+    - stmt: '\mathrm{R}^{*}(f) \le \mathrm{R}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BBGM22]
+      note: 'Immediate from $\mathrm{R}(f^{\circ k}) \le \mathrm{R}(f)^k$ (compose the algorithms and pay for error reduction only inside the constant). Strictness is exactly the failure of perfect composition.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}^{*}(f) = \mathrm{R}(f)^{1-o(1)} \text{ for read-once formulas}'
+      form: {exp: 1, kind: theta}
+      witness: NANDtree
+      refs: [SaksWigderson86]
+      note: 'For a function whose own powers have $\mathrm{R}(f^{\circ k}) = \Theta(c^k)$ the $k$-th root kills the constant and $\mathrm{R}^{*}(f) = c$ exactly. So the composition rate is one of the very few measures in the zoo whose value is a *number*, not a $\Theta$-class.'
+      conf: high
+  see_also: [Rstar, R, LR, NANDtree]
+
+# ---------------------------------------------------------------------
+# One-sided error and distributional variants
+# ---------------------------------------------------------------------
+
+- from: R
+  to: R1
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{R}(f) \le \mathrm{R}^{1}(f)'
+      form: {exp: 1, kind: exact}
+      note: 'One-sided error is a special case of two-sided error.'
+      conf: high
+  see_also: [R, R1, R0]
+
+- from: R1
+  to: R0
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{R}^{1}(f) \le \mathrm{R}_{0}(f)'
+      form: {exp: 1, kind: exact}
+      note: 'A zero-error algorithm is in particular one-sided. In the other direction $\mathrm{R}_0(f) = O\big(\mathrm{R}^{0}(f) + \mathrm{R}^{1}(f)\big)$: run both and stop at whichever becomes certain.'
+      conf: high
+  see_also: [R1, R0, R]
+
+- from: C1
+  to: R1
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{C}^{1}(f) \le \mathrm{R}^{1}(f)'
+      form: {exp: 1, kind: exact}
+      note: 'An output of $1$ that is never wrong must be justified by a $1$-certificate that the algorithm has actually queried. So the $1$-certificate complexity is a hard floor -- unlike for two-sided error, where $\mathrm{R}$ can be far below $\mathrm{C}$.'
+      conf: high
+  see_also: [C1, R1, C]
+
+- from: Dmu
+  to: R
+  setting: relation
+  status: settled
+  headline: 'Yao: every fixed distribution is at most as hard as the worst case, and the maximum over distributions is exactly $\mathrm{R}$.'
+  upper:
+    - stmt: '\mathrm{D}^{\mu}_{\varepsilon}(f) \le \mathrm{R}_{\varepsilon}(f) \quad\text{for every } \mu'
+      form: {exp: 1, kind: exact}
+      refs: [Yao77]
+      note: 'Fix the random string of the best randomized algorithm to one that does well under $\mu$; averaging says such a string exists. Yao''s minimax principle is the converse: $\max_\mu \mathrm{D}^{\mu}_{\varepsilon} = \mathrm{R}_{\varepsilon}$, so the family of $\mathrm{D}^\mu$ has $\mathrm{R}$ as its upper envelope and its individual members can be anywhere below.'
+      conf: high
+  see_also: [Dmu, R, D_prod, minimax]
+
+- from: D_prod
+  to: R
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{D}^{\mathrm{prod}}_{\varepsilon}(f) \le \mathrm{R}_{\varepsilon}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [Yao77]
+      note: 'A restriction of the maximum in Yao''s principle to product distributions.'
+      conf: high
+  see_also: [D_prod, Dmu, R, RS]
+
+- from: D_prod
+  to: RS
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{D}^{\mathrm{prod}}(g) = \tilde O\big(\mathrm{RS}(g)\big)'
+      form: {exp: 1, log: 1, kind: tilde}
+      refs: [Sanyal24]
+      note: 'Product distributions cannot certify more hardness than sabotage complexity, up to logs; this is what upgrades the Ben-David-Kothari composition theorem to $\mathrm{R}(f \circ g^n) = \tilde\Omega(\mathrm{R}(f)\,\mathrm{D}^{\mathrm{prod}}(g))$.'
+      conf: high
+  see_also: [D_prod, RS, R]
+
+# ---------------------------------------------------------------------
+# Mod-p degree
+# ---------------------------------------------------------------------
+
+- from: degp
+  to: deg
+  setting: partial
+  status: gap
+  headline: 'Reducing the integer multilinear expansion mod $p$ shows $\deg_p \le \deg$ -- and the gap can be as large as $n$ versus $1$.'
+  upper:
+    - stmt: '\deg_p(f) \le \deg(f)'
+      form: {exp: 1, kind: exact}
+      note: 'For Boolean $f$ the unique real multilinear representation has *integer* coefficients (they are the Mobius / inclusion-exclusion coefficients $\sum_{S\subseteq T}(-1)^{|T|-|S|}f(S)$). Reducing them mod $p$ gives a multilinear polynomial over $\mathbb{F}_p$ that still agrees with $f$ on $\{0,1\}^n$, of no larger degree.'
+      conf: high
+  lower:
+    - stmt: '\deg(\mathrm{PARITY}_n) = n \text{ while } \deg_2(\mathrm{PARITY}_n) = 1'
+      form: {kind: unbounded, dir: reverse}
+      witness: PARITY
+      note: 'The extreme case: mod $2$, parity is the linear form $\sum_i x_i$. Read the other way, no bound on $\deg$ in terms of $\deg_2$ exists.'
+      conf: high
+  see_also: [degp, deg2, deg, PARITY]
+
+# ---------------------------------------------------------------------
+# Certificate games, private coin
+# ---------------------------------------------------------------------
+
+- from: CGpub
+  to: CG
+  setting: partial
+  status: gap
+  upper:
+    - stmt: '\mathrm{CG}^{\mathrm{pub}}(f) \le \mathrm{CG}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [CGLMSG23]
+      note: 'Public randomness is at least as useful as private randomness.'
+      conf: high
+  see_also: [CG, CGpub, CA]
+
+- from: CG
+  to: R0
+  setting: partial
+  status: gap
+  headline: 'The private-coin certificate game is below zero-error randomized complexity, and above $\mathrm{CG}^{\mathrm{pub}} = \Theta(\mathrm{CA})$.'
+  upper:
+    - stmt: '\mathrm{CG}(f) = O\big(\mathrm{R}_0(f)\big)'
+      form: {exp: 1, kind: const}
+      refs: [CGLMSG23]
+      note: 'Both players privately run the same zero-error algorithm on their own input and output the first index at which their transcripts could differ. Together with $\mathrm{CG} \ge \mathrm{CG}^{\mathrm{pub}} = \Theta(\mathrm{CA})$ this pins $\mathrm{CG}$ for every function whose classical adversary bound already matches $\mathrm{R}_0$.'
+      conf: high
+  see_also: [CG, R0, CGpub, EC]

@@ -545,3 +545,67 @@ relations:
       note: '$\sum_i x_i - (n - \tfrac12)$ sign-represents $\mathrm{AND}_n$ with degree $1$.'
       conf: high
   see_also: [odeg, sdeg, AND]
+
+# ---------------------------------------------------------------------------
+# Certificate games: everything except the private-coin model collapses.
+# ---------------------------------------------------------------------------
+
+- from: CGpub
+  to: CGns
+  setting: partial
+  status: settled
+  headline: 'Public-coin, entangled and non-signaling certificate games all collapse to the classical adversary bound.'
+  upper:
+    - stmt: '\mathrm{CG}^{\mathrm{ns}}(f) \le \mathrm{CG}^{*}(f) \le \mathrm{CG}^{\mathrm{pub}}(f)'
+      form: {exp: 1, kind: exact, dir: reverse}
+      refs: [CGLMSG23]
+      note: 'A shared entangled state simulates shared randomness, and every entangled strategy is non-signaling, so the three models are nested by fiat.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{CG}^{\mathrm{pub}}(f) = O\big(\mathrm{CG}^{\mathrm{ns}}(f)\big)'
+      form: {exp: 1, kind: const}
+      refs: [CGLMSG23]
+      note: 'The **non-signaling bottleneck**. Any non-signaling strategy for the certificate game already yields a classical adversary weight scheme, so $\mathrm{CG}^{\mathrm{ns}} = \Omega(\mathrm{CA}) = \Omega(\mathrm{CG}^{\mathrm{pub}})$. Combined with the trivial nesting, $\mathrm{CG}^{\mathrm{ns}} = \Theta(\mathrm{CG}^{*}) = \Theta(\mathrm{CG}^{\mathrm{pub}}) = \Theta(\mathrm{CA})$ for every $f$. Only the private-coin model [[CG]] stays outside the collapse.'
+      conf: high
+  notes: |
+    This is the reason the zoo records the same number in the
+    $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$
+    columns of every function page: the three are the same measure up to
+    constants.  They are kept as separate columns only because the *definitions*
+    differ and a reader may arrive looking for one of them.
+  see_also: [CGpub, CGstar, CGns, CG, CA]
+
+- from: CGpub
+  to: CGstar
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{CG}^{*}(f) \le \mathrm{CG}^{\mathrm{pub}}(f)'
+      form: {exp: 1, kind: exact, dir: reverse}
+      refs: [CGLMSG23]
+      conf: high
+  lower:
+    - stmt: '\mathrm{CG}^{\mathrm{pub}}(f) = O\big(\mathrm{CG}^{*}(f)\big)'
+      form: {exp: 1, kind: const}
+      refs: [CGLMSG23]
+      note: 'Via the non-signaling bottleneck: $\mathrm{CG}^{*} \ge \mathrm{CG}^{\mathrm{ns}} = \Omega(\mathrm{CA}) = \Omega(\mathrm{CG}^{\mathrm{pub}})$.'
+      conf: high
+  see_also: [CGpub, CGstar, CGns]
+
+- from: CGstar
+  to: Q
+  setting: total
+  status: fails
+  headline: 'The entangled certificate game is *not* a quantum query lower bound — it can be quadratically larger than $\mathrm{Q}$.'
+  upper:
+    - stmt: '\mathrm{Q}(f) \text{ is known to be unbounded in terms of } \mathrm{CG}^{*}(f).'
+      form: {kind: none, dir: reverse}
+      conf: high
+  lower:
+    - stmt: '\mathrm{CG}^{*}(\mathrm{OR}_n) = \Theta(n) \text{ while } \mathrm{Q}(\mathrm{OR}_n) = \Theta(\sqrt n)'
+      form: {exp: 2, kind: theta, dir: reverse}
+      refs: [CGLMSG23]
+      witness: OR
+      note: 'Read the other way: $\mathrm{CG}^{*}$ can be quadratically *larger* than $\mathrm{Q}$, so despite the shared entanglement it is a lower bound on randomized, not quantum, query complexity. This is the sharpest way to see that the certificate-game hierarchy is a classical object.'
+      conf: high
+  see_also: [CGstar, Q, OR, CGpub]

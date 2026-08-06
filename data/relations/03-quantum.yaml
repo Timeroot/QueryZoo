@@ -165,10 +165,48 @@ relations:
   lower:
     - stmt: '\mathrm{Adv}(f) \le \sqrt{\mathrm{C}^{0}(f)\,\mathrm{C}^{1}(f)}\ \text{ while } \mathrm{Q}(f) \text{ can be much larger}'
       refs: [SpalekSzegedy06, Zhang05]
-      note: 'The **certificate complexity barrier**: for e.g. element distinctness ($\mathrm{C}=2$), $\mathrm{Adv}=O(1)$ but $\mathrm{Q}=\Theta(n^{2/3})$. This is exactly why the negative-weights version was invented.'
-      witness: ElementDistinctness
+      note: 'The **certificate complexity barrier**. Element distinctness has a $2$-element $1$-certificate but $\mathrm{C}^{0} = n$, so the barrier gives $\mathrm{Adv}(\mathrm{ED}) = O(\sqrt n)$ — still short of $\mathrm{Q} = \Theta(n^{2/3})$, but not $O(1)$. The barrier bites hardest on *property-testing* promise problems, where **both** certificate complexities are $O(1)$: for [[Collision]] and [[Simon]] it gives $\mathrm{Adv} = O(1)$ against $\mathrm{Q} = \Theta(n^{1/3})$ and $\Theta(n)$ respectively. This is exactly why the negative-weights version was invented.'
+      witness: Collision
       conf: high
   see_also: [Adv, Advpm, MAdv, ElementDistinctness]
+
+- from: MAdv
+  to: Q
+  setting: partial
+  status: settled
+  headline: 'The multiplicative adversary is sandwiched between $\mathrm{Adv}^{\pm}$ and $\mathrm{Q}$, so it is $\Theta(\mathrm{Q})$ -- its value is in the *strength* of the statements it proves, not in the quantity it computes.'
+  upper:
+    - stmt: '\mathrm{MAdv}(f) = O\big(\mathrm{Q}_{\varepsilon}(f)\big)'
+      form: {exp: 1, kind: const}
+      refs: [Spalek08]
+      note: 'It is a lower-bound method for $\mathrm{Q}$, so it cannot exceed it.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{MAdv}(f) = \Omega\big(\mathrm{Q}_{\varepsilon}(f)\big)'
+      form: {exp: 1, kind: const, dir: reverse}
+      refs: [Spalek08, Reichardt11]
+      note: 'Via $\mathrm{Adv}^{\pm} \le \mathrm{MAdv}$ below and $\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q}_\varepsilon)$.'
+      conf: high
+  notes: |
+    So as a *number* the multiplicative adversary tells you nothing that
+    [[Advpm]] does not. What it buys is the regime: the multiplicative progress
+    measure survives success probability $2^{-\Omega(T)}$, which is what strong
+    direct product theorems need, whereas the additive bound degrades to nothing
+    once the success probability drops below a constant. Every value on a function
+    page is therefore recorded as $\Theta(\mathrm{Q})$ and derived.
+  see_also: [Advpm, Q, Adv]
+
+- from: MAdv
+  to: Advpm
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{Adv}^{\pm}(f) = O\big(\mathrm{MAdv}(f)\big)'
+      form: {exp: 1, kind: const, dir: reverse}
+      refs: [Spalek08]
+      note: 'Spalek shows the multiplicative adversary is at least as strong as the additive one, up to a constant.'
+      conf: medium
+  see_also: [Advpm, MAdv]
 
 - from: Adv
   to: lambda

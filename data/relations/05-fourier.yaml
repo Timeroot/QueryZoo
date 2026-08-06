@@ -189,7 +189,7 @@ relations:
   notes: |
     Known unconditionally for special classes: $\mathrm{D}^{\oplus}(f) =
     \mathrm{polylog}(\mathrm{spar}(f))$ when $f$ has small $\mathbb{F}_2$-degree,
-    or when $f$ is a "sparse" symmetric function [STV17].
+    or when $f$ is a "sparse" symmetric function [Sanyal19].
   see_also: [PDT, spar, L1, Fdim, open-log-rank]
 
 - from: deg

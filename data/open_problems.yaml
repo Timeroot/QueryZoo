@@ -234,11 +234,11 @@ open_problems:
     - stmt: '\mathrm{D}^{\oplus}(f)\ge \tfrac12\log_2 \mathrm{spar}(f)'
       refs: [TsangWongXieZhang13]
     - stmt: '\text{Known for small } \mathbb{F}_2\text{-degree and for sparse symmetric } f'
-      refs: [STV17]
+      refs: [Sanyal19]
   why: |
     A positive answer implies the **log-rank conjecture for XOR functions**
     in communication complexity, via lifting.
-  refs: [TsangWongXieZhang13, STV17, GopalanEtAl16]
+  refs: [TsangWongXieZhang13, Sanyal19, GopalanEtAl16]
   see_also: [PDT, spar, L1, Fdim, lifting]
 
 - id: open-R-composition

@@ -97,7 +97,7 @@ measures:
   facts:
     - '$\mathrm{D}^{\oplus}(f) \ge \log_2 \mathrm{spar}(f) / \text{(something)}$; the exact relation to Fourier sparsity is a major open problem.'
     - '$\mathrm{D}^{\oplus}(f) = O(\sqrt{\mathrm{spar}(f)}\,\log \mathrm{spar}(f))$ is known for total $f$.'
-  refs: [TsangWongXieZhang13, STV17]
+  refs: [TsangWongXieZhang13, Sanyal19]
   see_also: [D, spar, L1, deg2]
   confidence: medium
 

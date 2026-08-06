@@ -1,0 +1,276 @@
+# =====================================================================
+# FUNCTIONS: classical total functions that a textbook or a homework
+# sheet would reach for. The bent function, the one-in-a-box function,
+# SINK, and two graph properties from the evasiveness story.
+# =====================================================================
+functions:
+
+- id: IP
+  name: Inner product mod 2
+  symbol: '\mathrm{IP}_n'
+  aliases: ['IP2', 'the bent function', 'x \cdot y \bmod 2']
+  group: basic
+  order: 19.1
+  kind: total
+  arity: '$n = 2m$ bits, read as a pair $(x,y)\in\{0,1\}^m\times\{0,1\}^m$'
+  short: 'Everything combinatorial is $n$ and everything Fourier is as spread out as it can be: the flat spectrum makes $\mathrm{L}_1 = 2^{n/2}$ with $\mathrm{spar} = 2^n$.'
+  definition: |
+    $\mathrm{IP}_n(x,y) = \bigoplus_{i=1}^{m} x_i \wedge y_i$. As a $\pm1$-valued
+    function $F(x,y) = (-1)^{x\cdot y}$ it is *bent*: every one of its $2^n$ Fourier
+    coefficients has the same magnitude $2^{-n/2}$, the flattest a Boolean spectrum
+    can be. That single fact fixes every Fourier quantity below.
+
+    IP is the standard gadget in lifting theorems, and the standard example of a
+    function that is trivial over $\mathbb{F}_2$ ($\deg_2 = 2$) and maximally hard
+    over $\mathbb{R}$ ($\deg = n$).
+  formal: '$$\mathrm{IP}_n(x,y) = \sum_{i=1}^{m} x_i y_i \bmod 2, \qquad n = 2m.$$'
+  values:
+    - {measure: D,     value: 'n', note: 'From $\deg = n$ below, and $\deg \le \mathrm{D}$.'}
+    - {measure: deg,   value: 'n', note: 'The multilinear extension is $\tfrac12\big(1 - \prod_{i=1}^{m}(1-2x_iy_i)\big)$, whose leading term $-\tfrac12(-2)^{m}\prod_i x_iy_i$ has degree $2m = n$ and does not cancel.'}
+    - {measure: deg2,  value: '2', note: 'Over $\mathbb{F}_2$ it is literally $\sum_i x_iy_i$. The gap between this and $\deg = n$ is the whole reason IP is used as a lifting gadget.'}
+    - {measure: s,     value: 'n', note: 'Flipping $x_i$ changes the value iff $y_i = 1$, and symmetrically, so $\mathrm{s}(x,y) = |x| + |y|$; at $x = y = 1^m$ that is $n$.'}
+    - {measure: bs,    value: 'n', note: 'Pinned: $\mathrm{s} \le \mathrm{bs} \le \mathrm{D}$ and both ends are $n$. The same sandwich fixes $\mathrm{fbs}$, $\mathrm{C}$, $\mathrm{RC}$, $\mathrm{UC}$ and $\mathrm{Dna}$ at $n$.'}
+    - {measure: C,     value: 'n', note: 'As above.'}
+    - {measure: fbs,   value: 'n', note: 'As above.'}
+    - {measure: R,     value: '\Theta(n)', note: 'Sandwiched: $\mathrm{bs} \le 3\mathrm{R}$ (indeed $\mathrm{R} = \Omega(\mathrm{s})$) and $\mathrm{R} \le \mathrm{D} = n$.'}
+    - {measure: Q,     value: '\Theta(n)', note: 'Sandwiched: $\mathrm{Q} \ge \widetilde{\deg}/2 \ge \mathrm{sdeg}/2 \ge n/4$ and $\mathrm{Q} \le \mathrm{D} = n$.'}
+    - {measure: QE,    value: '\Theta(n)', note: 'Sandwiched: $\mathrm{Q}_E \ge \deg/2 = n/2$ and $\mathrm{Q}_E \le \mathrm{D} = n$. (With a *parity* oracle the answer would be $m+1$ or so; see $\mathrm{D}^{\oplus}$ below.)'}
+    - {measure: sdeg,  value: '\Theta(n)', note: 'Restricting $y = 1^m$ leaves $\mathrm{PARITY}_m$, so $\mathrm{sdeg} \ge \mathrm{sdeg}(\mathrm{PARITY}_{n/2}) = n/2$; and $\mathrm{sdeg} \le \deg = n$.'}
+    - {measure: adeg,  value: '\Theta(n)', note: 'Between $\mathrm{sdeg} = \Omega(n)$ and $\deg = n$.'}
+    - {measure: spar,  value: '2^n', note: 'Bent: no Fourier coefficient vanishes. This is the maximum possible, and with [[PARITY]] (where $\mathrm{spar} = 1$) it brackets the range.'}
+    - {measure: L1,    value: '2^{n/2}', note: '$2^n$ coefficients of magnitude $2^{-n/2}$ each. Bent functions maximise $\mathrm{L}_1$ among all Boolean functions, so this is the extreme point of $\mathrm{L}_1 \le 2^{n/2}$.'}
+    - {measure: Fdim,  value: 'n', note: 'The support is all of $\mathbb{F}_2^n$, so its span is everything.'}
+    - {measure: Inf,   value: 'n/2', note: '$\mathrm{I}(f) = \sum_S |S|\hat f(S)^2 = 2^{-n}\sum_{S}|S| = 2^{-n}\cdot n2^{n-1}$.'}
+    - {measure: MaxInf, value: '1/2', note: 'Every coordinate has $\mathrm{Inf}_i = \sum_{S \ni i}\hat f(S)^2 = 2^{-n}2^{n-1} = 1/2$; the spectrum is flat, so no coordinate is special.'}
+    - {measure: Stab,  value: '\big(\tfrac{1+\rho}{2}\big)^{n}', note: '$\mathrm{Stab}_\rho = \sum_S \rho^{|S|}\hat f(S)^2 = 2^{-n}\sum_S \rho^{|S|} = 2^{-n}(1+\rho)^n$. Exponentially unstable: at any fixed $\rho < 1$ the correlation dies at a constant rate per bit.'}
+    - {measure: NS,    value: '\tfrac12\big(1 - (1-\delta)^{n}\big)', note: 'Substituting $\rho = 1-2\delta$ into $\mathrm{Stab}$ above. So $\mathrm{NS}_\delta \to 1/2$ once $\delta \gg 1/n$ -- IP is as noise-sensitive as a random function.'}
+    - {measure: PDT,   value: '\ge n/2 + 1', refs: [ChistopolskayaPodolskii18], note: 'The granularity of IP is exactly $2^{-n/2}$, so [ChistopolskayaPodolskii18] gives $\mathrm{D}^{\oplus} \ge n/2 + 1$. Upper bound: the trivial $n$. The factor $2$ is open as far as I know -- note $\mathrm{D}^{\oplus} \ge n/2$ also follows from bentness, since an affine subspace on which a bent function is constant has dimension at most $n/2$.'}
+    - {measure: RC, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{fbs}(f) \le \mathrm{RC}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: FC, value: 'n', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{FC}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: R0, value: 'n', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: CA, value: '\Theta(n)', note: '$\mathrm{CA}(f) = \Theta(\mathrm{fbs}(f))$ for every $f$ ([[CA]] vs [[fbs]]), and $\mathrm{fbs}(f) = n$ here.'}
+    - {measure: CGpub, value: '\Theta(n)', note: '$\mathrm{CG}^{\mathrm{pub}}(f) = \Theta(\mathrm{fbs}(f))$ for every $f$ ([[CGpub]] vs [[fbs]]), and $\mathrm{fbs}(f) = n$ here.'}
+    - {measure: CGstar, value: '\Theta(n)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: CGns, value: '\Theta(n)', refs: [CGLMSG23], note: 'All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, [[CGpub]] vs [[CGns]]), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin [[CG]] can be larger.'}
+    - {measure: Q0, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{Q}_{\varepsilon}(f) \le \mathrm{Q}_{0}(f) \le \mathrm{D}(f)$, with $\mathrm{Q}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: Advpm, value: '\Theta(n)', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(n)$ here.'}
+    - {measure: gamma2, value: '\Theta(n)', note: '$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[gamma2]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(n)$ here.'}
+    - {measure: odeg, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{sdeg}(f) \le \widetilde{\deg}_{+}(f) \le \mathrm{D}(f)$, with $\mathrm{sdeg}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: Rbar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: R1, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: chi, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \chi(g) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: chibar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \bar{\chi}(g) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: LR, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{LR}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: Rstar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{R}^{*}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: CG, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{CG}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: MAdv, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{Q}_{\varepsilon}(f) \le \mathrm{MAdv}(f) \le \mathrm{D}(f)$, with $\mathrm{Q}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: cjdeg, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{sdeg}(f) \le \mathrm{cjdeg}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\mathrm{sdeg}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: prt, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{prt}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
+    - {measure: degp, value: '2 \text{ for } p = 2;\ n \text{ for } p > 2', note: 'Over $\mathbb{F}_2$ the inner product literally *is* $\sum_{i} x_i y_i$, a quadratic form -- degree $2$ on $n = 2m$ variables. Over any other field the representation is $\tfrac12\big(1 - \prod_i (1 - 2x_iy_i)\big)$ and the degree is $n$. Together with $\deg = n$, $\mathrm{s} = n$ and $\mathrm{D} = n$, this makes IP the standard example that $\deg_2$ carries no information about query complexity.'}
+    - {measure: rprt, value: '\Theta(n)', conf: medium, note: 'Sandwiched: $\mathrm{s}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $n$ here. The lower end is the zoo''s own observation that the [JainKlauck10] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional.'}
+    - {measure: lambda, value: 'n/\sqrt2', note: 'Write $\mathrm{IP}_n = \mathrm{PARITY}_{m} \circ \mathrm{AND}_2$ with $m = n/2$ and use exact multiplicativity of $\lambda$ [ABKRT21]: $\lambda = m \cdot \sqrt 2 = n/\sqrt2$. Consistent with $\sqrt{\mathrm{s}} \le \lambda \le \mathrm{s}$ at $\mathrm{s} = n$, and with $\mathrm{Q} = \Theta(n) = \Omega(\lambda)$; like [[PARITY]] and unlike [[AND]], the inner product sits at the *top* of that range.'}
+  witnesses:
+    - {of: [deg, deg2], setting: total, statement: 'The extreme case: $\deg = n$ against $\deg_2 = 2$. Real degree and $\mathbb{F}_2$-degree are unrelated in this direction.'}
+    - {of: [L1, spar], setting: total, statement: 'Both at their maxima simultaneously: $\mathrm{spar} = 2^n$ and $\mathrm{L}_1 = 2^{n/2} = \sqrt{\mathrm{spar}}$, which is the equality case of $\mathrm{L}_1 \le \sqrt{\mathrm{spar}}$.'}
+  notes: |
+    **Why bent is the extreme.** Parseval gives $\sum_S \hat f(S)^2 = 1$, so by
+    Cauchy-Schwarz $\mathrm{L}_1(f) = \sum_S|\hat f(S)| \le \sqrt{\mathrm{spar}(f)}
+    \le 2^{n/2}$, with equality exactly when the spectrum is flat and full -- the
+    definition of a bent function. Bent functions exist only for even $n$.
+
+    **As a lifting gadget.** $\mathrm{IP}_b$ with $b = O(\log n)$ is the gadget in
+    the deterministic and randomized lifting theorems; the relevant parameter there
+    is the *discrepancy* $2^{-b/2}$, again a restatement of bentness.
+  refs: [ChistopolskayaPodolskii18, ODonnell14]
+  see_also: [PARITY, MAJ, spar, L1, Fdim, deg2, PDT]
+
+- id: MinskyPapert
+  name: Minsky-Papert one-in-a-box
+  symbol: '\mathrm{MP}_m'
+  aliases: ['one-in-a-box', 'AND_m o OR_{m^2}', 'the unbalanced AND-OR tree']
+  group: composed
+  order: 27.5
+  kind: total
+  arity: '$N = m^3$ bits: $m$ blocks of $m^2$'
+  short: 'The unbalanced AND-OR tree, tuned so that Minsky-Papert''s $\min\{m,\sqrt b\}$ is maximised: $\mathrm{sdeg} = \Theta(N^{1/3})$.'
+  definition: |
+    $\mathrm{MP}_m = \mathrm{AND}_m \circ \mathrm{OR}_{m^2}$: split $N = m^3$ bits
+    into $m$ boxes of $m^2$, and accept iff every box contains a $1$.
+
+    This is *not* the balanced [[ANDOR]]. The shape matters: Minsky and Papert's
+    theorem is $\mathrm{sdeg}(\mathrm{AND}_m\circ\mathrm{OR}_b) =
+    \Omega(\min\{m,\sqrt b\})$, and $b = m^2$ is the choice that makes both terms
+    equal. Quoting $\Theta(N^{1/3})$ for the balanced tree is a common slip.
+  formal: '$$\mathrm{MP}_m(x) = \bigwedge_{j=1}^{m}\ \bigvee_{i=1}^{m^2} x^j_i, \qquad N = m^3.$$'
+  values:
+    - {measure: sdeg, value: '\Theta(m) = \Theta(N^{1/3})', refs: [MinskyPapert69], note: 'The original theorem, and the first threshold-degree lower bound ever proved: no polynomial of degree $o(m)$ sign-represents $\mathrm{MP}_m$. Upper bound $O(m)$: the symmetrisation argument is tight here.'}
+    - {measure: D,    value: 'N = m^3', note: 'Read-once AND-OR formulas are evasive.'}
+    - {measure: deg,  value: 'N = m^3', note: 'Degree is multiplicative for block composition, and $\deg(\mathrm{AND}_m)\deg(\mathrm{OR}_{m^2}) = m\cdot m^2$.'}
+    - {measure: R,    value: '\Theta(m^3) = \Theta(N)', refs: [SaksWigderson86, Snir85], note: 'Randomised evaluation of a depth-two AND-OR tree with fan-ins $m$ and $m^2$ costs $\Theta(m\cdot m^2)$.'}
+    - {measure: adeg, value: '\Theta(m^{3/2}) = \Theta(\sqrt N)', note: 'The same $\Theta(\sqrt{mb})$ that gives [[ANDOR]] its $\Theta(\sqrt N)$; here $\sqrt{m\cdot m^2} = m^{3/2}$.'}
+    - {measure: Q,    value: '\Theta(m^{3/2}) = \Theta(\sqrt N)', refs: [HoyerMoscadeWolf03], note: 'Robust quantum search on the two levels; matches $\widetilde{\deg}/2$.'}
+    - {measure: s,    value: 'm^2 = N^{2/3}', note: 'One-sided. At a $1$-input only a box''s unique $1$ is sensitive, so $\mathrm{s}^1 = m$; at a $0$-input with exactly one empty box, every one of that box''s $m^2$ bits is sensitive, so $\mathrm{s}^0 = m^2$.'}
+    - {measure: s1,   value: 'm', note: 'As above.'}
+    - {measure: s0,   value: 'm^2', note: 'As above.'}
+    - {measure: Advpm, value: '\Theta(m^{3/2}) = \Theta(\sqrt N)', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(m^{3/2}) = \Theta(\sqrt N)$ here.'}
+    - {measure: gamma2, value: '\Theta(m^{3/2}) = \Theta(\sqrt N)', note: '$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[gamma2]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(m^{3/2}) = \Theta(\sqrt N)$ here.'}
+    - {measure: Rbar, value: '\Theta(m^3) = \Theta(N)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]), and $\mathrm{R}_{\varepsilon}(f) = \Theta(m^3) = \Theta(N)$ here.'}
+    - {measure: MAdv, value: '\Theta(m^{3/2}) = \Theta(\sqrt N)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with both ends $\Theta(m^{3/2}) = \Theta(\sqrt N)$ here.'}
+    - {measure: QE, value: 'N = m^3', note: 'Sandwiched exactly: $\deg(f) \le \mathrm{Q}_{\mathrm{E}}(f) \le \mathrm{D}(f)$, and both ends are $N = m^3$ here. Exact quantum computation buys nothing on a read-once AND-OR formula, while bounded error buys the full quadratic $\Theta(\sqrt N)$.'}
+    - {measure: C1, value: 'm', note: 'A $1$-certificate names one $1$ in each of the $m$ boxes.'}
+    - {measure: C0, value: 'm^2 = N^{2/3}', note: 'A $0$-certificate must exhibit an entirely empty box, and a box has $m^2$ bits. This is the asymmetry the whole function is built on.'}
+    - {measure: C, value: 'm^2 = N^{2/3}', note: '$\max\{\mathrm{C}^0,\mathrm{C}^1\}$.'}
+    - {measure: bs1, value: 'm', note: 'At a $1$-input with exactly one $1$ per box, the $m$ singleton blocks are minimal and disjoint.'}
+    - {measure: bs0, value: 'm^2 = N^{2/3}', note: 'At a $0$-input with exactly one empty box, flipping any single bit of that box already makes the function $1$: $m^2$ disjoint singleton blocks.'}
+    - {measure: bs, value: 'm^2 = N^{2/3}', note: 'From $\mathrm{bs}^0$. Together with $\mathrm{D} = N = m^3$ this is a cube-root gap, the largest a read-once formula allows.'}
+    - {measure: fbs, value: '\Theta(m^2) = \Theta(N^{2/3})', note: 'Squeezed between $\mathrm{bs} = m^2$ and $\mathrm{C} = m^2$.'}
+    - {measure: RC, value: '\Theta(m^2) = \Theta(N^{2/3})', note: '$\mathrm{RC} = \Theta(\mathrm{fbs})$.'}
+    - {measure: R0, value: '\Theta(m^3) = \Theta(N)', note: 'Squeezed between $\mathrm{R} = \Theta(N)$ and $\mathrm{D} = N$.'}
+    - {measure: lambda, value: 'm^{3/2} = \sqrt N', note: '$\lambda$ is exactly multiplicative under block composition [ABKRT21], so $\lambda(\mathrm{AND}_m \circ \mathrm{OR}_{m^2}) = \sqrt m \cdot \sqrt{m^2} = m^{3/2}$. This matches $\mathrm{Q} = \Theta(\sqrt N)$ up to a constant -- spectral sensitivity is tight here, while it is a $\sqrt{\ }$-factor loose against $\mathrm{s} = m^2$.'}
+  witnesses:
+    - {of: [adeg, sdeg], setting: total, statement: 'A polynomial gap between approximate and threshold degree on a read-once formula: $\widetilde{\deg} = \Theta(N^{1/2})$ against $\mathrm{sdeg} = \Theta(N^{1/3})$.', refs: [MinskyPapert69]}
+  notes: |
+    Minsky and Papert introduced this function in *Perceptrons* (1969) to show that a
+    perceptron over degree-$k$ monomials cannot compute it unless $k = \Omega(N^{1/3})$
+    -- the first lower bound on threshold degree, and still the template for the
+    dual-polynomial arguments used on [[Surjectivity]] and $\mathrm{AC}^0$.
+  refs: [MinskyPapert69, SaksWigderson86, HoyerMoscadeWolf03]
+  see_also: [ANDOR, AND, OR, sdeg, adeg]
+
+- id: SINK
+  name: Sink of a tournament
+  symbol: '\mathrm{SINK}_m'
+  aliases: ['SINK', 'the LARC function']
+  group: separating
+  order: 37.5
+  kind: total
+  arity: '$N = \binom{m}{2}$ bits, one per edge of $K_m$, read as an orientation'
+  short: 'The function that killed the log-approximate-rank conjecture: spectral norm $O(\sqrt N)$, but $\mathrm{SINK}\circ\mathrm{XOR}$ has randomized communication complexity $\Omega(\sqrt N)$.'
+  definition: |
+    An input orients every edge of the complete graph $K_m$. Output $1$ iff some
+    vertex is a *sink* -- every incident edge points into it.
+
+    A tournament has at most one sink, and that is the whole trick: the $m$ events
+    "$v$ is a sink" are mutually exclusive, so the indicator is a *sum* of $m$
+    monomials rather than an OR of them, and the Fourier spectrum stays tiny.
+  formal: '$$\mathrm{SINK}_m(x) = \bigvee_{v=1}^{m}\ \bigwedge_{u \ne v} [\,u \to v\,], \qquad N = \binom m2.$$'
+  values:
+    - {measure: deg,  value: 'm-1 = \Theta(\sqrt N)', refs: [CMS19], note: 'Exactly: $\mathrm{SINK}_m = \sum_{v}\prod_{u\ne v}[u\to v]$, a sum of $m$ disjoint monomials of degree $m-1$, and the top-degree terms do not cancel.'}
+    - {measure: L1,   value: 'O(m) = O(\sqrt N)', refs: [CMS19], note: 'Each of the $m$ disjoint conjunctions has spectral norm $1$ in the $\pm1$ normalisation, and spectral norm is subadditive. This -- a *total* function whose spectral norm is only $\sqrt N$ -- is what the refutation runs on.'}
+    - {measure: D,    value: '\Theta(m) = \Theta(\sqrt N)', note: 'Upper: the standard candidate-elimination argument. Query $m-1$ edges to knock out all but one possible sink (a vertex with an out-edge is not a sink), then spend $m-1$ more verifying the survivor, so $\mathrm{D} \le 2m-3$. Lower: $\mathrm{D} \ge \deg = m-1$.'}
+    - {measure: bs,   value: '\Theta(m) = \Theta(\sqrt N)', note: 'Take a tournament in which $k$ vertices have out-degree exactly $1$; each such vertex is one edge-flip from being a sink, and the flips are distinct edges, so $\mathrm{bs} \ge k$. Counting out-degrees, $k + (m-k)(m-1) \ge \binom m2$ allows $k = \Theta(m)$. Upper: $\mathrm{bs} \le \mathrm{D} = O(m)$.'}
+    - {measure: R,    value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}/3 \le \mathrm{R} \le \mathrm{D}$, with $\mathrm{bs} = \Theta(m)$ and $\mathrm{D} = O(m)$.'}
+    - {measure: C1,   value: 'm-1', note: 'To certify a sink you must exhibit all $m-1$ of its in-edges, and that suffices.'}
+    - {measure: adeg, value: '\Omega(\sqrt m),\ O(m)', note: 'Lower: $\widetilde{\deg} = \Omega(\sqrt{\mathrm{bs}}) = \Omega(\sqrt m)$. Upper: $\widetilde{\deg} \le \deg = m-1$. I have not found the exact value stated anywhere; note that pinning it down would also pin $\mathrm{Q}$, which is likewise only known to $\Omega(\sqrt m)$ to $O(m)$.'}
+    - {measure: fbs, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{fbs}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: C, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{C}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: FC, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{FC}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: R0, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: RC, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{RC}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: Rbar, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: R1, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: chi, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \chi(g) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: chibar, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \bar{\chi}(g) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: LR, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{LR}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: Rstar, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{R}^{*}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: CA, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{CA}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: CG, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{CG}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: CGpub, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{CG}^{\mathrm{pub}}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: prt, value: '\Theta(m) = \Theta(\sqrt N)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{prt}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here.'}
+    - {measure: rprt, value: '\Theta(m) = \Theta(\sqrt N)', conf: medium, note: 'Sandwiched: $\mathrm{bs}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m) = \Theta(\sqrt N)$ here. The lower end is the zoo''s own observation that the [JainKlauck10] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional.'}
+    - {measure: s1, value: 'm-1 \text{ for } m \ge 5', note: 'At a $1$-input the sink $v$ is unique, and flipping an edge not incident to $v$ leaves $v$ a sink, so only the $m-1$ edges at $v$ can be sensitive. Flipping $u \to v$ fails to be sensitive only if $u$ then becomes a sink, i.e. only if $u \to v$ was $u$''s **only** out-edge -- and at most one such $u$ can exist, since two of them would need an edge between them. So $\mathrm{s}^1 \in \{m-2, m-1\}$, and $m-1$ is attained by any $1$-input in which every non-sink has out-degree $\ge 2$ (e.g. a near-regular tournament on $V \setminus \{v\}$ with every vertex pointing at $v$), which exists for $m \ge 5$.'}
+    - {measure: s0, value: '3 \text{ for } m \ge 3', note: 'At a $0$-input, flipping the edge $e$ creates a sink iff $e$ is the unique out-edge of some vertex. Distinct vertices have distinct unique out-edges, so $\mathrm{s}^0_x$ counts the vertices of out-degree exactly $1$; if there are $k$ of them, the sub-tournament they span has $\binom k2$ edges and contributes $\binom k2$ to their out-degrees, whence $\binom k2 \le k$ and $k \le 3$. Three is attained: orient $u_1 \to u_2 \to u_3 \to u_1$ and every other edge into $\{u_1,u_2,u_3\}$. So $\mathrm{s}^0 = 3$ -- **a constant**, against $\mathrm{bs}^0 \ge m$ (the out-edge sets of the $m$ vertices are disjoint blocks, and flipping one makes its vertex a sink). SINK is thus a clean natural witness to a quadratic-and-then-some $\mathrm{s}^0$-versus-$\mathrm{bs}^0$ gap.'}
+    - {measure: s, value: 'm-1 = \Theta(\sqrt N)', note: '$\max\{\mathrm{s}^0,\mathrm{s}^1\} = \max\{3, m-1\}$.'}
+    - {measure: lambda, value: '\Theta(\sqrt m) = \Theta(N^{1/4})', note: 'Pinned from both sides. Upper: the sensitivity graph is bipartite with side-degrees at most $\mathrm{s}^0$ and $\mathrm{s}^1$, so $\lambda \le \sqrt{\mathrm{s}^0\mathrm{s}^1} = \sqrt{3(m-1)}$. Lower: Huang''s theorem in its spectral form gives $\lambda(f) \ge \sqrt{\deg(f)} = \sqrt{m-1}$. The two meet at $\Theta(\sqrt m)$. Note this is *far* below $\mathrm{s} = m-1$: SINK sits at the $\sqrt{\mathrm{s}}$ end of $\sqrt{\mathrm{s}} \le \lambda \le \mathrm{s}$, exactly like [[AND]] and unlike [[PARITY]].'}
+  witnesses:
+    - {of: [D, L1], setting: total, statement: 'Both $\Theta(\sqrt N)$ -- no separation *here*. The refutation happens one level up: $\log$ of the approximate rank of $\mathrm{SINK}\circ\mathrm{XOR}$ is $\widetilde O(\sqrt N)^{o(1)}$-small while its randomized communication complexity is $\Omega(\sqrt N)$.', refs: [CMS19]}
+  notes: |
+    **What is actually refuted.** The log-approximate-rank conjecture (Lee-Shraibman)
+    said $\mathrm{R}^{cc}(F) \le \mathrm{polylog}(\text{approximate rank of } F)$ for
+    total $F$. [CMS19] take $F = \mathrm{SINK}_m \circ \mathrm{XOR}$: its approximate
+    rank is $2^{O(\log m)}$-ish because the spectral norm is $O(m)$, while a corruption
+    argument (lifting a randomized parity-decision-tree bound, via Shearer's lemma)
+    gives $\mathrm{R}^{cc} = \Omega(m)$. The same function refutes Grolmusz's
+    conjecture and the parity-measure conjecture of Tsang-Wong-Xie-Zhang, which had
+    implied the log-rank conjecture for XOR functions.
+
+    The quantum version of the conjecture fell the same year, independently:
+    [SinhadeWolf19] and [ABT19].
+
+    **Why composed functions had not done this before.** For query complexity the
+    decision-tree analogue of the log-rank conjecture is *true* for both exact and
+    approximate degree, so a $g \circ \mathrm{XOR}$ counterexample has to come from a
+    $g$ whose ordinary Fourier structure is simple but whose *parity* decision trees
+    are not. SINK is exactly that.
+  refs: [CMS19, SinhadeWolf19, ABT19]
+  see_also: [L1, spar, PDT, adeg, OR]
+
+- id: SCORPION
+  name: Scorpion graphs
+  symbol: '\mathrm{SCORP}_m'
+  group: basic
+  order: 19.2
+  kind: total
+  arity: '$N = \binom{m}{2}$ bits, the adjacency matrix of an $m$-vertex graph'
+  short: 'The nontrivial graph property that is nowhere near evasive: $\mathrm{D} = \Theta(m) = \Theta(\sqrt N)$ out of $N$ possible queries.'
+  definition: |
+    A graph is a *scorpion* if it has three special vertices -- a **sting** $s$ of
+    degree $1$, adjacent only to the **tail** $t$; a tail $t$ of degree $2$, adjacent
+    only to $s$ and to the **body** $b$; and a body $b$ adjacent to every vertex except
+    $s$. The remaining $m-3$ vertices (the "feet") may be joined arbitrarily.
+
+    "Is this graph a scorpion?" is a graph property -- invariant under relabelling
+    vertices -- and it is nontrivial. It is also decidable in $O(m)$ queries.
+  formal: 'The property $P = \{G : \exists\, s,t,b \text{ with } N(s) = \{t\},\ N(t) = \{s,b\},\ N(b) = V \setminus \{s\}\}$.'
+  values:
+    - {measure: D, value: '\Theta(m) = \Theta(\sqrt N)', refs: [BvEBL74, LovaszYoung02], note: 'Upper: at most $6m$ queries. Walk a candidate body around, maintaining a set of vertices known not to be the body; each query eliminates a vertex, so $O(m)$ queries identify $b$ or reject, and $2(m-1)$ more check $s$ and $t$. Lower: $\Omega(m)$, since the answer depends on all $m$ vertices.'}
+    - {measure: R, value: '\Theta(m)', note: 'Between $\Omega(\sqrt{\mathrm{bs}})$ and $\mathrm{D} = O(m)$; nothing below $\Theta(m)$ is possible because the property depends on every vertex.'}
+    - {measure: Q, value: 'O(m)', note: 'From $\mathrm{Q} \le \mathrm{D}$. No better bound is recorded, and no better one is obviously available: this is not a search problem.'}
+    - {measure: Rbar, value: '\Theta(m)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]), and $\mathrm{R}_{\varepsilon}(f) = \Theta(m)$ here.'}
+  witnesses:
+    - {of: [D, D], setting: total, statement: 'Not a separation between measures, but the separation the evasiveness literature cares about: a nontrivial graph property with $\mathrm{D} = \Theta(\sqrt N)$ rather than $N$. Monotonicity is what makes the Aanderaa-Karp-Rosenberg conjecture plausible, and the scorpion is the reason it must be assumed.', refs: [BvEBL74]}
+  notes: |
+    The Aanderaa-Karp-Rosenberg conjecture asserts that every nontrivial *monotone*
+    graph property is evasive ($\mathrm{D} = \binom m2$ exactly). It is known for
+    prime-power $m$ by the topological argument of [KSS84], and $\Omega(m^2)$ in
+    general [RivestVuillemin76]; see [Miller13] for the survey. The scorpion property
+    is not monotone -- adding an edge at the sting destroys it -- and shows that
+    dropping monotonicity collapses the bound all the way to $\Theta(\sqrt N)$.
+
+    Randomized AKR is much weaker: the best general bound for monotone properties is
+    $\mathrm{R} = \Omega(m^{4/3}\log^{1/3} m)$ [ChakrabartiKhot07], against a
+    conjectured $\Omega(m^2)$.
+  refs: [BvEBL74, RivestVuillemin76, KSS84, LovaszYoung02, Miller13, ChakrabartiKhot07]
+  see_also: [CONN, D, R]
+
+- id: CONN
+  name: Graph connectivity
+  symbol: '\mathrm{CONN}_m'
+  group: basic
+  order: 19.3
+  kind: total
+  arity: '$N = \binom{m}{2}$ bits, the adjacency matrix of an $m$-vertex graph'
+  short: 'The monotone graph property everyone checks first: evasive, $\mathrm{R} = \Theta(N)$, and $\mathrm{Q} = \Theta(N^{3/4})$.'
+  definition: 'Given the adjacency matrix of an undirected graph on $m$ labelled vertices, decide whether the graph is connected. Monotone (adding edges never disconnects) and nontrivial.'
+  formal: '$$\mathrm{CONN}_m(G) = 1 \iff G \text{ has one connected component}.$$'
+  values:
+    - {measure: D, value: '\binom{m}{2} = N', refs: [Bollobas76, KSS84], note: 'Evasive for every $m \ge 2$: an adversary can always force all $\binom m2$ queries. One of the earliest properties proved evasive, and the model case for the Aanderaa-Karp-Rosenberg conjecture.'}
+    - {measure: R, value: '\Theta(m^2) = \Theta(N)', note: 'Upper: $\mathrm{R} \le \mathrm{D}$. Lower: $\Omega(m^2)$ -- take a random graph on the threshold and note that a spanning-tree/isolated-vertex distinction survives $o(m^2)$ random probes. So connectivity is one of the (few) monotone graph properties where randomized AKR is known.'}
+    - {measure: Q, value: '\Theta(m^{3/2}) = \Theta(N^{3/4})', refs: [DHHM06], note: '[DHHM06]: Grover-search the neighbourhoods in a BFS, $O(m^{3/2})$ queries; and $\Omega(m^{3/2})$ by the quantum adversary. Strong connectivity of a digraph, minimum spanning tree and single-source shortest paths in the adjacency-matrix model are all $\Theta(m^{3/2})$ too.'}
+    - {measure: C1, value: 'm-1', note: 'A spanning tree certifies connectivity.'}
+    - {measure: C0, value: '\Theta(m^2)', note: 'To certify disconnectedness you must exhibit a cut $(S,\bar S)$ with all $|S|(m-|S|)$ edges absent; the adversary makes $|S| = m/2$, so $\mathrm{C}^0 = \Theta(m^2)$.'}
+    - {measure: Advpm, value: '\Theta(m^{3/2}) = \Theta(N^{3/4})', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(m^{3/2}) = \Theta(N^{3/4})$ here.'}
+    - {measure: gamma2, value: '\Theta(m^{3/2}) = \Theta(N^{3/4})', note: '$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[gamma2]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(m^{3/2}) = \Theta(N^{3/4})$ here.'}
+    - {measure: Rbar, value: '\Theta(m^2) = \Theta(N)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]), and $\mathrm{R}_{\varepsilon}(f) = \Theta(m^2) = \Theta(N)$ here.'}
+    - {measure: MAdv, value: '\Theta(m^{3/2}) = \Theta(N^{3/4})', note: 'Sandwiched: $\mathrm{Adv}^{\pm}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with both ends $\Theta(m^{3/2}) = \Theta(N^{3/4})$ here.'}
+  witnesses:
+    - {of: [R, Q], setting: total, statement: 'A clean quadratic-in-the-vertex-count gap on a natural total function: $\mathrm{R} = \Theta(m^2)$ against $\mathrm{Q} = \Theta(m^{3/2})$, i.e. $\mathrm{R} = \Theta(\mathrm{Q}^{4/3})$ in the query count.', refs: [DHHM06]}
+    - {of: [C0, C1], setting: total, statement: '$\mathrm{C}^1 = m-1$ against $\mathrm{C}^0 = \Theta(m^2)$: certificate complexity is wildly one-sided, and $\mathrm{D} = \binom m2 = \Theta(\mathrm{C}^0\mathrm{C}^1/m)$.'}
+  notes: |
+    Connectivity is the standard illustration of the gap between the three graph
+    query models. In the *adjacency matrix* model above it is $\Theta(m^{3/2})$
+    quantumly; in the *adjacency list* model [DHHM06] give $\Theta(m)$ for a graph
+    with $m$ edges. The zoo records the matrix model, since that is the one that is a
+    Boolean function on $\binom m2$ bits.
+  refs: [Bollobas76, KSS84, DHHM06, RivestVuillemin76, ChakrabartiKhot07, LovaszYoung02]
+  see_also: [SCORPION, D, R, Q, C0, C1]

@@ -28,6 +28,9 @@ functions:
     - {measure: adeg, value: 'O(1)', note: '$\widetilde{\deg}\le 2\mathrm{Q} = 2$.'}
     - {measure: R,    value: '\widetilde\Theta(\sqrt n)', refs: [AaronsonAmbainis18, Tal20], note: 'Lower bound $\Omega(\sqrt n/\log n)$ [AaronsonAmbainis18], improved to $\widetilde\Omega(\sqrt n)$ via Fourier growth of decision trees [Tal20]. Matching $O(\sqrt n)$ upper bound.'}
     - {measure: D,    value: '\Theta(n)'}
+    - {measure: Advpm, value: '\Theta(1)', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = 1$ here.'}
+    - {measure: MAdv, value: '\Theta(1)', note: 'Sandwiched: $\mathrm{Adv}^{\pm}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with $\mathrm{Adv}^{\pm}(f) = \Theta(1)$ and $\mathrm{Q}_{\varepsilon}(f) = 1$ here.'}
+    - {measure: Rbar, value: '\widetilde\Theta(\sqrt n)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]), and $\mathrm{R}_{\varepsilon}(f) = \widetilde\Theta(\sqrt n)$ here.'}
   witnesses:
     - {of: [R, Q],    setting: partial, statement: '$\mathrm{R} = \widetilde\Omega(\mathrm{Q}^2 \cdot \sqrt n)$ -- with $\mathrm{Q}=1$ fixed, $\mathrm{R} = \widetilde\Theta(\sqrt n)$. No polynomial relation between R and Q for partial functions.', refs: [AaronsonAmbainis18, Tal20]}
     - {of: [R, adeg], setting: partial, statement: '$\widetilde{\deg} = O(1)$ but $\mathrm{R}=\widetilde\Omega(\sqrt n)$.', refs: [AaronsonAmbainis18]}
@@ -58,6 +61,9 @@ functions:
   values:
     - {measure: Q, value: '\lceil k/2\rceil', refs: [AaronsonAmbainis18]}
     - {measure: R, value: '\widetilde\Theta\!\big(n^{1-1/k}\big)', refs: [BansalSinha21, SSW21], note: 'Lower bound proved independently by [BansalSinha21] and [SSW21]; matches the Aaronson-Ambainis upper bound $\mathrm{R}=O(n^{1-1/(2\mathrm{Q})})$.'}
+    - {measure: Advpm, value: '\Theta(\lceil k/2\rceil)', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \lceil k/2\rceil$ here.'}
+    - {measure: MAdv, value: '\Theta(\lceil k/2\rceil)', note: 'Sandwiched: $\mathrm{Adv}^{\pm}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with $\mathrm{Adv}^{\pm}(f) = \Theta(\lceil k/2\rceil)$ and $\mathrm{Q}_{\varepsilon}(f) = \lceil k/2\rceil$ here.'}
+    - {measure: Rbar, value: '\widetilde\Theta\!\big(n^{1-1/k}\big)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]), and $\mathrm{R}_{\varepsilon}(f) = \widetilde\Theta(n^{1-1/k})$ here.'}
   witnesses:
     - {of: [R, Q], setting: partial, statement: 'For every $k$: $\mathrm{Q}=k$ and $\mathrm{R}=\widetilde\Theta(n^{1-1/(2k)})$. **Optimal** -- this settles the partial-function R-vs-Q trade-off.', refs: [BansalSinha21, SSW21, AaronsonAmbainis18]}
     - {of: [R, Q], setting: total, statement: 'Composed with cheat sheets, gives a *total* function with $\mathrm{R} = \widetilde\Omega(\mathrm{Q}^3)$ -- the best known total separation.', refs: [ABK16, BansalSinha21, SSW21]}
@@ -81,6 +87,8 @@ functions:
   values:
     - {measure: Q, value: 'O(n)', refs: [Simon97]}
     - {measure: R, value: '\Theta(2^{n/2})', refs: [Simon97]}
+    - {measure: Rbar, value: '\Theta(2^{n/2})', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]), and $\mathrm{R}_{\varepsilon}(f) = \Theta(2^{n/2})$ here.'}
+    - {measure: Adv, value: 'O(1)', refs: [HoyerSpalek05], note: 'Both certificate complexities are $O(1)$ under the promise -- exhibiting one colliding pair $x \ne y$ with $f(x)=f(y)$ settles the question -- so the positive adversary gives $O(1)$ against $\mathrm{Q} = \Theta(n)$. The largest known gap between $\mathrm{Adv}$ and $\mathrm{Q}$.'}
   witnesses:
     - {of: [R, Q], setting: partial, statement: 'Exponential: $\mathrm{R} = 2^{\Omega(\mathrm{Q})}$. The relational (find-$s$) version gives the same separation for relations.', refs: [Simon97]}
   refs: [Simon97, BernsteinVazirani97]
@@ -140,6 +148,9 @@ functions:
     - {measure: Q,  value: '\Theta(\sqrt n)', refs: [Grover96, BBBV97]}
     - {measure: R,  value: '\Theta(n)'}
     - {measure: D,  value: 'n'}
+    - {measure: Advpm, value: '\Theta(\sqrt n)', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(\sqrt n)$ here.'}
+    - {measure: MAdv, value: '\Theta(\sqrt n)', refs: [Spalek08], note: '$\mathrm{Adv}^{\pm}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$ and $\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q}_\varepsilon)$, so the multiplicative adversary is $\Theta(\mathrm{Q})$ on every function; here $\mathrm{Q} = \Theta(\sqrt n)$.'}
+    - {measure: R0, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
   witnesses:
     - {of: [R, Q], setting: relation, statement: '$\mathrm{R}=\Theta(\mathrm{Q}^2)$ for a relation, same as the decision version.', refs: [Grover96, BBBV97]}
   refs: [Grover96, BBBV97]
@@ -206,13 +217,14 @@ functions:
   values:
     - {measure: R,   value: 'O(1) \text{ for random } k\text{-CNFs (sample a clause)}', conf: medium}
     - {measure: psD, value: '\Omega(n^{1/3})', refs: [CDM23], note: '$\Omega(\sqrt n)$ in the related setting of [GIPS21]; also $\exp(\widetilde\Omega(n^{1/4}))$ in pseudo-deterministic decision-tree *size*.'}
+    - {measure: cbs, value: '\Omega(n)', refs: [GoosPitassi14, HuynhNordstrom12], note: 'For the false-clause search problem of a random $\Delta$-dense unsatisfiable $k$-CNF, and for the Tseitin contradiction on a bounded-degree expander. This is the whole point of the measure: ordinary $\mathrm{R}$ is $O(1)$ here (sample a clause and check it), and even block sensitivity of a *fixed* solution function can be small, but every solution function is block-sensitive at some critical input. Lifting $\mathrm{cbs}$ with a constant-size gadget is what yields the tight monotone-circuit-depth and Cutting-Planes lower bounds.'}
   refs: [GIPS21, CDM23]
   see_also: [psD, ApproxHW]
 
 - id: GapMaj
   name: Gap-Majority
   symbol: '\mathrm{GapMaj}^{\delta}_{n}'
-  group: quantum
+  group: separating
   order: 49
   kind: partial
   arity: '$n$ bits'
@@ -222,14 +234,50 @@ functions:
     and $0$ if $|x| \le n/2-\delta n$.
   formal: '$\mathrm{GapMaj}^\delta_n(x) = \mathbb{1}[|x| > n/2]$ restricted to $\{x : \big||x|-n/2\big| \ge \delta n\}$.'
   values:
-    - {measure: R,      value: '\Theta(1/\delta^2)'}
+    - {measure: R,      value: '\Theta(\min(n, 1/\delta^2))', note: 'Sample $\Theta(1/\delta^2)$ coordinates and compare the empirical density with $1/2$; the lower bound is the standard bias-amplification argument (Lemma 26 of [BenDavidBlais20composition] for the $\delta = 2/\sqrt{n}$ instance, where it reads $\mathrm{R} = \Theta(n)$).', refs: [BenDavidBlais20composition]}
     - {measure: D,      value: '\Theta(n)', note: 'Independent of $\delta$, and the whole point of the example: $\mathrm{D}$ is unbounded in terms of $\mathrm{R}$ on partial functions. Adversary count: after $q$ queries returning $a$ ones, output $0$ is still consistent iff $a \le n/2-\delta n$ and output $1$ iff $a + (n-q) \ge n/2+\delta n$, so keeping both alive is possible exactly while $q \le (1-2\delta)n$ -- giving $\mathrm{D} = (1-2\delta)n + 1$ up to integrality, and $n$ queries always suffice.'}
-    - {measure: noisyR, value: '\Theta(n)', refs: [BenDavidBlais20composition], note: 'The composition $f \circ \mathrm{GapMaj}$ is exactly the construction that shows $\mathrm{R}$ does not compose, and $\mathrm{noisyR}$ was defined so that it does.'}
-    - {measure: Q,      value: '\Theta(1/\delta)'}
+    - {measure: noisyR, value: '\Theta(\min(n, 1/\delta^2))', putative: true, refs: [BenDavidBlais20composition], note: 'Equal to $\mathrm{R}$: buying bias buys nothing here, which is exactly why $\mathrm{GapMaj}$ is the universal inner function of [BenDavidBlais20composition] (Theorem 4: $\mathrm{noisyR}(f) = \Theta(\mathrm{R}(f \circ \mathrm{GapMaj}_n)/n)$, with their $\mathrm{GapMaj}_n$ the $\delta = 2/\sqrt{n}$ instance). Upper: $\mathrm{noisyR} \le \mathrm{R}$ always. Lower: let $\mu^{\pm}$ be uniform on the two Hamming levels, so each coordinate is marginally $\mathrm{Bern}(1/2 \pm \delta)$. A noisy query of bias $\gamma$ returns a bit distributed $\mathrm{Bern}(1/2 \pm \gamma\delta)$, and $\mathrm{KL} = O(\gamma^2\delta^2)$, while the query costs $\gamma^2$. Distinguishing $\mu^+$ from $\mu^-$ needs $\Omega(1)$ total divergence, so the cost $\sum_j \gamma_j^2$ is $\Omega(1/\delta^2)$.'}
+    - {measure: Q,      value: '\Theta(\min(n, 1/\delta))', note: 'Amplitude estimation of $|x|/n$ to additive $\delta$; the matching lower bound is the usual approximate-counting bound of [NayakWu99]. So the promise buys a quadratic quantum speed-up over $\mathrm{R}$, the same one as for approximate counting.', refs: [NayakWu99]}
+    - {measure: LR, value: '\Theta\!\big(\sqrt{\mathrm{R}}\big) = \Theta\!\big(\min(\sqrt n, 1/\delta)\big)', refs: [BBGM22], conf: medium, note: 'The extreme case of the $\Omega(\sqrt{\mathrm{R}}) \le \mathrm{LR} \le \mathrm{R}$ sandwich, and the reason the measure was introduced: a single query already gives bias $\Theta(\delta)$ towards the answer, and $\mathrm{LR}$ charges $1/\gamma$ rather than $1/\gamma^2$ for bias $\gamma$. So gapped majority is cheap for $\mathrm{LR}$ and expensive for $\mathrm{R}$, which is exactly the slack that makes randomized composition fail.'}
+    - {measure: chibar, value: 'O\!\big(\min(\sqrt n, 1/\delta)\big)', refs: [GLSS19], conf: medium, note: 'At most $\mathrm{LR}$. Since $\bar\chi$ is the quantity that appears in the composition theorem $\mathrm{R}(f \circ g^n) = \Omega(\mathrm{R}(f)\bar\chi(g))$, gapped majority as an *inner* function loses a square root -- which is precisely why $\mathrm{R}$ does not compose.'}
   witnesses:
-    - {of: [noisyR, R], setting: partial, statement: 'Gap-Majority is the extremal example separating bias-purchasing (noisy) randomized complexity from ordinary randomized complexity.', refs: [BenDavidBlais20composition, BenDavidBlais20minimax]}
+    - {of: [D, R], setting: partial, statement: 'At constant $\delta$, $\mathrm{D} = \Theta(n)$ while $\mathrm{R} = \Theta(1)$: the standard proof that $\mathrm{D}$ is unbounded in terms of $\mathrm{R}$ on partial functions.'}
+    - {of: [R, Q], setting: partial, statement: 'Quadratic: $\mathrm{R} = \Theta(1/\delta^2)$ against $\mathrm{Q} = \Theta(1/\delta)$, the approximate-counting speed-up in its cleanest form.', refs: [NayakWu99]}
   refs: [BenDavidBlais20composition, BenDavidBlais20minimax, BBGM22]
-  see_also: [noisyR, R, LR, chibar]
+  see_also: [noisyR, R, LR, chibar, ApproxIndex]
+
+- id: ApproxIndex
+  name: Approximate index
+  symbol: '\mathrm{ApproxIndex}_k'
+  group: separating
+  order: 49.5
+  kind: partial
+  arity: '$n = k + 2^k$ bits (a $k$-bit address and a $2^k$-cell array over $\{0,1,2\}$, binary-encoded)'
+  short: 'The outer function that refutes the randomized composition conjecture: a *biased guess* at the index is good enough, which is cheap noisily and expensive classically.'
+  definition: |
+    The input is an address $a \in \{0,1\}^k$ together with an array
+    $x \in \{0,1,2\}^{2^k}$ indexed by $\{0,1\}^k$. The promise: every cell $b$ within
+    Hamming distance $k/2 - 2\sqrt{k\log k}$ of $a$ holds one and the same bit, and every
+    other cell holds $2$. Output that bit.
+
+    The point is the slack. You never have to find $a$ -- any $b$ in a ball of radius just
+    barely under $k/2$ around it reads off the answer -- and a ball of that radius catches a
+    string built by guessing each bit of $a$ with only a *small bias*. Bias is cheap in the
+    noisy model and expensive in the query model, and that difference is the whole
+    counterexample. The alphabet $\{0,1,2\}$ costs only a constant factor after binary
+    encoding, so this is treated as a partial Boolean function.
+  formal: '$\mathrm{ApproxIndex}(a,x) = x_a$ if $x_b = x_a \in \{0,1\}$ for every $b$ with $|b-a| \le k/2 - 2\sqrt{k\log k}$ and $x_b = 2$ for every other $b$; undefined otherwise.'
+  values:
+    - {measure: R, value: '\Theta(\sqrt{k\log k}) = \Theta(\sqrt{\log n\,\log\log n})', refs: [BenDavidBlais20composition], note: 'Lemma 27. Upper: read the first $8\sqrt{k\log k}$ bits of $a$, fill the rest of $b$ with fair coins, query $x_b$. Lower: an algorithm making $\sqrt{k\log k}$ queries can be assumed never to query the array (pretend the answer is $2$), and then it must still name a small set of candidate addresses one of which lands in the ball -- i.e. guess $k/2 + \sqrt{k\log k}$ of the unread bits of a uniformly random string correctly, which Chernoff forbids.'}
+    - {measure: D, value: '\Theta(\sqrt{k\log k})', putative: true, note: 'So this function is *not* a $\mathrm{D}$-vs-$\mathrm{R}$ separation, which is worth knowing given how hard its $\mathrm{R}$ lower bound works. Lower: $\mathrm{D} \ge \mathrm{R}$. Upper: read the first $q = 4\sqrt{k\log k}$ bits of $a$ and let $b$ agree with them and be $0$ elsewhere, $b''$ agree with them and be $1$ elsewhere. Then $|b-a| + |b''-a| = k-q$, so one of the two is within $(k-q)/2 = k/2 - 2\sqrt{k\log k}$ of $a$ -- inside the ball. Query $x_b$; if it is $2$, query $x_{b''}$, which cannot be. Total $4\sqrt{k\log k}+O(1)$ queries, deterministically. Randomness buys nothing here: it only replaces "read $4\sqrt{k\log k}$ bits and use antipodal guesses" with "read $8\sqrt{k\log k}$ bits and guess at random".'}
+    - {measure: R0, value: '\Theta(\sqrt{k\log k})', note: 'Sandwiched: $\mathrm{R} \le \mathrm{R}_0 \le \mathrm{D}$, and the two ends agree.'}
+    - {measure: noisyR, value: 'O(\log k) = O(\log\log n)', refs: [BenDavidBlais20composition], note: 'Not stated as a value in the source, but it is exactly what its two theorems say. Their composed algorithm gives $\mathrm{R}(\mathrm{ApproxIndex}_k \circ \mathrm{GapMaj}_k) = O(k\log k)$, and Theorem 3 says $\mathrm{R}(f \circ g) = \Omega(\mathrm{noisyR}(f)\,\mathrm{R}(g))$ with $\mathrm{R}(\mathrm{GapMaj}_k) = \Theta(k)$; divide. Directly, in the noisy model: buy each of the $k$ address bits at bias $\gamma = c\sqrt{\log k/k}$ for $\gamma^2$ each, total $c^2\log k$, which puts the guess inside the ball with high probability, then read one array cell at bias $1$.'}
+    - {measure: Rbar, value: '\Theta(\sqrt{k\log k}) = \Theta(\sqrt{\log n\,\log\log n})', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]), and $\mathrm{R}_{\varepsilon}(f) = \Theta(\sqrt{k\log k}) = \Theta(\sqrt{\log n\,\log\log n})$ here.'}
+  witnesses:
+    - {of: [R, noisyR], setting: partial, statement: 'An *exponential* gap: $\mathrm{R} = \Theta(\sqrt{k\log k})$ against $\mathrm{noisyR} = O(\log k)$, so $\mathrm{R} = 2^{\Omega(\mathrm{noisyR})}$ on this family.', refs: [BenDavidBlais20composition]}
+    - {of: [R, R], setting: partial, statement: 'Composed with $\mathrm{GapMaj}_k$ it refutes the randomized composition conjecture: $\mathrm{R}(f)\,\mathrm{R}(g) = \tilde\Theta(k^{3/2})$ but $\mathrm{R}(f \circ g) = O(k \log k)$.', refs: [BenDavidBlais20composition]}
+  refs: [BenDavidBlais20composition, GLSS19]
+  see_also: [GapMaj, noisyR, R, composition, LR, ADDR]
 
 - id: Collision
   name: Collision problem
@@ -241,10 +289,14 @@ functions:
   short: '$\mathrm{Q}=\Theta(n^{1/3})$ vs $\mathrm{R}=\Theta(\sqrt n)$: a *polynomial-only* quantum speedup for a promise problem.'
   definition: 'Promise: $g$ is one-to-one or two-to-one. Decide which.'
   values:
-    - {measure: Q, value: '\Theta(n^{1/3})', refs: [Aaronson06]}
-    - {measure: R, value: '\Theta(\sqrt n)'}
-  refs: [Aaronson06, Ambainis07]
-  see_also: [ElementDistinctness, Simon]
+    - {measure: Q, value: '\Theta(n^{1/3})', refs: [BHT98, AaronsonShi04, Kutin05], note: 'Upper: the birthday-paradox-plus-Grover algorithm of [BHT98]. Lower: the polynomial method [AaronsonShi04], originally for range $\Omega(n^2)$; [Kutin05] removed the range restriction (their proof needed range $\ge 3n/2$) and simplified the argument, and [Ambainis05smallrange] handles small ranges too.'}
+    - {measure: R, value: '\Theta(\sqrt n)', note: 'Birthday paradox both ways.'}
+    - {measure: Advpm, value: '\Theta(n^{1/3})', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(n^{1/3})$ here.'}
+    - {measure: Rbar, value: '\Theta(\sqrt n)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]), and $\mathrm{R}_{\varepsilon}(f) = \Theta(\sqrt n)$ here.'}
+    - {measure: MAdv, value: '\Theta(n^{1/3})', note: 'Sandwiched: $\mathrm{Adv}^{\pm}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with both ends $\Theta(n^{1/3})$ here.'}
+    - {measure: Adv, value: 'O(1)', refs: [HoyerSpalek05, SpalekSzegedy06], note: 'The certificate complexity barrier at its sharpest: a collision pair certifies a $2$-to-$1$ input with $2$ queries, and the promise means $O(1)$ queries also certify $1$-to-$1$-ness against the promise, so $\mathrm{Adv} \le \sqrt{\mathrm{C}^0\mathrm{C}^1} = O(1)$ while $\mathrm{Q} = \Theta(n^{1/3})$. No positive-weight adversary matrix can prove anything here -- this promise problem is the reason the negative-weights version had to be invented.'}
+  refs: [BHT98, AaronsonShi04, Kutin05, Ambainis05smallrange, Ambainis07]
+  see_also: [ElementDistinctness, KDistinctness, Simon]
 
 - id: ElementDistinctness
   name: Element distinctness
@@ -256,12 +308,19 @@ functions:
   short: '$\mathrm{Q}=\Theta(n^{2/3})$ vs $\mathrm{R}=\Theta(n)$; a total (non-Boolean-input) function.'
   definition: 'Decide whether all $n$ input symbols are distinct.'
   values:
-    - {measure: Q, value: '\Theta(n^{2/3})', refs: [Ambainis07], note: 'Quantum walk upper bound [Ambainis07]; lower bound from the polynomial method [Aaronson06].'}
+    - {measure: Q, value: '\Theta(n^{2/3})', refs: [Ambainis07, AaronsonShi04, Ambainis05smallrange], note: 'Upper: the quantum walk of [Ambainis07]. Lower: the polynomial method [AaronsonShi04], which needs alphabet size $\Omega(n^2)$; [Ambainis05smallrange] gets $\Omega(n^{2/3})$ down to alphabet size $n$. The $\varepsilon$-dependence is $\Theta(n^{2/3}\log^{1/3}(1/\varepsilon))$ [SherstovThaler23].'}
     - {measure: R, value: '\Theta(n)'}
     - {measure: D, value: 'n'}
+    - {measure: Advpm, value: '\Theta(n^{2/3})', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(n^{2/3})$ here.'}
+    - {measure: gamma2, value: '\Theta(n^{2/3})', note: '$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[gamma2]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(n^{2/3})$ here.'}
+    - {measure: MAdv, value: '\Theta(n^{2/3})', refs: [Spalek08], note: '$\mathrm{Adv}^{\pm}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$ and $\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q}_\varepsilon)$, so the multiplicative adversary is $\Theta(\mathrm{Q})$ on every function; here $\mathrm{Q} = \Theta(n^{2/3})$.'}
+    - {measure: Rbar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: R0, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: R1, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: Adv, value: 'O(\sqrt n)', refs: [SpalekSzegedy06, Zhang05, HoyerSpalek05], note: 'A colliding pair is a $2$-query certificate, but distinctness itself needs all $n$ values: $\mathrm{C}^1 = 2$ and $\mathrm{C}^0 = n$. The barrier caps the *product*, so $\mathrm{Adv} \le \sqrt{2n} = O(\sqrt n)$ -- short of $\mathrm{Q} = \Theta(n^{2/3})$, but not the $O(1)$ that a one-sided reading of the barrier would suggest. See [[Collision]] for the case where the collapse really is total.'}
   notes: 'A reminder that the "total function" theory in this zoo is for *Boolean* inputs; large alphabets change the picture (here $\mathrm{R}=\Theta(\mathrm{Q}^{3/2})$, which is fine, but the polynomial-relation proofs are alphabet-sensitive).'
-  refs: [Ambainis07, Aaronson06]
-  see_also: [Collision, Q]
+  refs: [Ambainis07, AaronsonShi04, Ambainis05smallrange, SherstovThaler23]
+  see_also: [Collision, KDistinctness, Q]
 
 - id: AmbainisBelovsFn
   name: Ambainis-Belovs function

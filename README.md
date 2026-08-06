@@ -21,20 +21,20 @@ if you need the site fully offline, drop `tex-chtml.js` into `static/` and point
 | | count |
 |---|---|
 | measures | 75 |
-| ordered pairs with an entry | 226 |
-| relation records (bounds and separations) | 160 |
-| witness functions | 42 |
+| ordered pairs with an entry | 261 |
+| relation records (bounds and separations) | 195 |
+| witness functions | 57 |
 | concept pages | 11 |
 | open problems | 14 |
-| references | 139 |
-| measure values recorded on function pages | 370 |
+| references | 216 |
+| measure values recorded on function pages | 855 |
 
 The site generates one page per measure, function and concept, plus the exponent matrix, the
 relations index, the open-problem list, the bibliography, and this guide's on-site twin
 (`editing.html`).
 
 **Pairs are not pages.** There are 75×75 = 5625 ordered pairs of measures and the build has
-something to say about roughly a quarter of them, mostly by derivation. Writing that many files
+something to say about roughly 2460 of them, mostly by derivation. Writing that many files
 would be silly, so `pair.html` renders any of them in the browser:
 
 ```
@@ -82,6 +82,13 @@ Three layers, deliberately separate:
    `updated: true` with an `update_note` saying why. The matrix page shows this 13×13 table by
    default and can widen to *all* measures (`#recorded`, `#all` on the URL); outside the published
    axis the exponents shown are computed from layers 2 and 3, not read off the table.
+
+   It has a fourth scope, **Ladder** (`#ladder`): 27 of the measures in a hand-written rough
+   order of size, biggest first, so the direction of the whole table is visible at a glance —
+   the free `1,1` inequalities fall below the diagonal, the real exponents above it. The order
+   lives in `data/site.yaml` under `ladder:` (with an optional one-line `why:` per entry) and is
+   the only ordering in the zoo that is not derived; the rule it obeys is that if `X ≤ Y` for
+   every total `f` then `Y` comes first. It is a reading aid, not a theorem.
 2. **Relation records** (`data/relations/*.yaml`) carry the fine-grained statements — the
    actual `O(R² log R)` rather than the exponent `2` — one record per (from, to, setting).
    This is where log factors, ε-dependence, and the partial/relational story live. A bullet may

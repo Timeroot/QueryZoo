@@ -194,20 +194,30 @@ relations:
 - from: chibar
   to: RS
   setting: partial
-  status: settled
+  status: open
   upper:
     - stmt: '\bar\chi(g) = \Omega(\mathrm{RS}(g))'
       form: {exp: 1, kind: const, dir: reverse}
       refs: [GLSS19]
       note: 'Max-conflict complexity dominates sabotage complexity for all partial $g$...'
       conf: high
-  lower:
-    - stmt: '\bar\chi(g) \text{ is unbounded in terms of } \mathrm{RS}(g) \text{ for partial } g'
-      form: {kind: unbounded}
-      refs: [GLSS19]
-      conf: low
-      todo: 'Check the attribution: the GLSS19 abstract claims only $\bar\chi = \Omega(\mathrm{RS})$, not a separation. A construction that does work: take a linear code $C'' \subseteq \mathbb{F}_2^n$ with distance and dual distance $\Omega(n)$, an index-$2$ subcode $C$ whose extra dual check also has weight $\Omega(n)$, and let $g = 0$ on $C$, $g = 1$ on $C''\setminus C$. Every sabotaged input has $\Omega(n)$ stars, so $\mathrm{RS}(g) = O(1)$, while $\Omega(n)$-wise independence gives $\mathrm{R}(g) = \Omega(n)$ and hence $\bar\chi(g) = \Omega(\sqrt n)$. Either verify GLSS19 or catalogue this family.'
   notes: |
+    **No separation is known in the other direction, in any setting.**
+    An earlier version of this page asserted that $\bar\chi$ is unbounded in
+    terms of $\mathrm{RS}$ and credited it to [GLSS19]; that is a
+    misattribution — GLSS19 prove only $\bar\chi = \Omega(\mathrm{RS})$, and use
+    it to *strengthen* the Ben-David–Kothari composition theorem, not to
+    separate the two.  The entry has been removed.
+
+    A plausible candidate family, not verified here: take a linear code
+    $C' \subseteq \mathbb{F}_2^n$ with distance and dual distance $\Omega(n)$,
+    an index-$2$ subcode $C$ whose extra dual check also has weight $\Omega(n)$,
+    and let $g = 0$ on $C$, $g = 1$ on $C' \setminus C$.  Every sabotaged input
+    has $\Omega(n)$ stars, so $\mathrm{RS}(g) = O(1)$, while $\Omega(n)$-wise
+    independence gives $\mathrm{R}(g) = \Omega(n)$.  Turning that into a
+    $\bar\chi$ lower bound needs a converse to $\bar\chi \le \mathrm{R}$, which
+    is exactly what is missing.
+
     For **total** $g$ no separation is known between any of
     $\mathrm{RS}$, $\bar\chi$, $\mathrm{LR}$ and $\mathrm{R}$.
   see_also: [chibar, RS, LR, chi]
@@ -271,10 +281,6 @@ relations:
       note: 'An exact characterisation, not just a bound.'
       conf: high
   lower:
-    - stmt: '\exists \text{ partial } f:\ \mathrm{R}(f) = \mathrm{noisyR}(f)^{1+\Omega(1)}'
-      refs: [BenDavidBlais20composition]
-      note: 'This separation *is* the refutation of the composition conjecture.'
-      conf: high
     - stmt: '\mathrm{R}(f)=\Theta(n)\ \Rightarrow\ \mathrm{noisyR}(f)=\Theta(\mathrm{R}(f))'
       refs: [CKMPSS23]
       conf: high
@@ -284,7 +290,42 @@ relations:
     *faulty-oracle* noise. They are different measures with different
     behaviour (e.g. $\mathrm{N}_p(\mathrm{PARITY})=\Theta(n\log n)$ but
     $\mathrm{noisyR}(\mathrm{PARITY})=\Theta(n)$).
-  see_also: [noisyR, R, Np, GapMaj, noisy-models]
+
+    The inequality is very far from tight on partial functions: see the
+    reverse pair for the [[ApproxIndex]] separation.
+  see_also: [noisyR, R, Np, GapMaj, noisy-models, ApproxIndex]
+
+- from: R
+  to: noisyR
+  setting: partial
+  status: gap
+  headline: '\mathrm{R} \text{ can be exponentially larger than } \mathrm{noisyR}'
+  lower:
+    - stmt: '\mathrm{R}(f) = 2^{\Omega(\mathrm{noisyR}(f))}'
+      form: {kind: exp}
+      witness: ApproxIndex
+      refs: [BenDavidBlais20composition]
+      note: |
+        Not stated this way in the source, which only needs a polynomial gap, but it is
+        what its lemmas give. On $\mathrm{ApproxIndex}_k$, Lemma 27 gives
+        $\mathrm{R} = \Theta(\sqrt{k\log k})$, while Theorem 3 applied to their
+        $O(k\log k)$ algorithm for $\mathrm{ApproxIndex}_k \circ \mathrm{GapMaj}_k$ gives
+        $\mathrm{noisyR} = O(\log k)$. So $k = 2^{\Omega(\mathrm{noisyR})}$ and
+        $\mathrm{R} = \Omega(\sqrt{k})$.
+      conf: high
+  notes: |
+    A slack lower bound is all we can do here: buying a bit at bias $\gamma$ costs
+    $\gamma^2$, so the noisy model gets $k$ bits of bias $\sqrt{\log k / k}$ for
+    $\log k$ -- a *statistical* budget the query model has no way to spend, since its
+    only move is to read a bit exactly.
+
+    **No upper bound on $\mathrm{R}$ in terms of $\mathrm{noisyR}$ is known** beyond the
+    trivial $\mathrm{R} \le n$; whether $\mathrm{R} = 2^{O(\mathrm{noisyR})}$ holds in
+    general seems to be open. For *total* functions the two are conjecturally equal:
+    no total $f$ with $\mathrm{noisyR}(f) = o(\mathrm{R}(f))$ is known, and if none
+    exists the randomized composition conjecture follows for total functions
+    ([[composition]]).
+  see_also: [noisyR, R, ApproxIndex, GapMaj, composition]
 
 - from: Rstar
   to: Q

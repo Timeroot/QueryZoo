@@ -1,0 +1,413 @@
+# =====================================================================
+# FUNCTIONS: the named problems that headline theorems, rather than the
+# gadgets built to fill a matrix cell. Surjectivity, k-distinctness,
+# triangle finding, recursive Fourier sampling, and friends.
+# =====================================================================
+functions:
+
+- id: Surjectivity
+  name: Surjectivity
+  symbol: '\mathrm{SURJ}_{N,R}'
+  group: quantum
+  order: 55
+  kind: total
+  arity: 'a list of $N$ elements of $[R]$ in binary, so $n = N\log_2 R$ bits; canonically $R = N/2$'
+  short: 'The only known *natural* function separating $\mathrm{Q}$ from $\widetilde{\deg}$: $\widetilde{\deg} = \tilde\Theta(n^{3/4})$ while $\mathrm{Q} = \tilde\Theta(n)$.'
+  definition: |
+    Read the input as a list $x_1,\dots,x_N \in [R]$ and accept iff every value in
+    the range is hit, $\{x_1,\dots,x_N\} = [R]$. With $R$ a power of two and each
+    $x_i$ written in binary this is a *total* Boolean function on $n = N\log_2 R$
+    bits, computed by a depth-3 $\mathrm{AC}^0$ circuit with logarithmic bottom
+    fan-in. The problem is trivial for $R > N$; the interesting regime is $R = N/2$.
+
+    Two encodings appear in the literature and they differ by a $\log R$ factor.
+    [Sherstov21] works over the one-hot domain, where
+    $\mathrm{SURJ}_{n,r} = \mathrm{AND}_r \circ \mathrm{OR}_n$ restricted to Hamming
+    weight $\le n$; [BKT18] and [BT22] use the binary encoding above.
+    [BT22, Obs. 52 and Lem. 54] relate the two -- which is where the tildes below
+    come from.
+  formal: '$$\mathrm{SURJ}_{N,R}(x) \;=\; \bigwedge_{j\in[R]}\ \bigvee_{i\in[N]}\ [\,x_i = j\,].$$'
+  values:
+    - {measure: adeg, value: '\tilde\Theta(n^{3/4})', refs: [Sherstov21, BKT18, BT22], note: 'At $R = N/2$. Upper: [Sherstov21, Thm. 1.3] constructs a polynomial of degree $O(\sqrt n\,r^{1/4})$ for $r \le n$; [BKT18, Thm. 3.1] restates it as $\tilde O(N^{3/4})$ for every $R$. Lower: [BKT18, Thm. 4.1], $\tilde\Omega(R^{3/4})$ for some $N = O(R)$. In general $\widetilde{\deg}(\mathrm{SURJ}_{N,R}) = \tilde\Theta(R^{1/4}N^{1/2})$. The $\varepsilon$-dependence is $\tilde\Theta(n^{3/4}\log^{1/4}(1/\varepsilon))$ for $3^{-n} \le \varepsilon \le 1/3$ [SherstovThaler23].'}
+    - {measure: Q, value: '\tilde\Theta(n)', refs: [BeameMachmouchi12], note: 'Lower: [BeameMachmouchi12, Cor. 3] gives $\Omega(n/\log n)$ -- their Cor. 2 shows $\Omega(N)$ *element* queries for $\mathrm{ONTO}$ with $[2N-2]\to[N]$, and the binary encoding costs the log. Upper: $n$, trivially. A clean $\Omega(n)$ is widely attributed to [Sherstov18asymmetry], but that paper states it only as a confidence in Remark 3.4 ("we are confident that ... one can eliminate the logarithmic factors"), not as a theorem, and about some $\mathrm{AC}^0$ function rather than $\mathrm{SURJ}$ in the binary encoding; hence the tilde.'}
+    - {measure: sdeg, value: '\tilde\Theta(\sqrt n)', refs: [BunThaler21largeerror, BT22], note: '[BunThaler21largeerror, Thm. 1.1]: $\deg_{\pm}(\mathrm{SURJ}_{N,R}) = \tilde\Theta(\min\{R,\sqrt N\})$ for $R < N/2$, which at the canonical $R$ is $\tilde\Theta(\sqrt n)$; also [BT22, Thm. 57]. Their Cor. 1.2 turns this into an $\mathrm{AC}^0$ function with unbounded-error communication complexity $\tilde\Omega(\sqrt n)$.'}
+    - {measure: s, value: '\Theta(n)', putative: true, note: 'At $R = N/2$ take the list in which each of $1,\dots,R-1$ occurs exactly once and $R$ fills the remaining $R+1$ slots: a $1$-input on which flipping any bit of any uniquely-occurring element deletes that value from the range, so $\mathrm{s} \ge (R-1)\log_2 R = n/2 - O(\log n)$. And $\mathrm{s}\le n$.'}
+    - {measure: C0, value: 'n', putative: true, note: 'A $0$-certificate must exhibit a value $j \in [R]$ that is missed, and that means ruling out $x_i = j$ for every $i$ -- i.e. fixing every bit of the input.'}
+    - {measure: C1, value: '\Theta(n)', putative: true, note: 'A $1$-certificate names one preimage for each of the $R$ range values, which is $R\log_2 R = n/2$ bits at $R = N/2$, and that suffices.'}
+    - {measure: bs, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{bs}(f) \le n$, with $\mathrm{s} = \Theta(n)$ here.'}
+    - {measure: R, value: '\tilde\Theta(n)', note: 'Sandwiched: $\mathrm{Q} \le \mathrm{R} \le n$.'}
+    - {measure: D, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s} \le \mathrm{D} \le n$. (Evasiveness -- $\mathrm{D} = n$ on the nose -- looks likely but I found no source for it.)'}
+    - {measure: fbs, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{fbs}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The $\mathrm{s}$ end is itself an unpublished argument (see above), so this is only as good as that.'}
+    - {measure: C, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{C}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The $\mathrm{s}$ end is itself an unpublished argument (see above), so this is only as good as that.'}
+    - {measure: FC, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{FC}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The $\mathrm{s}$ end is itself an unpublished argument (see above), so this is only as good as that.'}
+    - {measure: R0, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The $\mathrm{s}$ end is itself an unpublished argument (see above), so this is only as good as that.'}
+    - {measure: RC, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{RC}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The lower end of this sandwich is itself the zoo''s own argument (see the note on $\mathrm{s}$), so this value inherits its status.'}
+    - {measure: Rbar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The lower end of this sandwich is itself the zoo''s own argument (see the note on $\mathrm{s}$), so this value inherits its status.'}
+    - {measure: R1, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The lower end of this sandwich is itself the zoo''s own argument (see the note on $\mathrm{s}$), so this value inherits its status.'}
+    - {measure: chi, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \chi(g) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The lower end of this sandwich is itself the zoo''s own argument (see the note on $\mathrm{s}$), so this value inherits its status.'}
+    - {measure: chibar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \bar{\chi}(g) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The lower end of this sandwich is itself the zoo''s own argument (see the note on $\mathrm{s}$), so this value inherits its status.'}
+    - {measure: LR, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{LR}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The lower end of this sandwich is itself the zoo''s own argument (see the note on $\mathrm{s}$), so this value inherits its status.'}
+    - {measure: Rstar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{R}^{*}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The lower end of this sandwich is itself the zoo''s own argument (see the note on $\mathrm{s}$), so this value inherits its status.'}
+    - {measure: CA, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{CA}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The lower end of this sandwich is itself the zoo''s own argument (see the note on $\mathrm{s}$), so this value inherits its status.'}
+    - {measure: CG, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{CG}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The lower end of this sandwich is itself the zoo''s own argument (see the note on $\mathrm{s}$), so this value inherits its status.'}
+    - {measure: CGpub, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{CG}^{\mathrm{pub}}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The lower end of this sandwich is itself the zoo''s own argument (see the note on $\mathrm{s}$), so this value inherits its status.'}
+    - {measure: prt, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{prt}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The lower end of this sandwich is itself the zoo''s own argument (see the note on $\mathrm{s}$), so this value inherits its status.'}
+    - {measure: rprt, value: '\Theta(n)', conf: medium, note: 'Sandwiched: $\mathrm{s}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The lower end is the zoo''s own observation that the [JainKlauck10] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional. The lower end also inherits the provenance of $\mathrm{s}$ on this page.'}
+  witnesses:
+    - {of: [Q, adeg], setting: total, statement: '$\mathrm{Q} = \tilde\Omega(\widetilde{\deg}^{4/3})$. Not the record separation -- cheat sheets give $\tilde\Omega(\widetilde{\deg}^4)$, matching the $O(\widetilde{\deg}^4)$ upper bound -- but per [BKT18] this is the only *natural* function known to separate the two at all.', refs: [BKT18]}
+  notes: |
+    In the element-query model, where one query returns a whole $x_i \in [R]$, the
+    quantum bound is clean: $\mathrm{Q}(\mathrm{SURJ}_{N,N/2+1}) = \Theta(N)$
+    [BeameMachmouchi12, Cor. 2]. The tildes above are an artefact of the binary
+    encoding.
+  refs: [Sherstov21, BKT18, BT22, BeameMachmouchi12, BunThaler21largeerror, SherstovThaler23, Sherstov18asymmetry]
+  see_also: [adeg, Q, sdeg, cheatsheet, ElementDistinctness, KDistinctness]
+
+- id: KDistinctness
+  name: '$k$-distinctness'
+  symbol: '\mathrm{DIST}^k_n'
+  group: quantum
+  order: 56
+  kind: total
+  arity: '$n$ symbols over an alphabet $[q]$ (element queries); $k$ is a constant'
+  short: '$\mathrm{Q} = \Theta(n^{3/4 - 1/(4(2^k-1))})$, settled in 2026 after fourteen years; the approximate degree is still open.'
+  definition: |
+    Decide whether some symbol occurs at least $k$ times in the list. $k = 2$ is the
+    complement of [[ElementDistinctness]]. On the indicator matrix of the list it is
+    $\mathrm{OR}_q \circ \mathrm{THR}^k_n$ restricted to Hamming weight $\le n$.
+  formal: '$$\mathrm{DIST}^k(x) \;=\; \bigvee_{i_1 < \cdots < i_k}\ [\,x_{i_1} = \cdots = x_{i_k}\,].$$'
+  values:
+    - {measure: Q, value: '\Theta\!\big(n^{3/4 - 1/(4(2^k-1))}\big)', refs: [Belovs12kdist, Belovs26kdist], conf: medium, note: 'For constant $k$ and alphabet size $q = \Omega(n^2)$. Upper: [Belovs12kdist], a learning graph of cost $O(n^{1 - 2^{k-2}/(2^k-1)})$ -- the same exponent, $2/3$ at $k=2$ and $5/7$ at $k=3$. Lower: [Belovs26kdist, Thm. 1.1], by a compressed-oracle framework that subsumes the polynomial method; the same paper recovers $\Omega(n^{2/3})$ for element distinctness (its Thm. 6.10). Marked medium confidence only because the lower bound is a 2026 preprint; the exponent matches the 2012 algorithm exactly. Earlier: $O(n^{k/(k+1)})$ by quantum walk [Ambainis07].'}
+    - {measure: adeg, value: '\tilde\Omega\!\big(n^{3/4-1/(4k)}\big) \text{ to } O\!\big(n^{3/4-1/(4(2^k-1))}\big)', refs: [MTZ20, Sherstov21, BT22], conf: medium, note: 'Open, so recorded as a range. Lower: [MTZ20, Thm. 17 / Cor. 18] for $2 \le k \le \log^4 q$ -- the first proof that $4$-distinctness is strictly harder than element distinctness. Upper: [Sherstov21, Thm. 1.1], degree $O(\sqrt n \cdot \min\{n,q\}^{1/2 - 1/(4(1-2^{-k}))})$, and $\tilde O(n^{3/4})$ for all $k \le \mathrm{polylog}(n)$ [MTZ20, Thm. 2]. The 2026 quantum lower bound does *not* transfer: [BT22] ask exactly how fast $\widetilde{\deg}$ approaches $n^{3/4}$ and it is still open.'}
+    - {measure: R, value: '\Theta(n)', note: 'Read everything; the lower bound is the usual hybrid argument in the element-query model.'}
+    - {measure: D, value: 'n', note: 'Element-query model.'}
+    - {measure: Rbar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.', conf: medium}
+    - {measure: R0, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.', conf: medium}
+    - {measure: R1, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.', conf: medium}
+    - {measure: Advpm, value: '\Theta\!\big(n^{3/4 - 1/(4(2^k-1))}\big)', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta\!\big(n^{3/4 - 1/(4(2^k-1))}\big)$ here.', conf: medium}
+    - {measure: gamma2, value: '\Theta\!\big(n^{3/4 - 1/(4(2^k-1))}\big)', note: '$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[gamma2]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta\!\big(n^{3/4 - 1/(4(2^k-1))}\big)$ here.', conf: medium}
+    - {measure: MAdv, value: '\Theta\!\big(n^{3/4 - 1/(4(2^k-1))}\big)', note: '$\mathrm{MAdv}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[MAdv]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta\!\big(n^{3/4 - 1/(4(2^k-1))}\big)$ here.', conf: medium}
+  witnesses:
+    - {of: [R, Q], setting: total, statement: 'A family of total functions with $\mathrm{R} = \Theta(\mathrm{Q}^{1/(3/4 - 1/(4(2^k-1)))})$, approaching $\mathrm{R} = \mathrm{Q}^{4/3}$ as $k \to \infty$ -- over a large alphabet, so not a Boolean-input separation.', refs: [Belovs26kdist]}
+  notes: |
+    Open, per [Belovs26kdist, §7]: the approximate degree; alphabets smaller than
+    $n^2$; non-constant $k$; and removing the "$\Omega(n)$ singletons" assumption on
+    the input distribution. The framework is explicitly incomparable to the
+    Liu-Zhandry compressed-oracle results, which fix a uniformly random input.
+  refs: [Belovs12kdist, Belovs26kdist, MTZ20, Sherstov21, BT22, Ambainis07]
+  see_also: [ElementDistinctness, Q, adeg, Collision]
+
+- id: TriangleFinding
+  name: Triangle finding
+  symbol: '\mathrm{TRI}_m'
+  group: quantum
+  order: 57
+  kind: total
+  arity: 'the adjacency matrix of a graph on $m$ vertices: $n = \binom m2 = \Theta(m^2)$ bits'
+  short: 'The flagship open problem of quantum query complexity: $\Omega(m)$ against $O(m^{5/4})$, stuck for twenty years.'
+  definition: |
+    Does the input graph contain a copy of $K_3$? One query reveals one entry of the
+    adjacency matrix. Detection and finding have the same complexity up to constants
+    here, since the problem carries no promise [CGP26, Lem. 3.4].
+
+    Values below are stated in the number of *vertices* $m$, as the literature does;
+    in the zoo's convention $n = \binom m2$ input variables, so $m = \Theta(\sqrt n)$.
+  formal: '$$\mathrm{TRI}_m(x) \;=\; \bigvee_{u<v<w}\ x_{uv} \wedge x_{vw} \wedge x_{uw}.$$'
+  values:
+    - {measure: Q, value: '\Omega(m) \text{ to } O(m^{5/4})', refs: [CLM20, LeGall14, LMS13, Belovs12span, MSS07], conf: medium, note: 'Open. Best upper bound $O(m^{5/4})$ with no log factors [CLM20], after $\tilde O(m^{5/4})$ by combinatorial arguments [LeGall14, Thm. 1.1]. The ladder: $O(m^{3/2})$ by Grover, $\tilde O(m^{13/10})$ [MSS07, Thm. 4], $O(m^{35/27})$ [Belovs12span, Thm. 8], $O(m^{9/7})$ [LMS13, Thm. 7], also $\tilde O(m^{9/7})$ by nested quantum walks [JKM13]. The only lower bound is the trivial $\Omega(m)$ from a Grover search embedded in one bipartite block [CGP26, Lem. 3.3(3)]. Still open as of August 2026.'}
+    - {measure: R, value: '\Theta(m^2) = \Theta(n)', refs: [CGP26], note: '[CGP26, Lem. 3.3(3)] proves $\mathrm{R} = \Theta(m^2)$ for every subgraph-containment problem whose pattern keeps an edge after pinning, by embedding classical search over the $\binom m2$ pairs. Often asserted without citation, e.g. [LeGall14, §1].'}
+    - {measure: D, value: '\binom m2 = n', refs: [Bollobas76, CKS02], note: 'Evasive for every $m$: containing $K_k$ is elusive for all $2 \le k \le m$ [Bollobas76]. (Kahn-Saks-Sturtevant gives evasiveness of monotone properties only for prime-power $m$; Chakrabarti-Khot-Shi handle general patterns only along an arithmetic progression.)'}
+    - {measure: C1, value: '3', refs: [MSS07], note: 'Name the three edges. This is the whole difficulty: with $N$ variables and $1$-certificates of size $K$, no positive-weight adversary can prove more than $\Omega(\sqrt{NK})$ [MSS07, §1], which for $N = m^2$, $K = 3$ is exactly the $\Omega(m)$ already on record.'}
+    - {measure: C0, value: '\binom m2 = n', putative: true, note: 'The complete bipartite graph $K_{\lceil m/2\rceil,\lfloor m/2\rfloor}$ is a *maximal* triangle-free graph, so any unfixed pair could be set to $1$ and create a triangle; a $0$-certificate must fix every variable.'}
+    - {measure: s, value: '\Theta(m^2) = \Theta(n)', putative: true, note: 'On that same $K_{m/2,m/2}$ all $2\binom{\lfloor m/2\rfloor}{2} = \Theta(m^2)$ non-edges are sensitive, and $\mathrm{s} \le \binom m2$. Note the asymmetry: on a $1$-input with a single triangle and nothing else, $\mathrm{s} = 3$, so it is $\mathrm{s}^0$ that carries the maximum.'}
+    - {measure: bs, value: '\Theta(m^2) = \Theta(n)', note: 'Sandwiched: $\mathrm{s} \le \mathrm{bs} \le \mathrm{C} \le \binom m2$.'}
+    - {measure: fbs, value: '\Theta(m^2) = \Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{fbs}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.'}
+    - {measure: RC, value: '\Theta(m^2) = \Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{RC}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.'}
+    - {measure: FC, value: '\Theta(m^2) = \Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{FC}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.'}
+    - {measure: Rbar, value: '\Theta(m^2) = \Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.'}
+    - {measure: chi, value: '\Theta(m^2) = \Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \chi(g) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.'}
+    - {measure: chibar, value: '\Theta(m^2) = \Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \bar{\chi}(g) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.'}
+    - {measure: LR, value: '\Theta(m^2) = \Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{LR}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.'}
+    - {measure: Rstar, value: '\Theta(m^2) = \Theta(n)', note: 'Sandwiched: $\mathrm{bs}(f) \le \mathrm{R}^{*}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.'}
+    - {measure: CA, value: '\Theta(m^2) = \Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{CA}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.'}
+    - {measure: CGpub, value: '\Theta(m^2) = \Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{CG}^{\mathrm{pub}}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.'}
+    - {measure: prt, value: '\Theta(m^2) = \Theta(n)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{prt}_{\varepsilon}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.'}
+    - {measure: rprt, value: '\Theta(m^2) = \Theta(n)', conf: medium, note: 'Sandwiched: $\mathrm{s}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here. The lower end is the zoo''s own observation that the [JainKlauck10] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional.'}
+  witnesses:
+    - {of: [R, Q], setting: total, statement: 'A candidate for a large gap that nobody can pin down: $\mathrm{R} = \Theta(m^2)$ against a $\mathrm{Q}$ known only to lie in $[\Omega(m), O(m^{5/4})]$, so the true exponent of $\mathrm{R}$ vs $\mathrm{Q}$ here is somewhere in $[8/5, 2]$.'}
+  notes: |
+    Two barriers are worth knowing. The certificate-complexity barrier above caps the
+    positive-weight adversary at $\Omega(m)$. And [BalodisIraids15] show
+    $\mathrm{Q}(\mathrm{TRI}_m) = \Omega(\sqrt m \cdot \mathrm{Q}(\mathrm{GC}_m))$ for
+    graph collision, so any super-Grover bound for graph collision -- itself stuck at
+    the trivial bound -- would immediately break the triangle barrier.
+
+    A restricted-model lower bound often misquoted as an unconditional one:
+    [BelovsRosmanis14, Prop. 13] gives $\Omega(m^{9/7}/\sqrt{\log m})$ for the
+    *non-adaptive learning graph* complexity of the triangle certificate structure,
+    and unconditionally only for the edge-weighted triangle-sum problem. Le Gall's
+    $\tilde O(m^{5/4})$ therefore separates adaptive from non-adaptive learning
+    graphs rather than contradicting anything.
+  refs: [CLM20, LeGall14, LMS13, JKM13, Belovs12span, MSS07, CGP26, Bollobas76, CKS02, BelovsRosmanis14, BalodisIraids15]
+  see_also: [Q, R, Advpm, C1, GroverSearch]
+
+- id: RecursiveFourierSampling
+  name: Recursive Fourier sampling
+  symbol: '\mathrm{RFS}^g_\ell'
+  group: quantum
+  order: 58
+  kind: partial
+  arity: 'an oracle on $(\{0,1\}^n)^\ell$; cost is counted in oracle calls, not in bits'
+  short: 'The original superpolynomial oracle separation: $\mathrm{Q}_E = 2^\ell$ against $n^{\Omega(\log n)}$ classically at $\ell = \log n$.'
+  definition: |
+    Fix a Boolean $g:\{0,1\}^n\to\{0,1\}$ that is *not* a parity; $g$ is known in
+    advance and free to evaluate. Take a tree of height $\ell$ in which every internal
+    vertex has $2^n$ children, one per string. Each vertex $v$ carries a secret
+    $s_v \in \{0,1\}^n$, subject to the promise that
+    $g(s_{v\cdot x}) = s_v\cdot x \bmod 2$ for every child $x$; the oracle answers
+    $g(s_v)$ at the leaves. The task is to output $g(s_\varnothing)$ at the root.
+    The canonical choice is $g_{\mathrm{mod}3}(s) = [\,|s| \equiv 0 \bmod 3\,]$.
+
+    Three inequivalent formulations circulate. This is [Aaronson03rfs, §1] with the
+    per-node secrets made explicit as in [McKague12, §1.1].
+    [BernsteinVazirani97, §8.4] is genuinely different -- the string length *halves*
+    at each level, so the height is forced to $\log n$, and there is no fixed $g$ --
+    and should not be described as "$\mathrm{RFS}^g_\ell$ with $\ell = \log n$".
+  formal: |
+    $$g(s_{x_1\ldots x_k}) = s_{x_1\ldots x_{k-1}}\cdot x_k \bmod 2,
+      \qquad A(x_1,\dots,x_\ell) = g(s_{x_1\ldots x_\ell}),
+      \qquad \text{output } g(s_\varnothing).$$
+  values:
+    - {measure: QE, value: '2^\ell', refs: [Aaronson03rfs, BernsteinVazirani97], note: 'One level costs two queries by the Bernstein-Vazirani kickback trick, and the recursion is exact: [Aaronson03rfs, Lem. 1] puts the language version in $\mathrm{EQP}^A$; [BernsteinVazirani97, Thm. 8.4.3] gives a polynomial-time quantum machine accepting with probability $1$, from the recursion $T(n) \le \mathrm{poly}(n) + 4T(n/2)$.'}
+    - {measure: Q, value: '\Theta(2^\ell) \text{ for } g = g_{\mathrm{mod}3}', refs: [Aaronson03rfs], note: '[Aaronson03rfs, Thm. 5]: $\mathrm{Q}(\mathrm{RFS}^g_\ell) = \Omega\big((1-\mu(g))^{-\ell/2}\big)$, where $\mu(g)$ is the nonparity coefficient of Def. 2. Prop. 6 gives $\mu(g_{\mathrm{mod}3}) = 3/4 - O(1/n)$, hence $\Omega(2^\ell)$, matching the algorithm. Thm. 7: $\mu(g) < 0.146$ forces $g$ to be a parity, so *any* legal $g$ gives $\Omega(2^{0.113\ell})$. This was the first lower bound to need the adversary method rather than the polynomial method.'}
+    - {measure: R, value: 'n^{\Omega(\log n)} \text{ at } \ell = \log n', refs: [BernsteinVazirani97], note: '[BernsteinVazirani97, Thm. 8.4.6 / Cor. 8.4.7]: relative to a random legal oracle, with probability $1$, the language is not in $\mathrm{BPTime}(T(n))$ for any $T(n) = n^{o(\log n)}$; the explicit bound is $\tfrac1{12}\varphi(n/4)$ with $\varphi(n) = n(n/2)\cdots 1 > n^{(\log n)/2}$. So the separation is superpolynomial, not exponential. The often-quoted $\Theta(n^\ell)$ for general $\ell$ is a folklore extrapolation -- BV prove only the $\ell = \log n$ case.'}
+    - {measure: bs, value: '1', refs: [Aaronson10], putative: true, note: 'The promise is rigid enough that no block of the oracle can be flipped and stay inside it. Worth recording because it is precisely why the polynomial method says nothing here.'}
+    - {measure: Advpm, value: '\Theta(2^{\ell})', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(2^{\ell})$ here for the base function $g = g_{\mathrm{mod}3}$.'}
+    - {measure: MAdv, value: '\Theta(2^{\ell})', note: 'Same sandwich as [[Advpm]]: the multiplicative adversary is also a tight characterisation of $\mathrm{Q}$.'}
+  witnesses:
+    - {of: [R, QE], setting: partial, statement: 'Superpolynomial: $\mathrm{Q}_E = \mathrm{poly}$ against $\mathrm{R} = n^{\Omega(\log n)}$ at $\ell = \log n$ -- the first such separation, and it is *exact* quantum versus randomized.', refs: [BernsteinVazirani97]}
+  notes: |
+    $\mathrm{RFS}$ was the original candidate for $\mathrm{BQP}\not\subset\mathrm{PH}$,
+    a role Forrelation eventually filled: it does give
+    $\mathrm{BQP}^A \not\subset \mathrm{NP}^A, \mathrm{MA}^A$, but at $\ell = \log n$
+    it *is* in $\mathrm{PH}$ [Aaronson10], and whether some setting of the parameters
+    escapes $\mathrm{PH}$ (or $\mathrm{AM}$) is open.
+  refs: [Aaronson03rfs, BernsteinVazirani97, Aaronson10, McKague12]
+  see_also: [QE, Q, R, Forrelation, Simon, BV]
+
+- id: GluedTrees
+  name: Welded trees
+  symbol: '\mathrm{WT}_n'
+  aliases: ['glued trees', 'conjoined trees', 'graph traversal problem']
+  group: relational
+  order: 59
+  kind: relation
+  arity: 'a $9$-edge-coloured adjacency oracle on $2^{2n}$ possible vertex names, for a graph with $2^{n+2}-2$ vertices'
+  short: 'The quantum-walk speedup: $\mathrm{Q} = \Theta(n)$ against $\mathrm{R} = \mathrm{D} = \tilde\Theta(2^{n/2})$ -- exponential in the tree height, but only $\tilde\Theta(\sqrt{N})$ in the vertex count.'
+  definition: |
+    Two complete binary trees of height $n$ are joined leaf-to-leaf by a random cycle
+    alternating between the two leaf sets. Each vertex gets a uniformly random $2n$-bit
+    *name*, so names are exponentially sparse in the $2^{2n}$ name space, and the
+    oracle maps (name, colour) to the name of the neighbour across the edge of that
+    colour, or to $1^{2n}$ if there is none. Given the name of the ENTRANCE, output the
+    name of the EXIT. The random $9$-colouring is chosen precisely so that it tells a
+    classical algorithm nothing.
+
+    This is a *relation* with a unique valid answer, and the oracle is not a Boolean
+    decision tree: costs below are in oracle calls, and Boolean queries would cost an
+    extra $O(n)$ factor.
+  formal: '$S = \{(\mathcal{O}_{G,\pi,c},\ \pi(\mathrm{EXIT}))\}$ over welded trees $G$ of height $n$, injective namings $\pi: V \hookrightarrow \{0,1\}^{2n}$ with $\pi(\mathrm{ENTRANCE})$ fixed, and proper $9$-edge-colourings $c$.'
+  values:
+    - {measure: Q, value: '\Theta(n)', refs: [JefferyZur25, Belovs24welded], note: 'Upper: [JefferyZur25, §5], a multidimensional (electric-network) quantum walk, $O(n)$ queries and $O(n^2)$ time; [Belovs24welded] reproves it in a page. The 2003 continuous-time walk is *not* an $O(n)$-query algorithm: simulating $e^{-iHt}$ for $t = O(n^4)$ costs $O(t^2)$ queries, so [CCDFGS03] as stated is $O(n^{8.5})$ queries, brought to $O(n^{2.5}\log^2 n)$ by [AtiaChakraborty21].'}
+    - {measure: Q, value: '\Omega(n)', putative: true, conf: medium, note: 'Nobody states this as a theorem, but it is the light-cone argument: names are random $2n$-bit strings in a space of size $2^{2n}$, so with probability $1 - 2^{-\Omega(n)}$ an algorithm never guesses a name it has not been handed, and after $t$ queries everything it has seen lies within distance $t$ of the ENTRANCE, which is $2n+2$ away from the EXIT; BBBV makes the hybrid argument quantum. [Belovs24welded] calls the linear upper bound optimal, which presupposes it.'}
+    - {measure: QE, value: 'O(n^{1.5}\log n)', refs: [LiLiLuo24], note: '[LiLiLuo24, §5, Alg. 2]: run the plain coined quantum walk for a classically precomputable number of steps, then exact amplitude amplification. Zero error -- one of very few exponential $\mathrm{Q}_E$-vs-$\mathrm{R}$ separations known. Their bounded-error Alg. 1 uses $O(n^2\log n)$ queries.'}
+    - {measure: D, value: 'O(n\,2^{n/2})', refs: [AaronsonAmbainis18, Liu17thesis], note: 'Shalev Ben-David, reported in [AaronsonAmbainis18, fn. 5] as $O(\sqrt N\log N)$ with $N = 2^n$ ($O(\sqrt N \log^2 N)$ with Boolean queries), and written out in full as [Liu17thesis, §4.3, Alg. 5]: breadth-first search the top $\lceil n/2\rceil$ levels, cross using short probe-trees to tell "up" from "down", then search the last $\lfloor n/2\rfloor$ levels. So randomness buys essentially nothing here.'}
+    - {measure: R, value: '\Omega(2^{n/2}/n)', refs: [Liu17thesis, AaronsonAmbainis18], conf: medium, note: '[Liu17thesis, Cor. 25], for the easier task of finding either the EXIT or any cycle. [AaronsonAmbainis18, fn. 5] asserts $\Omega(\sqrt N)$ for constant success probability. Refereed but weaker: $\Omega(2^{n/6})$ [CCDFGS03, Thm. 9] and $\Omega(2^{n/3})$ [FennerZhang03, Thm. 1.2], both in the exponentially-small-success regime. Medium confidence: the strong form lives in a thesis and a footnote.'}
+    - {measure: R, value: 'O(n\,2^{n/2})', note: 'From $\mathrm{R} \le \mathrm{D}$.'}
+  witnesses:
+    - {of: [R, Q], setting: relation, statement: 'Exponential in the tree height: $\mathrm{Q} = \Theta(n)$ against $\mathrm{R} = \tilde\Theta(2^{n/2})$. In the vertex count $N = 2^n$ that reads $\mathrm{Q} = \Theta(\log N)$ vs $\mathrm{R} = \tilde\Theta(\sqrt N)$ -- the same shape as Simon, and *not* a $2^{\Omega(N)}$ separation.', refs: [CCDFGS03, FennerZhang03, JefferyZur25, Liu17thesis]}
+    - {of: [R, QE], setting: relation, statement: 'The separation survives at zero error: $\mathrm{Q}_E = O(n^{1.5}\log n)$ against $\mathrm{R} = \tilde\Theta(2^{n/2})$.', refs: [LiLiLuo24]}
+    - {of: [D, R], setting: relation, statement: '**Not** a separation, and that is the point: $\mathrm{D} = O(n2^{n/2})$ while $\mathrm{R} = \Omega(2^{n/2}/n)$, so randomness is worth at most a factor $n^2$ here.', refs: [AaronsonAmbainis18, Liu17thesis]}
+  notes: |
+    The speedup produces no certificate. [ChildsCoudronGilani23] show that the
+    *path-finding* version -- output an ENTRANCE-to-EXIT path rather than just the EXIT
+    name -- cannot be solved efficiently by any quantum algorithm that only ever
+    queries names inside a connected subgraph containing the ENTRANCE. The walk
+    necessarily forgets how it got there.
+
+    The advantage also lives entirely in the labelled adjacency-list presentation:
+    symmetric graph properties admit at most polynomial quantum speedups
+    (Ben-David, Childs, Gilyen, Kretschmer, Podder, Wang, FOCS 2020).
+
+    Open: whether $\mathrm{R} = \Theta(2^{n/2})$ with no $n$ factor (the window is
+    $[\Omega(2^{n/2}/n), O(n2^{n/2})]$), and whether $\mathrm{Q}_E$ can be brought down
+    to $O(n)$.
+  refs: [CCDFGS03, FennerZhang03, Liu17thesis, JefferyZur25, LiLiLuo24, Belovs24welded, ChildsCoudronGilani23, AaronsonAmbainis18, AtiaChakraborty21]
+  see_also: [Simon, YamakawaZhandry, Q, QE, R]
+
+- id: LocalSearchCube
+  name: Local search on the hypercube
+  symbol: '\mathrm{LS}(\{0,1\}^n)'
+  aliases: ['black-box 2SAT-FLIP']
+  group: relational
+  order: 60
+  kind: relation
+  arity: 'a table $f:\{0,1\}^n \to \mathbb{Z}$, so $N = 2^n$ integer-valued input cells'
+  short: 'The query-complexity home of PLS, and tight in all three models: $\mathrm{D} = \Theta(2^n/\sqrt n)$, $\mathrm{R} = \Theta(2^{n/2}\sqrt n)$, $\mathrm{Q} = \Theta(2^{n/3}n^{1/6})$.'
+  definition: |
+    Given $f$ by an oracle, output any $v$ that is a local minimum: $f(v) \le f(w)$ for
+    every neighbour $w$ at Hamming distance $1$. A minimum always exists, so this is a
+    *total* search problem -- the black-box form of the PLS-complete problem 2SAT-FLIP.
+
+    Note the arity convention: there are $N = 2^n$ cells, each holding an integer, so
+    the bounds below are in cell-queries and $n = \log_2 N$.
+  formal: '$S = \{(f, v) : f(v) \le f(w) \text{ for all } w \text{ with } |v \oplus w| = 1\}$.'
+  values:
+    - {measure: D, value: '\Theta(2^n/\sqrt n)', refs: [LTT89, SanthaSzegedy09], note: '[LTT89] characterise $\mathrm{D}$ for every graph in terms of vertex cuts; on the cube the optimum is essentially to query the middle layer. Quoted in this form in [SanthaSzegedy09, §1].'}
+    - {measure: R, value: '\Theta(2^{n/2}\sqrt n)', refs: [Zhang09localsearch, Aldous83], note: 'Upper: Aldous'' generic $O(\sqrt{N\Delta})$ with $N = 2^n$, $\Delta = n$. Lower: [Zhang09localsearch, Thm. 2], after [Aldous83] ($2^{n/2-o(n)}$) and [Aaronson06, Thm. 15] ($\Omega(2^{n/2}/n^2)$).'}
+    - {measure: Q, value: '\Theta(2^{n/3}n^{1/6})', refs: [Zhang09localsearch, Aaronson06], note: 'Upper: Aaronson''s generic $O(N^{1/3}\Delta^{1/6})$. Lower: [Zhang09localsearch, Thm. 2], after [Aaronson06, Thm. 15] ($\Omega(2^{n/4}/n)$ by the relational adversary) and an unpublished $\Omega(2^{n/3}/n^{O(1)})$ of Ambainis.'}
+    - {measure: R0, value: '\Theta(2^{n/2}\sqrt n)', note: 'A candidate local minimum is verified with $\Delta = n$ further queries, so $\mathrm{R}_0 = O(\mathrm{R} + n)$, and $n \ll \mathrm{R}$ here. Same remark as on [[promiseFind1]].'}
+    - {measure: Advpm, value: '\Theta(2^{n/3}n^{1/6})', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(2^{n/3}n^{1/6})$ here.'}
+  witnesses:
+    - {of: [D, R], setting: relation, statement: 'Quadratic, on a *total* search problem: $\mathrm{D} = \tilde\Theta(\mathrm{R}^2)$.', refs: [LTT89, Zhang09localsearch]}
+    - {of: [R, Q], setting: relation, statement: '$\mathrm{R} = \tilde\Theta(\mathrm{Q}^{3/2})$ -- strictly super-linear but well short of quadratic.', refs: [Zhang09localsearch]}
+  notes: |
+    **Why the exponents stop there.** [SanthaSzegedy09, Thm. 1]:
+    $\mathrm{D}(\mathrm{LS}_G) = O(\mathrm{Q}_{\varepsilon}(\mathrm{LS}_G)^{19})$ for
+    *every* graph $G$, so local search admits no exponential quantum speedup anywhere.
+    Their route is $\mathrm{D} = O(\log n\,(\Delta + s))$ (Thm. 2) against
+    $\mathrm{Q} = \Omega((s/\Delta)^{1/8}/\log n)$ (Thm. 4), with $s$ the separation
+    number; they say plainly that $19$ is far from optimal, and the true exponent is
+    open.
+
+    **PLS.** 2SAT-FLIP is PLS-complete and its neighbourhood graph is the cube, so the
+    $\Omega(2^{n/3}n^{1/6})$ bound gives an oracle relative to which
+    $\mathsf{PLS} \not\subseteq \mathsf{FBQP}$ [Aaronson06] -- and Santha-Szegedy say
+    that oracle separation can never be made exponential.
+
+    **Expanders.** [BranzeiChooRecker24] get $\mathrm{R} = \Omega(n^{1.5}/g)$ ($g$ the
+    vertex congestion) and $\Omega((s/\Delta)^{1/4})$, giving $\tilde\Theta(\sqrt n)$ on
+    constant-degree expanders; [BranzeiRecker24] get $\mathrm{Q} = \Omega(n^{3/4}/\sqrt g)$.
+  refs: [Aaronson06, Zhang09localsearch, SanthaSzegedy09, LTT89, Aldous83, BranzeiChooRecker24, BranzeiRecker24]
+  see_also: [LocalSearchGrid, SearchCNF, GroverSearch, promiseFind1]
+
+- id: LocalSearchGrid
+  name: Local search on the grid
+  symbol: '\mathrm{LS}([k]^d)'
+  group: relational
+  order: 61
+  kind: relation
+  arity: 'a table $f:[k]^d \to \mathbb{Z}$, so $N = k^d$ cells; $d$ is constant'
+  short: 'Tight at $\Theta(k^{d/2})$ randomized for $d\ge4$ and $\Theta(k^{d/3})$ quantum for $d\ge6$; the low dimensions took another decade, and $d=4$ quantum is still open.'
+  definition: 'As [[LocalSearchCube]], on the $d$-dimensional grid with nearest-neighbour edges, so $\Delta = 2d$.'
+  values:
+    - {measure: R, value: '\Theta(k^{d/2})\ (d \ge 4)', refs: [Zhang09localsearch, Aldous83], note: '[Zhang09localsearch, Thm. 3], matching Aldous'' $O(\sqrt{N\Delta}) = O(k^{d/2})$.'}
+    - {measure: R, value: '\tilde\Theta(k^{3/2})\ (d = 3)', refs: [Zhang09localsearch], note: '$\Omega((k^3/\log k)^{1/2})$ [Zhang09localsearch, Thm. 3].'}
+    - {measure: R, value: '\tilde\Theta(k)\ (d = 2)', refs: [SunYao09], note: '[SunYao09]: $\Omega(k^{1-\delta})$ for every constant $\delta > 0$, via Sarkozy-Szemeredi, matching Aldous'' $O(k)$. [Zhang09localsearch] had reached only $\Omega(k^{2/3})$.'}
+    - {measure: Q, value: '\Theta(k^{d/3})\ (d \ge 6)', refs: [Zhang09localsearch, Aaronson06], note: '[Zhang09localsearch, Thm. 3], matching Aaronson''s $O(N^{1/3}\Delta^{1/6}) = O(k^{d/3})$.'}
+    - {measure: Q, value: '\tilde\Theta(k^{5/3})\ (d = 5)', refs: [Zhang09localsearch], note: '$\Omega((k^5/\log k)^{1/3})$ [Zhang09localsearch, Thm. 3].'}
+    - {measure: Q, value: '\Omega(k^{6/5}),\ O(k^{4/3})\ (d = 4)', refs: [Zhang09localsearch], note: 'The one polynomial gap left in the table [Zhang09localsearch, Thm. 3].'}
+    - {measure: Q, value: '\tilde\Theta(k)\ (d = 3)', refs: [SunYao09], note: '[SunYao09]: $\Omega(k^{1-\delta})$ against $O(k^{d/3}) = O(k)$.'}
+    - {measure: Q, value: '\tilde\Theta(\sqrt k)\ (d = 2)', refs: [SunYao09, Verhoeven06, Zhang09localsearch], note: 'Lower $\Omega(k^{1/2-\delta})$ [SunYao09]; upper $O(\sqrt k\log\log k)$ [Verhoeven06] via graph genus, also $O(\sqrt k(\log\log k)^{1.5})$ [Zhang09localsearch, Thm. 5].'}
+    - {measure: D, value: '\tilde\Theta(k^{d-1})', putative: true, conf: medium, note: 'Upper from [SanthaSzegedy09, Thm. 2], $\mathrm{D} = O(\log n\,(\Delta + s))$ with separation number $s([k]^d) = \Theta(k^{d-1})$; lower from the vertex-cut characterisation of [LTT89]. [LTT89] and [LlewellynTovey93] treat the deterministic case exhaustively, but I could not verify this exact grid statement in a primary source.'}
+  refs: [Zhang09localsearch, SunYao09, Aaronson06, Verhoeven06, SanthaSzegedy09, LTT89, LlewellynTovey93, Aldous83]
+  see_also: [LocalSearchCube, R, Q]
+
+- id: FourierFishing
+  name: Fourier fishing
+  symbol: '\mathrm{FFish}_N'
+  aliases: ['Fourier sampling']
+  group: relational
+  order: 62
+  kind: relation
+  arity: 'a truth table $f:\{0,1\}^n \to \{-1,1\}$, so $N = 2^n$ input bits'
+  short: 'The largest separation there is: one quantum query against $\Omega(N/\log N)$ randomized ones -- impossible for a decision problem.'
+  definition: |
+    Write $\widehat f(z) = 2^{-n/2}\sum_x f(x)(-1)^{x\cdot z}$, so $\sum_z \widehat f(z)^2 = N$
+    and a typical $|\widehat f(z)|$ is $\Theta(1)$. **Fourier fishing** asks for any $z$
+    with $|\widehat f(z)| \ge 1$; the promise version restricts to $f$ on which one
+    Hadamard-query-Hadamard round succeeds with probability at least
+    $\mathrm{Succ}_Q - 1/n$, where
+    $\mathrm{Succ}_Q = \tfrac{2}{\sqrt{2\pi}}\int_1^\infty x^2 e^{-x^2/2}dx \approx 0.801$,
+    against $\mathrm{Succ}_R = \tfrac{2}{\sqrt{2\pi}}\int_1^\infty e^{-x^2/2}dx \approx 0.317$
+    for a uniformly random guess.
+
+    Its sibling **Fourier sampling** -- output a sample within total variation
+    $\varepsilon$ of $D_f(y) = \widehat f(y)^2/N$ -- is a sampling problem, which the
+    zoo's total/partial/relation vocabulary has no slot for; see the notes.
+  formal: '$\mathrm{FFish}_N = \{(f,z) : |\widehat f(z)| \ge 1\}$.'
+  values:
+    - {measure: Q, value: '1', refs: [AaronsonChen17, AaronsonAmbainis18], note: '[AaronsonChen17, Lem. 6.3]: Hadamard, query, Hadamard, measure. It solves Fourier sampling *exactly* and fishing with probability $\ge 0.801 - 1/n$ on the promise.'}
+    - {measure: R, value: '\Omega(N/\log N)', refs: [AaronsonChen17], note: '[AaronsonChen17, Thm. 6.4]: no $o(N/\log N)$-query randomized algorithm solves promise-fishing with probability $\mathrm{Succ}_R + \Omega(1)$. Note this is the *relation*; [AaronsonAmbainis18, Thm. 27] proves the analogous bound for the sampling problem and leaves the relation as a "plausible conjecture", which is what Aaronson-Chen discharge.'}
+    - {measure: D, value: 'N', note: 'Read everything. Nothing better is possible below $\Omega(N/\log N)$, and nothing better is known at all.'}
+    - {measure: Advpm, value: '\Theta(1)', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = 1$ here.'}
+  witnesses:
+    - {of: [R, Q], setting: relation, statement: 'One quantum query against $\Omega(N/\log N)$ classical ones. For a partial **decision** problem this is impossible: $\mathrm{Q}(f) = k$ forces $\mathrm{R}(f) = O(N^{1-1/2k})$ [AaronsonAmbainis18], so at $\mathrm{Q}=1$ the ceiling is $O(\sqrt N)$ -- attained by [[Forrelation]].', refs: [AaronsonChen17, AaronsonAmbainis18]}
+  notes: |
+    **The sampling sibling is settled and even stronger.** [AaronsonChen17, Thm. 6.8]
+    gives the optimal $\Omega(N)$ for Fourier *sampling* at some constant $\varepsilon$,
+    and Thm. 6.7 gives $\Omega(N/\log N)$ for every
+    $\varepsilon < \mathrm{Succ}_Q - \mathrm{Succ}_R \approx 0.483$; [AaronsonAmbainis18,
+    Thm. 27] had $\Omega(N/\log N)$ at $\varepsilon = 0.01$. So sampling sits at
+    $\mathrm{R} = \Theta(N)$ against $\mathrm{Q} = 1$ -- the reason this problem is
+    quoted throughout the quantum-supremacy literature. If the zoo ever grows a
+    `sampling` setting, this is the motivating example.
+
+    Aaronson's Kolmogorov-complexity trick converts any sampling problem into a
+    roughly equivalent relation, but it costs $\mathrm{Q} = 1 \to O(\log N)$, which is
+    why the relation version had to be proved directly.
+
+    Open: whether $\mathrm{R}(\mathrm{FFish}_N)$ is $\Theta(N/\log N)$ or $\Theta(N)$ --
+    the $\Omega(N)$ proof is for sampling and does not transfer. Aaronson-Ambainis
+    conjecture that $O(N/\log N)$ classical queries suffice for *any* one-query quantum
+    sampling problem.
+  refs: [AaronsonChen17, AaronsonAmbainis18, Aaronson10]
+  see_also: [Forrelation, kForrelation, YamakawaZhandry, RecursiveFourierSampling, R, Q]
+
+- id: OrderedSearch
+  name: Ordered search
+  symbol: '\mathrm{OS}_n'
+  aliases: ['binary search', 'insertion into a sorted list']
+  group: separating
+  order: 63
+  kind: partial
+  arity: '$n$ bits under the promise $x_1 \le x_2 \le \cdots \le x_n$'
+  short: 'Where quantum buys only a constant factor: $\mathrm{D} = \lceil\log_2(n+1)\rceil$ and $\mathrm{Q} = \Theta(\log n)$, with the constant pinned between $0.221$ and $0.390$.'
+  definition: |
+    Promise: $x = 0^k1^{\,n-k}$ for some $0 \le k \le n$. The *reconstruction* version
+    outputs $k$; the *decision* version outputs $\mathrm{parity}(k)$, which is the
+    Boolean form the degree measures need. Equivalently: insert an item into a sorted
+    list of $n$ items using comparisons.
+
+    Together with [[GroverSearch]] this is one of the two calibration points for
+    $\mathrm{R}$ versus $\mathrm{Q}$ -- the one where the answer is "nothing much".
+  formal: '$\mathrm{OS}_n(0^k1^{n-k}) = k$ on the promise; the decision version is $\mathrm{OS}^{\oplus}_n(0^k1^{n-k}) = k \bmod 2$.'
+  values:
+    - {measure: D, value: '\lceil \log_2(n+1) \rceil', note: 'Exactly. Upper: binary search. Lower: a depth-$T$ tree has at most $2^T$ leaves and must separate all $n+1$ promise inputs.'}
+    - {measure: R, value: '\log_2 n - \Theta(1)', note: 'Randomness buys a constant number of queries, not a constant factor. Upper: $\mathrm{R}\le\mathrm{D}$. Lower, by Yao plus leaf-counting: under the uniform distribution on the $n+1$ inputs a $T$-query deterministic tree is right on at most $2^T$ of them, so success $\ge 2/3$ forces $T \ge \log_2(n+1) - \log_2(3/2)$.'}
+    - {measure: R0, value: '\log_2 n \pm \Theta(1)', note: 'Sandwiched: $\mathrm{R} \le \mathrm{R}_0 \le \mathrm{D}$, and both ends are $\log_2 n \pm O(1)$.'}
+    - {measure: Q, value: '\Theta(\log n)', refs: [HNS02, CCKS25], note: 'The *constant* is open. Lower: $\tfrac1\pi(\ln n - 1) \approx 0.2206\log_2 n$ [HNS02], by a weighted all-pairs inner-product argument. Upper: $5\log_{7265} n \approx 0.390\log_2 n$ [CCKS25]. The ladder of lower bounds: $\Omega(\sqrt{\log n}/\log\log n)$ [BuhrmandeWolf99ordered], $\log_2 n/(2\log\log n)$ [FGGS98limit], $\tfrac1{12}\log_2 n$ [Ambainis99ordered], then HNS.'}
+    - {measure: QE, value: '\Theta(\log n)', refs: [CCKS25, HNS02], note: 'Upper $0.390\log_2 n$: [CCKS25] show every bounded-error $k$-query algorithm can be made translation-invariant with no workspace, and an LP search then finds an exact $5$-query algorithm for lists of length $7265$. Earlier exact algorithms: $0.526\log_2 n$ ($3$ queries, $52$ items) [FGGS99invariant], $0.433\log_2 n$ ($4$ queries, $605$ items) [CLP07]. Lower: $\mathrm{Q}_E \ge \mathrm{Q} \ge \tfrac1\pi(\ln n - 1)$.'}
+    - {measure: Adv, value: '\tfrac1\pi\ln n + O(1)', refs: [ChildsLee08], note: '[ChildsLee08] compute the *exact* optimum of the adversary bound for a symmetrised ordered search, whose query complexity differs from $\mathrm{OS}_n$ by at most $1$: the Hoyer-Neerbek-Shi bound is already the best the method can give.'}
+    - {measure: Advpm, value: '\tfrac1\pi\ln n + O(1)', refs: [ChildsLee08], note: 'The same ceiling holds for negative weights, so improving $0.221\log_2 n$ needs a genuinely different technique.'}
+    - {measure: deg, value: '1', putative: true, note: 'Under the zoo''s partial-function convention -- agree with $f$ on the domain, unconstrained off it -- the promise makes $x_j = [\,j \ge k\,]$, so for any target $g(k)$ the degree-one polynomial $p(x) = g(0) + \sum_j (g(j+1)-g(j))(1 - x_j)$ is exactly right. Hence $\deg = 1$ for *every* Boolean predicate of $k$, and the unbounded polynomial method says nothing here. [BunVoronova23] write "degree $n$" for the same object; they mean a *bounded* polynomial.'}
+    - {measure: sdeg, value: '1', note: 'From $\mathrm{sdeg} \le \deg = 1$.'}
+    - {measure: adeg, value: '\Omega\!\big(\tfrac{\log n}{(\log\log n)^2}\big) \text{ to } O(\log n)', refs: [BunVoronova23], note: 'Decision version. [BunVoronova23, Def. 5, Thm. 12]: $\widetilde{\deg}_{1/2-\gamma}(\mathrm{OS}^{\oplus}_{2^m}) = \Omega(m/\log^2 m - \log(1/\gamma))$, which in the number of input variables $n = 2^m$ is the bound stated. Upper: binary search. Previous best was $\Omega(\sqrt{\log n})$ [BuhrmandeWolf99ordered]. The whole distance between this and $\deg = 1$ is the boundedness requirement off the promise.'}
+    - {measure: Q0, value: '\Theta(\log n)', note: 'Sandwiched: $\mathrm{Q}_{\varepsilon}(f) \le \mathrm{Q}_{0}(f) \le \mathrm{Q}_{\mathrm{E}}(f)$, with both ends $\Theta(\log n)$ here.'}
+    - {measure: MAdv, value: '\Theta(\log n)', note: 'Sandwiched: $\mathrm{Q}_{\varepsilon}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\mathrm{E}}(f)$, with both ends $\Theta(\log n)$ here.'}
+    - {measure: Rbar, value: '\Theta(\log n)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]), and $\mathrm{R}_{\varepsilon}(f) = \log_2 n - \Theta(1)$ here. The expected-cost version does *not* beat binary search by more than a constant, unlike the quantum case.'}
+  witnesses:
+    - {of: [R, Q], setting: partial, statement: 'The canonical *non*-separation: $\mathrm{R} = \Theta(\mathrm{Q})$, with only the constant in doubt, and it lies in $[1/0.390,\ 1/0.221] \approx [2.6,\ 4.5]$.', refs: [HNS02, CCKS25]}
+    - {of: [Q, deg], setting: partial, statement: 'Unbounded: $\deg = 1$ while $\mathrm{Q} = \Theta(\log n)$ -- the cleanest illustration of why exact degree is worthless on a promise.', putative: true}
+    - {of: [Q, adeg], setting: partial, statement: 'And the repair: $\widetilde{\deg} = \tilde\Theta(\mathrm{Q})$ up to $(\log\log n)^2$, so the polynomial method does work once boundedness is imposed.', refs: [BunVoronova23]}
+  notes: |
+    [BenOrHassidim08] give a quantum algorithm of *expected* cost below
+    $0.32\log_2 n$ -- better than the best worst-case exact constant. The zoo has no
+    expected-cost quantum measure ([[Rbar]] and [[R0]] are randomized, [[Q0]] counts
+    worst case), so it cannot be filed as a value; note also that their abstract says
+    "error free" while their §3 says $o(1)$ failure probability.
+
+    Open: the constant; whether the $(\log\log n)^2$ loss in $\widetilde{\deg}$ is
+    removable; and $\widetilde{\deg}$ of the reconstruction version.
+  refs: [HNS02, CCKS25, CLP07, FGGS99invariant, FGGS98limit, Ambainis99ordered, BuhrmandeWolf99ordered, ChildsLee08, BenOrHassidim08, BunVoronova23]
+  see_also: [GroverSearch, Q, QE, adeg, deg, Adv, Advpm]

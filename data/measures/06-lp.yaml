@@ -13,15 +13,29 @@ measures:
   order: 60
   short: 'LP relaxation of "cover the cube by few low-codimension monochromatic subcubes"; subsumes most classical lower bound techniques.'
   definition: |
-    Imported into query complexity from communication complexity [JainKlauck10].
-    The LP has a variable $w_{C,z}\ge 0$ for every subcube $C$ (a partial assignment)
-    and output $z$, and asks to minimise $\sum_{C,z} w_{C,z}\,2^{-\mathrm{codim}(C)}$
-    subject to: for every input $x$, $\sum_{C \ni x} w_{C,f(x)} \ge 1-\varepsilon$ and
-    $\sum_{C\ni x, z} w_{C,z} = 1$. Then
-    $$\mathrm{prt}_\varepsilon(f) \;=\; \log_2 \Big(\text{optimum}\Big)\quad\text{(query version: the optimum itself).}$$
-    In the query setting one usually states it as: $\mathrm{prt}$ is the value of the LP
-    whose integral version is "partition the cube into monochromatic subcubes", so
-    $\mathrm{prt}(f) \le \mathrm{SP}(f) \le \mathrm{D}(f)$.
+    Introduced for query complexity (not merely imported from communication complexity)
+    in [JainKlauck10, Def. 15]. There is a variable $w_{A,z}\ge 0$ for every partial
+    assignment $A$ -- equivalently every subcube -- and every output $z$, and the LP is
+    $$\min \sum_{A,z} w_{A,z}\, 2^{|A|}
+      \quad\text{s.t.}\quad
+      \sum_{A \ni x} w_{A,f(x)} \ge 1-\varepsilon
+      \ \text{ and }\
+      \sum_{A \ni x,\, z} w_{A,z} = 1
+      \qquad \text{for every } x ,$$
+    where $|A|$ is the number of fixed variables. Read $w_{A,z}$ as "probability that a
+    zero-communication prover announces the subcube $A$ and the answer $z$": the second
+    constraint says exactly one subcube fires on each input, the first says the answer is
+    right with probability $1-\varepsilon$, and $2^{|A|}$ prices a codimension-$|A|$
+    subcube at the number of leaves it would take to isolate it.
+
+    The LP optimum is on a *number-of-leaves* scale, so throughout this zoo
+    $\mathrm{prt}_\varepsilon(f)$ denotes its **logarithm**,
+    $$\mathrm{prt}_\varepsilon(f) \;:=\; \log_2\Big(\text{optimum of the LP above}\Big),$$
+    which is the quantity that is comparable with $\mathrm{D}$ and $\mathrm{R}$. Beware
+    that [JainKlauck10] write $\mathrm{prt}_\varepsilon(f)$ for the optimum itself and
+    carry the $\log$ around explicitly.
+    The integral version of the LP is "partition the cube into monochromatic subcubes",
+    so $\mathrm{prt}(f) \le O(\mathrm{SP}(f)) \le O(\mathrm{D}(f))$.
   params:
     - {name: eps, symbol: '\varepsilon', default: '1/3', description: 'Error parameter.'}
   settings:
@@ -29,8 +43,9 @@ measures:
     partial:  {defined: yes}
     relation: {defined: yes, note: 'The LP formulation extends verbatim to relations; this is how lifting theorems for search problems are usually stated.'}
   facts:
-    - '$\mathrm{prt}(f) = O(\mathrm{R}(f))$ -- it is a lower bound technique for randomized query complexity.'
-    - 'It subsumes randomized certificate complexity, block sensitivity, the approximate polynomial degree bound and the classical adversary bound.'
+    - '$\mathrm{prt}_\varepsilon(f) \le 2\,\mathrm{R}_\varepsilon(f)$ -- it is a lower bound technique for randomized query complexity [JainKlauck10, Thm 3.1]. The factor $2$ is real for the price used above: a complete tree of depth $d$ has $2^d$ leaves each costing $2^d$, for an LP value of $4^d$.'
+    - 'It subsumes essentially every classical technique in this zoo [JainKlauck10, Thm 3]: $\mathrm{prt}_0(f) \ge \mathrm{C}(f)$; $\mathrm{prt}_{\varepsilon/4}(f) \ge \varepsilon\,\mathrm{bs}(f) + \log\varepsilon - 2$; $\mathrm{prt}_\varepsilon(f) \ge \mathrm{RC}_{2\varepsilon/(1-2\varepsilon)}(f) + \log \varepsilon$; $\mathrm{prt}_\varepsilon(f) \ge (1-4\varepsilon)\,\mathrm{CA}(f) + \log\varepsilon$; and $\mathrm{prt}_\varepsilon(f) \ge \widetilde{\deg}_{2\varepsilon}(f) + \log\varepsilon$ for Boolean $f$.'
+    - 'It is not *too* far from $\mathrm{D}$ either: $\mathrm{D}(f) = O\big(\mathrm{prt}_0(f)\cdot \mathrm{prt}_{1/3}(f)\big)$ and $\mathrm{D}(f) = O\big(\mathrm{prt}_{1/3}(f)^3\big)$ [JainKlauck10, Thm 3.7]. So for total $f$ the partition bound is polynomially related to everything else in the classical column.'
     - '**But it is not tight:** there is a total $f$ with $\mathrm{RS}(f) \ge \mathrm{prt}(f)^{2-o(1)}$, hence $\mathrm{R}(f) \ge \mathrm{prt}(f)^{2-o(1)}$ [BenDavidKothari18, Thm 30].'
     - 'Query-to-communication lifting theorems typically show $\mathrm{prt}$-type query bounds lift to communication bounds.'
   refs: [JainKlauck10, BenDavidKothari18, KLLRX15]
@@ -43,12 +58,32 @@ measures:
   aliases: ['relaxed partition bound', '\mathrm{prt}^{\ast}']
   category: adversary
   order: 65
-  short: 'The partition bound with the "sums to exactly 1" constraint relaxed to an inequality; weaker but easier to bound.'
+  short: 'The partition bound with the "fires with probability exactly 1" constraint relaxed to "at most 1"; weaker, but unlike prt it lower-bounds information complexity.'
   definition: |
-    Drop the equality constraint $\sum_{C\ni x,z} w_{C,z} = 1$ of the partition bound,
-    keeping only the covering requirement. The resulting LP value
-    $\overline{\mathrm{prt}}_\varepsilon(f) \le \mathrm{prt}_\varepsilon(f)$.
-    Its dual is a "smooth rectangle"-flavoured bound.
+    Take the LP of the [[prt|partition bound]] and relax the completeness constraint
+    from an equality to an inequality:
+    $$\min \sum_{A,z} w_{A,z}\, 2^{|A|}
+      \quad\text{s.t.}\quad
+      \sum_{A \ni x} w_{A,f(x)} \ge 1-\varepsilon
+      \ \text{ and }\
+      \sum_{A \ni x,\, z} w_{A,z} \;\le\; 1
+      \qquad \text{for every } x ,$$
+    and again put $\overline{\mathrm{prt}}_\varepsilon(f) := \log_2(\text{optimum})$.
+    **The only change is the second constraint: $=1$ has become $\le 1$.**
+    In the zero-communication reading, the prover is now allowed to **abort**: the
+    probability that some subcube fires may be anywhere in $[1-\varepsilon, 1]$ instead
+    of being exactly $1$ on every input. The relaxation is genuine but not vacuous --
+    the two constraints together still force
+    $\sum_{A\ni x} w_{A,z} \le \varepsilon$ for every wrong answer $z \ne f(x)$, so
+    e.g. one cannot simply buy the whole cube twice, once under each label.
+
+    The bound was defined for **communication** complexity by
+    [KLLRX15, Def. 3.2], who write the objective as $1/\eta$ where $\eta$ is the
+    non-abort probability, normalise $\sum_{R,z} p_{R,z} = 1$, and impose correctness
+    only *on average* under an input distribution $\mu$ before taking
+    $\overline{\mathrm{prt}}_\varepsilon = \max_\mu \overline{\mathrm{prt}}^{\,\mu}_\varepsilon$
+    (the averaging is what lets them handle promise problems). The display above is the
+    query analogue in the subcube dictionary, with correctness kept pointwise.
   params:
     - {name: eps, symbol: '\varepsilon', default: '1/3'}
   settings:
@@ -56,7 +91,10 @@ measures:
     partial:  {defined: yes}
     relation: {defined: yes}
   facts:
-    - '$\overline{\mathrm{prt}} \le \mathrm{prt} = O(\mathrm{R})$.'
+    - '$\overline{\mathrm{prt}} \le \mathrm{prt} \le 2\,\mathrm{R}$: enlarging the feasible region can only lower the optimum.'
+    - 'Why the relaxation was invented: $\overline{\mathrm{prt}}$ lower-bounds **information** complexity, $\mathrm{prt}$ is not known to [KLLRX15, Thm 1.1]. The proof compresses a protocol leaking $I$ bits into a zero-communication protocol with non-abort probability $2^{-O(I)}$, and one cannot make that probability come out exactly equal on every input -- hence the inequality.'
+    - 'In communication complexity it sits above the smooth rectangle bound, $\mathrm{srec}^z_\varepsilon \le \overline{\mathrm{prt}}_\varepsilon \le \mathrm{prt}_\varepsilon$ [KLLRX15, Lem. 3.3], and therefore also above corruption, $\gamma_2$ and discrepancy.'
+    - 'In the query setting **every** lower bound the partition bound subsumes survives the relaxation -- see the $\mathrm{bs} \to \overline{\mathrm{prt}}$ record for the argument -- so $\overline{\mathrm{prt}}$ is pinned to $\Theta(\mathrm{R})$ on all the usual functions, exactly like $\mathrm{prt}$.'
     - 'For **total search problems** there is an exponential separation between quantum information complexity (communication) and the relaxed partition bound [BenDavidKundu24search]; even the randomized-vs-$\overline{\mathrm{prt}}$ separation was previously unknown for total search problems.'
   refs: [KLLRX15, BenDavidKundu24search]
   see_also: [prt, cjdeg, CA]

@@ -147,7 +147,7 @@ measures:
     - '$\mathrm{D}^{\oplus}(f)=O(\sqrt{\mathrm{spar}(f)}\log \mathrm{spar}(f))$; whether $\mathrm{poly}\log \mathrm{spar}$ suffices is the query analogue of the log-rank conjecture.'
     - '$\deg_2(f)\le\log_2(\mathrm{spar}(f)+1)$. The real degree is **not** bounded by sparsity: $\oplus_n$ has $\deg = n$ and $\mathrm{spar} = 1$.'
     - '$\mathrm{spar}(f)\le 4^{\mathrm{D}^{\oplus}(f)}$.'
-  refs: [TsangWongXieZhang13, STV17, GopalanEtAl16]
+  refs: [TsangWongXieZhang13, Sanyal19, GopalanEtAl16]
   see_also: [L1, PDT, Fdim, deg]
   confidence: medium
 
