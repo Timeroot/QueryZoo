@@ -58,21 +58,21 @@
 
 {% macro mcell(e, rm) %}
   {% if e.diag %}
-    {% if e.rels %}
-    <td class="mcell diag has x-{{ e.col }}" data-col="{{ e.col }}">
-      <a href="{{ root }}pairs/{{ e.slug }}.html" class="cellinner"
+    <td class="mcell diag{% if e.rels or rm.params %} has{% endif %} x-{{ e.col }}" data-col="{{ e.col }}">
+      <a href="{{ pair_url(e.a, e.b) }}" class="cellinner"
          title="{{ rm.name }} with itself">&#8728;</a>
       <div class="celltip">
         <b>\({{ rm.symbol }}\) with itself</b>
-        <div class="tipnote">composition and parameter-dependence records</div>
+        <div class="tipnote">the trivial cell: \(1,1\). What is on the diagonal page is
+          composition, amplification and parameter dependence.</div>
+        {% for p in rm.params %}
+        <div class="tstmt">parameter \({{ p.symbol }}\){% if p.default %}, default \({{ p.default }}\){% endif %}</div>
+        {% endfor %}
         {% for r in e.rels %}
         <div class="tstmt">{% if r.headline %}{{ r.headline | tex }}{% else %}{{ r.id }}{% endif %}</div>
         {% endfor %}
       </div>
     </td>
-    {% else %}
-    <td class="diag x-{{ e.col }}" data-col="{{ e.col }}"></td>
-    {% endif %}
   {% elif e.tok or e.cell or e.have_pair %}
     {% set c = e.cell %}
     <td class="mcell x-{{ e.col }}{% if c and c.updated %} updated{% endif %}"
@@ -86,15 +86,7 @@
         {% if c and c.w %}<span class="wit-mark" title="witness: {{ zoo.function[c.w].name }}">&#9670;</span>{% endif %}
         {% if c and c.updated %}<span class="upd-mark" title="{{ c.update_note }}">&#9733;</span>{% endif %}
       {% endset %}
-      {% if e.have_pair %}
-        <a href="{{ root }}pairs/{{ e.slug }}.html" class="cellinner">{{ body }}</a>
-      {% elif e.eq %}
-        <a href="{{ root }}measures/{{ rm.id }}.html" class="cellinner">{{ body }}</a>
-      {% else %}
-        {# nothing recorded for this ordered pair: the closure alone knows it,
-           and there is no pair page to open. #}
-        <span class="cellinner nolink">{{ body }}</span>
-      {% endif %}
+      <a href="{{ pair_url(e.a, e.b) }}" class="cellinner">{{ body }}</a>
       <div class="celltip">
         <b>\({{ rm.symbol }}\) vs \({{ zoo.measure[e.col].symbol }}\)</b>
         {% if c %}
@@ -113,7 +105,7 @@
   {% elif e.eq %}
     {# No bound to record: the two measures are the same thing up to constants. #}
     <td class="mcell equiv x-{{ e.col }}" data-col="{{ e.col }}">
-      <a href="{{ root }}measures/{{ rm.id }}.html" class="cellinner">
+      <a href="{{ pair_url(e.a, e.b) }}" class="cellinner">
         <span class="glyph g-eq">&#8781;</span>
       </a>
       <div class="celltip">
@@ -123,7 +115,11 @@
       </div>
     </td>
   {% else %}
-    <td class="mcell empty x-{{ e.col }}" data-col="{{ e.col }}"></td>
+    {# nothing on record and nothing derivable -- still a view, just an empty one #}
+    <td class="mcell empty x-{{ e.col }}" data-col="{{ e.col }}">
+      <a href="{{ pair_url(e.a, e.b) }}" class="cellinner"
+         title="nothing on record"><span class="none">&nbsp;</span></a>
+    </td>
   {% endif %}
 {% endmacro %}
 

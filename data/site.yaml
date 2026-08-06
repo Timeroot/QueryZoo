@@ -61,6 +61,7 @@ nav:
   - {label: "Matrix",      href: "matrix.html"}
   - {label: "Measures",    href: "measures/index.html"}
   - {label: "Relations",   href: "relations.html"}
+  - {label: "Pairs",       href: "pair.html"}
   - {label: "Functions",   href: "functions/index.html"}
   - {label: "Concepts",    href: "concepts/index.html"}
   - {label: "Open",        href: "open.html"}

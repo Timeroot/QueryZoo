@@ -49,7 +49,7 @@
           {% if m.param_rels[p.name] %}
           <p class="paramrels">Detailed records:
             {% for r in m.param_rels[p.name] %}
-              <a href="{{ root }}pairs/{{ r.from }}__{{ r.to }}.html#{{ r.id }}">{% if r.headline %}{{ r.headline | tex }}{% else %}<code>{{ r.id }}</code>{% endif %}</a>{% if not loop.last %} &middot; {% endif %}
+              <a href="{{ pair_url(r.from, r.to, r.id) }}">{% if r.headline %}{{ r.headline | tex }}{% else %}<code>{{ r.id }}</code>{% endif %}</a>{% if not loop.last %} &middot; {% endif %}
             {% endfor %}
           </p>
           {% endif %}
@@ -103,7 +103,7 @@
                 <a href="{{ root }}measures/{{ r.other.id }}.html">{{ r.other.name }}</a></td>
               <td>
                 {% if r.out %}
-                  <a class="pairlink" href="{{ root }}pairs/{{ r.out.slug }}.html">
+                  <a class="pairlink" href="{{ pair_url(m.id, r.other.id) }}">
                     {% if r.out.cell %}<span class="exp"><span class="a">{{ r.out.cell.a }}</span>,<span class="b">{{ r.out.cell.b }}</span></span>{% endif %}
                     <span class="go">open pair &rarr;</span>
                   </a>
@@ -116,7 +116,7 @@
               </td>
               <td>
                 {% if r['in'] %}
-                  <a class="pairlink" href="{{ root }}pairs/{{ r['in'].slug }}.html">
+                  <a class="pairlink" href="{{ pair_url(r.other.id, m.id) }}">
                     {% if r['in'].cell %}<span class="exp"><span class="a">{{ r['in'].cell.a }}</span>,<span class="b">{{ r['in'].cell.b }}</span></span>{% endif %}
                     <span class="go">open pair &rarr;</span>
                   </a>

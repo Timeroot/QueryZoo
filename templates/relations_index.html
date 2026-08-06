@@ -40,21 +40,21 @@
           <td class="c">{% if p.summary.total %}{{ status_pill(p.summary.total.status) }}{% endif %}</td>
           <td class="stmtcell">
             {% if p.summary.total and p.summary.total.upper %}
-              <a href="{{ root }}pairs/{{ p.slug }}.html">{{ p.summary.total.upper.stmt | tex }}</a>
+              <a href="{{ pair_url(p.a, p.b) }}">{{ p.summary.total.upper.stmt | tex }}</a>
             {% elif p.summary.partial and p.summary.partial.upper %}
-              <a href="{{ root }}pairs/{{ p.slug }}.html">{{ p.summary.partial.upper.stmt | tex }}</a>
+              <a href="{{ pair_url(p.a, p.b) }}">{{ p.summary.partial.upper.stmt | tex }}</a>
               <span class="minipill s-partial">partial</span>
             {% elif p.summary.relation and p.summary.relation.upper %}
-              <a href="{{ root }}pairs/{{ p.slug }}.html">{{ p.summary.relation.upper.stmt | tex }}</a>
+              <a href="{{ pair_url(p.a, p.b) }}">{{ p.summary.relation.upper.stmt | tex }}</a>
               <span class="minipill s-relation">relation</span>
             {% else %}
-              <a class="dim" href="{{ root }}pairs/{{ p.slug }}.html">separations only &rarr;</a>
+              <a class="dim" href="{{ pair_url(p.a, p.b) }}">separations only &rarr;</a>
             {% endif %}
           </td>
           <td class="c">{% if p.summary.partial %}{{ status_pill(p.summary.partial.status) }}{% endif %}</td>
           <td class="c">{% if p.summary.relation %}{{ status_pill(p.summary.relation.status) }}{% endif %}</td>
           <td class="c">
-            {% if p.cell %}<a class="exp" href="{{ root }}pairs/{{ p.slug }}.html"><span class="a">{{ p.cell.a }}</span>,<span class="b">{{ p.cell.b }}</span></a>{% endif %}
+            {% if p.cell %}<a class="exp" href="{{ pair_url(p.a, p.b) }}"><span class="a">{{ p.cell.a }}</span>,<span class="b">{{ p.cell.b }}</span></a>{% endif %}
           </td>
         </tr>
       {% endfor %}
@@ -72,7 +72,7 @@
       <tbody>
         {% for r in named %}
         <tr>
-          <td><code><a href="{{ root }}pairs/{{ r.from }}__{{ r.to }}.html#{{ r.id }}">{{ r.id }}</a></code></td>
+          <td><code><a href="{{ pair_url(r.from, r.to, r.id) }}">{{ r.id }}</a></code></td>
           <td class="sym">{{ measure_chip(r.from) }} {{ measure_chip(r.to) }}</td>
           <td>{{ setting_pill(r.setting) }}</td>
           <td class="short">{% if r.headline %}{{ r.headline | tex }}{% endif %}</td>

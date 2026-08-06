@@ -751,9 +751,10 @@ class Renderer:
             return f"{root}refs.html#{ident}"
         if kind == "relation":
             r = self.zoo.relation_by_id[ident]
-            return f"{root}pairs/{r['from']}__{r['to']}.html#{ident}"
+            return pair_url(r["from"], r["to"], ident, root)
         if kind == "pair":
-            return f"{root}pairs/{ident}.html"
+            a, _, b = ident.partition("__")
+            return pair_url(a, b, None, root)
         raise ValueError(kind)
 
     def label(self, kind, ident):
@@ -1020,10 +1021,9 @@ def _derivation(z, f):
         return None
     steps = []
     for g in f.get("chain") or []:
-        pr = z.pairs.get((g["a"], g["b"]))
         steps.append({
             "tex": _fact_tex(z, g), "refs": g.get("refs") or [],
-            "setting": g["setting"], "slug": pr["slug"] if pr else None,
+            "setting": g["setting"], "a": g["a"], "b": g["b"],
             "side": g["side"], "witness": g.get("witness"),
         })
     d = {"how": f["origin"], "steps": steps, "path": [], "from_setting": f.get("from_setting")}
@@ -1123,6 +1123,26 @@ def _token(z, row, col, setting, cell):
     }
 
 
+def _prune(obj):
+    """Drop empty values from a payload. Halves the JSON; nothing reads them."""
+    if isinstance(obj, dict):
+        return {k: _prune(v) for k, v in obj.items()
+                if v is not None and v is not False and v != "" and v != [] and v != {}}
+    if isinstance(obj, list):
+        return [_prune(v) for v in obj]
+    return obj
+
+
+def pair_url(a, b, anchor=None, root=""):
+    """Every ordered pair is a view of one page, not a page of its own.
+
+    There are 67*67 = 4489 of them and most are interesting only because the
+    build can derive something about them; writing that many files to disk to
+    say so would be silly. `pair.html` renders any of them from JSON.
+    """
+    return f"{root}pair.html?a={a}&b={b}" + (f"#{anchor}" if anchor else "")
+
+
 def strip_tex(s: str) -> str:
     """Crude plain-text version of a LaTeX/markdown string, for search."""
     s = re.sub(r"\$\$?", " ", str(s))
@@ -1180,6 +1200,17 @@ class Builder:
         env.globals["categories"] = zoo.categories
         env.globals["verdict_word"] = VERDICT_WORD
         env.globals["chip_name"] = _CHIP_NAME
+
+        @pass_context
+        def pu(ctx, a, b, anchor=None):
+            return pair_url(a, b, anchor, ctx.get("root", ""))
+
+        env.globals["pair_url"] = pu
+        # one relation record, rendered exactly as the old pair pages did;
+        # the pair app ships these as HTML rather than reimplementing them
+        self._rel_tpl = env.from_string(
+            '{% from "macros.html" import relation_block with context %}'
+            '{{ relation_block(r) }}')
 
         self.search = []
 
@@ -1274,6 +1305,8 @@ class Builder:
             }
             return {
                 "col": col,
+                "a": row,
+                "b": col,
                 "cell": cell,
                 "tok": tok,
                 "diag": row == col,
@@ -1390,13 +1423,53 @@ class Builder:
                 " ".join([m.get("definition") or ""] + [str(x) for x in m["facts"]] + m["aliases"]),
             )
 
+    # ------------------------------------------------------------ the pairs
+    #
+    # One page, `pair.html`, renders any of the 67x67 ordered pairs from JSON
+    # shards -- one shard per row measure, so browsing along a row costs one
+    # fetch. The prose of a *recorded* relation is rendered here, by the same
+    # Jinja macro the rest of the site uses, and shipped as HTML; only the
+    # derived layer (exponents, chips, derivation chains) is assembled in the
+    # browser, from the same structures the matrix cells use.
+    #
     def page_pairs(self):
         z = self.zoo
+        api = self.out / "api" / "pair"
+        api.mkdir(parents=True, exist_ok=True)
+
+        self.write("pair.html", "pair_app.html",
+                   measures=sorted(z.measures, key=self._measure_sort),
+                   nav_active="relations.html")
+
+        (self.out / "api" / "meta.json").write_text(json.dumps({
+            "measures": {
+                m["id"]: {"sym": m["symbol"], "name": m["name"], "cat": m["category"],
+                          "short": m.get("short", ""),
+                          "def": {s: m["settings"][s]["defined"] for s in z.settings}}
+                for m in z.measures
+            },
+            "functions": {f["id"]: {"sym": f.get("symbol") or f["name"], "name": f["name"]}
+                          for f in z.functions},
+            "settings": [{"id": s["id"], "name": s["name"], "short": s["short"],
+                          "blurb": s.get("blurb", "")} for s in z.site["settings"]],
+            "verdicts": VERDICT_WORD,
+            "chips": _CHIP,
+            "chip_names": _CHIP_NAME,
+            "source": (z.matrix or {}).get("source"),
+        }, separators=(",", ":")))
+
+        for a in z.measure:
+            cols = {}
+            for b in z.measure:
+                payload = self.pair_payload(a, b)
+                if payload:
+                    cols[b] = payload
+            (api / f"{a}.json").write_text(
+                json.dumps({"a": a, "cols": cols}, separators=(",", ":")))
+
+        # the search index still lists the pairs somebody wrote about
         for (a, b), p in z.pairs.items():
             ma, mb = z.measure[a], z.measure[b]
-            tok = {s: t for s in z.settings
-                   for t in [_token(z, a, b, s, p.get("cell"))] if t}
-            self.write(f"pairs/{p['slug']}.html", "pair.html", p=p, ma=ma, mb=mb, tok=tok)
             txt = []
             for r in p["relations"]:
                 for side in ("upper", "lower"):
@@ -1404,11 +1477,69 @@ class Builder:
                         txt.append(x.get("stmt", ""))
                         txt.append(x.get("note", "") or "")
             self.index_entry(
-                f"pairs/{p['slug']}.html", "pair",
+                pair_url(a, b), "pair",
                 f"{ma['id']} vs {mb['id']}",
                 f"{ma['name']} versus {mb['name']}",
                 " ".join(txt),
             )
+
+    def _measure_sort(self, m):
+        cat_order = {c["id"]: i for i, c in enumerate(self.zoo.categories)}
+        return (cat_order.get(m["category"], 99), m["order"], m["id"])
+
+    def pair_payload(self, a, b):
+        """Everything `pair.html` needs for one ordered pair, or None."""
+        z = self.zoo
+        p = z.pairs.get((a, b))
+        cell = p.get("cell") if p else None
+        tok = {} if a == b else {
+            s: t for s in z.settings for t in [_token(z, a, b, s, cell)] if t
+        }
+        for t in tok.values():
+            for k in ("up", "lo", "fails", "other"):
+                v = t.get(k)
+                if v and v.get("note"):
+                    v["note"] = self.r.inline(v["note"], "")
+        rels = {}
+        for s in z.settings:
+            html_blocks = [self.rel_html(r) for r in ((p or {}).get("by_setting") or {}).get(s, [])]
+            if html_blocks:
+                rels[s] = html_blocks
+        out = {"tok": tok, "rels": rels}
+        if cell:
+            c = dict(cell)
+            if c.get("note"):
+                c["note"] = self.r.inline(c["note"], "")
+            if c.get("update_note"):
+                c["update_note"] = self.r.inline(c["update_note"], "")
+            out["cell"] = c
+        if a == b:
+            out["self"] = self.diagonal_payload(a)
+        if not (tok or rels or cell or out.get("self")):
+            return None
+        return _prune(out)
+
+    def diagonal_payload(self, mid):
+        """A measure against itself: parameters, amplification, composition."""
+        z = self.zoo
+        m = z.measure[mid]
+        params = []
+        for prm in m["params"]:
+            params.append({
+                "name": prm.get("name"), "symbol": prm.get("symbol"),
+                "default": str(prm.get("default", "")), "range": str(prm.get("range", "")),
+                "description": self.r.inline(prm.get("description") or "", ""),
+                "dependence": self.r.markdown(prm.get("dependence") or "", ""),
+            })
+        comp = [self.rel_html(r) for r in z.relations
+                if r["kind"] == "composition" and mid in (r["from"], r["to"])
+                and not (r["from"] == r["to"] == mid)]
+        facts = [self.r.inline(str(x), "") for x in m["facts"]]
+        return {"params": params, "comp": comp, "facts": facts,
+                "name": m["name"], "short": m.get("short", "")}
+
+    def rel_html(self, r):
+        return self._rel_tpl.render(r=r, root="")
 
     def page_functions(self):
         z = self.zoo

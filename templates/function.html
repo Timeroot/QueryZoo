@@ -79,10 +79,7 @@
             <div class="wpair">
               {% if w.of and w.of[0] != '*' %}
                 {{ measure_chip(w.of[0]) }} <span class="vs">vs</span> {{ measure_chip(w.of[1]) }}
-                {% set slug = w.of[0] ~ '__' ~ w.of[1] %}
-                {% if (w.of[0], w.of[1]) in zoo.pairs %}
-                  <a class="go" href="{{ root }}pairs/{{ slug }}.html">pair &rarr;</a>
-                {% endif %}
+                <a class="go" href="{{ pair_url(w.of[0], w.of[1]) }}">pair &rarr;</a>
               {% else %}
                 <span class="tag">general</span>
               {% endif %}
@@ -105,7 +102,7 @@
             <div class="wpair">
               {{ measure_chip(r.from) }} <span class="vs">vs</span> {{ measure_chip(r.to) }}
               {{ setting_pill(r.setting) }} {{ status_pill(r.status) }}
-              <a class="go" href="{{ root }}pairs/{{ r.from }}__{{ r.to }}.html#{{ r.id }}">open &rarr;</a>
+              <a class="go" href="{{ pair_url(r.from, r.to, r.id) }}">open &rarr;</a>
             </div>
             <div class="stmt">{{ b.stmt | tex }}</div>
             {% if b.refs %}<div class="refs">{{ b.refs | cites }}</div>{% endif %}

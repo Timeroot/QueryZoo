@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Any pair &middot; {{ site.title }}{% endblock %}
+
+{#
+   The pair browser. Every ordered pair of measures is a view of this one page:
+   pair.html?a=D&b=R (optionally #some-relation-id). static/pair.js fetches the
+   row's shard from api/pair/<a>.json and renders it.
+#}
+{% block body %}
+<div class="wrap pairapp">
+  <div class="crumbs"><a href="{{ root }}relations.html">Relations</a> &rsaquo;
+    <span id="crumb">pair</span></div>
+
+  <form class="pairpick" id="pairpick" onsubmit="return false">
+    <label>row <span class="dim">&mdash; the measure being bounded</span>
+      <select id="pick-a">
+        {% for c in categories %}
+        <optgroup label="{{ c.name }}">
+          {% for m in measures %}{% if m.category == c.id %}
+          <option value="{{ m.id }}">{{ m.id }} &mdash; {{ m.name }}</option>
+          {% endif %}{% endfor %}
+        </optgroup>
+        {% endfor %}
+      </select>
+    </label>
+    <span class="vs">vs</span>
+    <label>column <span class="dim">&mdash; what it is bounded by</span>
+      <select id="pick-b">
+        {% for c in categories %}
+        <optgroup label="{{ c.name }}">
+          {% for m in measures %}{% if m.category == c.id %}
+          <option value="{{ m.id }}">{{ m.id }} &mdash; {{ m.name }}</option>
+          {% endif %}{% endfor %}
+        </optgroup>
+        {% endfor %}
+      </select>
+    </label>
+    <button type="button" class="btn ghost" id="swap" title="swap the two measures">&#8646; swap</button>
+  </form>
+
+  <div id="pairview" aria-live="polite">
+    <p class="dim loading">Loading&hellip;</p>
+  </div>
+
+  <noscript>
+    <div class="banner">This page assembles itself in the browser from
+      <code>api/pair/&lt;measure&gt;.json</code>, because there are
+      {{ zoo.measures | length }}&times;{{ zoo.measures | length }} ordered pairs and
+      most of what can be said about them is computed rather than written down.
+      Without JavaScript, the <a href="{{ root }}relations.html">relations index</a> and the
+      <a href="{{ root }}matrix.html">matrix</a> still list everything that <em>is</em>
+      written down, and each measure page carries its own bounds.</div>
+  </noscript>
+</div>
+<script src="{{ root }}static/pair.js"></script>
+{% endblock %}

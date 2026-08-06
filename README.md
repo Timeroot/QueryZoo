@@ -28,9 +28,24 @@ if you need the site fully offline, drop `tex-chtml.js` into `static/` and point
 | open problems | 12 |
 | references | 135 |
 
-The site generates 328 pages: one per measure, one per ordered pair of measures, one per
-function, one per concept, plus the exponent matrix, the relations index, the open-problem
-list, the bibliography, and this guide's on-site twin (`editing.html`).
+The site generates one page per measure, function and concept, plus the exponent matrix, the
+relations index, the open-problem list, the bibliography, and this guide's on-site twin
+(`editing.html`).
+
+**Pairs are not pages.** There are 67×67 = 4489 ordered pairs of measures and the build has
+something to say about roughly a quarter of them, mostly by derivation. Writing that many files
+would be silly, so `pair.html` renders any of them in the browser:
+
+```
+pair.html?a=D&b=R            D versus R
+pair.html?a=D&b=R#D__R__total   ... scrolled to a particular record
+pair.html?a=R&b=R            the diagonal: composition and parameter dependence
+```
+
+It reads `api/pair/<row>.json` — one shard per matrix row, so walking along a row costs one
+fetch. Recorded relations travel as HTML rendered by the same Jinja macro the rest of the site
+uses (no second renderer to keep in sync); the derived layer travels as data and is assembled
+by `static/pair.js`.
 
 ## Layout
 
@@ -47,7 +62,9 @@ data/
   open_problems.yaml        open problems
 build.py                    loader + validator + renderer
 templates/*.html            Jinja2
-static/style.css, app.js    styling; client-side search, matrix views, table filters
+static/style.css            styling
+static/app.js               client-side search, matrix views, table filters
+static/pair.js              the pair browser (pair.html)
 ```
 
 Files within a directory are concatenated in filename order, so a new

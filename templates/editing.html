@@ -121,6 +121,22 @@ inherit: false -- do NOT propagate to other settings (side conditions!)</code></
         tooltip, find the step that overstates, and correct or annotate that record.</p>
       </section>
 
+      <section class="card prose" id="pairs">
+        <h2>Where a pair lives</h2>
+        <p>Pairs have no files. There are {{ zoo.measures | length }}&times;{{ zoo.measures | length }}
+        ordered pairs and the build can say something about a good fraction of them, mostly by
+        derivation, so <a href="{{ root }}pair.html">one page</a> renders all of them:</p>
+<pre><code>pair.html?a=D&amp;b=R                 D versus R
+pair.html?a=D&amp;b=R#D__R__total     ... at a particular record
+pair.html?a=R&amp;b=R                 the diagonal: composition, parameters</code></pre>
+        <p>A record's anchor is its <code>id:</code>, which defaults to
+        <code>&lt;from&gt;__&lt;to&gt;__&lt;setting&gt;</code>. The page reads
+        <code>api/pair/&lt;row&gt;.json</code>, written by <code>build.py</code>: recorded
+        relations are pre-rendered HTML (the same Jinja macro this site uses everywhere else),
+        the derived layer is data. Nothing about a pair is authored in the JSON &mdash; edit the
+        relation record and rebuild.</p>
+      </section>
+
       <section class="card prose">
         <h2>Conventions worth keeping</h2>
         <ul class="tick">

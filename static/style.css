@@ -564,7 +564,6 @@ body.hide-derived .v.drv > * { visibility: hidden; }
 body.hide-derived:not(.view-partial):not(.view-relation) td.mcell[data-dt="1"],
 body.hide-derived.view-partial td.mcell[data-dp="1"],
 body.hide-derived.view-relation td.mcell[data-dr="1"] { background: #fdfcf9; }
-.cellinner.nolink { cursor: default; }
 #floattip .tv { font-size: 11px; color: #e0d9c8; margin-left: 6px; }
 #floattip .tchip { color: #e8c98a; }
 #floattip .tstmt .dim { color: #a9a294; }
@@ -682,3 +681,29 @@ mjx-container[display="true"] { margin: 10px 0 !important; }
 .dependence { font-size: 14px; color: var(--ink-2); }
 .dependence p { margin: 0 0 8px; }
 .paramrels { font-size: 13px; color: var(--dim); margin: 6px 0 0; }
+
+/* ------------------------------------------------------------ pair app */
+/* pair.html renders any ordered pair client-side; these are the bits that
+   only exist there. Everything below the picker reuses the site's classes. */
+.pairapp .pairpick {
+  display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;
+  margin: 14px 0 4px; padding: 12px 14px;
+  background: #f4f1ea; border: 1px solid var(--line); border-radius: 8px;
+}
+.pairapp .pairpick label {
+  display: flex; flex-direction: column; gap: 4px;
+  font: 600 11.5px var(--sans); text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--dim);
+}
+.pairapp .pairpick label .dim { text-transform: none; letter-spacing: 0; font-weight: 400; }
+.pairapp .pairpick select {
+  font: 14px var(--sans); padding: 6px 8px; min-width: 260px;
+  border: 1px solid var(--line-2); border-radius: 6px; background: #fff; color: var(--ink);
+}
+.pairapp .pairpick .vs { font: italic 15px var(--serif); color: var(--dim); padding-bottom: 8px; }
+.pairapp .loading { padding: 40px 0; }
+.paramblock { padding: 10px 0; border-top: 1px dashed var(--line); }
+.paramblock:first-child { border-top: none; padding-top: 0; }
+.paramblock h3 { font: 600 15px var(--sans); margin: 0 0 6px; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.paramblock .prose { font-size: 14px; color: var(--ink-2); }
+.relation.targeted, .card.targeted { box-shadow: 0 0 0 3px #f0e3bd; border-radius: 6px; }
