@@ -38,6 +38,13 @@ functions:
     - {measure: RC,     value: '\Theta(n)'}
     - {measure: lambda, value: 'n', refs: [ABKRT21], note: '$\lambda$ is exactly multiplicative: $\lambda = \lambda(\mathrm{AND}_n)\lambda(\mathrm{OR}_n) = \sqrt n\cdot\sqrt n$.'}
     - {measure: rdeg,   value: 'n', refs: [IJKKKSWW23], note: '$\mathrm{ndeg}(f) = n\cdot\mathrm{ndeg}(\mathrm{OR}_n) = n$ and $\mathrm{ndeg}(\bar f)=\mathrm{ndeg}(\mathrm{NOR}_n)=n$.'}
+    - {measure: C0,     value: 'n'}
+    - {measure: C1,     value: 'n'}
+    - {measure: bs0,    value: 'n'}
+    - {measure: bs1,    value: 'n'}
+    - {measure: FC,     value: 'n'}
+    - {measure: EC,     value: 'n', putative: true, note: 'Between $\mathrm{fbs}=n$ and $\mathrm{C}=n$.'}
+    - {measure: Dna,    value: 'N = n^2'}
   witnesses:
     - {of: [D, C],    setting: total, statement: '$\mathrm{D}=\mathrm{C}^2$; matches the upper bound $\mathrm{D}\le \mathrm{C}^0\mathrm{C}^1 \le \mathrm{C}^2$.', refs: [BlumImpagliazzo87, HartmanisHemachandra87, Tardos89]}
     - {of: [D, bs],   setting: total, statement: '$\mathrm{D} = \mathrm{bs}^2$ (upper bound is $\mathrm{bs}^3$).'}
@@ -77,6 +84,10 @@ functions:
     - {measure: C,      value: '\Theta(\sqrt{N})'}
     - {measure: RC,     value: '\Theta(\sqrt{N})'}
     - {measure: lambda, value: '\sqrt{N}', note: '$\lambda(\mathrm{NAND}_2)=\sqrt2$ and $\lambda$ is multiplicative.'}
+    - {measure: fbs,    value: '\Theta(\sqrt N)', putative: true, note: 'Between $\mathrm{bs}$ and $\mathrm{C}$, which agree here.'}
+    - {measure: FC,     value: '\Theta(\sqrt N)', putative: true, note: 'Equal to $\mathrm{fbs}$ by LP duality.'}
+    - {measure: EC,     value: '\Theta(\sqrt N)', putative: true, note: 'Between $\mathrm{fbs}$ and $\mathrm{C}$, which agree here.'}
+    - {measure: Dna,    value: 'N'}
   witnesses:
     - {of: [D, R0],  setting: total, statement: '$\mathrm{D} = \Theta(\mathrm{R}_0^{1.327\ldots})$ -- for 30 years the best known D-vs-$\mathrm{R}_0$ separation, until [ABBLSS17] made it quadratic.', refs: [SaksWigderson86]}
     - {of: [QE, R0], setting: total, statement: '$\mathrm{Q}_E = \Theta(\mathrm{R}_0^{1.33})$: the witness cited in the $\mathrm{Q}_E$-vs-$\mathrm{R}_0$ and $\mathrm{Q}_E$-vs-$\mathrm{R}$ cells.', refs: [ABKRT21]}
@@ -107,6 +118,10 @@ functions:
     - {measure: s,      value: '2^d = N^{0.6309}'}
     - {measure: bs,     value: '2^d'}
     - {measure: C,      value: '2^d'}
+    - {measure: fbs,    value: '2^d', putative: true, note: 'Between $\mathrm{bs}=2^d$ and $\mathrm{C}=2^d$.'}
+    - {measure: FC,     value: '2^d', putative: true, note: 'Equal to $\mathrm{fbs}$ by LP duality.'}
+    - {measure: EC,     value: '2^d', putative: true, note: 'Between $\mathrm{fbs}$ and $\mathrm{C}$.'}
+    - {measure: Dna,    value: 'N = 3^d'}
     - {measure: lambda, value: '2^d = N^{\log_3 2}', note: '$\lambda(\mathrm{MAJ}_3)=2$, multiplicativity.'}
     - {measure: Q,      value: '\Theta(2^d)', refs: [Reichardt11], note: '$\mathrm{Adv}^{\pm}(\mathrm{MAJ}_3)=2$ and $\mathrm{Adv}^\pm$ composes perfectly, so $\mathrm{Q} = \Theta(\mathrm{Adv}^\pm(\mathrm{MAJ}_3)^d)$.'}
   refs: [SaksWigderson86, Reichardt11, ABKRT21]
@@ -135,6 +150,9 @@ functions:
     - {measure: RC,  value: '\Theta(N)'}
     - {measure: C,   value: 'N'}
     - {measure: D,   value: 'N'}
+    - {measure: FC,     value: 'N'}
+    - {measure: EC,     value: 'N', putative: true, note: 'Between $\mathrm{fbs}=N$ and $\mathrm{C}=N$.'}
+    - {measure: Dna,    value: 'N'}
   witnesses:
     - {of: [bs, deg], setting: total, statement: '$\mathrm{bs} = \Omega(\deg^{1.63})$; the best known separation against the upper bound $\mathrm{bs}\le 2\deg^2$.', refs: [NisanWigderson95, NS94]}
     - {of: [s, deg],  setting: total, statement: '$\mathrm{s} = \Omega(\deg^{1.63})$ vs the upper bound $\mathrm{s}\le\deg^2$ (Huang).', refs: [NisanWigderson95, Huang19]}
@@ -163,6 +181,9 @@ functions:
     - {measure: bs, value: 'n^2/2 = N/2', note: 'At $0^N$: the $n/2$ adjacent pairs inside each of the $n$ blocks are disjoint sensitive blocks.'}
     - {measure: C,  value: '\Theta(N)'}
     - {measure: D,  value: 'N'}
+    - {measure: fbs,    value: '\Theta(N)', putative: true, note: 'Between $\mathrm{bs}=N/2$ and $\mathrm{C}=\Theta(N)$.'}
+    - {measure: FC,     value: '\Theta(N)', putative: true, note: 'Equal to $\mathrm{fbs}$ by LP duality.'}
+    - {measure: Dna,    value: 'N'}
   witnesses:
     - {of: [bs, s], setting: total, statement: '$\mathrm{bs}(f) = \tfrac12 \mathrm{s}(f)^2$; improved constant $\mathrm{bs}\ge\tfrac23 \mathrm{s}^2 - \tfrac13\mathrm{s}$ by [AmbainisSun11].', refs: [Rubinstein95, AmbainisSun11]}
     - {of: [RC, s], setting: total, statement: '$\mathrm{RC} = \Omega(\mathrm{s}^2)$ (since $\mathrm{RC}=\Theta(\mathrm{fbs})\ge\mathrm{bs}$); the witness in the RC-vs-s and bs-vs-s cells.', refs: [Rubinstein95]}

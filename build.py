@@ -191,8 +191,14 @@ class Zoo:
             if f["kind"] not in ("total", "partial", "relation"):
                 self.err(f"function {f['id']}: bad kind {f['kind']}")
             for v in f["values"]:
+                v.setdefault("putative", False)
+                v.setdefault("refs", [])
                 if v.get("measure") and v["measure"] not in self.measure:
                     self.err(f"function {f['id']}: unknown measure {v['measure']}")
+                # A value nobody has published needs its argument written down.
+                if v["putative"] and not v.get("note"):
+                    self.err(f"function {f['id']}: putative value for "
+                             f"{v.get('measure')} has no `note` giving the argument")
 
         # relations
         self.relation_by_id = OrderedDict()
@@ -211,6 +217,10 @@ class Zoo:
                 for b in r[side] or []:
                     b.setdefault("conf", "medium")
                     b.setdefault("refs", [])
+                    b.setdefault("putative", False)
+                    if b["putative"] and not b.get("note"):
+                        self.err(f"relation {rid_hint(r)}: putative bullet has no "
+                                 f"`note` giving the argument")
                     b["form"] = self._form(b.get("form"), r, side)
             for end in ("from", "to"):
                 if r.get(end) not in self.measure:
@@ -658,6 +668,11 @@ class Zoo:
                         if self.resolve(wl.strip()) is None:
                             self.err(f"{rel}: unresolved [[{wl}]]")
         return self.problems
+
+
+def rid_hint(r):
+    """Best label for a relation in an error message, before ids are assigned."""
+    return r.get("id") or f"{r.get('from')}->{r.get('to')} ({r.get('setting')})"
 
 
 def _yn(v):

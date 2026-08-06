@@ -211,6 +211,9 @@ main { padding-bottom: 60px; }
 }
 .tag.tight { background: #eef7f1; border-color: #b6d8c3; color: var(--settled); }
 .tag.todo  { background: #eef4fb; border-color: #bcd3ea; color: #274a68; }
+/* a value or bullet nobody has published: worked out here, argument in the note */
+.tag.putative { background: #fbf3e6; border-color: #e6cfa3; color: #7a5a17; font-style: italic; }
+td.val .tag.putative { margin-left: 6px; }
 .conf {
   display: inline-block; width: 15px; height: 15px; line-height: 14px; text-align: center;
   border-radius: 50%; font-size: 10.5px; font-weight: 700; margin-left: 5px;

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import measure_chip, setting_pill, status_pill with context %}
+{% from "macros.html" import measure_chip, setting_pill, status_pill, putative_mark, conf_mark with context %}
 {% block title %}{{ f.name }} &middot; {{ site.title }}{% endblock %}
 
 {% block body %}
@@ -60,7 +60,7 @@
                   <a href="{{ root }}measures/{{ v.measure }}.html">{{ zoo.measure[v.measure].name }}</a>
                 {% else %}{{ v.measure }}{% endif %}
               </td>
-              <td class="val">{{ v.value | tex }}</td>
+              <td class="val">{{ v.value | tex }}{{ conf_mark(v.conf) }}{% if v.putative %}{{ putative_mark() }}{% endif %}</td>
               <td class="short">{{ v.note | mdi }}
                 {% if v.refs %}<span class="refs">{{ v.refs | cites }}</span>{% endif %}</td>
             </tr>

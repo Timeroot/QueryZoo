@@ -27,6 +27,7 @@ if you need the site fully offline, drop `tex-chtml.js` into `static/` and point
 | concept pages | 11 |
 | open problems | 14 |
 | references | 139 |
+| measure values recorded on function pages | 364 |
 
 The site generates one page per measure, function and concept, plus the exponent matrix, the
 relations index, the open-problem list, the bibliography, and this guide's on-site twin
@@ -177,6 +178,10 @@ to a single exponent; adding one where it belongs is a good contribution.
   record under `partial` if there is a counterexample.
 - **Confidence is visible.** `conf: low` renders a `?` badge on the page. Use it instead of
   deleting something you are unsure of, and pair it with `todo:` saying what to check.
+- **`putative: true` for anything unpublished.** A value or bullet that no source states --
+  worked out with pen and paper for this catalogue -- gets a `putative` badge, and the build
+  refuses it unless `note:` spells out the argument. Everything else is a transcription with
+  a citation.
 - **Witnesses are ids**, not prose. If the function is not catalogued yet, add a stub with
   `id/name/short/refs`; its page shows a "definition not yet transcribed" banner until someone
   fills in `formal:`.

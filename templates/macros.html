@@ -19,6 +19,10 @@
   {% endif %}
 {% endmacro %}
 
+{% macro putative_mark() %}
+  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+{% endmacro %}
+
 {% macro measure_chip(mid) %}
   {% set m = zoo.measure[mid] %}
   <a class="chip cat-{{ m.category }}" href="{{ root }}measures/{{ mid }}.html" title="{{ m.name }}">
@@ -30,6 +34,7 @@
   <li class="bnd {{ side }}{% if b.conf == 'low' %} shaky{% endif %}">
     <div class="stmt">{{ b.stmt | tex }}{{ conf_mark(b.conf) }}</div>
     <div class="meta">
+      {% if b.putative %}{{ putative_mark() }}{% endif %}
       {% if b.witness %}
         <span class="wit">witness: {{ xref(b.witness) }}</span>
       {% endif %}

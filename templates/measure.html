@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import status_pill, setting_pill, measure_chip, relation_block with context %}
+{% from "macros.html" import status_pill, setting_pill, measure_chip, relation_block, putative_mark, conf_mark with context %}
 {% block title %}{{ m.name }} &middot; {{ site.title }}{% endblock %}
 
 {% block body %}
@@ -144,7 +144,7 @@
             <tr>
               <td class="nm"><a href="{{ root }}functions/{{ f.id }}.html">{{ f.name }}</a>
                 <span class="kindtag k-{{ f.kind }}">{{ f.kind }}</span></td>
-              <td class="val">{{ v.value | tex }}</td>
+              <td class="val">{{ v.value | tex }}{{ conf_mark(v.conf) }}{% if v.putative %}{{ putative_mark() }}{% endif %}</td>
               <td class="short">{{ v.note | mdi }}
                 {% if v.refs %}<span class="refs">{{ v.refs | cites }}</span>{% endif %}</td>
             </tr>
