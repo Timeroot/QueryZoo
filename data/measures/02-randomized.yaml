@@ -1,0 +1,423 @@
+# =====================================================================
+# MEASURES: randomized (bounded error, zero error, expected cost,
+#           noisy, and the composition-theoretic family)
+# =====================================================================
+
+measures:
+
+- id: R
+  name: Bounded-error randomized query complexity
+  symbol: '\mathrm{R}_{\varepsilon}(f)'
+  aliases: ['R_2(f)', 'Monte Carlo decision tree complexity', 'BPP-style query complexity']
+  category: randomized
+  order: 10
+  short: 'Worst-case number of queries of a randomized decision tree that errs with probability at most eps.'
+  definition: |
+    A randomized decision tree is a probability distribution over deterministic trees.
+    $\mathrm{R}_\varepsilon(f)$ is the least $T$ such that some distribution over depth-$T$
+    trees outputs $f(x)$ with probability $\ge 1-\varepsilon$ for every $x$ in the domain.
+    Unadorned $\mathrm{R}(f) := \mathrm{R}_{1/3}(f)$.
+
+    Two cost conventions circulate and they are *not* interchangeable at small bias:
+    * **worst-case cost** ($\mathrm{R}_\varepsilon$): every branch has depth $\le T$;
+    * **expected cost** ($\bar{\mathrm{R}}_\varepsilon$, see [[Rbar]]): the expected number of
+      queries is $\le T$, maximised over inputs.
+  params:
+    - name: eps
+      symbol: '\varepsilon'
+      default: '1/3'
+      range: '[0, 1/2)'
+      description: 'Error probability. Standard choice 1/3; "small bias" means eps = 1/2 - gamma with gamma -> 0.'
+      dependence: |
+        **Amplification (always true):** $\mathrm{R}_{\varepsilon}(f) = O\!\big(\mathrm{R}_{1/3}(f)\log(1/\varepsilon)\big)$
+        by majority vote, and this is tight for some $f$ (e.g. $\mathrm{OR}$) but not for all.
+
+        **Small bias:** for $\varepsilon = 1/2-\gamma$, $\mathrm{R}_{1/2-\gamma}(f) \ge \Omega(\gamma^2 \mathrm{R}_{1/3}(f))$
+        is *false* in general; the correct general statement is
+        $\mathrm{R}_{1/3}(f) = O\!\big(\gamma^{-2}\,\mathrm{R}_{1/2-\gamma}(f)\big)$ by amplification,
+        and the extent to which small-bias algorithms can beat $\gamma^2$ scaling is exactly what
+        the measures [[noisyR]] and [[LR]] were invented to capture.
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes, note: 'Only inputs in the promise must be answered correctly.'}
+    relation: {defined: yes, note: 'Must output some valid $o$ with probability $\ge 1-\varepsilon$. Yao-style minimax for relations is subtler; see [[settings]].'}
+  facts:
+    - '$\mathrm{bs}(f) \le 3\,\mathrm{R}(f)$ and $\widetilde{\deg}(f) \le \mathrm{R}(f)$ [Nisan; BBCMdW01].'
+    - '$\mathrm{D}(f) \le 27\,\mathrm{R}(f)^3$ [Nisan]. Best known separation is $\mathrm{D} = \tilde\Omega(\mathrm{R}^2)$ [ABBLSS17], so the truth is between $2$ and $3$.'
+    - 'Composition can *fail*: there are partial $f,g$ with $\mathrm{R}(f\circ g) \ll \mathrm{R}(f)\mathrm{R}(g)$ [BenDavidBlais20composition].'
+    - '$\mathrm{R}_\varepsilon(f) = \max_\mu \mathrm{D}^\mu_\varepsilon(f)$ (Yao), for the worst-case-cost convention.'
+  refs: [Nisan91, BBCMdW01, BdW02, ABBLSS17]
+  see_also: [R0, Rbar, D, Q, noisyR, LR, RS]
+  confidence: high
+
+- id: Rbar
+  name: Expected-cost randomized query complexity
+  symbol: '\bar{\mathrm{R}}_{\varepsilon}(f)'
+  aliases: ['expected query complexity', 'average-depth randomized complexity']
+  category: randomized
+  order: 15
+  short: 'Same as R_eps but the cost is the expected (not worst-case) number of queries.'
+  definition: |
+    $\bar{\mathrm{R}}_\varepsilon(f) = \min_{A} \max_{x\in\mathrm{Dom}(f)} \mathbb{E}[\#\text{queries of }A\text{ on }x]$
+    over randomized algorithms $A$ that err with probability $\le\varepsilon$ on every $x$.
+
+    The distinction from $\mathrm{R}_\varepsilon$ matters:
+    * $\bar{\mathrm{R}}_\varepsilon(f) \le \mathrm{R}_\varepsilon(f)$ always;
+    * $\mathrm{R}_{\varepsilon'}(f) \le \bar{\mathrm{R}}_\varepsilon(f)/(\varepsilon'-\varepsilon)$ by Markov + truncation,
+      so at constant error they agree up to constants;
+    * at $\varepsilon = 1/2 - o(1)$ they can behave very differently, and Yao's question
+      of whether $\bar{\mathrm{R}}_\varepsilon$ has a distributional characterisation has a
+      **positive** answer for bounded error [Vereshchagin98] and a **negative** answer
+      in the small-bias regime [BBGM22].
+  params:
+    - {name: eps, symbol: '\varepsilon', default: '1/3'}
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
+  facts:
+    - '$\bar{\mathrm{R}}_0(f) = \mathrm{R}_0(f)$: the zero-error measure is by definition an expected-cost measure.'
+    - 'Yao (1977) asked for a distributional characterisation of $\bar{\mathrm{R}}_\varepsilon$; resolved positively for constant $\varepsilon$ and negatively for $\varepsilon = 1/2-o(1)$.'
+  refs: [Yao77, Vereshchagin98, BBGM22]
+  see_also: [R, R0, Dmu]
+  confidence: high
+
+- id: R0
+  name: Zero-error randomized query complexity
+  symbol: '\mathrm{R}_{0}(f)'
+  aliases: ['Las Vegas query complexity', 'ZPP-style query complexity']
+  category: randomized
+  order: 20
+  short: 'Expected number of queries of a randomized algorithm that is always correct.'
+  definition: |
+    The minimum over always-correct randomized algorithms of the worst-case
+    *expected* number of queries. (Worst-case cost would collapse to $\mathrm{D}$,
+    so the expected-cost convention is forced here.)
+    Equivalently the algorithm may output "don't know" with probability $\le 1/2$
+    and otherwise must be right ("Las Vegas").
+  params: []
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
+  facts:
+    - '$\mathrm{R}(f) \le \mathrm{R}_0(f) \le \mathrm{D}(f)$.'
+    - '$\mathrm{D}(f) = O(\mathrm{R}_0(f)^2)$ for total $f$; tight up to $\tilde\Omega$ by pointer functions [ABBLSS17].'
+    - '$\mathrm{R}_0(f) = O\big(\mathrm{R}(f)^2\log \mathrm{R}(f)\big)$ [KulkarniTal16], improving $O(\mathrm{R}(f)^2\log n)$ [Midrijanis05].'
+    - '$\mathrm{R}_0(\text{NAND-tree}_n) = \Theta(n^{0.7537\ldots})$ [Saks-Wigderson], matching $\mathrm{R}$ [Santha].'
+  refs: [SaksWigderson86, Santha95, KulkarniTal16, ABBLSS17, BdW02]
+  see_also: [R, D, Rbar, Q0]
+  confidence: high
+
+- id: R1
+  name: One-sided-error randomized query complexity
+  symbol: '\mathrm{R}^{1}(f)'
+  aliases: ['RP-style query complexity', 'R^0(f) for the co-version']
+  category: randomized
+  order: 25
+  short: 'Randomized complexity when errors are allowed on only one side.'
+  definition: |
+    $\mathrm{R}^1_\varepsilon(f)$: the algorithm must output $1$ with certainty when $f(x)=1$
+    and output $0$ with probability $\ge 1-\varepsilon$ when $f(x)=0$ (or vice versa for $\mathrm{R}^0$).
+    This is the query analogue of $\mathsf{RP}$/$\mathsf{coRP}$, and
+    $\mathrm{R}_0(f) = \Theta(\mathrm{R}^0(f) + \mathrm{R}^1(f))$ up to log factors
+    (run both and stop when one is certain).
+  params: [{name: eps, symbol: '\varepsilon', default: '1/3'}]
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: partial, note: 'Needs a notion of "certainly valid output".'}}
+  facts:
+    - '$\mathrm{R}^1(f) \ge \mathrm{C}^1(f)$: a certain "yes" must exhibit a 1-certificate.'
+    - '$\mathrm{R}(f) \le \mathrm{R}^1(f) \le \mathrm{R}_0(f) \le \mathrm{D}(f)$.'
+  refs: [BdW02]
+  see_also: [R, R0, C1]
+  confidence: medium
+
+- id: RS
+  name: Sabotage complexity
+  symbol: '\mathrm{RS}(f)'
+  category: composition
+  order: 30
+  short: 'Randomized cost of finding a "sabotaged" (damaged) input bit; the first measure with perfect composition.'
+  definition: |
+    Define the *sabotaged* problem $f_{\mathrm{sab}}$: the input is a partial assignment with
+    some coordinates set to $\ast$ such that the $\ast$'s genuinely matter (the value of $f$ is
+    not determined), and the goal is to find one $\ast$. $\mathrm{RS}(f)$ is the bounded-error
+    randomized query complexity of $f_{\mathrm{sab}}$.
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes}
+    relation: {defined: partial, note: 'Definable in principle; not standard.'}
+  facts:
+    - 'Formally $\mathrm{RS}(f) := \mathrm{R}_0(f_{\mathrm{sab}})$; using $\mathrm{R}$ instead of $\mathrm{R}_0$ changes nothing up to constants [BenDavidKothari18, Def. 10].'
+    - '$\mathrm{RS}(f\circ g) \ge \mathrm{RS}(f)\,\mathrm{RS}(g)$ -- perfect composition [BenDavidKothari18, Thm 19].'
+    - '$\mathrm{R}(f\circ g^n) = \Omega(\mathrm{R}(f)\,\mathrm{RS}(g))$ [BenDavidKothari18, Thm 21].'
+    - '$\mathrm{R}_\varepsilon(f) \ge \bar{\mathrm{R}}_\varepsilon(f) \ge (1-2\varepsilon)\,\mathrm{RS}(f)$ [BenDavidKothari18, Thm 12].'
+    - '**Quadratically tight for total $f$:** $\mathrm{R}(f) = O(\mathrm{RS}(f)^2\log \mathrm{RS}(f))$ [BenDavidKothari18, Thm 32]. No total $f$ with $\mathrm{RS}(f) = o(\mathrm{R}(f))$ is known.'
+    - '$\mathrm{RS}$ can be quadratically larger than the partition bound, and $\mathrm{RS}(f) = \tilde\Omega(\mathrm{Q}(f)^{2.5})$ for some total $f$ [BenDavidKothari18, Thm 30].'
+    - '$\mathrm{RS}(g) = \tilde\Omega(\mathrm{D}^{\mathrm{prod}}(g))$ for total $g$, and the gap is polynomial (NAND-tree) [Sanyal24].'
+    - '$\bar{\chi}(g) = \Omega(\mathrm{RS}(g))$, with an unbounded separation [GLSS19].'
+  refs: [BenDavidKothari18, GLSS19, Sanyal24]
+  see_also: [R, chi, chibar, LR, noisyR]
+  confidence: high
+
+- id: chi
+  name: Conflict complexity
+  symbol: '\chi(g)'
+  category: composition
+  order: 35
+  short: 'A measure of how hard it is for a decision tree to distinguish a random 0-input from a random 1-input, one query at a time.'
+  definition: |
+    Introduced to prove composition theorems. Informally: sample $x \sim \mu_0$ and
+    $y \sim \mu_1$ from hard distributions on $g^{-1}(0)$ and $g^{-1}(1)$, and run a
+    deterministic tree simultaneously on both, "resolving" a conflict when the tree
+    queries a coordinate on which $x$ and $y$ differ. $\chi(g)$ measures the expected
+    number of queries before a conflict, maximised over distributions and minimised
+    over trees.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{R}(f\circ g^n) = \Omega(\mathrm{R}(f)\,\chi(g))$ [Sanyal18; AGJKLMSS17].'
+    - '$\chi(g) = \Omega(\mathrm{bs}(g))$ [Li18].'
+    - '$\chi(g) = \Omega(\sqrt{\mathrm{R}(g)})$.'
+  refs: [Sanyal18, AGJKLMSS17, Li18]
+  see_also: [chibar, RS, LR, R]
+  confidence: medium
+
+- id: chibar
+  name: Max-conflict complexity
+  symbol: '\bar{\chi}(g)'
+  category: composition
+  order: 36
+  short: 'A strengthening of conflict complexity that dominates sabotage complexity.'
+  definition: |
+    The "max" version of conflict complexity of Gavinsky-Lee-Santha-Sanyal: the
+    adversary may choose the hard distribution pair *after* seeing the algorithm's
+    behaviour, yielding a larger and better-behaved measure.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{R}(f\circ g^n) = \Omega(\mathrm{R}(f)\,\bar{\chi}(g))$ [GLSS19].'
+    - '$\bar{\chi}(g) = \Omega(\sqrt{\mathrm{R}(g)})$ even for partial $g$.'
+    - '$\bar{\chi}(g) = \Omega(\mathrm{RS}(g))$ for all partial $g$, with an unbounded separation in the other direction.'
+    - 'Ordering: $\mathrm{RS} \lesssim \bar{\chi} \lesssim \mathrm{LR} \lesssim \mathrm{R}$; no asymptotic separation among the first three is known for *total* functions.'
+  refs: [GLSS19, BBGM22]
+  see_also: [chi, RS, LR, R]
+  confidence: high
+
+- id: LR
+  name: Linearised randomized complexity
+  symbol: '\mathrm{LR}(f)'
+  category: composition
+  order: 37
+  short: 'The largest measure satisfying an inner composition theorem R(f o g) = Omega(R(f) LR(g)).'
+  definition: |
+    Where $\mathrm{R}$ effectively charges $1/\gamma^2$ for an algorithm that achieves bias
+    $\gamma$ towards the right answer, $\mathrm{LR}$ charges only $1/\gamma$ -- it *linearises*
+    the cost in the bias. Consequently $\mathrm{LR}(f)$ can be as small as $\sqrt{\mathrm{R}(f)}$
+    and never larger than $\mathrm{R}(f)$.
+
+    Ben-David-Blais-Göös-Maystre prove it is exactly the right inner measure:
+    $\mathrm{R}(f\circ g)=\Omega(\mathrm{R}(f)\mathrm{LR}(g))$ for all partial $f,g$, and
+    *no* larger measure has this property.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: partial, note: 'The composition statement is proved for partial functions; the relational case is not standard.'}}
+  facts:
+    - '$\Omega(\sqrt{\mathrm{R}(f)}) \le \mathrm{LR}(f) \le \mathrm{R}(f)$.'
+    - '$\mathrm{LR}$ can be polynomially larger than $\bar{\chi}$ [BBGM22].'
+    - '$\mathrm{R}^*(f) \ge \Omega(\mathrm{LR}(f))$.'
+  refs: [BBGM22]
+  see_also: [chibar, RS, noisyR, Rstar, R]
+  confidence: high
+
+- id: noisyR
+  name: Noisy randomized query complexity
+  symbol: '\mathrm{noisyR}(f)'
+  category: composition
+  order: 38
+  short: 'Randomized complexity when the algorithm may buy a biased (noisy) copy of any bit at cost proportional to bias squared.'
+  definition: |
+    In the *noisy query model* the algorithm may, at any step, request the value of $x_i$
+    through a channel of its choosing with bias $\gamma$, paying cost $\Theta(\gamma^2)$.
+    (Equivalently: it may make a fractional query.) $\mathrm{noisyR}(f)$ is the least total
+    cost of an algorithm that computes $f$ with error $\le 1/3$.
+
+    Ben-David and Blais showed this is exactly the right *outer* measure for composition.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: partial}}
+  facts:
+    - '$\mathrm{noisyR}(f) \le \mathrm{R}(f) = O(\mathrm{noisyR}(f)\cdot \text{polylog})$? -- the two are within a polynomial; $\mathrm{noisyR} \le \mathrm{R}$ always.'
+    - '$\mathrm{R}(f\circ g^n) = \Omega(\mathrm{noisyR}(f)\,\mathrm{R}(g))$, and $\mathrm{noisyR}$ is the largest measure with this property [BenDavidBlais20composition].'
+    - 'Characterisation: $\mathrm{noisyR}(f) = \Theta\!\big(\mathrm{R}(f\circ \mathrm{GapMaj}_n)/\mathrm{R}(\mathrm{GapMaj}_n)\big)$.'
+    - 'If $\mathrm{R}(f) = \Theta(n)$ then $\mathrm{noisyR}(f) = \Theta(\mathrm{R}(f))$.'
+  refs: [BenDavidBlais20minimax, BenDavidBlais20composition, GoosMaystre21]
+  see_also: [R, LR, Rstar, Np]
+  confidence: high
+
+- id: Rstar
+  name: Asymptotic composition rate
+  symbol: '\mathrm{R}^{*}(f)'
+  category: composition
+  order: 39
+  short: 'lim_k R(f^{o k})^{1/k}: the per-level cost of composing f with itself many times.'
+  definition: |
+    $$\mathrm{R}^*(f) \;=\; \lim_{k\to\infty} \mathrm{R}\!\left(f^{\circ k}\right)^{1/k}.$$
+    The limit exists by submultiplicativity. Since composition of randomized query
+    complexity is *not* perfect, $\mathrm{R}^*(f)$ can be strictly smaller than $\mathrm{R}(f)$.
+    Characterising $\mathrm{R}^*$ by a simpler (ideally efficiently computable) measure is
+    an open problem posed in [BBGM22].
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{R}^*(f) \ge \Omega(\mathrm{LR}(f))$ [BBGM22].'
+    - '$\mathrm{R}^*(f) \ge \Omega(\mathrm{Q}(f))$, since quantum query complexity composes perfectly.'
+    - 'Whether either bound dominates the other is open.'
+  refs: [BBGM22]
+  see_also: [LR, Q, R, noisyR]
+  confidence: high
+
+- id: Np
+  name: Noisy decision tree complexity
+  symbol: '\mathrm{N}_{p}(f)'
+  aliases: ['noisy query complexity (FRPU model)', 'noisy oracle complexity']
+  category: randomized
+  order: 40
+  short: 'Number of queries when every query answer is independently flipped with probability p.'
+  definition: |
+    In the model of Feige-Raghavan-Peleg-Upfal each query (repeats allowed) returns
+    $x_i \oplus \eta$ where $\eta = 1$ with probability $p \in (0,1/2)$ independently
+    each time. $\mathrm{N}_p(f)$ is the least number of queries needed to output $f(x)$
+    with error $\le 1/3$.
+
+    This is a *different* notion from [[noisyR]]: here the noise rate is imposed by the
+    model, and repetition is the only way to reduce it, whereas in the Ben-David-Blais
+    model the algorithm chooses the bias and pays for it.
+  params:
+    - name: p
+      symbol: 'p'
+      default: 'constant in (0,1/2)'
+      description: 'per-query flip probability'
+      dependence: |
+        For constant $p$, changing $p$ changes $\mathrm{N}_p$ by only a constant factor
+        (each "reliable" bit costs $\Theta(\log(1/\delta)/(1-2p)^2)$ repetitions).
+        The interesting dependence is on the *target* error and on $n$.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
+  facts:
+    - '$\mathrm{N}_p(f) = O(\mathrm{R}(f)\log \mathrm{R}(f))$ always (amplify each query by $O(\log \mathrm{R})$ repetitions and union bound).'
+    - '$\mathrm{N}_p(\mathrm{PARITY}_n) = \Theta(n\log n)$ [FRPU94] -- the log factor is *necessary*, giving a genuine separation from $\mathrm{R}$.'
+    - 'Average-case/Fourier lower bound: $\mathrm{N}_p(f) = \Omega\!\big(\sum_S |\hat f(S)|^2 |S| \log|S|\big)$-flavoured bounds [Evans-Pippenger].'
+    - 'Almost all $f$ need $\Omega(n\log n)$ noisy queries [Reischuk-Schmeltz].'
+    - 'Quantum contrast: the *robust* quantum query complexity of PARITY is $\Theta(n)$ -- no log factor [BNRdW05].'
+  refs: [FRPU94, EvansPippenger98, ReischukSchmeltz91, BNRdW05, Gu25noisy]
+  see_also: [R, noisyR, robustQ]
+  confidence: high
+
+- id: CA
+  name: Classical adversary bound
+  symbol: '\mathrm{CA}(f)'
+  aliases: ['relational adversary', 'Aaronson adversary', 'Laplante-Magniez Kolmogorov bound']
+  category: adversary
+  order: 45
+  short: 'The classical analogue of the positive-weights quantum adversary; a lower bound on R.'
+  definition: |
+    Aaronson's classical adversary: choose a relation $\mathcal{R}$ between 0-inputs and
+    1-inputs and weights; the bound is the resulting min-max quantity. Several apparently
+    different formulations (Aaronson's, the Laplante-Magniez Kolmogorov version, the
+    "weighted" version) all coincide.
+  settings:
+    total:   {defined: yes, note: '$\mathrm{CA}(f) = \Theta(\mathrm{fbs}(f))$ for total $f$ -- all classical adversary methods are equivalent and equal fractional block sensitivity [ABIKPS17].'}
+    partial: {defined: yes, note: 'For partial functions $\mathrm{CA}$ is strictly stronger than $\mathrm{fbs}$ and can be exponentially separated from $\mathrm{R}$ [CGLMSG23].'}
+    relation: {defined: yes, note: 'The relational adversary was designed for exactly this setting.'}
+  equivalent:
+    - {measure: CGpub, form: {exp: 1, kind: theta}, statement: '$\mathrm{CA}(f) = \Theta(\mathrm{CG}^{\mathrm{pub}}(f))$', refs: [CGLMSG23]}
+    - {measure: fbs, form: {exp: 1, kind: theta}, statement: '$\mathrm{CA}(f) = \Theta(\mathrm{fbs}(f))$ for *total* $f$', refs: [ABIKPS17]}
+  facts:
+    - '$\mathrm{CA}(f) = O(\mathrm{R}(f))$ for every (partial) Boolean $f$.'
+    - '$\mathrm{CA}(f) \le \mathrm{EC}(f) \le \mathrm{C}(f)$ and $\mathrm{CA}(f) \le \mathrm{RS}(f)$.'
+    - 'There are partial functions with $\mathrm{R}(f)$ exponentially larger than $\mathrm{CA}(f)$ [CGLMSG23].'
+  refs: [Aaronson06, LaplanteMagniez08, ABIKPS17, CGLMSG23]
+  see_also: [fbs, CG, CGpub, EC, R, Adv]
+  confidence: high
+
+- id: CG
+  name: Certificate game complexity (private coin)
+  symbol: '\mathrm{CG}(f)'
+  category: adversary
+  order: 50
+  short: 'Inverse winning probability of a zero-communication game where two players must agree on a coordinate where their inputs differ.'
+  definition: |
+    Two players receive $x$ and $y$ with $f(x)\ne f(y)$ and, without communicating,
+    must both output the *same* index $i$ with $x_i \ne y_i$. $\mathrm{CG}(f)$ is the
+    inverse of the optimal (worst-case over $(x,y)$) winning probability, using
+    private randomness.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{CG}^{\mathrm{ns}} \le \mathrm{CG}^{*} \le \mathrm{CG}^{\mathrm{pub}} \le \mathrm{CG}$.'
+    - '$\mathrm{R}_0(f) = O(\mathrm{CG}(f))$ ... $\mathrm{CG}(f) = O(\mathrm{EC}(f)^2)$ [CGLMSG23].'
+    - 'The *single-bit* private-coin variant (inputs at Hamming distance 1) equals $\lambda(f)^2$.'
+  refs: [CGLMSG23]
+  see_also: [CGpub, CGstar, CGns, CA, lambda]
+  confidence: medium
+
+- id: CGpub
+  name: Certificate game complexity (public coin)
+  symbol: '\mathrm{CG}^{\mathrm{pub}}(f)'
+  category: adversary
+  order: 51
+  short: 'Public-coin version of the certificate game; equals the classical adversary bound.'
+  definition: 'As [[CG]] but the players share randomness.'
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  equivalent:
+    - {measure: CA, form: {exp: 1, kind: theta}, statement: '$\mathrm{CG}^{\mathrm{pub}}(f) = \Theta(\mathrm{CA}(f))$', refs: [CGLMSG23]}
+  facts:
+    - '$\mathrm{fbs}(f) \le \mathrm{CG}^{\mathrm{pub}}(f) \le \min(\mathrm{EC}(f), \mathrm{RS}(f), \mathrm{C}(f))$ up to constants.'
+    - '$\mathrm{CG}^{\mathrm{pub}}(f) = O(\mathrm{R}(f))$.'
+    - 'The single-bit public-coin variant $= \Theta(\mathrm{s}(f))$, a new characterisation of sensitivity.'
+  refs: [CGLMSG23]
+  see_also: [CA, CG, s, fbs]
+  confidence: medium
+
+- id: CGstar
+  name: Quantum certificate game complexity
+  symbol: '\mathrm{CG}^{*}(f)'
+  category: adversary
+  order: 52
+  short: 'Certificate game with shared entanglement.'
+  definition: 'As [[CG]] but the players share an entangled state.'
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - 'Surprisingly $\mathrm{CG}^*$ is *not* below $\mathrm{Q}$: $\mathrm{CG}^*(\mathrm{OR}_n)=\Theta(n)$ while $\mathrm{Q}(\mathrm{OR}_n)=\Theta(\sqrt n)$.'
+    - 'All certificate-game models except the private-coin one collapse to the classical adversary bound for high-sensitivity functions.'
+  refs: [CGLMSG23]
+  see_also: [CG, CGpub, CGns, Q]
+  confidence: medium
+
+- id: CGns
+  name: Non-signaling certificate game complexity
+  symbol: '\mathrm{CG}^{\mathrm{ns}}(f)'
+  category: adversary
+  order: 53
+  short: 'Certificate game with arbitrary non-signaling correlations; the weakest of the four.'
+  definition: 'As [[CG]] but the players may use any non-signaling box.'
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  refs: [CGLMSG23]
+  see_also: [CG, CGpub, CGstar]
+  confidence: medium
+
+- id: psD
+  name: Pseudo-deterministic query complexity
+  symbol: '\mathrm{psD}(S)'
+  aliases: ['pseudodeterministic decision tree complexity', 'reproducible randomized complexity']
+  category: randomized
+  order: 35
+  short: 'Randomized cost of a search algorithm that must output the *same* canonical answer with high probability on every input.'
+  definition: |
+    For a relation $S \subseteq \{0,1\}^n \times \mathcal{O}$, a *pseudo-deterministic*
+    algorithm is a randomized decision tree $A$ together with a canonical solution
+    function $s : \{0,1\}^n \to \mathcal{O}$ with $(x, s(x)) \in S$, such that
+    $$\Pr[A(x) = s(x)] \ \ge\ 2/3 \quad\text{for every } x .$$
+    $\mathrm{psD}(S)$ is the least worst-case cost of such an $A$. It interpolates
+    between $\mathrm{R}$ and $\mathrm{D}$: a deterministic algorithm is trivially
+    pseudo-deterministic, and a pseudo-deterministic algorithm is randomized.
+    This is *the* measure that makes the relational setting interesting: for
+    Boolean-valued $f$ it collapses, $\mathrm{psD}(f) = \Theta(\mathrm{R}(f))$,
+    because the canonical answer is forced.
+  settings:
+    total:    {defined: degenerate, note: 'For total (or partial) Boolean functions $\mathrm{psD} = \Theta(\mathrm{R})$: there is only one correct answer, so reproducibility is free.'}
+    partial:  {defined: degenerate, note: 'Same collapse as for total functions.'}
+    relation: {defined: yes, note: 'The natural home of this measure. Only interesting when a single input admits several valid outputs.'}
+  facts:
+    - '$\mathrm{R}(S) \le \mathrm{psD}(S) \le \mathrm{D}(S)$.'
+    - '$\mathrm{D}(S) = O(\mathrm{psD}(S)^3)$ for total search problems [CDM23], improving the quartic bound of [GGR13].'
+    - '$\mathrm{R}$ and $\mathrm{psD}$ are **exponentially separated**: for the approximate-Hamming-weight relation $\mathrm{ApproxHW}$, $\mathrm{R} = O(1)$ while $\mathrm{psD} = \Omega(n)$ [CDM23]; and $\mathrm{psD}(\mathrm{SearchCNF}) = \Omega(n^{1/3})$ for random $k$-CNFs [CDM23], $\Omega(\sqrt{n})$ in the setting of [GIPS21].'
+    - 'In the zero-error average-case setting, deterministic, randomized and pseudo-deterministic complexity all coincide [GIPS21].'
+  refs: [GGR13, GIPS21, CDM23]
+  see_also: [R, D, R0]
+  confidence: high

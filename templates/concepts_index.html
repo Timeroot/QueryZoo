@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Concepts &middot; {{ site.title }}{% endblock %}
+
+{% block body %}
+<div class="wrap">
+  <h1 class="pagetitle">Concepts</h1>
+  <p class="lede">The prose that the tables lean on: conventions, why the settings differ,
+  what composition is for, and the cheat sheets.</p>
+
+  <div class="conceptgrid">
+    {% for c in cs %}
+    <a class="conceptcard" href="{{ root }}concepts/{{ c.id }}.html">
+      <h2>{{ c.title }}</h2>
+      <p>{{ c.blurb | mdi }}</p>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

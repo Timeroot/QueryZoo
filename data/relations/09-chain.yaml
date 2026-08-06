@@ -1,0 +1,268 @@
+# =====================================================================
+# RELATIONS, part 9: the elementary chain.
+#
+# The textbook pointwise inequalities
+#
+#   s <= bs <= C <= D,   Q <= R <= R0 <= D,   adeg <= deg <= D,
+#   Q <= Q0 <= QE <= D,  rdeg <= adeg,        C <= R0 <= C^2
+#
+# each as its own record. They carry no surprises, but they are the edges
+# the transitive closure walks, so leaving them implicit inside somebody
+# else's `stmt` chain made the derived bounds much weaker than the data
+# actually supports. Each is tight at exponent 1, witnessed by PARITY or OR.
+#
+# Schema: see 01-classical-core.yaml.
+# =====================================================================
+
+relations:
+
+- from: s
+  to: bs
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{s}(f) \le \mathrm{bs}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [Nisan91, BdW02]
+      note: 'Sensitivity is block sensitivity restricted to singleton blocks.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{s}(\mathrm{OR}_n) = \mathrm{bs}(\mathrm{OR}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      conf: high
+  see_also: [s, bs, sensitivity-conjecture]
+
+- from: bs
+  to: C
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{bs}(f) \le \mathrm{C}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [Nisan91, BdW02]
+      note: 'A certificate for $x$ must intersect every sensitive block of $x$, and the blocks are disjoint.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{bs}(\mathrm{OR}_n) = \mathrm{C}(\mathrm{OR}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      conf: high
+  see_also: [bs, C, fbs]
+
+- from: C
+  to: D
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{C}(f) \le \mathrm{D}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BdW02]
+      note: 'The queries a deterministic algorithm makes on $x$ are a certificate for $x$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{C}(\mathrm{PARITY}_n) = \mathrm{D}(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      conf: high
+  see_also: [C, D]
+
+- from: C
+  to: R0
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{C}(f) \le \mathrm{R}_0(f)'
+      form: {exp: 1, kind: exact}
+      refs: [GJKKLSSV17, BdW02]
+      note: 'A zero-error algorithm must output a certificate on every input, so it queries one.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{C}(\mathrm{PARITY}_n) = \mathrm{R}_0(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      conf: high
+  see_also: [C, R0]
+
+- from: R0
+  to: C
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{R}_0(f) \le \mathrm{C}(f)^2'
+      form: {exp: 2, kind: exact}
+      refs: [GJKKLSSV17]
+      note: 'Via $\mathrm{D}\le\mathrm{C}^{(0)}\mathrm{C}^{(1)}$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}_0(f_n) = \widetilde\Omega\big(\mathrm{C}(f_n)^{?}\big)'
+      todo: 'Best known R0 vs C separation -- is the quadratic bound tight?'
+      conf: low
+  see_also: [R0, C, D]
+
+- from: R
+  to: R0
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{R}(f) \le \mathrm{R}_0(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BdW02]
+      note: 'A zero-error algorithm is in particular a bounded-error one.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}(\mathrm{PARITY}_n) = \mathrm{R}_0(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      conf: high
+  see_also: [R, R0]
+
+- from: R
+  to: D
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{R}(f) \le \mathrm{R}_0(f) \le \mathrm{D}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BdW02]
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}(\mathrm{PARITY}_n) = \mathrm{D}(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      conf: high
+  notes: |
+    The interesting direction is the reverse one, $\mathrm{D}$ in terms of
+    $\mathrm{R}$, where the exponent is between 2 and 3.
+  see_also: [R, D, R0]
+
+- from: Q
+  to: R
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{Q}(f) \le \mathrm{R}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BdW02]
+      note: 'A randomized algorithm is a (very restricted) quantum one.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{Q}(\mathrm{PARITY}_n) = \lceil n/2\rceil = \tfrac12\,\mathrm{R}(\mathrm{PARITY}_n)'
+      form: {exp: 1, kind: const}
+      witness: PARITY
+      refs: [BBCMdW01]
+      conf: high
+  see_also: [Q, R, D]
+
+- from: Q
+  to: Q0
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{Q}(f) \le \mathrm{Q}_0(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BdW02]
+      conf: high
+  lower:
+    - stmt: '\mathrm{Q}(\mathrm{PARITY}_n) = \mathrm{Q}_0(\mathrm{PARITY}_n) = \lceil n/2\rceil'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      conf: high
+  see_also: [Q, Q0, QE]
+
+- from: QE
+  to: D
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{Q}_E(f) \le \mathrm{D}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BdW02]
+      conf: high
+  lower:
+    - stmt: '\mathrm{Q}_E(\mathrm{OR}_n) = n = \mathrm{D}(\mathrm{OR}_n)'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      refs: [BBCMdW01]
+      note: 'Exact quantum algorithms need $n$ queries for $\mathrm{OR}$.'
+      conf: high
+  see_also: [QE, D, Q0]
+
+- from: deg
+  to: D
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\deg(f) \le \mathrm{D}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [NS94, BdW02]
+      note: 'Sum the indicator polynomials of the accepting leaves of a depth-$\mathrm{D}$ tree.'
+      conf: high
+  lower:
+    - stmt: '\deg(\mathrm{PARITY}_n) = \mathrm{D}(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      conf: high
+  see_also: [deg, D, adeg]
+
+- from: adeg
+  to: deg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\widetilde{\deg}(f) \le \deg(f)'
+      form: {exp: 1, kind: exact}
+      refs: [NS94, BdW02]
+      note: 'The representing polynomial is in particular an approximating one.'
+      conf: high
+  lower:
+    - stmt: '\widetilde{\deg}(\mathrm{PARITY}_n) = \deg(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      refs: [BBCMdW01]
+      conf: high
+  see_also: [adeg, deg, rdeg]
+
+- from: ardeg
+  to: adeg
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{rdeg}_\varepsilon(f) \le \widetilde{\deg}_\varepsilon(f)'
+      form: {exp: 1, kind: exact}
+      refs: [IJKKKSWW23, MahadevdeWolf15]
+      note: 'A polynomial is a rational function with denominator 1.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{rdeg}_\varepsilon(f_n) = \Omega\big(\widetilde{\deg}_\varepsilon(f_n)^{?}\big)'
+      todo: 'Best known separation of approximate rational degree from approximate degree.'
+      conf: low
+  notes: |
+    Careful: this is the *approximate* rational degree. The exact rational degree
+    [[rdeg]] is **not** below $\widetilde{\deg}$ -- it is $\mathrm{rdeg}=\max\{\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f)\}$,
+    and $\widetilde{\deg}=\Omega(\mathrm{rdeg}^{3/2})$ is a theorem, not a triviality.
+  see_also: [ardeg, adeg, rdeg, PostQ]
+
+- from: ardeg
+  to: rdeg
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{rdeg}_\varepsilon(f) \le \mathrm{rdeg}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [IJKKKSWW23]
+      note: 'Exact rational representation is in particular an $\varepsilon$-approximation.'
+      conf: high
+  see_also: [ardeg, rdeg, PostQ]
+
+- from: rdeg
+  to: C
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{rdeg}(f) \le \mathrm{C}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [IJKKKSWW23]
+      note: 'Via $\mathrm{rdeg}(f)=\max\{\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f)\}$ and $\mathrm{ndeg}\le\mathrm{C}$.'
+      conf: medium
+  see_also: [rdeg, C, ndeg]

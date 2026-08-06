@@ -1,0 +1,334 @@
+# =====================================================================
+# RELATIONS, part 4: composition and the measures invented to control it.
+#
+# These entries are a little different from the rest of the zoo: the
+# "relation" being recorded is often about  f o g  rather than about a
+# single function.  We use `kind: composition` on those, and keep the
+# usual from/to schema (documented in 01-classical-core.yaml) for the
+# plain measure-vs-measure comparisons.
+# =====================================================================
+
+relations:
+
+# =========================================== the composition question itself
+- from: R
+  to: R
+  kind: composition
+  id: comp-R
+  setting: partial
+  status: fails
+  headline: '\mathrm{R}(f\circ g^n) \stackrel{?}{=} \tilde\Theta\big(\mathrm{R}(f)\,\mathrm{R}(g)\big)'
+  upper:
+    - stmt: '\mathrm{R}_{1/3}(f\circ g^n) = O\big(\mathrm{R}(f)\,\mathrm{R}_{1/(3\mathrm{R}(f))}(g)\big) = O\big(\mathrm{R}(f)\,\mathrm{R}(g)\log \mathrm{R}(f)\big)'
+      note: 'Folklore: run the outer algorithm and amplify each inner call to error $1/(3\mathrm{R}(f))$, then union bound. The $\log$ comes purely from amplification, which is why $\bar{\mathrm{R}}_\varepsilon$ and the $\varepsilon$-dependence of $\mathrm{R}$ matter so much here.'
+      conf: high
+  lower:
+    - stmt: '\text{FALSE in general: } \exists \text{ partial } f,g:\ \mathrm{R}(f\circ g) \ll \mathrm{R}(f)\,\mathrm{R}(g)'
+      refs: [BenDavidBlais20composition]
+      note: 'The randomized composition conjecture is **refuted** for partial functions. The gap is polynomial, although in the construction both sides are polylogarithmic in the input size of $f$.'
+      conf: high
+    - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{noisyR}(f)\,\mathrm{R}(g)\big)'
+      refs: [BenDavidBlais20composition]
+      note: 'Optimal *outer* composition theorem: if $\mathrm{R}(f\circ g^n)=\Omega(M(f)\mathrm{R}(g))$ for all $g$, then $M(f) = O(\mathrm{noisyR}(f))$.'
+      conf: high
+    - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{R}(f)\,\mathrm{LR}(g)\big)'
+      refs: [BBGM22]
+      note: 'Optimal *inner* composition theorem: $\mathrm{LR}$ is the largest measure with this property.'
+      conf: high
+    - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{R}(f)\,\bar\chi(g)\big) = \Omega\big(\mathrm{R}(f)\,\mathrm{RS}(g)\big) = \Omega\big(\mathrm{R}(f)\,\chi(g)\big)'
+      refs: [GLSS19, BenDavidKothari18, Sanyal18, AGJKLMSS17]
+      note: 'The historical chain of inner measures, each subsuming the previous: $\chi \lesssim \mathrm{RS} \lesssim \bar\chi \lesssim \mathrm{LR}$.'
+      conf: high
+    - stmt: '\mathrm{R}(f\circ g^n) = \tilde\Omega\big(\mathrm{R}(f)\,\mathrm{D}^{\mathrm{prod}}(g)\big)'
+      refs: [Sanyal24]
+      conf: high
+  notes: |
+    **Status by setting.**
+
+    * *Partial functions*: the conjecture is **false** [BenDavidBlais20composition].
+    * *Total functions*: **open**. No total $f$ is known with
+      $\mathrm{noisyR}(f) = o(\mathrm{R}(f))$, and no total $g$ is known with
+      $\mathrm{RS}(g) = o(\mathrm{R}(g))$; if either stayed true in general the
+      conjecture would follow for total functions.
+    * *Relations*: Sanyal's theorem already allows the outer object $f$ to be a
+      relation on $\{0,1\}^n$ [Sanyal24].
+
+    **Sufficient conditions for composition (all with arbitrary inner $g$).**
+
+    * $\mathrm{R}(f)=\Theta(n)$, i.e. the outer function is maximally hard [CKMPSS23].
+    * $f$ symmetric, or "weakly symmetric" in the sense of [CKMPSS23].
+    * Inserting a cheap buffer works unconditionally:
+      $\mathrm{R}(f\circ h\circ g)=\Omega(\mathrm{R}(f)\mathrm{R}(h)\mathrm{R}(g))$
+      whenever $\mathrm{D}(h)=\Theta(\log \mathrm{R}(g))$ [BenDavidKothari18].
+  see_also: [R, noisyR, LR, RS, chi, chibar, D_prod, Rbar, composition]
+
+- from: R
+  to: Rbar
+  kind: composition
+  id: comp-MAJ
+  setting: total
+  status: settled
+  headline: '\mathrm{R}(\mathrm{MAJ}_n\circ g^n) = \Theta\big(n\cdot \bar{\mathrm{R}}_{1/n}(g)\big)'
+  upper:
+    - stmt: '\mathrm{R}(\mathrm{MAJ}_n\circ g^n) = O\big(n\cdot \bar{\mathrm{R}}_{1/n}(g)\big)'
+      refs: [GoosMaystre21]
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}(\mathrm{MAJ}_n\circ g^n) = \Omega\big(n\cdot \bar{\mathrm{R}}_{1/n}(g)\big)'
+      refs: [GoosMaystre21]
+      conf: high
+  notes: |
+    The cleanest illustration in the zoo of why **$\varepsilon$-dependence and
+    expected cost are not bookkeeping**: the right answer for majority-of-$g$ is
+    $n$ times the *expected* complexity of $g$ at error $1/n$, not $n$ times
+    $\mathrm{R}_{1/3}(g)$. [GoosMaystre21] also show that a sufficiently strong
+    version of this for the single inner function $\mathrm{GapOr}$ would settle
+    the general composition question.
+  see_also: [MAJ, Rbar, R, comp-R]
+
+- from: adeg
+  to: adeg
+  kind: composition
+  id: comp-adeg
+  setting: total
+  status: open
+  headline: '\widetilde{\deg}(f\circ g) \stackrel{?}{=} \tilde\Theta\big(\widetilde{\deg}(f)\,\widetilde{\deg}(g)\big)'
+  upper:
+    - stmt: '\widetilde{\deg}(f\circ g) = O\big(\widetilde{\deg}(f)\,\widetilde{\deg}(g)\big)'
+      refs: [Sherstov12robust]
+      note: 'Robustification: every bounded polynomial of degree $d$ has a degree-$O(d)$ version that is robust to noisy inputs, so the outer approximating polynomial can be fed noisy copies of the inner ones for free.'
+      conf: high
+  lower:
+    - stmt: '\widetilde{\deg}(f\circ g) = \tilde\Omega\big(\sqrt{\mathrm{bs}(f)}\cdot\widetilde{\deg}(g)\big)'
+      refs: [CKMPSS23]
+      note: 'The first inner composition theorem for approximate degree with a nontrivial outer measure. It gives composition whenever $\widetilde{\deg}(f) = \Theta(\sqrt{\mathrm{bs}(f)})$.'
+      conf: high
+  notes: |
+    Open in general, in both the total and partial settings. Known for
+    symmetric outer $f$, and for the special pairs used in the AC$^0$
+    approximate-degree literature (via dual block composition).
+  see_also: [adeg, deg, bs, comp-R, open-adeg-composition]
+
+- from: deg
+  to: deg
+  kind: composition
+  id: comp-deg
+  setting: total
+  status: settled
+  headline: '\deg(f\circ g) = \deg(f)\,\deg(g)'
+  upper:
+    - stmt: '\deg(f\circ g) \le \deg(f)\,\deg(g)'
+      note: 'Substitute the multilinear polynomial for $g$ into that for $f$.'
+      conf: high
+  lower:
+    - stmt: '\deg(f\circ g) \ge \deg(f)\,\deg(g)'
+      refs: [Tal13]
+      note: 'Exact composition; unlike almost everything else in this file, no log factors and no counterexamples.'
+      conf: high
+  see_also: [deg, comp-adeg, Tal13]
+
+- from: Q
+  to: Advpm
+  kind: composition
+  id: comp-Q
+  setting: partial
+  status: settled
+  headline: '\mathrm{Q}(f\circ g) = \Theta\big(\mathrm{Q}(f)\,\mathrm{Q}(g)\big)'
+  upper:
+    - stmt: '\mathrm{Q}(f\circ g) = O(\mathrm{Q}(f)\,\mathrm{Q}(g))'
+      refs: [LMRSS11, Reichardt11]
+      note: 'Via $\mathrm{Q}=\Theta(\mathrm{Adv}^{\pm})$ and the perfect composition of the SDP; no $\log$ factor, in sharp contrast to the randomized case.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{Q}(f\circ g) = \Omega(\mathrm{Q}(f)\,\mathrm{Q}(g))'
+      refs: [HLS07, Reichardt11]
+      conf: high
+  notes: |
+    Quantum query complexity is the *only* major measure in this zoo that
+    composes perfectly for partial functions. This is the deep reason the
+    quantum world is better behaved, and the reason
+    $\mathrm{R}^{*}(f)=\Omega(\mathrm{Q}(f))$.
+  see_also: [Q, Advpm, Rstar, comp-R]
+
+# =========================================== plain measure comparisons
+- from: R
+  to: RS
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{R}_\varepsilon(f) \ge \bar{\mathrm{R}}_\varepsilon(f) \ge (1-2\varepsilon)\,\mathrm{RS}(f)'
+      form: {exp: 1, kind: const, dir: reverse}
+      refs: [BenDavidKothari18]
+      note: 'Theorem 12. Note the explicit $\varepsilon$-dependence and that it is really a bound on *expected* cost.'
+      conf: high
+    - stmt: '\mathrm{R}(f) = O\big(\mathrm{RS}(f)^2\log \mathrm{RS}(f)\big)'
+      form: {exp: 2, log: 1, kind: const}
+      refs: [BenDavidKothari18]
+      note: 'Theorem 32, total $f$ only. "Quadratically tight."'
+      conf: high
+  lower:
+    - stmt: '\text{No total } f \text{ with } \mathrm{RS}(f)=o(\mathrm{R}(f)) \text{ is known.}'
+      refs: [BenDavidKothari18]
+      conf: high
+  notes: |
+    Whether $\mathrm{RS}(f)=\Theta(\mathrm{R}(f))$ for all total $f$ is a
+    well-known open question; a positive answer would prove the randomized
+    composition conjecture for total functions.
+  see_also: [RS, R, comp-R, open-RS-vs-R]
+
+- from: RS
+  to: prt
+  setting: total
+  status: settled
+  lower:
+    - stmt: '\exists f \text{ total}:\ \mathrm{RS}(f) \ge \mathrm{prt}(f)^{2-o(1)}'
+      form: {exp: 2, kind: const}
+      refs: [BenDavidKothari18]
+      note: 'Theorem 30. Sabotage complexity is *not* subsumed by the partition bound, so it is a genuinely new lower-bound technique for $\mathrm{R}$.'
+      conf: high
+    - stmt: '\exists f \text{ total}:\ \mathrm{RS}(f) = \tilde\Omega(\mathrm{Q}(f)^{2.5})'
+      refs: [BenDavidKothari18]
+      conf: high
+  see_also: [RS, prt, Q]
+
+- from: chibar
+  to: RS
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\bar\chi(g) = \Omega(\mathrm{RS}(g))'
+      form: {exp: 1, kind: const, dir: reverse}
+      refs: [GLSS19]
+      note: 'Max-conflict complexity dominates sabotage complexity for all partial $g$...'
+      conf: high
+  lower:
+    - stmt: '\exists \text{ partial } g:\ \bar\chi(g)/\mathrm{RS}(g) \text{ unbounded}'
+      form: {kind: unbounded}
+      refs: [GLSS19]
+      conf: high
+  notes: |
+    For **total** $g$ no separation is known between any of
+    $\mathrm{RS}$, $\bar\chi$, $\mathrm{LR}$ and $\mathrm{R}$.
+  see_also: [chibar, RS, LR, chi]
+
+- from: LR
+  to: chibar
+  setting: partial
+  status: settled
+  lower:
+    - stmt: '\exists \text{ partial } g:\ \mathrm{LR}(g) = \bar\chi(g)^{1+\Omega(1)}'
+      refs: [BBGM22]
+      note: 'A polynomial separation; this is what makes $\mathrm{LR}$ a strictly better inner measure.'
+      conf: high
+  upper:
+    - stmt: '\bar\chi(g) = O(\mathrm{LR}(g))'
+      form: {exp: 1, kind: const, dir: reverse}
+      refs: [BBGM22]
+      note: 'Immediate from the optimality of $\mathrm{LR}$: any measure satisfying the inner composition theorem is $O(\mathrm{LR})$.'
+      conf: high
+  see_also: [LR, chibar, comp-R]
+
+- from: LR
+  to: R
+  setting: partial
+  status: gap
+  upper:
+    - stmt: '\mathrm{LR}(f) \le \mathrm{R}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BBGM22]
+      conf: high
+    - stmt: '\mathrm{LR}(f) = \Omega\big(\sqrt{\mathrm{R}(f)}\big)'
+      form: {exp: 2, kind: const, dir: reverse}
+      refs: [BBGM22, GLSS19]
+      note: 'Already true for $\bar\chi$, hence for $\mathrm{LR}$; the square root is the barrier all of these measures share.'
+      conf: high
+  see_also: [LR, R, chibar]
+
+- from: chi
+  to: bs
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\chi(g) = \Omega(\mathrm{bs}(g))'
+      form: {exp: 1, kind: const, dir: reverse}
+      refs: [Li18]
+      conf: high
+  see_also: [chi, bs]
+
+- from: noisyR
+  to: R
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{noisyR}(f) \le \mathrm{R}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BenDavidBlais20composition]
+      note: 'Buying an unbiased copy of a bit costs $1$, so the noisy model is at least as powerful as the query model.'
+      conf: high
+    - stmt: '\mathrm{noisyR}(f) = \Theta\big(\mathrm{R}(f\circ \mathrm{GapMaj}_n)\,/\,\mathrm{R}(\mathrm{GapMaj}_n)\big)'
+      refs: [BenDavidBlais20composition]
+      note: 'An exact characterisation, not just a bound.'
+      conf: high
+  lower:
+    - stmt: '\exists \text{ partial } f:\ \mathrm{R}(f) = \mathrm{noisyR}(f)^{1+\Omega(1)}'
+      refs: [BenDavidBlais20composition]
+      note: 'This separation *is* the refutation of the composition conjecture.'
+      conf: high
+    - stmt: '\mathrm{R}(f)=\Theta(n)\ \Rightarrow\ \mathrm{noisyR}(f)=\Theta(\mathrm{R}(f))'
+      refs: [CKMPSS23]
+      conf: high
+  notes: |
+    Do not confuse $\mathrm{noisyR}$ with $\mathrm{N}_p$: see
+    [[noisy-models]] for the distinction between *bias-purchasing* and
+    *faulty-oracle* noise. They are different measures with different
+    behaviour (e.g. $\mathrm{N}_p(\mathrm{PARITY})=\Theta(n\log n)$ but
+    $\mathrm{noisyR}(\mathrm{PARITY})=\Theta(n)$).
+  see_also: [noisyR, R, Np, GapMaj, noisy-models]
+
+- from: Rstar
+  to: Q
+  setting: total
+  status: open
+  upper:
+    - stmt: '\mathrm{R}^{*}(f) = \Omega(\mathrm{Q}(f))'
+      form: {exp: 1, kind: const, dir: reverse}
+      refs: [BBGM22]
+      note: 'Because $\mathrm{Q}$ composes perfectly and $\mathrm{Q}\le\mathrm{R}$: $\mathrm{R}(f^{\circ k})\ge\mathrm{Q}(f^{\circ k})=\Omega(\mathrm{Q}(f))^k$.'
+      conf: high
+    - stmt: '\mathrm{R}^{*}(f) = \Omega(\mathrm{LR}(f))'
+      refs: [BBGM22]
+      conf: high
+  notes: |
+    Whether $\mathrm{R}^{*}(f)=\Theta(\mathrm{R}(f))$ -- i.e. whether $\mathrm{R}$
+    composes with *itself* -- is open even for total functions, and is a weaker
+    question than full composition.
+  see_also: [Rstar, Q, LR, R]
+
+# =========================================== noisy oracles
+- from: Np
+  to: R
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{N}_p(f) = O\big(\mathrm{R}(f)\log \mathrm{R}(f)\big)'
+      form: {exp: 1, log: 1, kind: const}
+      note: 'Repeat each query $O(\log \mathrm{R})$ times and take the majority; union bound over the $\mathrm{R}$ queries. The constant depends on $p$ as $1/(1-2p)^2$.'
+      refs: [FRPU94]
+      conf: high
+  lower:
+    - stmt: '\mathrm{N}_p(\mathrm{PARITY}_n) = \Theta(n\log n)'
+      form: {exp: 1, log: 1, kind: const}
+      witness: PARITY
+      refs: [FRPU94, EvansPippenger98]
+      note: 'So the $\log$ is genuinely necessary: $\mathrm{N}_p$ is *not* $\Theta(\mathrm{R})$.'
+      conf: high
+    - stmt: '\text{almost every } f:\ \mathrm{N}_p(f) = \Omega(n\log n)'
+      refs: [ReischukSchmeltz91]
+      conf: high
+  notes: |
+    High total influence is what forces the $\log$: recent work gives tight
+    bounds of the form $\mathrm{N}_p(f)=\Theta(n\log n)$ for high-influence $f$
+    and matching upper bounds otherwise [Gu25noisy]. The **quantum** analogue
+    behaves differently: $\mathrm{Q}^{\mathrm{rob}}(\mathrm{PARITY}_n)=\Theta(n)$
+    with no log [BNRdW05].
+  see_also: [Np, R, robustQ, Inf, PARITY, noisy-models]

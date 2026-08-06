@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ site.title }}{% endblock %}</title>
+<link rel="stylesheet" href="{{ root }}static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="{{ root }}">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="{{ root }}index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">{{ site.title }}</span>
+    </a>
+    <nav class="mainnav">
+      {% for item in site.nav %}
+      {% set section = item.href.split('/')[0] %}
+      <a href="{{ root }}{{ item.href }}"
+         class="{% if nav_active == item.href or ('/' in item.href and nav_active.startswith(section ~ '/')) %}on{% endif %}">{{ item.label }}</a>
+      {% endfor %}
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+{% block body %}{% endblock %}
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>{{ site.tagline }}</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="{{ root }}editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="{{ root }}static/app.js"></script>
+</body>
+</html>

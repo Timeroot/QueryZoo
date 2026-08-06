@@ -1,0 +1,218 @@
+# =====================================================================
+# MEASURES: polynomial-representation measures
+# =====================================================================
+
+measures:
+
+- id: deg
+  name: Exact degree
+  symbol: '\deg(f)'
+  aliases: ['Fourier degree', 'real degree', 'polynomial degree']
+  category: degree
+  order: 10
+  short: 'Degree of the unique multilinear real polynomial that represents f exactly.'
+  definition: |
+    Every $f:\{0,1\}^n\to\mathbb{R}$ has a unique multilinear representation
+    $p(x)=\sum_{S\subseteq[n]}\hat f(S)\prod_{i\in S}x_i$; $\deg(f)=\max\{|S| : \hat f(S)\ne 0\}$.
+    (Equivalently, in the $\pm 1$ Fourier basis, the largest $|S|$ with a nonzero
+    Fourier coefficient.)
+  params: []
+  settings:
+    total:   {defined: yes}
+    partial: {defined: yes, note: '**Warning:** for partial $f$ the representing polynomial is not unique, so $\deg(f)$ is defined as the *minimum* degree of a polynomial agreeing with $f$ on the domain (unbounded elsewhere). Most total-function relations involving $\deg$ break in this setting.'}
+    relation: {defined: no}
+  facts:
+    - '$\deg(f)\le \mathrm{D}(f)$; $\mathrm{D}(f) = O(\deg(f)^3)$ [Midrijanis04].'
+    - '$\deg(f) \le \mathrm{s}(f)^2$ [Huang19]; in fact $\deg(f)\le\lambda(f)^2$.'
+    - '$\deg(f) = O(\widetilde{\deg}(f)^2)$ [ABKRT21]; tight, e.g. $\mathrm{OR}_n$.'
+    - '$\deg(f)\le 2\,\mathrm{Q}_{\mathrm{E}}(f)$; $\deg(f)=n-O(n^{0.548})$ for all non-constant symmetric $f$.'
+    - '$\mathrm{bs}(f)\le 2\deg(f)^2$ [Nisan-Szegedy].'
+  refs: [NS94, Midrijanis04, Huang19, ABKRT21, vzGathenRoche97, BdW02]
+  see_also: [adeg, D, s, lambda, deg2, spar]
+  confidence: high
+
+- id: adeg
+  name: Approximate degree
+  symbol: '\widetilde{\deg}_{\varepsilon}(f)'
+  aliases: ['deg~', 'eps-approximate degree']
+  category: degree
+  order: 20
+  short: 'Least degree of a polynomial that approximates f pointwise to within eps.'
+  definition: |
+    $\widetilde{\deg}_\varepsilon(f)$ is the least degree of a real polynomial $p$ with
+    $|p(x)-f(x)|\le\varepsilon$ for all $x\in\mathrm{Dom}(f)$ and (for partial $f$)
+    $|p(x)|\le 1+\varepsilon$ for all $x\in\{0,1\}^n$. Unadorned
+    $\widetilde{\deg}(f):=\widetilde{\deg}_{1/3}(f)$.
+  params:
+    - name: eps
+      symbol: '\varepsilon'
+      default: '1/3'
+      range: '[0, 1/2)'
+      dependence: |
+        * **Error reduction:** $\widetilde{\deg}_{\varepsilon}(f)=O(\widetilde{\deg}_{1/3}(f)\log(1/\varepsilon))$
+          (compose with an amplifying univariate polynomial).
+        * **$\varepsilon\to 0$:** $\widetilde{\deg}_0(f)=\deg(f)$, and $\deg(f)=O(\widetilde{\deg}(f)^2)$,
+          so the whole range $\varepsilon\in(0,1/3]$ spans at most a quadratic factor for total $f$.
+        * **Large error / small bias:** $\widetilde{\deg}_{1/2-\gamma}(f)$ can be far smaller;
+          at $\gamma\to 0$ it degenerates towards *sign degree* [[sdeg]].
+          The "large-error approximate degree" $\widetilde{\deg}_{1/2-1/\mathrm{poly}}$ is its own
+          subject with applications to $\mathsf{PP}$ and to communication complexity.
+  settings:
+    total:   {defined: yes}
+    partial: {defined: yes, note: 'The boundedness condition off the promise is essential; without it the measure collapses. Standard in the quantum literature.'}
+    relation: {defined: partial, note: 'One can ask for a polynomial per output symbol; not standard.'}
+  facts:
+    - '$\widetilde{\deg}(f) \le 2\,\mathrm{Q}(f)$: the polynomial method [BBCMdW01].'
+    - '$\mathrm{D}(f) = O(\widetilde{\deg}(f)^4)$ [ABKRT21], improving $O(\widetilde{\deg}^6)$ [BBCMdW01]; matching separation $\mathrm{D}=\tilde\Omega(\widetilde{\deg}^4)$ [ABBLSS17]. **Exponent settled at 4.**'
+    - '$\mathrm{bs}(f)\le 6\widetilde{\deg}(f)^2$ [Nisan-Szegedy]; $\mathrm{RC}(f)=O(\widetilde{\deg}(f)^2)$ [Kulkarni-Tal].'
+    - 'Paturi: for symmetric $f$, $\widetilde{\deg}(f)=\Theta(\sqrt{n(n-\Gamma(f))})$ where $\Gamma(f)=\min\{|2k-n+1| : f_k\ne f_{k+1}\}$.'
+    - 'Read-once formulas: $\widetilde{\deg}(f)=\Theta(\sqrt n)$ [ABKRT21, Thm 6].'
+    - '$\lambda(f)=O(\widetilde{\deg}(f))$.'
+  refs: [NS94, BBCMdW01, ABKRT21, Paturi92, BT22, KulkarniTal16]
+  see_also: [deg, Q, sdeg, ardeg, lambda]
+  confidence: high
+
+- id: sdeg
+  name: Sign degree
+  symbol: '\mathrm{sdeg}(f)'
+  aliases: ['threshold degree', 'deg_{\pm}', 'PP-degree']
+  category: degree
+  order: 30
+  short: 'Least degree of a polynomial whose sign agrees with f everywhere.'
+  definition: |
+    The least degree of a real polynomial $p$ that is nonzero on the domain with
+    $\mathrm{sign}(p(x)) = (-1)^{f(x)}$. Equivalently
+    $\mathrm{sdeg}(f) = \lim_{\gamma\to 0}\widetilde{\deg}_{1/2-\gamma}(f)$.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{sdeg}(f)\le\widetilde{\deg}(f)\le\deg(f)$.'
+    - '$\mathrm{sdeg}(\mathrm{ODD\text{-}MAX\text{-}BIT})=1$ while $\widetilde{\deg}=\Omega(n^{?})$: sign degree can be exponentially smaller.'
+    - '$\mathrm{sdeg}$ characterises the query analogue of $\mathsf{PP}$ (unbounded-error).'
+  refs: [BT22, MinskyPapert69]
+  see_also: [adeg, rdeg, deg]
+  confidence: medium
+
+- id: rdeg
+  name: Rational degree
+  symbol: '\mathrm{rdeg}(f)'
+  category: degree
+  order: 40
+  short: 'Least d such that f = p/q on the domain with deg(p), deg(q) <= d.'
+  definition: |
+    $\mathrm{rdeg}_\varepsilon(f)$ is the least $\max\{\deg p,\deg q\}$ over rational functions
+    $p/q$ with $|p(x)/q(x) - f(x)|\le\varepsilon$ on $\mathrm{Dom}(f)$; $\mathrm{rdeg}:=\mathrm{rdeg}_0$.
+    **No boundedness is required off the domain**, which is what makes it behave so
+    differently from $\widetilde{\deg}$.
+
+    Characterisation: $\mathrm{rdeg}(f)=\max\{\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f)\}$,
+    hence $\mathrm{rdeg}(f)=\mathrm{rdeg}(\bar f)$ and $\mathrm{rdeg}(f)\le \mathrm{C}(f)$.
+  params: [{name: eps, symbol: '\varepsilon', default: '0'}]
+  settings: {total: {defined: yes}, partial: {defined: yes, note: 'Unbounded separations from $\widetilde{\deg}$ in **both** directions exist for partial functions [IJKKKSWW23].'}, relation: {defined: no}}
+  equivalent:
+    - {measure: PostQ, statement: 'For matching error: $\mathrm{rdeg}_\varepsilon(f) = \Theta(\mathrm{PostQ}_\varepsilon(f))$. At $\varepsilon = 0$ this is $\mathrm{PostQ}_{\mathrm{E}}$, not the bounded-error [[PostQ]]; the bounded-error pairing is with [[ardeg]].', refs: [MahadevdeWolf15]}
+  facts:
+    - 'Symmetric $f$: $\mathrm{rdeg}(f)=\Omega(\deg(f))$ (tight).'
+    - 'Unate $f$: $\mathrm{rdeg}(f)=\Omega(\sqrt{\deg(f)})$ (tight).'
+    - 'Read-once $\mathsf{AC}^0$/$\mathsf{TC}^0$ formulas: $\mathrm{rdeg}(f)=\Omega(\sqrt{\deg(f)})$; with parity gates and depth $d$, $\Omega(\deg(f)^{1/2d})$.'
+    - 'Almost every $f$ on $n$ variables has $\mathrm{rdeg}(f)\ge n/2-O(\sqrt n)$.'
+    - '**Open (Fortnow):** is $\mathrm{rdeg}(f)=\deg(f)^{\Omega(1)}$ for all total $f$? Every "?" in the rdeg column of the big matrix is this question.'
+  refs: [IJKKKSWW23, MahadevdeWolf15]
+  see_also: [ardeg, ndeg, PostQ, deg, C]
+  confidence: high
+
+- id: ardeg
+  name: Approximate rational degree
+  symbol: '\mathrm{rdeg}_{\varepsilon}(f)'
+  category: degree
+  order: 41
+  short: 'Bounded-error version of rational degree; equals post-selected bounded-error quantum query complexity.'
+  definition: 'The $\varepsilon>0$ case of [[rdeg]]; $\mathrm{rdeg}_{1/3}$ is the standard choice.'
+  params: [{name: eps, symbol: '\varepsilon', default: '1/3'}]
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  equivalent:
+    - {measure: PostQ, form: {exp: 1, kind: theta}, statement: '$\mathrm{rdeg}_\varepsilon(f) = \Theta(\mathrm{PostQ}_\varepsilon(f))$ for constant $\varepsilon$', refs: [MahadevdeWolf15, IJKKKSWW23]}
+  facts:
+    - '$\mathrm{PostQ}_\varepsilon(f)=\Theta(\mathrm{rdeg}_\varepsilon(f))$ [MahadevdeWolf15].'
+    - '$\mathrm{rdeg}_\varepsilon(f)\le\mathrm{rdeg}(f)$ and $\mathrm{rdeg}_\varepsilon(f)\le\widetilde{\deg}_\varepsilon(f)$.'
+  refs: [MahadevdeWolf15, IJKKKSWW23]
+  see_also: [rdeg, PostQ, adeg]
+  confidence: high
+
+- id: ndeg
+  name: Nondeterministic degree
+  symbol: '\mathrm{ndeg}(f)'
+  category: degree
+  order: 45
+  short: 'Least degree of a polynomial that is nonzero exactly on the 1-inputs.'
+  definition: |
+    The least degree of $p$ with $p(x)\ne 0 \iff f(x)=1$ (on the domain).
+    de Wolf: $\mathrm{NQ}(f)=\lceil\mathrm{ndeg}(f)/2\rceil$, and
+    $\mathrm{rdeg}(f)=\max\{\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f)\}$.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts: ['$\mathrm{ndeg}(f)\le\mathrm{C}^1(f)$.']
+  refs: [deWolf03, IJKKKSWW23]
+  see_also: [NQ, rdeg, C1]
+  confidence: high
+
+- id: deg2
+  name: Mod-2 degree
+  symbol: '\deg_2(f)'
+  aliases: ['F_2-degree', 'algebraic degree', 'GF(2) degree']
+  category: degree
+  order: 50
+  short: 'Degree of f as a multilinear polynomial over F_2.'
+  definition: |
+    The degree of the unique multilinear polynomial over $\mathbb{F}_2$ representing $f$.
+    Very different from real degree: $\deg_2(\mathrm{PARITY})=1$ but $\deg(\mathrm{PARITY})=n$.
+  settings: {total: {defined: yes}, partial: {defined: no, note: 'The $\mathbb{F}_2$ representation is not unique for partial $f$; one takes the minimum degree.'}, relation: {defined: no}}
+  facts:
+    - '$\deg_2(f)\le\deg(f)$ and $\deg_2(f)\le\mathrm{D}(f)$.'
+    - 'A function of $\mathbb{F}_2$-degree $d$ is determined by, and can be computed from, structure of "$2^d$-flavoured" size; the tight relation between $\deg_2$ and $\mathrm{D}$ (and between $\deg_2$ and $\mathrm{s}$) is not settled here -- see the TODO.'
+    - 'The mod-$p$ generalisation $\deg_p$ behaves similarly.'
+  refs: [BdW02]
+  see_also: [deg, PDT, spar]
+  confidence: low
+  todo: 'Fill in the correct known relations for deg_2 vs D and vs s (Gopalan et al.; Bhrushundi et al.).'
+
+- id: degp
+  name: Mod-p degree
+  symbol: '\deg_p(f)'
+  category: degree
+  order: 51
+  short: 'Degree over F_p.'
+  definition: 'Least degree of a polynomial over $\mathbb{F}_p$ agreeing with $f$ on the domain.'
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  params: [{name: p, symbol: 'p', default: '2', description: 'prime modulus'}]
+  refs: [BdW02]
+  see_also: [deg2, deg]
+  confidence: low
+
+- id: cjdeg
+  name: Conical junta degree
+  symbol: '\mathrm{cjdeg}_{\varepsilon}(f)'
+  aliases: ['two-sided approximate non-negative degree', 'conical junta / non-negative-combination degree']
+  category: degree
+  order: 60
+  short: 'Least d such that f is approximated by a non-negative combination of width-d conjunctions (a conical junta).'
+  definition: |
+    A *conical junta* of width $d$ is a non-negative linear combination
+    $h = \sum_C \alpha_C \, C$ of conjunctions $C$ of at most $d$ literals, with all
+    $\alpha_C \ge 0$. The *two-sided approximate non-negative degree*
+    $\mathrm{cjdeg}_\varepsilon$ is the least $d$ for which some width-$d$ conical
+    junta $\varepsilon$-approximates $f$ pointwise.
+    Non-negativity makes this a *larger* measure than approximate degree; it also
+    upper-bounds randomized query complexity's LP relaxation and, in the usual
+    regimes, exceeds $\mathrm{Q}$.
+  params: [{name: eps, symbol: '\varepsilon', default: '1/3'}]
+  settings:
+    total:   {defined: yes}
+    partial: {defined: yes}
+    relation: {defined: yes, note: 'The version used for total search problems in [BenDavidKundu24search].'}
+  facts:
+    - '$\widetilde{\deg}_\varepsilon(f) \le \mathrm{cjdeg}_\varepsilon(f)$ (drop non-negativity).'
+    - 'Usually $\mathrm{cjdeg}(f) \ge \mathrm{Q}(f)$, so a separation of $\mathrm{Q}$ from $\mathrm{cjdeg}$ is strictly stronger than one from $\widetilde{\deg}$.'
+    - '**Total search problems:** $\mathrm{Q}(S)$ can be exponentially larger than $\mathrm{cjdeg}(S)$ [BenDavidKundu24search]; previously not even a separation from $\mathrm{R}(S)$ was known.'
+    - 'The dual object is a *conical junta* certificate, which is the LP-dual view of randomized query lower bounds (the "partition bound" family).'
+  refs: [BenDavidKundu24search]
+  see_also: [adeg, Q, Adv, R]
+  confidence: medium

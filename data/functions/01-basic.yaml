@@ -1,0 +1,324 @@
+# =====================================================================
+# FUNCTIONS: the basic building blocks.
+#
+# Schema (see data/functions/README or the "Editing" page):
+#   id        : slug, unique across ALL function files
+#   name / symbol (LaTeX, no $) / aliases / group / order
+#   kind      : total | partial | relation
+#   arity     : human-readable description of the input size
+#   short     : one-liner
+#   definition: markdown + LaTeX, informal is fine
+#   formal    : the exact mathematical description. If absent, the function
+#               page shows a "definition not yet transcribed" banner and the
+#               function is listed on the /functions "stubs" list.
+#   values    : list of {measure, value, note, refs, conf}
+#               `value` is LaTeX (no $). `conf` in {high, medium, low}.
+#   witnesses : list of {of: [M1, M2], setting, statement, refs}
+#               meaning: this family witnesses "M1 can be this much bigger
+#               than M2" in the given setting.  Use of: ['*','*'] for a
+#               witness that is not about one specific pair.
+#   refs / see_also / notes
+# =====================================================================
+
+functions:
+
+- id: OR
+  name: OR
+  symbol: '\mathrm{OR}_n'
+  aliases: ['unstructured search (decision version)', '\vee']
+  group: basic
+  order: 10
+  kind: total
+  arity: '$n$ bits'
+  short: 'The archetypal one-sided function: cheap 1-certificates, expensive 0-certificates.'
+  definition: |
+    $\mathrm{OR}_n(x) = 1$ iff some $x_i = 1$.
+  formal: |
+    $$\mathrm{OR}_n : \{0,1\}^n \to \{0,1\},\qquad \mathrm{OR}_n(x) \;=\; \bigvee_{i=1}^n x_i
+      \;=\; 1 - \prod_{i=1}^n (1-x_i).$$
+  values:
+    - {measure: D,    value: 'n'}
+    - {measure: R0,   value: 'n'}
+    - {measure: R,    value: '\Theta(n)'}
+    - {measure: Q,    value: '\Theta(\sqrt{n})', refs: [Grover96, BBBV97], note: 'Grover upper bound, BBBV lower bound. Exactly $\tfrac{\pi}{4}\sqrt n$ asymptotically.'}
+    - {measure: QE,   value: 'n', refs: [BBCMdW01]}
+    - {measure: deg,  value: 'n'}
+    - {measure: adeg, value: '\Theta(\sqrt{n})', refs: [NS94, Paturi92]}
+    - {measure: sdeg, value: '1', note: 'A linear threshold function: $\sum_i x_i \ge 1$.'}
+    - {measure: ndeg, value: '1', note: '$p(x)=\sum_i x_i$ vanishes exactly on $\mathrm{OR}^{-1}(0)$.'}
+    - {measure: rdeg, value: 'n', refs: [IJKKKSWW23], note: '$\mathrm{rdeg} = \max\{\mathrm{ndeg}(f), \mathrm{ndeg}(\bar f)\} = \max\{1, n\}$.'}
+    - {measure: s0,   value: 'n'}
+    - {measure: s1,   value: '1'}
+    - {measure: s,    value: 'n'}
+    - {measure: bs,   value: 'n'}
+    - {measure: fbs,  value: 'n'}
+    - {measure: C0,   value: 'n'}
+    - {measure: C1,   value: '1'}
+    - {measure: C,    value: 'n'}
+    - {measure: RC,   value: '\Theta(n)'}
+    - {measure: lambda, value: '\sqrt{n}', refs: [ABKRT21], note: 'Sensitivity graph is a star $K_{1,n}$ plus isolated edges; $\|K_{1,n}\| = \sqrt n$.'}
+    - {measure: PDT,  value: 'n'}
+    - {measure: Inf,  value: 'n\,2^{1-n}', note: 'Vanishingly small: OR is very noise-stable.'}
+    - {measure: Np,   value: '\Theta(n)', conf: medium, refs: [FRPU94], note: 'Constant-rate noise costs only a constant factor here, unlike PARITY.'}
+  witnesses:
+    - {of: [C, Q],      setting: total, statement: '$\mathrm{C} = \Theta(\mathrm{Q}^2)$ -- the "$2$" in the C-vs-Q cell (usually quoted with AND).', refs: [Grover96]}
+    - {of: [deg, adeg], setting: total, statement: '$\deg = \Theta(\widetilde{\deg}^2)$, matching the ABKRT upper bound $\deg = O(\widetilde{\deg}^2)$.', refs: [NS94, ABKRT21]}
+    - {of: [s, lambda], setting: total, statement: '$\mathrm{s} = \lambda^2$, matching $\mathrm{s} \le \lambda^2$.', refs: [ABKRT21]}
+    - {of: [bs, lambda], setting: total, statement: '$\mathrm{bs} = \lambda^2$; improved to $\lambda^{2.127}$ by Meiburg.', refs: [ABKRT21, Meiburg26]}
+    - {of: [rdeg, ndeg], setting: total, statement: 'Maximal gap between $\mathrm{ndeg}(f)=1$ and $\mathrm{ndeg}(\bar f)=n$.', refs: [deWolf00]}
+  refs: [Grover96, BBBV97, NS94, BdW02]
+  see_also: [AND, PARITY, MAJ, ANDOR, GroverSearch]
+
+- id: AND
+  name: AND
+  symbol: '\mathrm{AND}_n'
+  aliases: ['\wedge']
+  group: basic
+  order: 11
+  kind: total
+  arity: '$n$ bits'
+  short: 'The dual of OR; the witness cited in most "$2,2$" and "$2,4$" cells of the total-function matrix.'
+  definition: '$\mathrm{AND}_n(x)=1$ iff every $x_i=1$. All measures are those of $\mathrm{OR}_n$ with the roles of $0$ and $1$ exchanged.'
+  formal: |
+    $$\mathrm{AND}_n : \{0,1\}^n \to \{0,1\},\qquad \mathrm{AND}_n(x) = \prod_{i=1}^n x_i .$$
+  values:
+    - {measure: D,    value: 'n'}
+    - {measure: R,    value: '\Theta(n)'}
+    - {measure: Q,    value: '\Theta(\sqrt{n})'}
+    - {measure: deg,  value: 'n'}
+    - {measure: adeg, value: '\Theta(\sqrt{n})'}
+    - {measure: s0,   value: '1'}
+    - {measure: s1,   value: 'n'}
+    - {measure: s,    value: 'n'}
+    - {measure: bs,   value: 'n'}
+    - {measure: C,    value: 'n'}
+    - {measure: RC,   value: '\Theta(n)'}
+    - {measure: lambda, value: '\sqrt{n}', refs: [IJKKKSWW23]}
+    - {measure: ndeg, value: 'n'}
+    - {measure: rdeg, value: 'n'}
+  witnesses:
+    - {of: [C, Q],       setting: total, statement: '$\mathrm{C}(f)=n$, $\mathrm{Q}(f)=\Theta(\sqrt n)$: the quadratic C-vs-Q separation.', refs: [Grover96]}
+    - {of: [bs, lambda], setting: total, statement: '$\mathrm{bs}=\lambda^2$.', refs: [ABKRT21]}
+    - {of: [RC, Q],      setting: total, statement: '$\mathrm{RC}=\Theta(\mathrm{Q}^2)$, matching $\mathrm{RC}=O(\mathrm{Q}^2)$.', refs: [Aaronson08]}
+    - {of: [deg, adeg],  setting: total, statement: '$\deg = \Theta(\widetilde{\deg}^2)$.', refs: [NS94]}
+  refs: [Grover96, NS94, BdW02]
+  see_also: [OR, ANDOR, ANDEH]
+
+- id: PARITY
+  name: PARITY
+  symbol: '\oplus_n'
+  aliases: ['XOR', 'MOD_2']
+  group: basic
+  order: 12
+  kind: total
+  arity: '$n$ bits'
+  short: 'Maximally hard for every measure in the zoo except parity decision trees -- hence the witness for every "$1,1$" cell.'
+  definition: '$\oplus_n(x) = x_1 \oplus \cdots \oplus x_n$.'
+  formal: |
+    $$\oplus_n(x) = \sum_{i=1}^n x_i \bmod 2,\qquad\text{Fourier: } (-1)^{\oplus_n(x)} = \prod_{i=1}^n (-1)^{x_i}=\chi_{[n]}(x).$$
+  values:
+    - {measure: D,      value: 'n'}
+    - {measure: R0,     value: 'n'}
+    - {measure: R,      value: 'n'}
+    - {measure: Q,      value: '\lceil n/2 \rceil', refs: [BBCMdW01], note: 'One query decides the parity of two bits (Deutsch); this is exactly tight.'}
+    - {measure: QE,     value: '\lceil n/2 \rceil', refs: [BBCMdW01]}
+    - {measure: deg,    value: 'n'}
+    - {measure: adeg,   value: 'n'}
+    - {measure: sdeg,   value: 'n', refs: [MinskyPapert69]}
+    - {measure: s,      value: 'n'}
+    - {measure: bs,     value: 'n'}
+    - {measure: fbs,    value: 'n'}
+    - {measure: C,      value: 'n'}
+    - {measure: RC,     value: 'n'}
+    - {measure: lambda, value: 'n', note: 'Sensitivity graph is the whole hypercube, which is $n$-regular.'}
+    - {measure: rdeg,   value: 'n'}
+    - {measure: ndeg,   value: 'n'}
+    - {measure: PDT,    value: '1', note: 'One parity query. The reason $\mathrm{D}^{\oplus}$ is a genuinely different measure.'}
+    - {measure: Inf,    value: 'n'}
+    - {measure: spar,   value: '1'}
+    - {measure: L1,     value: '1'}
+    - {measure: Np,     value: '\Theta(n\log n)', refs: [FRPU94, EvansPippenger98], note: 'The canonical example where constant-rate noise costs a $\log n$ factor; matching upper bound in [FRPU94], matching lower bound in [EvansPippenger98].'}
+  witnesses:
+    - {of: ['*', '*'], setting: total, statement: 'Every classical measure equals $n$, so PARITY certifies that all the "$1,1$" cells of the matrix are tight -- no measure in the left column can be asymptotically smaller than any in the top row on this family.', refs: [ABKRT21]}
+    - {of: [D, PDT], setting: total, statement: '$\mathrm{D}=n$ but $\mathrm{D}^{\oplus}=1$: parity decision trees are incomparable to ordinary ones.', refs: [TsangWongXieZhang13]}
+    - {of: [Np, D],  setting: total, statement: '$\mathrm{N}_p = \Theta(n\log n)$ vs $\mathrm{D}=n$: noise genuinely costs a logarithm.', refs: [FRPU94, EvansPippenger98]}
+  refs: [BBCMdW01, FRPU94, EvansPippenger98]
+  see_also: [OR, MAJ, PDT]
+
+- id: MAJ
+  name: MAJORITY
+  symbol: '\mathrm{MAJ}_n'
+  aliases: ['\mathrm{THR}_{n/2}']
+  group: basic
+  order: 13
+  kind: total
+  arity: '$n$ bits, $n$ odd'
+  short: 'Hard for quantum too ($\mathrm{Q}=\Theta(n)$), but with sensitivity only $\approx n/2$.'
+  definition: '$\mathrm{MAJ}_n(x)=1$ iff $|x| > n/2$.'
+  formal: '$\mathrm{MAJ}_n(x) = \mathbb{1}[\,\sum_i x_i \ge (n+1)/2\,]$ for odd $n$.'
+  values:
+    - {measure: D,      value: 'n'}
+    - {measure: R,      value: '\Theta(n)'}
+    - {measure: Q,      value: '\Theta(n)', refs: [BBCMdW01, Paturi92], note: 'Via Paturi: $\widetilde{\deg}(\mathrm{MAJ}) = \Theta(n)$ because the jump is at the middle layer.'}
+    - {measure: deg,    value: 'n'}
+    - {measure: adeg,   value: '\Theta(n)', refs: [Paturi92]}
+    - {measure: sdeg,   value: '1'}
+    - {measure: s,      value: '(n+1)/2'}
+    - {measure: bs,     value: '(n+1)/2'}
+    - {measure: C,      value: '(n+1)/2'}
+    - {measure: lambda, value: '(n+1)/2', note: 'The sensitivity graph is the middle-layer bipartite graph, which is $\tfrac{n+1}{2}$-regular, so $\lambda = \mathrm{s}$.'}
+    - {measure: rdeg,   value: '\Theta(n)', refs: [IJKKKSWW23], note: 'Symmetric functions have $\mathrm{rdeg} = \Omega(\deg)$.'}
+    - {measure: Inf,    value: '\Theta(\sqrt{n})'}
+  refs: [Paturi92, BBCMdW01, IJKKKSWW23]
+  see_also: [THR, EH, RMAJ3, SYM]
+
+- id: THR
+  name: Threshold
+  symbol: '\mathrm{THR}^n_k'
+  group: basic
+  order: 14
+  kind: total
+  arity: '$n$ bits'
+  short: 'The whole one-parameter family interpolating OR ($k=1$), MAJ ($k=n/2$) and AND ($k=n$).'
+  definition: '$\mathrm{THR}^n_k(x)=1$ iff $|x|\ge k$.'
+  formal: '$\mathrm{THR}^n_k(x) = \mathbb{1}[\,\sum_{i=1}^n x_i \ge k\,]$.'
+  values:
+    - {measure: D,    value: 'n'}
+    - {measure: adeg, value: '\Theta\!\big(\sqrt{k(n-k+1)}\big)', refs: [Paturi92]}
+    - {measure: Q,    value: '\Theta\!\big(\sqrt{k(n-k+1)}\big)', refs: [BBCMdW01, NayakWu99]}
+    - {measure: s,    value: '\max\{k,\; n-k+1\}'}
+    - {measure: bs,   value: '\max\{k,\; n-k+1\}'}
+    - {measure: C0,   value: 'n-k+1'}
+    - {measure: C1,   value: 'k'}
+    - {measure: sdeg, value: '1'}
+  refs: [Paturi92, NayakWu99]
+  see_also: [OR, AND, MAJ, SYM]
+
+- id: SYM
+  name: Symmetric functions (general)
+  symbol: 'f = f(|x|)'
+  group: basic
+  order: 15
+  kind: total
+  arity: '$n$ bits'
+  short: 'Every measure in the polynomial/quantum column is pinned down exactly by Paturi''s theorem.'
+  definition: |
+    $f$ is *symmetric* if $f(x)$ depends only on the Hamming weight $|x|$; write
+    $f(x) = f_{|x|}$. Let
+    $$\Gamma(f) \;=\; \min\{\,|2k-n+1| \;:\; f_k \ne f_{k+1}\,\}$$
+    measure how close to the middle layer the "jump" is.
+  formal: |
+    $f:\{0,1\}^n\to\{0,1\}$ with $f(x)=f(\sigma x)$ for all permutations $\sigma$.
+    Equivalently $f = g \circ (\sum_i x_i)$ for some $g : \{0,\dots,n\}\to\{0,1\}$.
+  values:
+    - {measure: adeg, value: '\Theta\!\big(\sqrt{n(n-\Gamma(f))}\big)', refs: [Paturi92]}
+    - {measure: Q,    value: '\Theta\!\big(\sqrt{n(n-\Gamma(f))}\big)', refs: [BBCMdW01, Paturi92], note: 'Approximate degree characterises $\mathrm{Q}$ exactly (up to constants) for symmetric functions.'}
+    - {measure: deg,  value: 'n \text{ or } n-1', refs: [vzGathenRoche97], note: 'von zur Gathen-Roche: $\deg(f) = n - O(n^{0.548})$ for every non-constant symmetric $f$, conjecturally $n-O(1)$.'}
+    - {measure: D,    value: 'n \text{ (for all but trivial } f)'}
+    - {measure: rdeg, value: '\Omega(\deg(f))', refs: [IJKKKSWW23], note: 'Asymptotically tight: symmetric functions cannot separate rdeg from deg.'}
+  refs: [Paturi92, vzGathenRoche97, BBCMdW01, IJKKKSWW23]
+  see_also: [MAJ, THR, EH, OR]
+
+- id: EH
+  name: EXACT-HALF
+  symbol: '\mathrm{EH}_n'
+  aliases: ['\overline{\mathrm{EH}}_n \text{ (its negation)}']
+  group: basic
+  order: 16
+  kind: total
+  arity: '$n$ bits, $n$ even'
+  short: 'Nondeterministic degree 1 for the negation -- the engine behind the rdeg separations.'
+  definition: '$\mathrm{EH}_n(x)=1$ iff $|x| = n/2$.'
+  formal: |
+    $$\mathrm{EH}_n(x) = \mathbb{1}\Big[\textstyle\sum_i x_i = \tfrac n2\Big],
+      \qquad \overline{\mathrm{EH}}_n(x) = 1 - \mathrm{EH}_n(x).$$
+    The point: $q(x)=\sum_i x_i - n/2$ vanishes *exactly* on $\overline{\mathrm{EH}}_n^{-1}(0)$,
+    so $\mathrm{ndeg}(\overline{\mathrm{EH}}_n)=1$ -- the smallest possible for a
+    non-constant function.
+  values:
+    - {measure: D,    value: 'n'}
+    - {measure: deg,  value: 'n'}
+    - {measure: adeg, value: '\Theta(n)', refs: [Paturi92]}
+    - {measure: Q,    value: '\Theta(n)'}
+    - {measure: s1,   value: 'n'}
+    - {measure: s0,   value: 'n/2 + 1'}
+    - {measure: s,    value: 'n'}
+    - {measure: lambda, value: '\Theta(n)', refs: [IJKKKSWW23], note: 'Exactly: $n/2 \le \lambda(\overline{\mathrm{EH}}_n) \le n$.'}
+    - {measure: ndeg, value: '\le n \text{ for } \mathrm{EH};\ =1 \text{ for } \overline{\mathrm{EH}}', refs: [IJKKKSWW23]}
+  refs: [IJKKKSWW23, Paturi92]
+  see_also: [ANDEH, rdeg, SYM]
+
+- id: OMB
+  name: ODD-MAX-BIT
+  symbol: '\mathrm{OMB}_n'
+  group: basic
+  order: 17
+  kind: total
+  arity: '$n$ bits'
+  short: 'Sign degree $1$, deterministic complexity $n$: the extreme sdeg separation.'
+  definition: |
+    $\mathrm{OMB}_n(x) = 1$ iff the largest index $i$ with $x_i = 1$ is odd
+    (and $\mathrm{OMB}_n(0^n)=0$).
+  formal: |
+    $$\mathrm{OMB}_n(x) = \mathrm{sign}\Big(\sum_{i=1}^n (-1)^{i+1}\, 2^{\,n-i}\, x_i\Big)_{+}$$
+    i.e. it is the linear threshold function with exponentially decreasing weights;
+    the highest-index $1$ dominates all lower-index terms.
+  values:
+    - {measure: sdeg, value: '1', note: 'It is a linear threshold function -- but every representation needs exponentially large weights.'}
+    - {measure: D,    value: 'n'}
+    - {measure: R,    value: '\Theta(n)'}
+  witnesses:
+    - {of: [D, sdeg], setting: total, statement: 'Unbounded: $\mathrm{D}=n$, $\mathrm{sdeg}=1$. Sign degree is *not* polynomially related to any other measure in the zoo.', refs: [Beigel94]}
+  refs: [Beigel94, MinskyPapert69]
+  see_also: [sdeg, MAJ]
+
+- id: ADDR
+  name: ADDRESS / multiplexer
+  symbol: '\mathrm{ADDR}_k'
+  aliases: ['MUX', 'index function', 'storage access function']
+  group: basic
+  order: 18
+  kind: total
+  arity: '$k + 2^k$ bits'
+  short: 'The standard gadget in lifting theorems and in "adaptivity is necessary" arguments.'
+  definition: |
+    Input is $(a, y)$ with $a \in \{0,1\}^k$ an *address* and $y \in \{0,1\}^{2^k}$
+    a *table*; the output is $y_a$.
+  formal: '$\mathrm{ADDR}_k(a, y) = y_{\mathrm{bin}(a)}$ where $\mathrm{bin}(a)\in\{0,\dots,2^k-1\}$ is the integer encoded by $a$.'
+  values:
+    - {measure: D,   value: 'k+1'}
+    - {measure: deg, value: 'k+1'}
+    - {measure: s,   value: 'k+1'}
+    - {measure: bs,  value: 'k+1'}
+    - {measure: C,   value: 'k+1'}
+  refs: [GPW18, GJPW18]
+  see_also: [ANDOR, pointer]
+
+- id: TRIBES
+  name: TRIBES
+  symbol: '\mathrm{Tribes}_{w,s}'
+  group: basic
+  order: 19
+  kind: total
+  arity: '$n = ws$ bits'
+  short: 'Balanced read-once DNF; the KKL / max-influence extremal example.'
+  definition: |
+    An OR of $s$ disjoint ANDs of $w$ variables each, with $w,s$ chosen so that
+    $\Pr[\mathrm{Tribes}=1] \approx 1/2$, i.e. $s \approx 2^w \ln 2$.
+  formal: |
+    $$\mathrm{Tribes}_{w,s}(x) = \bigvee_{j=1}^{s} \bigwedge_{i=1}^{w} x_{(j-1)w+i},
+      \qquad w \approx \log_2 n - \log_2\ln n,\ \ s = n/w .$$
+  values:
+    - {measure: D,      value: 'n'}
+    - {measure: R,      value: '\Theta(n)'}
+    - {measure: s1,     value: '\Theta(\log n)', note: 'Flip any bit of the unique all-ones tribe.'}
+    - {measure: s0,     value: '\Theta(n/\log n)', note: 'Every tribe missing exactly one bit.'}
+    - {measure: s,      value: '\Theta(n/\log n)'}
+    - {measure: bs,     value: '\Theta(n/\log n)'}
+    - {measure: C1,     value: '\Theta(\log n)'}
+    - {measure: C0,     value: '\Theta(n/\log n)'}
+    - {measure: C,      value: '\Theta(n/\log n)'}
+    - {measure: Inf,    value: '\Theta(\log n)'}
+    - {measure: MaxInf, value: '\Theta(\log n / n)', refs: [KKL88], note: 'Extremal for the KKL theorem: no variable has influence more than $O(\log n/n)$.'}
+  refs: [KKL88, ODonnell14, BOL85]
+  see_also: [Inf, MaxInf, OR, AND]

@@ -1,0 +1,87 @@
+# =====================================================================
+# Global site configuration.
+# =====================================================================
+
+title: "The Query Complexity Zoo"
+subtitle: "Measures, relations, and separations for Boolean decision trees"
+tagline: >
+  A browsable, editable catalogue of query-complexity measures and everything
+  known about how they relate -- upper bounds with log factors, matching
+  separations with witnesses, and the partial / total / relational distinctions.
+
+base_url: ""          # set to e.g. "/zoo" if serving from a subdirectory
+math: mathjax         # mathjax | none
+output_dir: "site"
+
+# Order and display of measure categories.
+categories:
+  - id: deterministic
+    name: "Deterministic"
+    blurb: "Decision-tree depth, size, and distributional variants."
+  - id: randomized
+    name: "Randomized"
+    blurb: "Bounded error, zero error, expected cost, noisy oracles."
+  - id: quantum
+    name: "Quantum"
+    blurb: "Bounded error, exact, post-selected, robust."
+  - id: degree
+    name: "Polynomial degree"
+    blurb: "Exact, approximate, sign, rational, nondeterministic, mod-p."
+  - id: combinatorial
+    name: "Combinatorial"
+    blurb: "Sensitivity, block sensitivity, certificates, spectral sensitivity."
+  - id: fourier
+    name: "Fourier-analytic"
+    blurb: "Influence, noise sensitivity, spectral norm, sparsity."
+  - id: adversary
+    name: "Adversary & games"
+    blurb: "Quantum and classical adversary bounds, certificate games."
+  - id: composition
+    name: "Composition-theoretic"
+    blurb: "Measures invented to make R(f o g) behave: RS, chi, chibar, LR, noisyR, R*."
+
+# The settings we track separately everywhere.
+settings:
+  - id: total
+    name: "Total functions"
+    short: "total"
+    blurb: "f : {0,1}^n -> {0,1} defined on the whole cube. Where all measures are polynomially related."
+  - id: partial
+    name: "Partial functions"
+    short: "partial"
+    blurb: "f : Dom(f) -> {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here."
+  - id: relation
+    name: "Relations"
+    short: "relation"
+    blurb: "f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style."
+
+# Top navigation.
+nav:
+  - {label: "Overview",    href: "index.html"}
+  - {label: "Matrix",      href: "matrix.html"}
+  - {label: "Measures",    href: "measures/index.html"}
+  - {label: "Relations",   href: "relations.html"}
+  - {label: "Functions",   href: "functions/index.html"}
+  - {label: "Concepts",    href: "concepts/index.html"}
+  - {label: "Open",        href: "open.html"}
+  - {label: "References",  href: "refs.html"}
+  - {label: "Editing",     href: "editing.html"}
+
+# Status vocabulary used by relations. Order = severity for display.
+statuses:
+  settled:
+    label: "Settled"
+    blurb: "Upper bound and separation match (up to the stated slack)."
+    color: "settled"
+  gap:
+    label: "Gap"
+    blurb: "Best upper bound and best separation do not meet."
+    color: "gap"
+  open:
+    label: "Wide open"
+    blurb: "No nontrivial bound in at least one direction."
+    color: "open"
+  fails:
+    label: "No bound exists"
+    blurb: "Proved that no bound of this form can hold in this setting."
+    color: "fails"

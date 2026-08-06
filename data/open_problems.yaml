@@ -1,0 +1,326 @@
+# =====================================================================
+# OPEN PROBLEMS
+#
+# Schema:
+#   id        : slug ("open-..."), the target of see_also / [[wiki-links]]
+#   title     : short statement
+#   order     : sort order
+#   setting   : total | partial | relation
+#   statement : the question, in markdown + LaTeX
+#   status    : one-line "where things stand"
+#   best_known: list of {stmt, refs, note}
+#   why       : why anyone cares
+#   refs / see_also
+# =====================================================================
+
+open_problems:
+
+- id: open-D-vs-bs
+  title: "Is $\\mathrm{D}(f) = O(\\mathrm{bs}(f)^2)$?"
+  order: 10
+  setting: total
+  statement: |
+    Block sensitivity is one of the two workhorse lower bounds on
+    $\mathrm{D}$. We know $\mathrm{D}(f)\le\mathrm{s}(f)\mathrm{bs}(f)^2\le\mathrm{bs}(f)^3$
+    [BdW02, Cor. 1] and that $\mathrm{D}(f)$ can be $\Omega(\mathrm{bs}(f)^2)$.
+    Which is the truth?
+  status: "Gap between exponents 2 and 3."
+  best_known:
+    - stmt: '\mathrm{D}(f) \le \mathrm{C}^1(f)\,\mathrm{bs}(f) \le \mathrm{s}(f)\mathrm{bs}(f)^2 \le \mathrm{bs}(f)^3'
+      refs: [Nisan91, BdW02]
+    - stmt: '\mathrm{D}(f_n) = \Omega(\mathrm{bs}(f_n)^2)'
+      refs: [Rubinstein95, BdW02]
+      note: 'Open problem 2 of [BdW02]; still open.'
+  why: |
+    $\mathrm{bs}$ sits between $\mathrm{s}$ and $\mathrm{C}$, so this is the
+    cleanest remaining question in the classical combinatorial core.
+  refs: [BdW02, Nisan91]
+  see_also: [D, bs, s, C, sensitivity-conjecture]
+
+- id: open-bs-vs-s
+  title: "Is $\\mathrm{bs}(f) = O(\\mathrm{s}(f)^2)$?"
+  order: 20
+  setting: total
+  statement: |
+    Huang's theorem gives $\deg\le\mathrm{s}^2$ and hence
+    $\mathrm{bs}\le 2\deg^2\le 2\mathrm{s}^4$. The best separation is quadratic.
+  status: "Gap between exponents 2 and 4."
+  best_known:
+    - stmt: '\mathrm{bs}(f) \le 2\deg(f)^2 \le 2\,\mathrm{s}(f)^4'
+      refs: [NS94, Huang19]
+    - stmt: '\mathrm{bs}(f) \ge \tfrac23 \mathrm{s}(f)^2 - \tfrac13\mathrm{s}(f)'
+      refs: [AmbainisSun11]
+      note: 'Improving Rubinstein''s $\mathrm{s}^2/2$.'
+  why: |
+    This is what is left of the sensitivity conjecture after Huang. Also
+    $\mathrm{bs}_\ell(f)=O(\mathrm{s}(f)^\ell)$ [KenyonKutin04], so the
+    $\ell = 2$ case is known -- the difficulty is unbounded block size.
+  refs: [Huang19, AmbainisSun11, Rubinstein95, KenyonKutin04]
+  see_also: [bs, s, deg, sensitivity-conjecture, Rubinstein]
+
+- id: open-D-vs-deg
+  title: "Is $\\mathrm{D}(f) = O(\\deg(f)^2)$?"
+  order: 30
+  setting: total
+  statement: |
+    Exact polynomial degree lower-bounds everything. Nisan-Smolensky gave
+    $\mathrm{D}\le 2\deg^4$, improved by Midrijanis to $\mathrm{D}=O(\deg^3)$.
+    The best separation is quadratic.
+  status: "Gap between exponents 2 and 3."
+  best_known:
+    - stmt: '\mathrm{D}(f) \le \mathrm{bs}(f)\deg(f) = O(\deg(f)^3)'
+      refs: [Midrijanis04]
+      note: 'Midrijanis'' inequality $\mathrm{D}\le\mathrm{bs}\cdot\deg$ combined with $\mathrm{bs}\le2\deg^2$.'
+    - stmt: '\mathrm{D}(f) \le \deg(f)^2\,\mathrm{bs}(f) \le 2\deg(f)^4'
+      refs: [NisanSmolensky, BdW02]
+      note: 'The earlier bound.'
+    - stmt: '\mathrm{D}(f_n) = \tilde\Omega(\deg(f_n)^2)'
+      refs: [GPW18]
+      note: 'The $\mathrm{D}$-vs-$\deg$ cell of the matrix; see that cell for the construction.'
+  why: |
+    A positive answer would say the polynomial method loses at most a square.
+  refs: [Midrijanis04, NisanSmolensky, BdW02, NS94]
+  see_also: [D, deg, bs, adeg]
+
+- id: open-QE-vs-deg
+  title: "Is $\\mathrm{Q}_E(f) = O(\\deg(f))$?"
+  order: 40
+  setting: total
+  statement: |
+    We know $\deg(f)\le 2\mathrm{Q}_E(f)$. Is the converse true up to constants?
+    Equivalently: is the polynomial method *tight* for exact quantum algorithms?
+  status: "Open. Open problem 4 of [BdW02]."
+  best_known:
+    - stmt: '\deg(f) \le 2\,\mathrm{Q}_E(f)'
+      refs: [BBCMdW01]
+    - stmt: '\mathrm{Q}_E(f) \le \mathrm{D}(f) = O(\deg(f)^3)'
+      refs: [Midrijanis04]
+    - stmt: '\mathrm{Q}_E(f) = O(\mathrm{D}(f)^{0.8675})'
+      refs: [Ambainis13]
+      witness: Ambainis13fn
+      note: 'The first superlinear exact-quantum advantage for a total function; shows $\mathrm{Q}_E$ is not simply $\Theta(\mathrm{D})$.'
+  why: |
+    For symmetric $f$, $\mathrm{Q}_E(f)=\Theta(n)$ [BdW02, Thm 21], so no
+    speedup at all -- the question is entirely about asymmetric functions.
+    The companion question "is $\mathrm{Q}(f)=O(\widetilde{\deg}(f))$?" is
+    **false** for partial functions [AmbainisBelovs23] and open for total ones.
+  refs: [BdW02, BBCMdW01, Ambainis13, Midrijanis04]
+  see_also: [QE, deg, Q, adeg, Ambainis13fn]
+
+- id: open-R-vs-Q
+  title: "Is the maximum quantum speedup for total functions cubic or quartic?"
+  order: 50
+  setting: total
+  statement: |
+    $\mathrm{R}(f)\le\mathrm{D}(f)=O(\mathrm{Q}(f)^4)$ [ABKRT21], and there are
+    total functions with $\mathrm{R}(f)=\tilde\Omega(\mathrm{Q}(f)^3)$.
+    Which exponent is right?
+  status: "Gap between exponents 3 and 4."
+  best_known:
+    - stmt: '\mathrm{R}(f) = O(\mathrm{Q}(f)^4)'
+      refs: [ABKRT21]
+    - stmt: '\mathrm{R}(f_n) = \tilde\Omega(\mathrm{Q}(f_n)^3)'
+      refs: [BansalSinha21, SSW21, ABK16]
+      witness: kForrelation
+      note: 'Via $k$-Forrelation plus a cheat sheet.'
+  why: |
+    The single most-quoted number in query complexity. Note the
+    $\mathrm{D}$-vs-$\mathrm{Q}$ version *is* settled at $4$ [ABBLSS17,
+    ABKRT21]; the open part is specifically about bounded-error randomized.
+  refs: [ABKRT21, BansalSinha21, SSW21, ABK16, ABBLSS17]
+  see_also: [R, Q, D, kForrelation, cheatsheet, cheat-sheets]
+
+- id: open-rdeg
+  title: "Is $\\mathrm{rdeg}(f) = \\deg(f)^{\\Omega(1)}$?"
+  order: 60
+  setting: total
+  statement: |
+    Fortnow's question: is exact rational degree polynomially related to exact
+    polynomial degree for total Boolean functions?
+  status: "Open. Known for symmetric, unate, and read-once AC$^0$/TC$^0$ functions."
+  best_known:
+    - stmt: '\mathrm{rdeg}(f) = \Omega(\deg(f)) \text{ for symmetric } f'
+      refs: [IJKKKSWW23]
+    - stmt: '\mathrm{rdeg}(f) = \Omega(\sqrt{\deg(f)}) \text{ for unate } f \text{ and for read-once } \mathsf{AC}^0/\mathsf{TC}^0'
+      refs: [IJKKKSWW23]
+    - stmt: '\mathrm{rdeg}(f) \ge n/2 - O(\sqrt n) \text{ for almost every } f'
+      refs: [IJKKKSWW23]
+  why: |
+    $\mathrm{rdeg}$ is the exact-error analogue of [[ardeg]], which
+    characterises post-selected quantum query complexity [MahadevdeWolf15].
+    A positive answer would add a new column to the classical lattice; the
+    partial-function version is already known to fail in both directions.
+  refs: [IJKKKSWW23, MahadevdeWolf15]
+  see_also: [rdeg, ardeg, deg, PostQ, sdeg]
+
+- id: open-RS-vs-R
+  title: "Is $\\mathrm{RS}(f) = \\Theta(\\mathrm{R}(f))$ for total $f$?"
+  order: 70
+  setting: total
+  statement: |
+    Sabotage complexity is a lower bound on randomized query complexity that
+    composes perfectly. No total function is known where it is asymptotically
+    smaller.
+  status: "Open. Quadratically tight: $\\mathrm{R}(f)=O(\\mathrm{RS}(f)^2\\log\\mathrm{RS}(f))$."
+  best_known:
+    - stmt: '\mathrm{RS}(f) \le \mathrm{R}(f) = O\big(\mathrm{RS}(f)^2\log \mathrm{RS}(f)\big)'
+      refs: [BenDavidKothari18]
+    - stmt: '\exists \text{ partial } g:\ \bar\chi(g)/\mathrm{RS}(g) \text{ unbounded}'
+      refs: [GLSS19]
+      note: 'So $\mathrm{RS}$ is *not* $\Theta(\mathrm{R})$ for partial functions.'
+  why: |
+    A positive answer immediately proves the **randomized composition
+    conjecture for total functions**, since
+    $\mathrm{R}(f\circ g)=\Omega(\mathrm{R}(f)\mathrm{RS}(g))$.
+  refs: [BenDavidKothari18, GLSS19, BBGM22]
+  see_also: [RS, R, chibar, LR, composition, comp-R]
+
+- id: open-adeg-composition
+  title: "Does approximate degree compose?"
+  order: 80
+  setting: total
+  statement: |
+    Is $\widetilde{\deg}(f\circ g) = \tilde\Theta(\widetilde{\deg}(f)\widetilde{\deg}(g))$?
+    The upper bound is known; the lower bound is open.
+  status: "Upper bound settled; lower bound known only for restricted outer functions."
+  best_known:
+    - stmt: '\widetilde{\deg}(f\circ g) = O(\widetilde{\deg}(f)\widetilde{\deg}(g))'
+      refs: [Sherstov12robust]
+    - stmt: '\widetilde{\deg}(f\circ g) = \tilde\Omega\big(\sqrt{\mathrm{bs}(f)}\,\widetilde{\deg}(g)\big)'
+      refs: [CKMPSS23]
+    - stmt: '\text{Composition holds for symmetric outer } f'
+      refs: [CKMPSS23]
+  why: |
+    Approximate degree composition is the main tool for proving
+    $\mathsf{AC}^0$ approximate-degree lower bounds and quantum query lower
+    bounds by the dual polynomial method.
+  refs: [Sherstov12robust, CKMPSS23, BT22]
+  see_also: [adeg, comp-adeg, composition, bs, Q]
+
+- id: open-aaronson-ambainis
+  title: "The Aaronson-Ambainis conjecture"
+  order: 90
+  setting: total
+  statement: |
+    Every bounded degree-$d$ polynomial $p:\{-1,1\}^n\to[-1,1]$ with
+    $\mathrm{Var}(p)\ge\varepsilon$ has a variable with influence at least
+    $\mathrm{poly}(\varepsilon/d)$.
+  status: "Open. The decision-tree analogue (OSSS) is a theorem."
+  best_known:
+    - stmt: '\mathrm{Var}(f) \le \sum_i \delta_i(T)\,\mathrm{Inf}_i(f) \text{ for every decision tree } T'
+      refs: [OSSS05]
+      note: 'The decision-tree version, which *is* known.'
+    - stmt: '\mathrm{I}^{1}(p) = O(\deg(p)^2) \text{ for bounded } p'
+      refs: [FHKL16]
+      note: 'A related, weaker statement that is known.'
+  why: |
+    If true, $\mathrm{R}(f)=\mathrm{poly}(\mathrm{Q}(f))$ for all **total** $f$,
+    and more generally every bounded-error quantum query algorithm can be
+    simulated classically with polynomially many queries on product
+    distributions. "Quantum speedups need structure."
+  refs: [AaronsonAmbainis14, OSSS05, FHKL16, BackursBavarian14]
+  see_also: [MaxInf, Inf, Inf1, adeg, Q, R]
+
+- id: open-log-rank
+  title: "Parity decision trees vs Fourier sparsity (query log-rank)"
+  order: 100
+  setting: total
+  statement: |
+    Is $\mathrm{D}^{\oplus}(f) = \mathrm{polylog}(\mathrm{spar}(f))$?
+  status: "Best known: $\\mathrm{D}^{\\oplus}(f)=O(\\sqrt{\\mathrm{spar}(f)}\\log\\mathrm{spar}(f))$."
+  best_known:
+    - stmt: '\mathrm{D}^{\oplus}(f) = O\big(\sqrt{\mathrm{spar}(f)}\log \mathrm{spar}(f)\big)'
+      refs: [TsangWongXieZhang13]
+    - stmt: '\mathrm{D}^{\oplus}(f)\ge \tfrac12\log_2 \mathrm{spar}(f)'
+      refs: [TsangWongXieZhang13]
+    - stmt: '\text{Known for small } \mathbb{F}_2\text{-degree and for sparse symmetric } f'
+      refs: [STV17]
+  why: |
+    A positive answer implies the **log-rank conjecture for XOR functions**
+    in communication complexity, via lifting.
+  refs: [TsangWongXieZhang13, STV17, GopalanEtAl16]
+  see_also: [PDT, spar, L1, Fdim, lifting]
+
+- id: open-R-composition
+  title: "Does randomized query complexity compose for total functions?"
+  order: 110
+  setting: total
+  statement: |
+    Is $\mathrm{R}(f\circ g^n) = \tilde\Omega(\mathrm{R}(f)\mathrm{R}(g))$ for all
+    total $f$ and $g$?
+  status: "**False for partial functions** [BenDavidBlais20composition]; open for total."
+  best_known:
+    - stmt: '\mathrm{R}(f\circ g^n) = \Omega(\mathrm{noisyR}(f)\,\mathrm{R}(g))'
+      refs: [BenDavidBlais20composition]
+    - stmt: '\mathrm{R}(f\circ g^n) = \Omega(\mathrm{R}(f)\,\mathrm{LR}(g))'
+      refs: [BBGM22]
+    - stmt: '\text{Holds when } \mathrm{R}(f)=\Theta(n) \text{ or } f \text{ is (weakly) symmetric}'
+      refs: [CKMPSS23]
+  why: |
+    Composition is the basic tool for building hard functions out of easy
+    ones; its failure for partial functions was a genuine surprise.
+  refs: [BenDavidBlais20composition, BBGM22, CKMPSS23, BenDavidKothari18]
+  see_also: [comp-R, R, noisyR, LR, RS, composition, open-RS-vs-R]
+
+- id: open-Rstar
+  title: "Is $\\mathrm{R}^{*}(f) = \\Theta(\\mathrm{R}(f))$?"
+  order: 120
+  setting: total
+  statement: |
+    Does randomized query complexity compose with *itself*? I.e. is
+    $\lim_k \mathrm{R}(f^{\circ k})^{1/k} = \Theta(\mathrm{R}(f))$?
+  status: "Open even for total functions; strictly weaker than full composition."
+  best_known:
+    - stmt: '\mathrm{R}^{*}(f) = \Omega\big(\max(\mathrm{Q}(f), \mathrm{LR}(f))\big)'
+      refs: [BBGM22]
+    - stmt: '\text{Whether } \mathrm{Q} \text{ or } \mathrm{LR} \text{ dominates is itself open.}'
+      refs: [BBGM22]
+  refs: [BBGM22]
+  see_also: [Rstar, R, Q, LR, composition]
+
+- id: open-fbs-vs-bs
+  title: "Is $\\mathrm{fbs}(f) = O(\\mathrm{bs}(f)^{3/2})$?"
+  order: 130
+  setting: total
+  statement: |
+    Fractional block sensitivity is the LP relaxation of block sensitivity, so
+    $\mathrm{bs}\le\mathrm{fbs}$ always, and $\mathrm{fbs}\le\mathrm{C}\le\mathrm{s}\cdot\mathrm{bs}\le\mathrm{bs}^2$.
+    The largest known integrality gap is $\mathrm{fbs}=\widetilde\Omega(\mathrm{bs}^{3/2})$
+    [GSS16]. Which end of $[3/2,\,2]$ is the truth?
+  status: "Gap between exponents 3/2 and 2."
+  best_known:
+    - stmt: '\mathrm{fbs}(f) \le \mathrm{C}(f) \le \mathrm{s}(f)\,\mathrm{bs}(f) \le \mathrm{bs}(f)^2'
+      refs: [Nisan91]
+    - stmt: '\mathrm{fbs}(f_n) = \widetilde\Omega\big(\mathrm{bs}(f_n)^{3/2}\big)'
+      refs: [GSS16, APV18]
+      note: '[APV18] simplify the construction and improve the constant, but not the exponent.'
+  why: |
+    $\mathrm{fbs}=\Theta(\mathrm{RC})=\Theta(\mathrm{CA})$ and $\mathrm{QC}=\Theta(\sqrt{\mathrm{fbs}})$,
+    so this is simultaneously a question about randomized certificates, the
+    classical adversary method, and quantum certificate complexity -- all of which
+    would collapse onto $\mathrm{bs}$ if the answer were $3/2$... or rather, would
+    stay distinct from it.
+  refs: [GSS16, APV18, Tal13, Aaronson08]
+  see_also: [fbs, bs, RC, QC, CA, GSSfn]
+
+- id: open-R0-vs-fbs
+  title: "Is $\\mathrm{R}_0(f) = O(\\mathrm{FC}(f)^2)$?"
+  order: 140
+  setting: total
+  statement: |
+    Aaronson's question, in the fractional-certificate notation
+    $\mathrm{FC}=\mathrm{fbs}$: we know
+    $\mathrm{R}_0(f)\le\mathrm{D}(f)\le\mathrm{C}^{(1)}(f)\,\mathrm{bs}(f)=O(\mathrm{fbs}(f)^3)$,
+    and Tribes gives a quadratic separation. Is the cubic bound tight?
+  status: "Gap between exponents 2 and 3."
+  best_known:
+    - stmt: '\mathrm{D}(f) = O\big(\mathrm{fbs}(f)^3\big)'
+      refs: [Aaronson08, Nisan91, Tal13]
+    - stmt: '\mathrm{D}(\mathrm{TRIBES}_n) = \Theta(n) = \Theta\big(\mathrm{fbs}(\mathrm{TRIBES}_n)^2\big)'
+      refs: [Aaronson08]
+  why: |
+    The analogous question for integral certificate complexity is *settled* at 2
+    ($\mathrm{C}=O(\mathrm{fbs}^2)$ is tight [GSS16]), so a positive answer would say
+    the LP relaxation loses nothing beyond what rounding already costs.
+  refs: [Aaronson08, Tal13, GSS16]
+  see_also: [R0, D, fbs, RC, C, TRIBES, open-fbs-vs-bs]

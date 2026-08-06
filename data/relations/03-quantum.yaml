@@ -1,0 +1,291 @@
+# =====================================================================
+# RELATIONS, part 3: quantum measures and adversary bounds.
+# Schema documented in 01-classical-core.yaml.
+# =====================================================================
+
+relations:
+
+# ---------------------------------------------------------- D vs Q
+- from: D
+  to: Q
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{D}(f) = O(\mathrm{Q}(f)^4)'
+      form: {exp: 4, kind: const}
+      refs: [ABKRT21]
+      note: 'Theorem 2 of [ABKRT21]. Proof: $\mathrm{D}\le\mathrm{bs}\cdot\deg$ [Midrijanis04], $\mathrm{bs}=O(\mathrm{Q}^2)$ [NS94, BBCMdW01], $\deg=O(\mathrm{Q}^2)$ [ABKRT21, Thm 3].'
+      conf: high
+    - stmt: '\mathrm{D}(f) = O(\mathrm{Q}(f)^6)'
+      form: {exp: 6, kind: const}
+      refs: [BBCMdW01, BdW02]
+      note: 'The 1998 bound (Corollary 4 of [BdW02]).'
+      conf: high
+      superseded_by: 'ABKRT21'
+  lower:
+    - stmt: '\mathrm{D}(f_n) = \widetilde\Omega(\mathrm{Q}(f_n)^4)'
+      form: {exp: 4, kind: tilde}
+      witness: pointer
+      refs: [ABBLSS17]
+      conf: high
+  notes: |
+    **The maximum quantum speedup for total Boolean functions is exactly
+    quartic**, up to $n^{o(1)}$ factors. Contrast the partial-function world,
+    where the speedup is unbounded ([[Forrelation]], [[Simon]]).
+    For **monotone** $f$, $\mathrm{D}(f) = O(\mathrm{Q}(f)^4)$ improves to
+    $O(\mathrm{Q}(f)^4)$... in fact [BdW02, Cor. 6] already gives
+    $\mathrm{D}(f)=O(\mathrm{Q}(f)^4)$ for monotone $f$ from $\mathrm{D}\le\mathrm{s}^2$.
+  see_also: [D, Q, pointer, Forrelation]
+
+# ---------------------------------------------------------- R vs Q
+- from: R
+  to: Q
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{R}(f) \le \mathrm{D}(f) = O(\mathrm{Q}(f)^4)'
+      form: {exp: 4, kind: const}
+      refs: [ABKRT21]
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}(f_n) = \widetilde\Omega(\mathrm{Q}(f_n)^3)'
+      form: {exp: 3, kind: tilde}
+      refs: [BansalSinha21, SSW21, ABK16]
+      witness: kForrelation
+      note: 'Take $k$-Forrelation ($\mathrm{Q}=k$, $\mathrm{R}=\widetilde\Theta(n^{1-1/2k})$, a *partial* function) and totalise it with a cheat sheet [ABK16].'
+      conf: high
+  notes: |
+    **The headline open problem.** Is the maximum randomized-to-quantum
+    speedup for total functions cubic or quartic? The upper bound is quartic
+    (inherited from $\mathrm{D}$); the best separation is cubic.
+    A quartic $\mathrm{R}$-vs-$\mathrm{Q}$ separation would require a total
+    function that is *simultaneously* extremal for $\mathrm{R}$-vs-$\widetilde{\deg}$
+    and for the $\deg$-vs-$\widetilde{\deg}$ step.
+  see_also: [R, Q, kForrelation, cheatsheet, open-R-vs-Q]
+
+# --------------------------------------------------------- Q vs deg
+- from: Q
+  to: deg
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{Q}(f) \le \mathrm{D}(f) \le 2\deg(f)^3'
+      form: {exp: 3, kind: const}
+      refs: [Midrijanis04]
+      conf: high
+  lower:
+    - stmt: '\mathrm{Q}(f_n) = \widetilde\Omega(\deg(f_n)^2)'
+      form: {exp: 2, kind: tilde}
+      refs: [ABK16]
+      witness: cheatsheet
+      conf: high
+  notes: |
+    "How lossy is the polynomial method?" The gap here $[2,3]$ mirrors the
+    $\mathrm{D}$-vs-$\deg$ gap.
+  see_also: [Q, deg, adeg]
+
+# ------------------------------------------------------- Q vs lambda
+- from: Q
+  to: lambda
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\lambda(f) \le \mathrm{Q}(f)\cdot O(1) \quad\text{i.e.}\quad \mathrm{Q}(f) = \Omega(\lambda(f))'
+      form: {exp: 1, kind: const, dir: reverse}
+      refs: [ABKRT21, BarnumSaksSzegedy03]
+      note: 'Spectral sensitivity is a quantum lower bound because $\lambda(f)\le\mathrm{Adv}(f)\le \mathrm{Adv}^{\pm}(f)=\Theta(\mathrm{Q}(f))$.'
+      conf: high
+  lower:
+    - stmt: '\lambda(\mathrm{PARITY}_n) = n,\ \mathrm{Q}(\mathrm{PARITY}_n)=\lceil n/2\rceil'
+      form: {exp: 1, kind: const}
+      witness: PARITY
+      conf: high
+  see_also: [lambda, Q, Adv]
+
+- from: lambda
+  to: s
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\lambda(f) \le \mathrm{s}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [ABKRT21]
+      note: 'Spectral radius of the sensitivity graph is at most its maximum degree.'
+      conf: high
+  lower:
+    - stmt: '\sqrt{\mathrm{s}(f)} \le \lambda(f)'
+      refs: [ABKRT21]
+      note: 'A star $K_{1,\mathrm{s}}$ sits inside the sensitivity graph, and $\lambda(K_{1,k})=\sqrt k$. Tight for AND: $\lambda(\wedge_n)=\sqrt n$, $\mathrm{s}(\wedge_n)=n$.'
+      witness: AND
+      conf: high
+  notes: |
+    So $\sqrt{\mathrm{s}} \le \lambda \le \mathrm{s}$, and both ends are achieved.
+    Huang''s theorem is the statement $\deg\le\mathrm{s}^2$; its spectral
+    strengthening $\deg\le\lambda^2$ [ABKRT21, Thm 1] is what makes $\lambda$
+    worth its own column.
+  see_also: [lambda, s, deg, Huang19]
+
+# ------------------------------------------------------- Adv family
+- from: Q
+  to: Advpm
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{Q}(f) = \Theta(\mathrm{Adv}^{\pm}(f))'
+      form: {exp: 1, kind: theta}
+      refs: [HLS07, Reichardt11, LMRSS11]
+      note: 'The general adversary bound *characterises* bounded-error quantum query complexity, for total and partial functions and for state conversion. This is why $\mathrm{Adv}^{\pm}$ is not really a separate measure -- it is $\mathrm{Q}$ in SDP clothing.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{Adv}^{\pm}(f)\le \mathrm{Q}(f)\cdot O(1)'
+      form: {exp: 1, kind: const}
+      refs: [HLS07]
+      conf: high
+  notes: |
+    Consequences: $\mathrm{Q}$ composes perfectly
+    ($\mathrm{Q}(f\circ g)=\Theta(\mathrm{Q}(f)\mathrm{Q}(g))$), and
+    $\mathrm{Adv}^{\pm}=\Theta(\gamma_2$-norm$)$.
+  see_also: [Advpm, Q, gamma2, composition]
+
+- from: Advpm
+  to: Adv
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{Adv}(f) \le \mathrm{Adv}^{\pm}(f)'
+      form: {exp: 1, kind: exact, dir: reverse}
+      note: 'Trivial: the positive adversary is the negative adversary restricted to non-negative weights.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{Adv}(f) \le \sqrt{\mathrm{C}^{0}(f)\,\mathrm{C}^{1}(f)}\ \text{ while } \mathrm{Q}(f) \text{ can be much larger}'
+      refs: [SpalekSzegedy06, Zhang05]
+      note: 'The **certificate complexity barrier**: for e.g. element distinctness ($\mathrm{C}=2$), $\mathrm{Adv}=O(1)$ but $\mathrm{Q}=\Theta(n^{2/3})$. This is exactly why the negative-weights version was invented.'
+      witness: ElementDistinctness
+      conf: high
+  see_also: [Adv, Advpm, MAdv, ElementDistinctness]
+
+- from: Adv
+  to: lambda
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\lambda(f) \le \mathrm{Adv}(f)'
+      form: {exp: 1, kind: exact, dir: reverse}
+      refs: [ABKRT21, BarnumSaksSzegedy03]
+      note: 'Plug the sensitivity-graph eigenvector into the positive adversary SDP.'
+      conf: high
+  see_also: [lambda, Adv]
+
+# ------------------------------------------------------- QC, RC
+- from: QC
+  to: RC
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{QC}(f) = \Theta\big(\sqrt{\mathrm{RC}(f)}\big) = \Theta\big(\sqrt{\mathrm{fbs}(f)}\big)'
+      form: {exp: 0.5, kind: theta}
+      refs: [Aaronson08]
+      note: 'An exact characterisation, proved with Ambainis'' adversary method in both directions.'
+      conf: high
+  see_also: [QC, RC, fbs, Adv]
+
+- from: R0
+  to: Q0
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{R}_0(f) = O\big(\mathrm{Q}(f)^2\,\mathrm{Q}_0(f)\log n\big)'
+      refs: [Aaronson08]
+      note: 'One of the few bounds that goes *from* quantum measures *to* a classical one; note the explicit $\log n$.'
+      conf: high
+  see_also: [R0, Q0, Q, Aaronson08]
+
+# ------------------------------------------------------- QE
+- from: D
+  to: QE
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{D}(f) \le 2\deg(f)^3 \le 16\,\mathrm{Q}_E(f)^3'
+      form: {exp: 3, kind: const}
+      refs: [Midrijanis04, BBCMdW01]
+      conf: high
+    - stmt: '\mathrm{D}(f) = O(\mathrm{Q}_E(f)^4)'
+      form: {exp: 4, kind: const}
+      refs: [BBCMdW01, BdW02]
+      note: 'Corollary 4 of [BdW02]; superseded by the cubic bound above.'
+      conf: high
+      superseded_by: 'Midrijanis04'
+  lower:
+    - stmt: '\mathrm{D}(f_n) = \widetilde\Omega(\mathrm{Q}_E(f_n)^2)'
+      form: {exp: 2, kind: tilde}
+      refs: [ABBLSS17]
+      witness: pointer
+      conf: high
+    - stmt: '\mathrm{D}(f_n) = \Omega(\mathrm{Q}_E(f_n)^{1.15})'
+      form: {exp: 1.15, kind: const}
+      refs: [Ambainis13]
+      witness: Ambainis13fn
+      note: 'The first *superlinear* exact-quantum advantage for a total function: $\mathrm{Q}_E(f)=O(\mathrm{D}(f)^{0.8675})$. Historically the harder result, even though the pointer function later gave a bigger exponent for this cell.'
+      conf: high
+  notes: |
+    **Open problem 4 of [BdW02]**: is $\mathrm{Q}_E(f)=O(\deg(f))$? Equivalently,
+    can exact quantum algorithms ever beat the degree lower bound by more than a
+    constant? For **symmetric** $f$, $\mathrm{Q}_E(f)=\Theta(n)$ [BdW02, Thm 21],
+    so no speedup at all.
+  see_also: [QE, D, deg, Ambainis13fn, open-QE-vs-deg]
+
+# ------------------------------------------------------- NQ / ndeg
+- from: NQ
+  to: ndeg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{NQ}(f) = \lceil \mathrm{ndeg}(f)/2\rceil'
+      form: {exp: 1, kind: theta}
+      refs: [deWolf03]
+      note: 'An *exact* characterisation, not merely a polynomial relation: nondeterministic quantum query complexity is half the nondeterministic degree.'
+      conf: high
+  notes: |
+    Also $\mathrm{ndeg}(f)\le\mathrm{C}^{1}(f)$, and $\mathrm{ndeg}$ can be
+    exponentially smaller than $\mathrm{D}$ -- the nondeterministic world is
+    genuinely different.
+  see_also: [NQ, ndeg, C1]
+
+# ------------------------------------------------------- PostQ / rdeg
+- from: PostQ
+  to: ardeg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{PostQ}_\varepsilon(f) = \Theta(\mathrm{rdeg}_\varepsilon(f))'
+      form: {exp: 1, kind: theta}
+      refs: [MahadevdeWolf15]
+      note: 'Post-selected quantum query complexity is characterised by *approximate rational* degree, exactly as $\mathrm{Q}$ is characterised (polynomially) by approximate degree.'
+      conf: high
+  notes: |
+    This is the reason rational degree is in the zoo at all: it is the natural
+    "$\mathsf{PostBQP}$" analogue of $\widetilde{\deg}$. Its exact version
+    $\mathrm{rdeg}$ is the one Fortnow asked about.
+  see_also: [PostQ, ardeg, rdeg, sdeg]
+
+# ------------------------------------------------------- robust Q
+- from: robustQ
+  to: Q
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{Q}^{\mathrm{rob}}(f) = O(\mathrm{Q}(f)\log \mathrm{Q}(f))'
+      form: {exp: 1, log: 1, kind: const}
+      refs: [BNRdW05]
+      conf: high
+    - stmt: '\mathrm{Q}^{\mathrm{rob}}(\mathrm{PARITY}_n) = \Theta(n)'
+      refs: [BNRdW05]
+      note: '**No** $\log n$ overhead, unlike the classical noisy model where $\mathrm{N}_p(\mathrm{PARITY}_n)=\Theta(n\log n)$ [FRPU94, EvansPippenger98]. Quantum error-correction of the *oracle* is cheaper than classical repetition.'
+      witness: PARITY
+      conf: high
+  notes: |
+    Whether the $\log$ is needed in general is open. Compare with the
+    classical picture in the noise file: there the $\log$ is provably
+    necessary for PARITY.
+  see_also: [robustQ, Q, Np, noisyR, PARITY]

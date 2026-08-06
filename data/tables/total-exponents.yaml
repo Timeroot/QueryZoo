@@ -1,0 +1,254 @@
+# =====================================================================
+# THE EXPONENT MATRIX for TOTAL Boolean functions.
+#
+# Convention (verbatim from the source):
+#   An entry `a, b` in row M1 and column M2 means that there exists a
+#   function g with  M1(g) >= M2(g)^{a - o(1)},  and that for all total
+#   functions f,  M1(f) <= M2(f)^{b + o(1)}.
+#
+# So: `a` is the best known SEPARATION exponent (a lower bound on how
+# much bigger M1 can be), `b` is the best known UPPER BOUND exponent.
+# a == b  =>  the relationship is settled (shown white / "tight").
+# b == '?' => no polynomial upper bound is known at all.
+#
+# Editing:
+#   * `a` and `b` are numbers, or the strings '?' (unknown) or 'inf'.
+#   * `w` names a function id from data/functions/*.yaml that witnesses
+#     the separation (rendered as a link), OR is omitted when the source
+#     gives only a citation.
+#   * `refs` are citation keys from data/refs.yaml.
+#   * `tight: true` mirrors the white background in the source table.
+#   * Anything you add under `note` shows in the cell's tooltip and on
+#     the pair page.
+#
+# This table is deliberately kept as a faithful reproduction plus
+# explicitly-marked updates; the *fine-grained* statements (constants,
+# log factors, epsilon dependence) live in data/relations/*.yaml and are
+# what the pair pages actually show. The matrix is the index into them.
+# =====================================================================
+
+id: total-exponents
+name: "Exponent matrix (total functions)"
+setting: total
+source: IJKKKSWW23
+source_note: >
+  Table 1 of [IJKKKSWW23], which is itself a reproduction of [ABKRT21, Table 1]
+  updated with more recent developments and with a new rdeg column
+  (their Proposition 29). Cells marked `updated: true` below are further
+  updates made in this zoo, with the reason given.
+
+convention: >
+  An entry $a, b$ in row $M_1$ and column $M_2$ means that there exists a
+  function $g$ with $M_1(g) \ge M_2(g)^{a-o(1)}$, and that for all total
+  functions $f$, $M_1(f) \le M_2(f)^{b+o(1)}$. For example, the $3,4$ entry at
+  row $\mathrm{R}$ and column $\mathrm{Q}$ means that the maximum possible
+  separation between $\mathrm{R}$ and $\mathrm{Q}$ is at least cubic and at most
+  quartic.
+
+shading: >
+  Cells are shown "tight" (light) if the relationship is optimal
+  ($a = b$) and "gap" (shaded) otherwise. Getting any polynomial upper bound
+  in the rdeg column -- replacing a `?` by a constant -- would resolve
+  Fortnow's question on whether rational degree is polynomially related to the
+  other measures.
+
+# Column (and row) order, by measure id.
+axis: [D, R0, R, C, RC, bs, s, lambda, QE, deg, Q, adeg, rdeg]
+
+# rdeg has a column but no row: no separation of the form
+# rdeg(g) >= M(g)^a is recorded in the source, because rdeg is bounded
+# above by essentially everything (rdeg <= adeg <= ... ), so the
+# interesting direction is the other one.
+rows: [D, R0, R, C, RC, bs, s, lambda, QE, deg, Q, adeg]
+
+legend:
+  '\oplus': PARITY
+  '\wedge': AND
+  '\vee': OR
+  '\wedge\circ\vee': ANDOR
+  '\bar\wedge\text{-tree}': NANDtree
+  '\wedge\circ\overline{\mathrm{EH}}': ANDEH
+
+cells:
+
+  # ---------------------------------------------------------------- D
+  D:
+    R0:     {a: 2,   b: 2, tight: true,  refs: [ABBLSS17]}
+    R:      {a: 2,   b: 3, tight: false, refs: [ABBLSS17], note: '$\mathrm{D}=O(\mathrm{R}^3)$ is Nisan; the separation is the pointer function.'}
+    C:      {a: 2,   b: 2, tight: true,  w: ANDOR}
+    RC:     {a: 2,   b: 3, tight: false, w: ANDOR}
+    bs:     {a: 2,   b: 3, tight: false, w: ANDOR, note: 'Upper bound: $\mathrm{D}\le \mathrm{bs}\cdot\deg \le 2\,\mathrm{bs}^3$ [Midrijanis04, NS94]; $\mathrm{D}\ge \mathrm{bs}^2$ already for $\wedge\circ\vee$.'}
+    s:      {a: 3,   b: 6, tight: false, refs: [BHT17, Huang19, Midrijanis04], note: 'Upper bound: $\mathrm{D}\le\mathrm{bs}\cdot\deg$ [Midrijanis04], $\mathrm{bs}\le2\deg^2$ [NS94] and $\deg\le\mathrm{s}^2$ [Huang19] give $\mathrm{D}\le2\mathrm{s}^6$.'}
+    lambda: {a: 4,   b: 6, tight: false, refs: [ABBLSS17, ABKRT21], note: 'Upper bound: same chain with $\deg\le\lambda^2$ [ABKRT21, Thm 1].'}
+    QE:     {a: 2,   b: 3, tight: false, refs: [ABBLSS17]}
+    deg:    {a: 2,   b: 3, tight: false, refs: [GPW18], note: 'Upper bound: $\mathrm{D}\le\mathrm{bs}\cdot\deg\le2\deg^3$ [Midrijanis04, NS94]. Whether $\mathrm{D}=O(\deg^2)$ is a well-known open problem.'}
+    Q:      {a: 4,   b: 4, tight: true,  refs: [ABKRT21, ABBLSS17], w: pointer, note: 'Settled. $\mathrm{D}=O(\mathrm{Q}^4)$ is [ABKRT21, Thm 2]: $\mathrm{D}\le\mathrm{bs}\cdot\deg$ [Midrijanis04] with $\mathrm{bs}=O(\mathrm{Q}^2)$ [NS94, BBCMdW01] and $\deg=O(\mathrm{Q}^2)$ [ABKRT21, Thm 3]. Matched (up to log factors) by the pointer function.'}
+    adeg:   {a: 4,   b: 4, tight: true,  refs: [ABKRT21, ABBLSS17], w: pointer, note: 'Settled. $\mathrm{D}\le\mathrm{bs}\cdot\deg = O(\widetilde{\deg}^2)\cdot O(\widetilde{\deg}^2)$ using [NS94] and [ABKRT21, Thm 4].'}
+    rdeg:   {a: 2,   b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+
+  # ---------------------------------------------------------------- R0
+  R0:
+    D:      {a: 1,   b: 1, tight: true,  w: PARITY}
+    R:      {a: 2,   b: 2, tight: true,  refs: [ABBLSS17], note: 'Settled: $\mathrm{R}_0 = O(\mathrm{R}^2)$ and the pointer function separates quadratically.'}
+    C:      {a: 2,   b: 2, tight: true,  w: ANDOR}
+    RC:     {a: 2,   b: 3, tight: false, w: ANDOR}
+    bs:     {a: 2,   b: 3, tight: false, w: ANDOR}
+    s:      {a: 3,   b: 6, tight: false, refs: [BHT17]}
+    lambda: {a: 4,   b: 6, tight: false, refs: [ABBLSS17]}
+    QE:     {a: 2,   b: 3, tight: false, refs: [ABBLSS17]}
+    deg:    {a: 2,   b: 3, tight: false, refs: [GJPW18]}
+    Q:      {a: 3,   b: 4, tight: false, refs: [ABBLSS17]}
+    adeg:   {a: 4,   b: 4, tight: true,  refs: [ABBLSS17]}
+    rdeg:   {a: 2,   b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+
+  # ---------------------------------------------------------------- R
+  R:
+    D:      {a: 1,   b: 1, tight: true,  w: PARITY}
+    R0:     {a: 1,   b: 1, tight: true,  w: PARITY}
+    C:      {a: 2,   b: 2, tight: true,  w: ANDOR}
+    RC:     {a: 2,   b: 3, tight: false, w: ANDOR}
+    bs:     {a: 2,   b: 3, tight: false, w: ANDOR}
+    s:      {a: 3,   b: 6, tight: false, refs: [BHT17]}
+    lambda: {a: 4,   b: 6, tight: false, refs: [ABBLSS17]}
+    QE:     {a: 1.5, b: 3, tight: false, refs: [ABBLSS17], note: 'The $3/2$ entry: $\mathrm{R}(g)\ge \mathrm{Q}_E(g)^{3/2-o(1)}$.'}
+    deg:    {a: 2,   b: 3, tight: false, refs: [GJPW18]}
+    Q:      {a: 3,   b: 4, tight: false, refs: [BansalSinha21, SSW21, ABK16], note: 'Cubic separation from $k$-Forrelation + cheat sheets; the $\mathrm{R}=O(\mathrm{Q}^4)$ upper bound is [BBCMdW01]. **The** headline open problem of the total-function theory.'}
+    adeg:   {a: 4,   b: 4, tight: true,  refs: [ABBLSS17]}
+    rdeg:   {a: 2,   b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+
+  # ---------------------------------------------------------------- C
+  C:
+    D:      {a: 1,   b: 1, tight: true,  w: PARITY}
+    R0:     {a: 1,   b: 1, tight: true,  w: PARITY}
+    R:      {a: 1,   b: 2, tight: false, w: PARITY, note: 'Upper bound $\mathrm{C}\le\mathrm{R}^2$; no separation better than equality is known.'}
+    RC:     {a: 2,   b: 2, tight: true,  refs: [GSS16]}
+    bs:     {a: 2,   b: 2, tight: true,  refs: [GSS16], note: 'Settled: $\mathrm{C}\le\mathrm{bs}^2$ (Nisan) and [GSS16] matches it.'}
+    s:      {a: 3,   b: 5, tight: false, refs: [BBGJK21], note: 'Upper bound: $\mathrm{C}\le\mathrm{s}\cdot\mathrm{bs}$ [Nisan91] and $\mathrm{bs}\le 2\deg^2\le 2\mathrm{s}^4$ [NS94, Huang19], so $\mathrm{C}\le 2\mathrm{s}^5$.'}
+    lambda: {a: 4,   b: 6, tight: false, refs: [BBGJK21]}
+    QE:     {a: 1.15, b: 3, tight: false, refs: [Ambainis13], note: 'From Ambainis'' function with $\mathrm{Q}_E = O(\mathrm{D}^{0.8675})$ -- the first super-linear advantage for *exact* quantum algorithms; $1/0.8675 \approx 1.15$.'}
+    deg:    {a: 2,   b: 3, tight: false, refs: [BBGJK21]}
+    Q:      {a: 2,   b: 4, tight: false, w: AND}
+    adeg:   {a: 3,   b: 4, tight: false, refs: [BBGJK21]}
+    rdeg:   {a: 2,   b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+
+  # ---------------------------------------------------------------- RC
+  RC:
+    D:      {a: 1,   b: 1, tight: true, w: PARITY}
+    R0:     {a: 1,   b: 1, tight: true, w: PARITY}
+    R:      {a: 1,   b: 1, tight: true, w: PARITY}
+    C:      {a: 1,   b: 1, tight: true, w: PARITY}
+    bs:     {a: 1.5, b: 2, tight: false, refs: [GSS16]}
+    s:      {a: 2,   b: 4, tight: false, refs: [Rubinstein95]}
+    lambda: {a: 2,   b: 4, tight: false, w: AND}
+    QE:     {a: 1.15, b: 2, tight: false, refs: [Ambainis13]}
+    deg:    {a: 1.63, b: 2, tight: false, refs: [NisanWigderson95], note: '$1.63 = \log 6/\log 3 = 1.6309\ldots$, from iterating Kushilevitz'' $6$-variable function ($\mathrm{D}=6$, $\deg=3$), reported in [NisanWigderson95].'}
+    Q:      {a: 2,   b: 2, tight: true,  w: AND}
+    adeg:   {a: 2,   b: 2, tight: true,  w: AND}
+    rdeg:   {a: 2,   b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+
+  # ---------------------------------------------------------------- bs
+  bs:
+    D:      {a: 1,   b: 1, tight: true, w: PARITY}
+    R0:     {a: 1,   b: 1, tight: true, w: PARITY}
+    R:      {a: 1,   b: 1, tight: true, w: PARITY}
+    C:      {a: 1,   b: 1, tight: true, w: PARITY}
+    RC:     {a: 1,   b: 1, tight: true, w: PARITY}
+    s:      {a: 2,   b: 4, tight: false, refs: [Rubinstein95, Huang19], note: 'The sensitivity-vs-block-sensitivity gap. $\mathrm{bs}\le\mathrm{s}^4$ from Huang''s $\deg\le\mathrm{s}^2$ plus $\mathrm{bs}\le\deg^2$; Rubinstein gives $\mathrm{bs}\ge\mathrm{s}^2/2$.'}
+    lambda: {a: 2.127, b: 4, tight: false, w: MeiburgTournament, refs: [Meiburg26], updated: true,
+             update_note: 'Source table has $2, 4$ (witness $\wedge$). Updated: [Meiburg26] shows $\mathrm{bs} \ge \lambda^{2.127}$, i.e. block sensitivity can exceed spectral sensitivity squared.'}
+    QE:     {a: 1.15, b: 2, tight: false, refs: [Ambainis13]}
+    deg:    {a: 1.63, b: 2, tight: false, refs: [NisanWigderson95]}
+    Q:      {a: 2,   b: 2, tight: true, w: AND}
+    adeg:   {a: 2,   b: 2, tight: true, w: AND}
+    rdeg:   {a: 2,   b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+
+  # ---------------------------------------------------------------- s
+  s:
+    D:      {a: 1, b: 1, tight: true, w: PARITY}
+    R0:     {a: 1, b: 1, tight: true, w: PARITY}
+    R:      {a: 1, b: 1, tight: true, w: PARITY}
+    C:      {a: 1, b: 1, tight: true, w: PARITY}
+    RC:     {a: 1, b: 1, tight: true, w: PARITY}
+    bs:     {a: 1, b: 1, tight: true, w: PARITY}
+    lambda: {a: 2, b: 2, tight: true, w: AND, note: 'Settled by $\lambda\le\mathrm{s}\le\lambda^2$ [ABKRT21] with AND matching.'}
+    QE:     {a: 1.15, b: 2, tight: false, refs: [Ambainis13]}
+    deg:    {a: 1.63, b: 2, tight: false, refs: [NisanWigderson95]}
+    Q:      {a: 2, b: 2, tight: true, w: AND}
+    adeg:   {a: 2, b: 2, tight: true, w: AND}
+    rdeg:   {a: 2, b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+
+  # ---------------------------------------------------------------- lambda
+  lambda:
+    D:      {a: 1, b: 1, tight: true, w: PARITY}
+    R0:     {a: 1, b: 1, tight: true, w: PARITY}
+    R:      {a: 1, b: 1, tight: true, w: PARITY}
+    C:      {a: 1, b: 1, tight: true, w: PARITY}
+    RC:     {a: 1, b: 1, tight: true, w: PARITY}
+    bs:     {a: 1, b: 1, tight: true, w: PARITY}
+    s:      {a: 1, b: 1, tight: true, w: PARITY}
+    QE:     {a: 1, b: 1, tight: true, w: PARITY}
+    deg:    {a: 1, b: 1, tight: true, w: PARITY}
+    Q:      {a: 1, b: 1, tight: true, w: PARITY, note: '$\mathrm{Q}(f)=\Omega(\lambda(f))$ -- spectral sensitivity is a quantum lower bound [ABKRT21] -- and PARITY matches.'}
+    adeg:   {a: 1, b: 1, tight: true, w: PARITY}
+    rdeg:   {a: 1.5, b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true,
+             note: 'Proposition 29 of [IJKKKSWW23]: $\wedge_n\circ\overline{\mathrm{EH}}_n$ has $\mathrm{rdeg}=\Theta(n)$ and $\lambda=\Theta(n^{3/2})$. In particular $\lambda \le \mathrm{rdeg}$ is FALSE.'}
+
+  # ---------------------------------------------------------------- QE
+  QE:
+    D:      {a: 1,    b: 1, tight: true,  w: PARITY}
+    R0:     {a: 1.33, b: 2, tight: false, w: NANDtree, note: 'Balanced NAND-tree on $N$ leaves: $\mathrm{Q}_E = \deg = N$ while $\mathrm{R}_0=\Theta(N^{0.7537})$, and $1/0.7537 = 1.327\ldots$'}
+    R:      {a: 1.33, b: 3, tight: false, w: NANDtree}
+    C:      {a: 2,    b: 2, tight: true,  w: ANDOR}
+    RC:     {a: 2,    b: 3, tight: false, w: ANDOR}
+    bs:     {a: 2,    b: 3, tight: false, w: ANDOR}
+    s:      {a: 3,    b: 6, tight: false, refs: [BHT17]}
+    lambda: {a: 4,    b: 6, tight: false, refs: [ABK16]}
+    deg:    {a: 2,    b: 3, tight: false, refs: [ABK16]}
+    Q:      {a: 2,    b: 4, tight: false, w: AND}
+    adeg:   {a: 4,    b: 4, tight: true,  refs: [ABK16]}
+    rdeg:   {a: 2,    b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+
+  # ---------------------------------------------------------------- deg
+  deg:
+    D:      {a: 1,    b: 1, tight: true,  w: PARITY}
+    R0:     {a: 1.33, b: 2, tight: false, w: NANDtree}
+    R:      {a: 1.33, b: 2, tight: false, w: NANDtree, note: 'Upper bound: $\deg = O(\widetilde{\deg}^2)$ [ABKRT21] and $\widetilde{\deg} = O(\mathrm{R})$.'}
+    C:      {a: 2,    b: 2, tight: true,  w: ANDOR}
+    RC:     {a: 2,    b: 2, tight: true,  w: ANDOR}
+    bs:     {a: 2,    b: 2, tight: true,  w: ANDOR, note: 'Settled: $\deg\le\mathrm{s}^2\le\mathrm{bs}^2$ [Huang19], matched by $\wedge\circ\vee$.'}
+    s:      {a: 2,    b: 2, tight: true,  w: ANDOR, note: 'Settled by Huang''s sensitivity theorem $\deg(f)\le \mathrm{s}(f)^2$ [Huang19], matched by $\wedge\circ\vee$.'}
+    lambda: {a: 2,    b: 2, tight: true,  w: AND, note: '$\deg \le \lambda^2$ [ABKRT21, Thm 1] -- the spectral strengthening of Huang''s theorem, since $\lambda\le\mathrm{s}$.'}
+    QE:     {a: 1,    b: 1, tight: true,  w: PARITY}
+    Q:      {a: 2,    b: 2, tight: true,  w: AND, note: 'Settled: $\deg = O(\mathrm{Q}^2)$ [ABKRT21, Thm 3] and $\deg(\wedge_n)=n$, $\mathrm{Q}(\wedge_n)=\Theta(\sqrt n)$.'}
+    adeg:   {a: 2,    b: 2, tight: true,  w: AND, note: 'Settled: $\deg = O(\widetilde{\deg}^2)$ [ABKRT21, Thm 4], optimal for OR/AND.'}
+    rdeg:   {a: 2,    b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+
+  # ---------------------------------------------------------------- Q
+  Q:
+    D:      {a: 1, b: 1, tight: true,  w: PARITY}
+    R0:     {a: 1, b: 1, tight: true,  w: PARITY}
+    R:      {a: 1, b: 1, tight: true,  w: PARITY}
+    C:      {a: 2, b: 2, tight: true,  refs: [ABK16]}
+    RC:     {a: 2, b: 3, tight: false, refs: [ABK16]}
+    bs:     {a: 2, b: 3, tight: false, refs: [ABK16]}
+    s:      {a: 3, b: 6, tight: false, refs: [BHT17]}
+    lambda: {a: 4, b: 6, tight: false, refs: [ABK16]}
+    QE:     {a: 1, b: 1, tight: true,  w: PARITY}
+    deg:    {a: 2, b: 3, tight: false, refs: [ABK16], note: 'How lossy is the polynomial method? $\mathrm{Q}\le O(\deg^3)$ vs a quadratic separation.'}
+    adeg:   {a: 4, b: 4, tight: true,  refs: [ABK16], note: 'Settled: $\mathrm{Q} \le O(\widetilde{\deg}^4)$ [BBCMdW01] and cheat sheets match.'}
+    rdeg:   {a: 1.5, b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+
+  # ---------------------------------------------------------------- adeg
+  adeg:
+    D:      {a: 1, b: 1, tight: true,  w: PARITY}
+    R0:     {a: 1, b: 1, tight: true,  w: PARITY}
+    R:      {a: 1, b: 1, tight: true,  w: PARITY}
+    C:      {a: 2, b: 2, tight: true,  refs: [BunThaler17]}
+    RC:     {a: 2, b: 2, tight: true,  refs: [BunThaler17]}
+    bs:     {a: 2, b: 2, tight: true,  refs: [BunThaler17]}
+    s:      {a: 2, b: 2, tight: true,  refs: [BunThaler17]}
+    lambda: {a: 2, b: 2, tight: true,  refs: [BunThaler17]}
+    QE:     {a: 1, b: 1, tight: true,  w: PARITY}
+    deg:    {a: 1, b: 1, tight: true,  w: PARITY}
+    Q:      {a: 1, b: 1, tight: true,  w: PARITY}
+    rdeg:   {a: 1.5, b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}

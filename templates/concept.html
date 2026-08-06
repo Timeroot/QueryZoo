@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ c.title }} &middot; {{ site.title }}{% endblock %}
+
+{% block body %}
+<div class="wrap">
+  <div class="crumbs"><a href="{{ root }}concepts/index.html">Concepts</a></div>
+  <header class="entryhead concept">
+    <div>
+      <h1>{{ c.title }}</h1>
+      <p class="lede">{{ c.blurb | mdi }}</p>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="main-col">
+      <article class="card prose">
+        {{ c.body | md }}
+      </article>
+    </div>
+    <aside class="side-col">
+      {% if c.see_also %}
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist">{% for s in c.see_also %}<li>{{ xref(s) }}</li>{% endfor %}</ul>
+      </section>
+      {% endif %}
+      {% if c.refs %}
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+          {% for k in c.refs %}
+            {% set e = zoo.refs[zoo.ref_key[k]] if k in zoo.ref_key else none %}
+            <li>{{ xref(k) }} {% if e %}<span class="dim">{{ e.title }}</span>{% endif %}</li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/concepts.yaml</code> &mdash; id <code>{{ c.id }}</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+{% endblock %}

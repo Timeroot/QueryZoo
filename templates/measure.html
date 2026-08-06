@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% from "macros.html" import status_pill, setting_pill, measure_chip, relation_block with context %}
+{% block title %}{{ m.name }} &middot; {{ site.title }}{% endblock %}
+
+{% block body %}
+<div class="wrap">
+  <div class="crumbs"><a href="{{ root }}measures/index.html">Measures</a> &rsaquo;
+    <a href="{{ root }}measures/index.html#{{ m.category }}">{{ zoo.category_by_id[m.category].name }}</a></div>
+
+  <header class="entryhead cat-{{ m.category }}">
+    <div class="bigsym">\({{ m.symbol }}\)</div>
+    <div>
+      <h1>{{ m.name }}</h1>
+      <p class="lede">{{ m.short | mdi }}</p>
+      {% if m.aliases %}
+      <p class="aliases">also written:
+        {% for a in m.aliases %}<code>{{ a }}</code>{% if not loop.last %}, {% endif %}{% endfor %}
+        {% if m.symbol_alt %}, \({{ m.symbol_alt }}\){% endif %}
+      </p>
+      {% endif %}
+    </div>
+  </header>
+
+  {% if m.todo %}<div class="banner todo"><b>TODO:</b> {{ m.todo | mdi }}</div>{% endif %}
+  {% if m.confidence == 'low' %}
+  <div class="banner warn">Entries on this page are marked low confidence &mdash; check the cited
+  sources before relying on them.</div>
+  {% endif %}
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Definition</h2>
+        {{ m.definition | md }}
+      </section>
+
+      {% if m.params %}
+      <section class="card">
+        <h2>Parameters</h2>
+        {% for p in m.params %}
+        <div class="param" id="param-{{ p.name }}">
+          <h3>\({{ p.symbol }}\) <span class="dim">({{ p.name }})</span>
+            {% if p.default %}<span class="tag">default {{ p.default | tex }}</span>{% endif %}
+            {% if p.range %}<span class="tag">range \({{ p.range }}\)</span>{% endif %}
+          </h3>
+          {% if p.description %}<p>{{ p.description | mdi }}</p>{% endif %}
+          {% if p.dependence %}<div class="dependence">{{ p.dependence | md }}</div>{% endif %}
+          {% if m.param_rels[p.name] %}
+          <p class="paramrels">Detailed records:
+            {% for r in m.param_rels[p.name] %}
+              <a href="{{ root }}pairs/{{ r.from }}__{{ r.to }}.html#{{ r.id }}">{% if r.headline %}{{ r.headline | tex }}{% else %}<code>{{ r.id }}</code>{% endif %}</a>{% if not loop.last %} &middot; {% endif %}
+            {% endfor %}
+          </p>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+
+      {% if m.facts %}
+      <section class="card">
+        <h2>Basic facts</h2>
+        <ul class="facts">
+          {% for fct in m.facts %}<li>{{ fct | mdi }}</li>{% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+
+      {% if m.equivalent %}
+      <section class="card">
+        <h2>Equivalent / near-equivalent measures</h2>
+        <ul class="equivs">
+          {% for e in m.equivalent %}
+          <li>
+            {% if e.measure %}{{ measure_chip(e.measure) }}{% endif %}
+            <span class="stmt">{{ e.statement | mdi }}</span>
+            {% if e.refs %}<span class="refs">{{ e.refs | cites }}</span>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+
+      {% if m.nbrs %}
+      <section class="card">
+        <h2>Relations to other measures</h2>
+        <p class="dim">A row shows what the zoo records for the ordered pairs involving
+        \({{ m.symbol }}\). &ldquo;\({{ m.symbol }}\) bounded by&rdquo; is the pair with
+        \({{ m.symbol }}\) on the left (the matrix row); &ldquo;bounds&rdquo; is the reverse.</p>
+        <table class="listing nbrs">
+          <thead>
+            <tr>
+              <th>Other measure</th>
+              <th>\({{ m.symbol }}\) in terms of it</th>
+              <th>It in terms of \({{ m.symbol }}\)</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for r in m.nbrs %}
+            <tr>
+              <td class="nm">{{ measure_chip(r.other.id) }}
+                <a href="{{ root }}measures/{{ r.other.id }}.html">{{ r.other.name }}</a></td>
+              <td>
+                {% if r.out %}
+                  <a class="pairlink" href="{{ root }}pairs/{{ r.out.slug }}.html">
+                    {% if r.out.cell %}<span class="exp"><span class="a">{{ r.out.cell.a }}</span>,<span class="b">{{ r.out.cell.b }}</span></span>{% endif %}
+                    <span class="go">open pair &rarr;</span>
+                  </a>
+                  <span class="stbadges">
+                  {% for s in site.settings %}{% if r.st_out[s.id] %}
+                    <span class="minipill st-{{ r.st_out[s.id] }}" title="{{ s.name }}: {{ statuses[r.st_out[s.id]].label }}">{{ s.short }}</span>
+                  {% endif %}{% endfor %}
+                  </span>
+                {% else %}<span class="dim">&mdash;</span>{% endif %}
+              </td>
+              <td>
+                {% if r['in'] %}
+                  <a class="pairlink" href="{{ root }}pairs/{{ r['in'].slug }}.html">
+                    {% if r['in'].cell %}<span class="exp"><span class="a">{{ r['in'].cell.a }}</span>,<span class="b">{{ r['in'].cell.b }}</span></span>{% endif %}
+                    <span class="go">open pair &rarr;</span>
+                  </a>
+                  <span class="stbadges">
+                  {% for s in site.settings %}{% if r.st_in[s.id] %}
+                    <span class="minipill st-{{ r.st_in[s.id] }}" title="{{ s.name }}: {{ statuses[r.st_in[s.id]].label }}">{{ s.short }}</span>
+                  {% endif %}{% endfor %}
+                  </span>
+                {% else %}<span class="dim">&mdash;</span>{% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </section>
+      {% endif %}
+
+      {% if m.function_values %}
+      <section class="card">
+        <h2>Known values</h2>
+        <table class="listing values">
+          <thead><tr><th>Function</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+          {% for f, v in m.function_values %}
+            <tr>
+              <td class="nm"><a href="{{ root }}functions/{{ f.id }}.html">{{ f.name }}</a>
+                <span class="kindtag k-{{ f.kind }}">{{ f.kind }}</span></td>
+              <td class="val">{{ v.value | tex }}</td>
+              <td class="short">{{ v.note | mdi }}
+                {% if v.refs %}<span class="refs">{{ v.refs | cites }}</span>{% endif %}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </section>
+      {% endif %}
+
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>Defined for</h2>
+        <ul class="settinglist">
+          {% for s in site.settings %}
+            {% set d = m.settings[s.id] %}
+            <li class="{% if d.defined == 'yes' %}yes{% elif d.defined == 'no' %}no{% else %}maybe{% endif %}">
+              <b>{{ s.name }}</b>
+              <span class="verdict">{{ d.defined }}</span>
+              {% if d.note %}<div class="note">{{ d.note | mdi }}</div>{% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+
+      {% if m.open_problems %}
+      <section class="card tight">
+        <h2>Open problems</h2>
+        <ul class="linklist">
+          {% for o in m.open_problems %}
+          <li><a href="{{ root }}open.html#{{ o.id }}">{{ o.title | mdi }}</a></li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+
+      {% if m.see_also %}
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist">
+          {% for s in m.see_also %}<li>{{ xref(s) }}</li>{% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+
+      {% if m.refs %}
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+          {% for k in m.refs %}
+            {% set e = zoo.refs[zoo.ref_key[k]] if k in zoo.ref_key else none %}
+            <li>{{ xref(k) }} {% if e %}<span class="dim">{{ e.title }}</span>{% endif %}</li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>{{ m._source }}</code> &mdash; id <code>{{ m.id }}</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+{% endblock %}

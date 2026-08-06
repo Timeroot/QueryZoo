@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Functions &middot; {{ site.title }}{% endblock %}
+
+{% block body %}
+<div class="wrap">
+  <h1 class="pagetitle">Functions</h1>
+  <p class="lede">The witnesses. Every separation in the zoo points at one of these families;
+  every page gives the definition (or says plainly that it has not been transcribed yet), the
+  measure values that make it interesting, and the separations it witnesses.</p>
+
+  <nav class="jump">
+    {% for s in site.settings %}{% if by_kind[s.id] %}
+      <a href="#{{ s.id }}">{{ s.name }} <span class="n">{{ by_kind[s.id] | length }}</span></a>
+    {% endif %}{% endfor %}
+  </nav>
+
+  {% for s in site.settings %}
+    {% if by_kind[s.id] %}
+    <section class="card" id="{{ s.id }}">
+      <h2>{{ s.name }}</h2>
+      <p class="dim">{{ s.blurb }}</p>
+      <table class="listing">
+        <thead><tr><th>Symbol</th><th>Name</th><th>Group</th><th>Definition given?</th><th>Why it matters</th></tr></thead>
+        <tbody>
+        {% for f in by_kind[s.id] %}
+          <tr>
+            <td class="sym"><a href="{{ root }}functions/{{ f.id }}.html">{% if f.symbol %}\({{ f.symbol }}\){% else %}{{ f.id }}{% endif %}</a></td>
+            <td class="nm"><a href="{{ root }}functions/{{ f.id }}.html">{{ f.name }}</a>
+              <div class="idtag">{{ f.id }}</div></td>
+            <td><span class="grouptag g-{{ f.group }}">{{ f.group }}</span></td>
+            <td class="c">{% if f.formal %}<span class="dot yes" title="formal definition present"></span>
+                          {% elif f.definition %}<span class="dot maybe" title="informal definition only"></span>
+                          {% else %}<span class="dot no" title="stub"></span>{% endif %}</td>
+            <td class="short">{{ f.short | mdi }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </section>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,276 @@
+# =====================================================================
+# MEASURES: quantum query complexity and quantum lower-bound methods
+# =====================================================================
+
+measures:
+
+- id: Q
+  name: Bounded-error quantum query complexity
+  symbol: '\mathrm{Q}_{\varepsilon}(f)'
+  aliases: ['Q_2(f)', 'quantum decision tree complexity']
+  category: quantum
+  order: 10
+  short: 'Number of applications of the phase/bit oracle O_x needed to compute f with error <= eps.'
+  definition: |
+    A $T$-query quantum algorithm is
+    $U_T O_x U_{T-1}\cdots O_x U_0 |0\rangle$, measured at the end; $O_x$ maps
+    $|i,b\rangle\mapsto|i,b\oplus x_i\rangle$. $\mathrm{Q}_\varepsilon(f)$ is the least $T$
+    such that some algorithm outputs $f(x)$ with probability $\ge 1-\varepsilon$ for all
+    $x$ in the domain. Unadorned $\mathrm{Q}(f):=\mathrm{Q}_{1/3}(f)$.
+  params:
+    - name: eps
+      symbol: '\varepsilon'
+      default: '1/3'
+      range: '[0, 1/2)'
+      dependence: |
+        $\mathrm{Q}_\varepsilon(f) = O(\mathrm{Q}(f)\log(1/\varepsilon))$ by majority voting.
+        For *decision* problems the $\log(1/\varepsilon)$ is sometimes removable via
+        amplitude amplification when the algorithm has one-sided structure.
+        In the small-bias regime $\varepsilon = 1/2-\gamma$ one has
+        $\mathrm{Q}(f) = O(\gamma^{-1}\mathrm{Q}_{1/2-\gamma}(f))$ -- note $\gamma^{-1}$,
+        not $\gamma^{-2}$: amplitude amplification is quadratically better than
+        classical majority voting, which is the source of several quantum/classical gaps.
+  settings:
+    total:   {defined: yes}
+    partial: {defined: yes, note: 'Where all the big speedups live: Simon, Forrelation, period finding.'}
+    relation: {defined: yes, note: 'Standard; the general adversary bound has been extended to relations [BelovsLee20].'}
+  equivalent:
+    - {measure: Advpm, setting: partial, form: {exp: 1, kind: theta}, statement: '$\mathrm{Q}(f) = \Theta(\mathrm{Adv}^{\pm}(f))$ for all partial Boolean $f$', refs: [Reichardt11, LMRSS11]}
+  facts:
+    - '$\widetilde{\deg}(f) \le 2\,\mathrm{Q}(f)$ [BBCMdW01].'
+    - '$\mathrm{D}(f) = O(\mathrm{Q}(f)^4)$ for total $f$ [ABKRT21], improving $O(\mathrm{Q}^6)$; matching separation $\mathrm{D}=\tilde\Omega(\mathrm{Q}^4)$ [ABBLSS17], so the exponent is **4, settled**.'
+    - '$\mathrm{R}(f) \le \mathrm{D}(f) = O(\mathrm{Q}(f)^4)$ for total $f$; best known separation $\mathrm{R}=\tilde\Omega(\mathrm{Q}^3)$ [BansalSinha21, SSW21], so the $\mathrm{R}$-vs-$\mathrm{Q}$ exponent lies in $[3,4]$.'
+    - 'Quantum query complexity **composes perfectly**: $\mathrm{Q}(f\circ g) = \Theta(\mathrm{Q}(f)\mathrm{Q}(g))$.'
+    - 'For partial functions the gap with $\mathrm{R}$ is unbounded: $\mathrm{Q}=O(1)$ vs $\mathrm{R}=\tilde\Omega(n^{1-1/2k})$; exponential for Simon''s problem.'
+  refs: [BBCMdW01, Reichardt11, ABKRT21, ABBLSS17, BansalSinha21, SSW21]
+  see_also: [QE, Q0, Advpm, adeg, R, D, lambda]
+  confidence: high
+
+- id: QE
+  name: Exact quantum query complexity
+  symbol: '\mathrm{Q}_{\mathrm{E}}(f)'
+  aliases: ['Q_0 in some papers (careful!)', 'zero-error-with-certainty quantum complexity']
+  category: quantum
+  order: 20
+  short: 'Number of queries of a quantum algorithm that outputs f(x) with probability 1.'
+  definition: |
+    $\mathrm{Q}_{\mathrm{E}}(f) = \mathrm{Q}_0(f)$ in the *"always right"* sense:
+    the algorithm must output the correct answer with certainty.
+    Note the notational hazard: some authors use $\mathrm{Q}_0$ for the Las Vegas
+    (zero-error-but-may-abort) version, which is [[Q0]] here.
+  params: []
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
+  facts:
+    - '$\deg(f) \le 2\,\mathrm{Q}_{\mathrm{E}}(f)$ [BBCMdW01].'
+    - '$\mathrm{Q}_{\mathrm{E}}(\mathrm{PARITY}_n) = \lceil n/2\rceil$: the only known factor-2 speedup style behaviour for total functions.'
+    - 'First superlinear-advantage total function: $\mathrm{Q}_{\mathrm{E}}(f) = O(\mathrm{D}(f)^{0.8675\ldots})$ [Ambainis13], giving the $1.15$ exponents in the $\mathrm{Q}_{\mathrm{E}}$ column.'
+    - 'It is open whether $\mathrm{Q}_{\mathrm{E}}(f) = O(\deg(f))$ for total $f$ [BdW02, Open problem 4].'
+  refs: [BBCMdW01, Ambainis13, BdW02, AmbainisGruslysEtAl16]
+  see_also: [Q, Q0, deg, D]
+  confidence: high
+
+- id: Q0
+  name: Zero-error (Las Vegas) quantum query complexity
+  symbol: '\mathrm{Q}_{0}(f)'
+  category: quantum
+  order: 25
+  short: 'Quantum algorithm that never errs but may output "don''t know" with probability <= 1/2.'
+  definition: |
+    The quantum analogue of $\mathrm{R}_0$: outputs in $\{0,1,\bot\}$, never wrong,
+    $\Pr[\bot]\le 1/2$; cost is the (worst-case, or expected) number of queries.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
+  facts:
+    - '$\mathrm{Q}(f) \le \mathrm{Q}_0(f) \le \mathrm{Q}_{\mathrm{E}}(f)$.'
+    - 'For total $f$, $\mathrm{Q}_0$ is polynomially related to all the other measures; the exact relations to $\mathrm{Q}_{\mathrm{E}}$ are less studied than the $\mathrm{R}_0$-vs-$\mathrm{R}$ ones.'
+  refs: [BdW02]
+  see_also: [Q, QE, R0]
+  confidence: medium
+
+- id: PostQ
+  name: Post-selected quantum query complexity
+  symbol: '\mathrm{PostQ}_{\varepsilon}(f)'
+  category: quantum
+  order: 30
+  short: 'Quantum queries when the algorithm may post-select on an exponentially unlikely event.'
+  definition: |
+    The algorithm may condition on a measurement outcome of arbitrarily small
+    probability (the class $\mathsf{PostBQP}$ analogue). Mahadev-de Wolf showed this
+    is *exactly* characterised by rational approximation:
+    $$\mathrm{PostQ}_\varepsilon(f) = \Theta(\mathrm{rdeg}_\varepsilon(f)).$$
+  params: [{name: eps, symbol: '\varepsilon', default: '1/3'}]
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: partial}}
+  equivalent:
+    - {measure: ardeg, form: {exp: 1, kind: theta}, statement: '$\mathrm{PostQ}_\varepsilon(f)=\Theta(\mathrm{rdeg}_\varepsilon(f))$ -- bounded error on both sides', refs: [MahadevdeWolf15, IJKKKSWW23]}
+    - {measure: rdeg, statement: '$\mathrm{PostQ}_{\mathrm{E}}(f) = \Theta(\mathrm{rdeg}(f))$ -- the *exact*-error versions of both. Not an equivalence between $\mathrm{PostQ}_{1/3}$ and $\mathrm{rdeg}_0$, which are genuinely different quantities.', refs: [MahadevdeWolf15, IJKKKSWW23]}
+  facts:
+    - 'Post-selection and bounded error are *incomparable* resources: for partial functions there are unbounded separations between $\mathrm{rdeg}$ and $\widetilde{\deg}$ in both directions [IJKKKSWW23].'
+  refs: [MahadevdeWolf15, Aaronson05postselection, IJKKKSWW23]
+  see_also: [rdeg, ardeg, Q, adeg]
+  confidence: high
+
+- id: QC
+  name: Quantum certificate complexity
+  symbol: '\mathrm{QC}(f)'
+  category: quantum
+  order: 35
+  short: 'Quantum analogue of certificate complexity; the square root of RC.'
+  definition: |
+    $\mathrm{QC}_x(f)$ is the minimum number of quantum queries needed to verify that
+    the input is $x$ "as far as $f$ is concerned"; $\mathrm{QC}(f)=\max_x \mathrm{QC}_x(f)$.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  equivalent:
+    - {measure: RC, form: {exp: 0.5, kind: theta}, statement: '$\mathrm{QC}(f) = \Theta(\sqrt{\mathrm{RC}(f)})$', refs: [Aaronson08]}
+  facts:
+    - '$\mathrm{QC}(f) = \Theta(\sqrt{\mathrm{RC}(f)}) = \Theta(\sqrt{\mathrm{fbs}(f)})$ [Aaronson08].'
+    - '$\mathrm{QC}(f) \le \mathrm{Q}(f)$.'
+  refs: [Aaronson08]
+  see_also: [RC, fbs, C, Q]
+  confidence: high
+
+- id: NQ
+  name: Nondeterministic quantum query complexity
+  symbol: '\mathrm{NQ}(f)'
+  category: quantum
+  order: 40
+  short: 'Quantum algorithm with nonzero acceptance probability exactly on 1-inputs.'
+  definition: |
+    The algorithm must accept with *some* positive probability iff $f(x)=1$.
+    de Wolf showed $\mathrm{NQ}(f) = \lceil \mathrm{ndeg}(f)/2\rceil$ where $\mathrm{ndeg}$
+    is the nondeterministic degree.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: partial}}
+  equivalent:
+    - {measure: ndeg, form: {exp: 1, kind: theta}, statement: '$\mathrm{NQ}(f) = \lceil \mathrm{ndeg}(f)/2 \rceil$', refs: [deWolf03]}
+  refs: [deWolf03]
+  see_also: [ndeg, C1, rdeg]
+  confidence: high
+
+- id: robustQ
+  name: Robust quantum query complexity
+  symbol: '\mathrm{Q}^{\mathrm{rob}}(f)'
+  category: quantum
+  order: 45
+  short: 'Quantum queries when the oracle is noisy (each query answer is corrupted).'
+  definition: |
+    The quantum analogue of the [[Np]] model: the oracle returns a corrupted bit, or
+    more precisely the algorithm has access to a "noisy" version of $x$ and must be
+    robust to it. Buhrman-Newman-Röhrig-de Wolf showed that $n$ noisy quantum queries
+    suffice to recover all $n$ bits with high probability.
+  params: [{name: p, symbol: 'p', default: 'constant'}]
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
+  facts:
+    - '$\mathrm{Q}^{\mathrm{rob}}(\mathrm{PARITY}_n) = \Theta(n)$ -- **no** $\log n$ overhead, in contrast to the classical $\Theta(n\log n)$ [FRPU94 vs BNRdW05].'
+    - '$\mathrm{Q}^{\mathrm{rob}}(f) = O(\mathrm{Q}(f)\log \mathrm{Q}(f))$ in general; whether the log is needed is open.'
+  refs: [BNRdW05, FRPU94]
+  see_also: [Q, Np]
+  confidence: medium
+
+- id: Adv
+  name: Positive-weights adversary bound
+  symbol: '\mathrm{Adv}(f)'
+  aliases: ['Ambainis adversary', 'spectral adversary SA(f)', 'unweighted/weighted adversary']
+  category: adversary
+  order: 50
+  short: 'The original quantum adversary lower bound; all positive-weight variants coincide.'
+  definition: |
+    $$\mathrm{Adv}(f) \;=\; \max_{\Gamma \ge 0,\ \Gamma \ne 0} \frac{\|\Gamma\|}{\max_i \|\Gamma \circ D_i\|},$$
+    the maximum over entrywise-nonnegative adversary matrices $\Gamma$ supported on
+    pairs $(x,y)$ with $f(x)\ne f(y)$, where $D_i$ is the 0/1 matrix indicating
+    $x_i \ne y_i$. Špalek-Szegedy showed the spectral, weighted, Kolmogorov and
+    minimax adversary variants are all equal.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
+  facts:
+    - '$\mathrm{Adv}(f) \le \mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}(f))$.'
+    - '**Certificate complexity barrier:** $\mathrm{Adv}(f) \le \sqrt{\mathrm{C}^0(f)\,\mathrm{C}^1(f)}$ [SpalekSzegedy06, Zhang05], so the positive adversary cannot prove good bounds for e.g. element distinctness.'
+    - 'Sharper: $\mathrm{Adv}(f) \le \sqrt{\mathrm{RC}^0(f)\,\mathrm{RC}^1(f)}$, the *randomized*-certificate version of the barrier [KulkarniTal16].'
+    - '$\lambda(f) \le \mathrm{Adv}(f)$ [ABKRT21 via BSS03].'
+    - 'For **total search problems** $\mathrm{Adv}$ can be exponentially smaller than $\widetilde{\deg}$ [BenDavidKundu24search].'
+  refs: [Ambainis02, SpalekSzegedy06, Zhang05, BarnumSaksSzegedy03, LLS06, KulkarniTal16]
+  see_also: [Advpm, lambda, Q, gamma2]
+  confidence: high
+
+- id: Advpm
+  name: General (negative-weights) adversary bound
+  symbol: '\mathrm{Adv}^{\pm}(f)'
+  aliases: ['negative adversary', 'ADV^pm', 'gamma_2 with error']
+  category: adversary
+  order: 55
+  short: 'The tight SDP characterisation of bounded-error quantum query complexity.'
+  definition: |
+    Same SDP as $\mathrm{Adv}$ but the adversary matrix $\Gamma$ may have negative entries.
+    Reichardt proved $\mathrm{Q}(f)=\Theta(\mathrm{Adv}^{\pm}(f))$, so this is not merely a
+    lower bound but a *characterisation*.
+  settings:
+    total:   {defined: yes}
+    partial: {defined: yes}
+    relation: {defined: yes, note: 'Belovs gave a modified $\mathrm{Adv}^{\pm}_{\mathrm{rel}}$ characterising $\mathrm{Q}$ of efficiently verifiable relations, with a perfect composition theorem [BelovsLee20].'}
+  equivalent:
+    - {measure: Q, setting: partial, form: {exp: 1, kind: theta}, statement: '$\mathrm{Adv}^{\pm}(f) \le \mathrm{Q}(f) = O(\mathrm{Adv}^{\pm}(f))$', refs: [Reichardt11, LMRSS11]}
+    - {measure: gamma2, form: {exp: 1, kind: theta}, statement: 'Equal to the approximate $\gamma_2$ norm of the sign matrix, up to constants', refs: [LMRSS11]}
+  facts:
+    - 'Perfect composition: $\mathrm{Adv}^{\pm}(f\circ g)=\Theta(\mathrm{Adv}^{\pm}(f)\mathrm{Adv}^{\pm}(g))$, which is how one proves $\mathrm{Q}$ composes.'
+    - 'Being an SDP, $\mathrm{Adv}^{\pm}$ is computable in time exponential in $n$ but polynomial in the domain size.'
+  refs: [HLS07, Reichardt11, LMRSS11, BelovsLee20]
+  see_also: [Adv, Q, gamma2, lambda]
+  confidence: high
+
+- id: gamma2
+  name: Approximate gamma_2 norm
+  symbol: '\gamma_2^{\alpha}(f)'
+  category: adversary
+  order: 56
+  short: 'Factorisation-norm formulation of the general adversary bound.'
+  definition: |
+    $\gamma_2(M) = \min\{\ \max_x\|u_x\|\max_y\|v_y\|\ :\ M_{xy}=\langle u_x,v_y\rangle\}$;
+    the $\alpha$-approximate version allows $M_{xy}$ to be approximated. For query
+    complexity one applies it to the matrix $(1 - 2\cdot[\![x_i\ne y_i]\!])$ style
+    objects; it coincides with $\mathrm{Adv}^{\pm}$ up to constants.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: partial}}
+  refs: [LMRSS11]
+  see_also: [Advpm, Q]
+  confidence: medium
+
+- id: MAdv
+  name: Multiplicative adversary
+  symbol: '\mathrm{MAdv}(f)'
+  category: adversary
+  order: 57
+  short: 'A multiplicative-weight version of the adversary method, at least as strong as Adv^pm.'
+  definition: |
+    Replaces the additive progress measure by a multiplicative one; it is at least as
+    strong as $\mathrm{Adv}^{\pm}$ and applies to bounds with small success probability
+    (strong direct product theorems), where $\mathrm{Adv}^{\pm}$ degrades.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: partial}}
+  refs: [SpalekSzegedy06]
+  see_also: [Advpm, Adv]
+  confidence: low
+  todo: 'Add Špalek''s "The multiplicative quantum adversary" (CCC 2008) to refs.yaml and cite it here.'
+
+- id: lambda
+  name: Spectral sensitivity
+  symbol: '\lambda(f)'
+  aliases: ['Koutsoupias'' K(f)', 'largest eigenvalue of the sensitivity graph']
+  category: combinatorial
+  order: 58
+  short: 'Largest eigenvalue of the adjacency matrix of the sensitivity graph of f.'
+  definition: |
+    The *sensitivity graph* $G_f$ has vertex set $\{0,1\}^n$ and an edge $\{x,x^{\oplus i}\}$
+    whenever $f(x)\ne f(x^{\oplus i})$. Then $\lambda(f) = \|A_{G_f}\|$, the spectral norm
+    of its adjacency matrix.
+
+    Introduced (under this name) by Aaronson-Ben-David-Kothari-Rao-Tal; it coincides with
+    Koutsoupias' $K(f)$ and is a lower bound on essentially everything, while Huang's
+    theorem in its strongest form reads $\deg(f)\le\lambda(f)^2$.
+  settings:
+    total:   {defined: yes}
+    partial: {defined: yes, note: 'Definable, but like $\mathrm{s}$ and $\mathrm{bs}$ it is weak for promise problems (the sensitivity graph may be empty).'}
+    relation: {defined: no}
+  facts:
+    - '$\sqrt{\mathrm{s}(f)} \le \lambda(f) \le \mathrm{s}(f)$ and $\lambda(f)\le\sqrt{\mathrm{s}^0(f)\mathrm{s}^1(f)}$.'
+    - '$\deg(f) \le \lambda(f)^2$ (Huang''s theorem, spectral form) and $\lambda(f)\le\deg(f)$.'
+    - '$\lambda(f) = O(\widetilde{\deg}(f))$ [ABKRT21, Thms 17-18].'
+    - '$\lambda(f) \le \mathrm{Adv}(f) = O(\mathrm{Q}(f))$, so $\lambda$ lower-bounds quantum query complexity.'
+    - '**2026:** $\mathrm{bs}(f)$ can exceed $\lambda(f)^2$ -- there is a total $f$ with $\mathrm{bs}(f)\ge\lambda(f)^{2.127}$ [Meiburg26], refuting an ABKRT question. Best upper bound remains $\mathrm{bs} = O(\lambda^4)$.'
+    - 'The single-bit private-coin certificate game value equals $\lambda(f)^2$ [CGLMSG23].'
+  refs: [ABKRT21, Huang19, Koutsoupias93, Meiburg26, CGLMSG23]
+  see_also: [s, s0, s1, deg, adeg, bs, Adv, Q]
+  confidence: high

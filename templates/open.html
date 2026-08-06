@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% from "macros.html" import setting_pill with context %}
+{% block title %}Open problems &middot; {{ site.title }}{% endblock %}
+
+{% block body %}
+<div class="wrap">
+  <h1 class="pagetitle">Open problems</h1>
+  <p class="lede">The gaps that people actually care about, with the best known bounds on each
+  side. If you close one, please edit <code>data/open_problems.yaml</code>.</p>
+
+  <nav class="jump">
+    {% for o in ops %}<a href="#{{ o.id }}">{{ o.id | replace('open-', '') }}</a>{% endfor %}
+  </nav>
+
+  {% for o in ops %}
+  <section class="card openp" id="{{ o.id }}">
+    <h2>{{ o.title | mdi }} {{ setting_pill(o.setting) }}
+      <a class="anchor" href="#{{ o.id }}">#</a></h2>
+    {% if o.status %}<p class="statusline">{{ o.status | mdi }}</p>{% endif %}
+    <div class="prose">{{ o.statement | md }}</div>
+
+    {% if o.best_known %}
+    <h3>Best known</h3>
+    <ul class="bounds">
+      {% for b in o.best_known %}
+      <li class="bnd">
+        <div class="stmt">{{ b.stmt | tex }}</div>
+        <div class="meta">
+          {% if b.witness %}<span class="wit">witness: {{ xref(b.witness) }}</span>{% endif %}
+          {% if b.refs %}<span class="refs">{{ b.refs | cites }}</span>{% endif %}
+        </div>
+        {% if b.note %}<div class="note">{{ b.note | mdi }}</div>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if o.why %}<h3>Why it matters</h3><div class="prose">{{ o.why | md }}</div>{% endif %}
+
+    <footer class="relfoot">
+      {% if o.see_also %}<span class="seealso">see also:
+        {% for s in o.see_also %}{{ xref(s) }}{% if not loop.last %}, {% endif %}{% endfor %}</span>{% endif %}
+      {% if o.refs %}<span class="refs">{{ o.refs | cites }}</span>{% endif %}
+    </footer>
+  </section>
+  {% endfor %}
+</div>
+{% endblock %}

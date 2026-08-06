@@ -1,0 +1,83 @@
+{# ------------------------------------------------------------------ #}
+{# Reusable fragments. Always import "with context" so that the        #}
+{# context-aware filters (md, cites, xref) can see `root`.             #}
+{# ------------------------------------------------------------------ #}
+
+{% macro status_pill(status) %}
+  {% set s = statuses[status] %}
+  <span class="pill st-{{ status }}" title="{{ s.blurb }}">{{ s.label }}</span>
+{% endmacro %}
+
+{% macro setting_pill(sid) %}
+  {% set s = zoo.setting_by_id[sid] %}
+  <span class="pill setting s-{{ sid }}" title="{{ s.blurb }}">{{ s.short }}</span>
+{% endmacro %}
+
+{% macro conf_mark(conf) %}
+  {% if conf == 'low' %}<span class="conf low" title="Low confidence: transcribed from memory or a secondary source; verify before relying on it.">?</span>
+  {% elif conf == 'medium' %}<span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+  {% endif %}
+{% endmacro %}
+
+{% macro measure_chip(mid) %}
+  {% set m = zoo.measure[mid] %}
+  <a class="chip cat-{{ m.category }}" href="{{ root }}measures/{{ mid }}.html" title="{{ m.name }}">
+    <span class="tex">\({{ m.symbol }}\)</span>
+  </a>
+{% endmacro %}
+
+{% macro bound(b, side) %}
+  <li class="bnd {{ side }}{% if b.conf == 'low' %} shaky{% endif %}">
+    <div class="stmt">{{ b.stmt | tex }}{{ conf_mark(b.conf) }}</div>
+    <div class="meta">
+      {% if b.witness %}
+        <span class="wit">witness: {{ xref(b.witness) }}</span>
+      {% endif %}
+      {% if b.refs %}<span class="refs">{{ b.refs | cites }}</span>{% endif %}
+      {% if b.tight %}<span class="tag tight">tight: {{ b.tight }}</span>{% endif %}
+      {% if b.todo %}<span class="tag todo">todo: {{ b.todo }}</span>{% endif %}
+    </div>
+    {% if b.note %}<div class="note">{{ b.note | mdi }}</div>{% endif %}
+  </li>
+{% endmacro %}
+
+{% macro relation_block(r, show_pair=false) %}
+<section class="relation" id="{{ r.id }}">
+  <header>
+    <h3>
+      {% if show_pair %}
+        {{ measure_chip(r.from) }} <span class="vs">vs</span> {{ measure_chip(r.to) }}
+      {% endif %}
+      {% if r.headline %}<span class="headline">{{ r.headline | tex }}</span>{% endif %}
+      {{ setting_pill(r.setting) }}
+      {{ status_pill(r.status) }}
+      {% if r.param %}<span class="pill param">parameter: {{ r.param }}</span>{% endif %}
+      <a class="anchor" href="#{{ r.id }}" title="permalink">#</a>
+    </h3>
+  </header>
+
+  {% if r.upper %}
+  <div class="side">
+    <h4>Upper bounds <span class="dim">&mdash; holds for every {{ zoo.setting_by_id[r.setting].short }}</span></h4>
+    <ul class="bounds">{% for b in r.upper %}{{ bound(b, 'up') }}{% endfor %}</ul>
+  </div>
+  {% endif %}
+
+  {% if r.lower %}
+  <div class="side">
+    <h4>Lower bounds / separations <span class="dim">&mdash; there is a family achieving this</span></h4>
+    <ul class="bounds">{% for b in r.lower %}{{ bound(b, 'lo') }}{% endfor %}</ul>
+  </div>
+  {% endif %}
+
+  {% if r.notes %}<div class="notes">{{ r.notes | md }}</div>{% endif %}
+
+  <footer class="relfoot">
+    {% if r.superseded_by %}<span class="tag">superseded by {{ xref(r.superseded_by) }}</span>{% endif %}
+    {% if r.see_also %}
+      <span class="seealso">see also: {% for s in r.see_also %}{{ xref(s) }}{% if not loop.last %}, {% endif %}{% endfor %}</span>
+    {% endif %}
+    <span class="src dim">{{ r._source }}</span>
+  </footer>
+</section>
+{% endmacro %}

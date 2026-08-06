@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}References &middot; {{ site.title }}{% endblock %}
+
+{% block body %}
+<div class="wrap">
+  <h1 class="pagetitle">References</h1>
+  <p class="lede">{{ items | length }} entries, newest first. A citation key is the anchor,
+  so <code>refs.html#Nisan91</code> works. &ldquo;Used in&rdquo; lists the data files that cite it.</p>
+
+  <div class="reffilter">
+    <input type="search" id="reffilter" placeholder="filter by author, title, key, year&hellip;" autocomplete="off">
+  </div>
+
+  <div class="card">
+    <ol class="bib" id="bib">
+      {% for key, e in items %}
+      <li id="{{ key }}" class="bibentry"
+          data-search="{{ (key ~ ' ' ~ (e.authors or '') ~ ' ' ~ (e.title or '') ~ ' ' ~ (e.venue or '') ~ ' ' ~ (e.year or '')) | lower }}">
+        <div class="bibkey"><a href="#{{ key }}">[{{ key }}]</a></div>
+        <div class="bibbody">
+          <span class="bibauth">{{ e.authors }}</span>{% if e.authors %}.{% endif %}
+          <span class="bibtitle">{{ e.title }}</span>{% if e.title %}.{% endif %}
+          {% if e.venue %}<span class="bibvenue">{{ e.venue }}</span>{% if e.year %}, {% endif %}{% endif %}
+          {% if e.year %}<span class="bibyear">{{ e.year }}</span>.{% endif %}
+          <span class="biblinks">
+            {% if e.arxiv %}<a href="https://arxiv.org/abs/{{ e.arxiv }}">arXiv:{{ e.arxiv }}</a>{% endif %}
+            {% if e.eccc %}<a href="https://eccc.weizmann.ac.il/report/{{ e.eccc }}/">ECCC {{ e.eccc }}</a>{% endif %}
+            {% if e.doi %}<a href="https://doi.org/{{ e.doi }}">doi</a>{% endif %}
+            {% if e.url %}<a href="{{ e.url }}">link</a>{% endif %}
+          </span>
+          {% if e.aliases %}<div class="bibalias">also cited here as
+            {% for a in e.aliases %}<code>{{ a }}</code>{% if not loop.last %}, {% endif %}{% endfor %}</div>{% endif %}
+          {% if e.note %}<div class="bibnote">{{ e.note | mdi }}</div>{% endif %}
+          {% if used[key] %}<div class="bibused">used in
+            {% for u in used[key] | sort %}<code>{{ u | replace('data/', '') }}</code>{% if not loop.last %} {% endif %}{% endfor %}</div>
+          {% else %}<div class="bibused unused">not currently cited by any entry</div>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</div>
+{% endblock %}

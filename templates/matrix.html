@@ -1,0 +1,327 @@
+{% extends "base.html" %}
+{% from "macros.html" import setting_pill with context %}
+{% block title %}Exponent matrix &middot; {{ site.title }}{% endblock %}
+
+{#
+   One cell of either table. `e` is a grid entry, `rm` the row measure.
+   The three <span class="v"> children are the three views; CSS shows one.
+#}
+{#
+   The token for one setting: the two exponents, a tightness chip, or a glyph
+   when no polynomial bound is on the table. `k` is the view class (vt/vp/vr).
+#}
+{% macro tok(e, k, s) %}
+  {% set d = e.tok[s] %}
+  <span class="v {{ k }}{% if d and d.derived %} drv{% endif %}">
+    {% if not d %}<span class="none">&nbsp;</span>
+    {% elif d.glyph %}<span class="glyph g-{{ d.verdict }}" title="{{ d.glyph_name }}">{{ d.glyph }}</span>
+    {% else %}
+      <span class="exp{% if d.derived %} drv{% endif %}"
+        ><span class="a">{{ d.a }}</span><span class="comma">,</span><span class="b">{{ d.b }}</span
+        >{% if d.chip %}<span class="tchip c-{{ d.chip_kind }}">{{ d.chip }}</span>{% endif %}</span>
+    {% endif %}
+  </span>
+{% endmacro %}
+
+{# The per-setting block of a cell tooltip. #}
+{% macro tiptok(e, s, short) %}
+  {% set d = e.tok[s] %}
+  {% if d %}
+  <div class="tipset">
+    <span class="tl">{{ short }}</span>
+    <span class="tv v-{{ d.verdict }}">{{ verdict_word[d.verdict] }}</span>
+    {% if d.fails %}<div class="tstmt">{{ d.fails.tex | tex }}</div>{% endif %}
+    {% if d.other %}<div class="tstmt">{{ d.other.tex | tex }}</div>{% endif %}
+    {% if d.up %}
+      <div class="tstmt">{{ d.up.tex | tex }}{% if d.up.chip %} <span class="tchip c-{{ d.up.kind }}">{{ d.up.chip }}</span>{% endif %}</div>
+      {% if d.up.deriv %}<div class="tipnote">{{ derivline(d.up.deriv) }}</div>{% endif %}
+    {% elif d.b != '?' %}<div class="tstmt">upper bound exponent \({{ d.b }}\) <span class="dim">(matrix table)</span></div>
+    {% endif %}
+    {% if d.lo %}
+      <div class="tstmt lo">sep: {{ d.lo.tex | tex }}</div>
+      {% if d.lo.deriv %}<div class="tipnote">{{ derivline(d.lo.deriv) }}</div>{% endif %}
+    {% elif d.a != '?' %}<div class="tstmt lo">separation exponent \({{ d.a }}\) <span class="dim">(matrix table)</span></div>
+    {% endif %}
+  </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro derivline(v) %}
+  {%- if v.how == 'setting' -%}
+    derived: inherited from the {{ v.from_setting }} setting
+  {%- elif v.how == 'push' -%}
+    derived: the separation above, pushed through {{ v.steps | length - 1 }} recorded bound{{ '' if v.steps | length == 2 else 's' }}
+  {%- else -%}
+    derived via \({{ v.path | join(' \\to ') }}\)
+  {%- endif -%}
+{% endmacro %}
+
+{% macro mcell(e, rm) %}
+  {% if e.diag %}
+    {% if e.rels %}
+    <td class="mcell diag has x-{{ e.col }}" data-col="{{ e.col }}">
+      <a href="{{ root }}pairs/{{ e.slug }}.html" class="cellinner"
+         title="{{ rm.name }} with itself">&#8728;</a>
+      <div class="celltip">
+        <b>\({{ rm.symbol }}\) with itself</b>
+        <div class="tipnote">composition and parameter-dependence records</div>
+        {% for r in e.rels %}
+        <div class="tstmt">{% if r.headline %}{{ r.headline | tex }}{% else %}{{ r.id }}{% endif %}</div>
+        {% endfor %}
+      </div>
+    </td>
+    {% else %}
+    <td class="diag x-{{ e.col }}" data-col="{{ e.col }}"></td>
+    {% endif %}
+  {% elif e.tok or e.cell or e.have_pair %}
+    {% set c = e.cell %}
+    <td class="mcell x-{{ e.col }}{% if c and c.updated %} updated{% endif %}"
+        data-col="{{ e.col }}"
+        data-vt="{{ e.tok.total.verdict if e.tok.total else '' }}"
+        data-vp="{{ e.tok.partial.verdict if e.tok.partial else '' }}"
+        data-vr="{{ e.tok.relation.verdict if e.tok.relation else '' }}"
+        {% for s in ['total', 'partial', 'relation'] %}{% if e.tok[s] and e.tok[s].derived %}data-d{{ s[0] }}="1" {% endif %}{% endfor %}>
+      {% set body %}
+        {{ tok(e, 'vt', 'total') }}{{ tok(e, 'vp', 'partial') }}{{ tok(e, 'vr', 'relation') }}
+        {% if c and c.w %}<span class="wit-mark" title="witness: {{ zoo.function[c.w].name }}">&#9670;</span>{% endif %}
+        {% if c and c.updated %}<span class="upd-mark" title="{{ c.update_note }}">&#9733;</span>{% endif %}
+      {% endset %}
+      {% if e.have_pair %}
+        <a href="{{ root }}pairs/{{ e.slug }}.html" class="cellinner">{{ body }}</a>
+      {% elif e.eq %}
+        <a href="{{ root }}measures/{{ rm.id }}.html" class="cellinner">{{ body }}</a>
+      {% else %}
+        {# nothing recorded for this ordered pair: the closure alone knows it,
+           and there is no pair page to open. #}
+        <span class="cellinner nolink">{{ body }}</span>
+      {% endif %}
+      <div class="celltip">
+        <b>\({{ rm.symbol }}\) vs \({{ zoo.measure[e.col].symbol }}\)</b>
+        {% if c %}
+        <div>table: separation \(\ge {{ c.a }}\), upper bound \(\le {{ c.b }}\)</div>
+        {% if c.w %}<div>witness: {{ zoo.function[c.w].name }}</div>{% endif %}
+        {% if c.refs %}<div>{{ c.refs | join(', ') }}</div>{% endif %}
+        {% if c.note %}<div class="tipnote">{{ c.note | mdi }}</div>{% endif %}
+        {% if c.update_note %}<div class="tipnote">&#9733; {{ c.update_note | mdi }}</div>{% endif %}
+        {% endif %}
+        {% for s in site.settings %}{{ tiptok(e, s.id, s.short) }}{% endfor %}
+        {% if e.eq %}<div class="tipnote">Equivalent measures: {{ e.eq.statement | mdi }}</div>{% endif %}
+        {% if not e.have_pair %}<div class="tipnote">No record for this ordered pair &mdash;
+          everything above is derived.</div>{% endif %}
+      </div>
+    </td>
+  {% elif e.eq %}
+    {# No bound to record: the two measures are the same thing up to constants. #}
+    <td class="mcell equiv x-{{ e.col }}" data-col="{{ e.col }}">
+      <a href="{{ root }}measures/{{ rm.id }}.html" class="cellinner">
+        <span class="glyph g-eq">&#8781;</span>
+      </a>
+      <div class="celltip">
+        <b>\({{ rm.symbol }}\) vs \({{ zoo.measure[e.col].symbol }}\)</b>
+        <div class="tstmt">{{ e.eq.statement | mdi }}</div>
+        {% if e.eq.refs %}<div class="tipnote">{{ e.eq.refs | join(', ') }}</div>{% endif %}
+      </div>
+    </td>
+  {% else %}
+    <td class="mcell empty x-{{ e.col }}" data-col="{{ e.col }}"></td>
+  {% endif %}
+{% endmacro %}
+
+{% block body %}
+<div class="wrap">
+  <h1 class="pagetitle">{{ t.name }}</h1>
+
+  <div class="card">
+    <p>{{ t.convention | md }}</p>
+    <p class="dim">Source: {{ t.source_note | mdi }}</p>
+  </div>
+
+  <div class="matrix-controls" id="matrix-controls">
+    <span class="lbl">Measures</span>
+    <div class="segmented" id="matrix-scope">
+      <button class="on" data-scope="core">Core {{ meta.counts.core }}</button>
+      <button data-scope="recorded">With records {{ meta.counts.recorded }}</button>
+      <button data-scope="all">All {{ meta.counts.all }}</button>
+    </div>
+    <span class="lbl">View</span>
+    <div class="segmented" id="matrix-view">
+      <button class="on" data-view="total">Total</button>
+      <button data-view="partial">Partial</button>
+      <button data-view="relation">Relations</button>
+    </div>
+    <label class="ck"><input type="checkbox" id="hide-tight"> dim settled cells</label>
+    <label class="ck"><input type="checkbox" id="hide-derived"> hide derived cells</label>
+    <span class="grow"></span>
+    <span class="dim small" id="matrix-count"></span>
+  </div>
+
+  <div class="catchips" id="matrix-cats" hidden>
+    <span class="lbl">Categories</span>
+    {% for c in site.categories %}
+    <label class="catchip cat-{{ c.id }}">
+      <input type="checkbox" checked value="{{ c.id }}">
+      <span>{{ c.name }}</span><span class="n">{{ cat_counts[c.id] }}</span>
+    </label>
+    {% endfor %}
+    <button class="linkish" id="cats-all">all</button>
+    <button class="linkish" id="cats-none">none</button>
+  </div>
+
+  {# -------------------------------------------------- the published table #}
+  <div class="matrixwrap" id="wrap-core">
+    <table class="matrix" id="matrix">
+      <thead>
+        <tr>
+          <th class="corner"><span class="m1">\(M_1\)</span><span class="slash">/</span><span class="m2">\(M_2\)</span></th>
+          {% for c in cols %}
+          <th class="colhead cat-{{ c.category }}" data-col="{{ c.id }}">
+            <a href="{{ root }}measures/{{ c.id }}.html" title="{{ c.name }}">\({{ c.symbol }}\)</a>
+          </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in grid %}
+        <tr>
+          <th class="rowhead cat-{{ r.m.category }}">
+            <a href="{{ root }}measures/{{ r.m.id }}.html" title="{{ r.m.name }}">\({{ r.m.symbol }}\)</a>
+          </th>
+          {% for e in r.entries %}{{ mcell(e, r.m) }}{% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {# ------------------------------------------------------ the full grid #}
+  <div class="matrixwrap wide mj-defer" id="wrap-all" hidden>
+    <table class="matrix all" id="matrix-all">
+      <thead>
+        <tr>
+          <th class="corner"><span class="m1">\(M_1\)</span><span class="slash">/</span><span class="m2">\(M_2\)</span></th>
+          {% for c in allm %}
+          <th class="colhead cat-{{ c.category }} x-{{ c.id }}" data-col="{{ c.id }}" data-cat="{{ c.category }}">
+            <a href="{{ root }}measures/{{ c.id }}.html" title="{{ c.name }}">\({{ c.symbol }}\)</a>
+          </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in big %}
+        <tr class="y-{{ r.m.id }}" data-cat="{{ r.m.category }}">
+          <th class="rowhead cat-{{ r.m.category }}">
+            <a href="{{ root }}measures/{{ r.m.id }}.html" title="{{ r.m.name }}">\({{ r.m.symbol }}\)</a>
+          </th>
+          {% for e in r.entries %}{{ mcell(e, r.m) }}{% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="dim small mtnote">Row \(M_1\), column \(M_2\). Hover a cell for the statements behind
+  it &mdash; including, for a derived cell, the chain the build walked to get there; click to
+  open the pair page. The <b>Core</b> grid reproduces the published table in its original row
+  order, and its total-function exponents are the source's; everywhere else the exponents are the
+  best the zoo's own records support, which for most pairs off the published table means a
+  <span class="exp drv"><span class="a">derived</span></span> one.</p>
+
+  <div class="legendrow">
+    <div class="card tight">
+      <h3>Reading a cell</h3>
+      <p>Entry \(a,b\) in row \(M_1\), column \(M_2\):
+        <span class="a">\(a\)</span> is the best <b>separation</b> exponent
+        (some \(g\) has \(M_1(g)\ge M_2(g)^{a-o(1)}\));
+        <span class="b">\(b\)</span> is the best <b>upper bound</b> exponent
+        (all \(f\) in the setting have \(M_1(f)\le M_2(f)^{b+o(1)}\)).
+        A <b>?</b> on either side means the zoo knows of nothing there.</p>
+      <p><span class="swatch v-settled"></span> settled (\(a=b\)) &nbsp;
+         <span class="swatch v-gap"></span> gap &nbsp;
+         <span class="swatch v-upper"></span> upper bound only &nbsp;
+         <span class="swatch v-lower"></span> separation only &nbsp;
+         <span class="swatch v-none"></span> no bound exists &nbsp;
+         &#9670; separation has a named witness &nbsp;
+         &#9733; this zoo updated the source's value</p>
+      <p class="dim">{{ t.shading | mdi }}</p>
+    </div>
+
+    <div class="card tight">
+      <h3>The chip: what the exponent hides</h3>
+      <p>An exponent is only defined up to \(n^{o(1)}\), so \(1,1\) can mean anything from a
+      one-line inequality to a theorem with polylog slack. The superscript chip says which:</p>
+      <ul class="legend glyphkey">
+        <li><span class="tchip c-exact">&le;</span> <b>exact</b> &mdash; \(M_1(f) \le M_2(f)^b\)
+          on the nose, no hidden constant</li>
+        <li><span class="tchip c-theta">&Theta;</span> <b>theta</b> &mdash;
+          \(M_1 = \Theta(M_2^{b})\): tight up to constants, in <em>both</em> directions</li>
+        <li><span class="tchip c-tilde">&Otilde;</span> <b>tilde</b> &mdash;
+          \(M_1 = \widetilde O(M_2^{b})\): tight up to polylog factors</li>
+        <li><span class="tchip c-const">O</span> <b>constant</b> &mdash; \(M_1 = O(M_2^{b})\),
+          the constant being explicit on the pair page where it is known</li>
+        <li><span class="tchip">&nbsp;</span> no chip &mdash; only the exponent is on record,
+          with the \(o(1)\) unquantified</li>
+      </ul>
+      <p class="dim">So \(\mathrm{QC}\) vs \(\mathrm{RC}\) reads
+      <span class="exp"><span class="a">0.5</span><span class="comma">,</span><span class="b">0.5</span><span class="tchip c-theta">&Theta;</span></span>:
+      \(\mathrm{QC} = \Theta(\sqrt{\mathrm{RC}})\), settled and tight to a constant.</p>
+    </div>
+
+    <div class="card tight">
+      <h3>Derived cells</h3>
+      <p>Cells with a <span class="exp drv"><span class="a">1</span><span class="comma">,</span><span class="b">2</span></span>
+      dotted underline are not in the data: the build computed them, and the tooltip says how.
+      Three rules do the work &mdash;</p>
+      <ul class="legend">
+        <li><b>transitive closure</b>: \(M_1 \le M_2^{p}\) and \(M_2 \le M_3^{q}\) give
+          \(M_1 = O(M_3^{pq})\), carrying log factors and tightness along;</li>
+        <li><b>separations pushed forward</b>: a family with \(M_1 \ge M_2^{p}\), plus a universal
+          \(M_3 = O(M_2^{r})\), separates \(M_1\) from \(M_3\) at exponent \(p/r\);</li>
+        <li><b>setting inheritance</b>: an upper bound proved for relations holds for partial and
+          total functions; a separation exhibited by a total function is a separation for partial
+          functions and for relations. See {{ xref('settings') }}.</li>
+      </ul>
+      <p class="dim">Nothing derived is ever written back to the YAML, and a recorded statement
+      always wins over a derived one of the same strength. <b>hide derived cells</b> blanks them,
+      leaving exactly what a human wrote down.</p>
+    </div>
+
+    <div class="card tight">
+      <h3>Cells with no exponent</h3>
+      <ul class="legend glyphkey">
+        <li><span class="glyph g-none">&#8856;</span> proved that <em>no</em> bound of this form
+          exists in this setting &mdash; the usual fate of a polynomial relation on partial functions</li>
+        <li><span class="glyph g-unbounded">&infin;</span> unbounded: \(M_1\) can be arbitrarily
+          large at fixed \(M_2\)</li>
+        <li><span class="glyph g-exp">2&#8319;</span> / <span class="glyph g-log">log</span>
+          only an exponential (resp. logarithmic-type) bound is known</li>
+        <li><span class="glyph">&#8728;</span> on the <b>diagonal</b>: records about a measure and
+          itself &mdash; composition theorems, \(\varepsilon\)-dependence</li>
+        <li>blank &mdash; nothing recorded and nothing derivable for that ordered pair</li>
+      </ul>
+    </div>
+
+    <div class="card tight">
+      <h3>Views and scope</h3>
+      <p><b>Total / Partial / Relations</b> switches which setting each cell reports; every
+      exponent, chip and colour is recomputed for that setting, so most of the grid goes pale
+      when you leave the total world &mdash; that is the honest picture.</p>
+      <p><b>Core</b> is the published table. <b>With records</b> adds every measure appearing in at
+      least one relation record. <b>All</b> shows all {{ meta.counts.all }} measures in the zoo,
+      including ones whose pairs are entirely unpopulated &mdash; useful for seeing what is
+      missing. Narrow either with the category chips.</p>
+      <p class="dim">Blank means the zoo has no entry for that pair in that setting yet &mdash;
+      it does <em>not</em> mean nothing is known; see {{ xref('settings') }}.</p>
+    </div>
+
+    <div class="card tight">
+      <h3>Witness shorthand</h3>
+      <ul class="legend">
+        {% for tex, fid in t.legend.items() %}
+        <li>\({{ tex }}\) &rarr; {{ xref(fid) }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+<script id="matrix-meta" type="application/json">{{ meta_json | safe }}</script>
+{% endblock %}

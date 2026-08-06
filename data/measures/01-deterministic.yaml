@@ -1,0 +1,431 @@
+# =====================================================================
+# MEASURES: deterministic / combinatorial
+#
+# Schema for every entry (see data/SCHEMA.md for the full description):
+#   id         : slug, unique across ALL measure files. Used in relations.
+#   name       : human name
+#   symbol     : LaTeX, no $ delimiters
+#   aliases    : other names/notations you may meet in papers
+#   category   : must match a category id in data/site.yaml
+#   order      : sort key inside the category
+#   short      : one-line gloss (shown in tables and tooltips)
+#   definition : markdown + LaTeX ($...$ inline, $$...$$ display)
+#   params     : list of parameters (eps, p, ...) with defaults
+#   settings   : total / partial / relation -> {defined, note}
+#   facts      : quick bullet list of standard facts
+#   equivalent : list of {measure, statement, refs} -- equal up to constants
+#   refs       : citation keys from data/refs.yaml
+#   see_also   : other measure ids
+#   confidence : high | medium | low  (how sure the *editor* is)
+# =====================================================================
+
+measures:
+
+- id: D
+  name: Deterministic query complexity
+  symbol: '\mathrm{D}(f)'
+  aliases: ['decision tree complexity', 'DT(f)', 'D^{dt}(f)']
+  category: deterministic
+  order: 10
+  short: 'Minimum worst-case number of queries of a deterministic decision tree computing f.'
+  definition: |
+    A *deterministic decision tree* is a rooted binary tree; each internal node is
+    labelled by an index $i \in [n]$, each edge by a bit, and each leaf by an output.
+    On input $x$ the tree follows the path determined by the bits $x_i$ it reads.
+    $\mathrm{D}(f)$ is the minimum depth of a tree that outputs $f(x)$ on every $x$
+    in the domain of $f$.
+
+    Equivalently, $\mathrm{D}(f)$ is the minimum $d$ such that the *adversary* can be
+    forced to reveal $f$ after $d$ bits, i.e. the "decision tree depth" of $f$.
+  params: []
+  settings:
+    total:    {defined: yes, note: 'The standard setting. $\mathrm{D}(f) \le n$ always.'}
+    partial:  {defined: yes, note: 'The tree must be correct on $\mathrm{Dom}(f)$ only; behaviour off-promise is unconstrained.'}
+    relation: {defined: yes, note: 'For $f \subseteq \{0,1\}^n \times \mathcal{O}$ the tree must output *some* $o$ with $(x,o) \in f$. Well defined whenever every $x$ has at least one valid output.'}
+  facts:
+    - '$\mathrm{D}(f) \le n$ for total $f$, with equality for e.g. $\mathrm{PARITY}_n$.'
+    - '$\mathrm{D}$ is the largest of all the standard measures: every other measure in this zoo is $O(\mathrm{D})$ for total functions (except the size-based ones).'
+    - '$\mathrm{D}(f\circ g) = \mathrm{D}(f)\,\mathrm{D}(g)$ exactly, for total $f,g$ (composition is perfect).'
+  refs: [BdW02, Nisan91]
+  see_also: [R, R0, Q, QE, C, deg, D_size]
+  confidence: high
+
+- id: D_size
+  name: Decision tree size
+  symbol: '\mathrm{DTsize}(f)'
+  aliases: ['DT size', 'leaf complexity', '\mathrm{L}(f)']
+  category: deterministic
+  order: 20
+  short: 'Minimum number of leaves of a deterministic decision tree computing f.'
+  definition: |
+    The minimum number of leaves in a deterministic decision tree computing $f$.
+    One usually works with $\log \mathrm{DTsize}(f)$, which sits between
+    $\log n$-ish quantities and $\mathrm{D}(f)$:
+    $$\log_2 \mathrm{DTsize}(f) \le \mathrm{D}(f) \le \mathrm{DTsize}(f)-1 .$$
+    Size, unlike depth, is sensitive to "wide but shallow" structure and is the
+    natural notion for the *quantum speedup for decision-tree size* line of work.
+  params: []
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes}
+    relation: {defined: yes, note: 'Standard: results such as $\mathrm{Q}(f) = O(\sqrt{\mathrm{DTsize}(f)})$ are stated for relations.'}
+  facts:
+    - '$\mathrm{Q}_{2/5}(f) = O(\sqrt{\mathrm{DTsize}(f)})$, even for relations, and even if the tree is randomized.'
+    - 'Size can be exponentially larger than depth ($\mathrm{DTsize} \le 2^{\mathrm{D}}$).'
+  refs: [BdW02]
+  see_also: [D, Q]
+  confidence: medium
+
+- id: PDT
+  name: Parity decision tree complexity
+  symbol: '\mathrm{D}^{\oplus}(f)'
+  aliases: ['D_parity', 'linear decision tree complexity over F_2']
+  category: deterministic
+  order: 30
+  short: 'Decision tree depth when each query may read the parity of an arbitrary subset of bits.'
+  definition: |
+    Each internal node is labelled by a set $S \subseteq [n]$ and branches on
+    $\bigoplus_{i\in S} x_i$. $\mathrm{D}^{\oplus}(f)$ is the minimum depth.
+    Clearly $\mathrm{D}^{\oplus}(f) \le \mathrm{D}(f)$, and $\mathrm{D}^{\oplus}$ can be
+    exponentially smaller (e.g. $\mathrm{D}^\oplus(\mathrm{PARITY}_n)=1$).
+    This is the query model tied to the *log-rank conjecture* through lifting.
+  params: []
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes}
+    relation: {defined: yes, note: 'Defined identically; less studied.'}
+  facts:
+    - '$\mathrm{D}^{\oplus}(f) \ge \log_2 \mathrm{spar}(f) / \text{(something)}$; the exact relation to Fourier sparsity is a major open problem.'
+    - '$\mathrm{D}^{\oplus}(f) = O(\sqrt{\mathrm{spar}(f)}\,\log \mathrm{spar}(f))$ is known for total $f$.'
+  refs: [TsangWongXieZhang13, STV17]
+  see_also: [D, spar, L1, deg2]
+  confidence: medium
+
+- id: s
+  name: Sensitivity
+  symbol: '\mathrm{s}(f)'
+  aliases: ['critical complexity', 'maximum sensitivity']
+  category: combinatorial
+  order: 40
+  short: 'Max over inputs of the number of coordinates whose flip changes the output.'
+  definition: |
+    For $x$ in the domain, $\mathrm{s}_x(f) = |\{ i : f(x) \neq f(x^{\oplus i}) \}|$
+    where $x^{\oplus i}$ flips coordinate $i$. Then
+    $$\mathrm{s}(f) = \max_x \mathrm{s}_x(f), \qquad
+      \mathrm{s}^b(f) = \max_{x \in f^{-1}(b)} \mathrm{s}_x(f).$$
+    Average sensitivity $\mathbb{E}_x[\mathrm{s}_x(f)]$ is the *total influence*
+    $\mathrm{I}(f)$ (see [[Inf]]).
+  params: []
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes, note: 'One must decide whether $x^{\oplus i}$ is required to be in the domain. The standard convention counts only $i$ with $x^{\oplus i} \in \mathrm{Dom}(f)$ and $f(x)\ne f(x^{\oplus i})$; with this convention sensitivity can be $0$ for a hard partial function, so it is nearly useless in the partial setting.'}
+    relation: {defined: no, note: 'No standard definition: the output is not unique, so "changes the output" is not well defined. Sabotage-style variants are used instead.'}
+  facts:
+    - '$\mathrm{s}(f) \le \mathrm{bs}(f) \le \mathrm{C}(f) \le \mathrm{D}(f)$.'
+    - 'Huang''s theorem: $\deg(f) \le \mathrm{s}(f)^2$, hence $\mathrm{D}(f) = O(\mathrm{s}(f)^6)$ and all measures are polynomially related to $\mathrm{s}$ (for total $f$).'
+    - '$\mathrm{s}(f) \ge \tfrac{1}{2}(\log_2 n - \log_2\log_2 n)$ for total $f$ depending on all $n$ variables.'
+    - 'For monotone $f$: $\mathrm{s}(f) = \mathrm{bs}(f) = \mathrm{C}(f)$.'
+  refs: [Nisan91, Huang19, Simon83, BdW02]
+  see_also: [bs, C, lambda, Inf, s0, s1]
+  confidence: high
+
+- id: s0
+  name: 0-sensitivity
+  symbol: '\mathrm{s}^0(f)'
+  category: combinatorial
+  order: 41
+  short: 'Sensitivity maximised only over 0-inputs.'
+  definition: '$\mathrm{s}^0(f) = \max_{x \in f^{-1}(0)} \mathrm{s}_x(f)$.'
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts: ['$\mathrm{s}(f) = \max(\mathrm{s}^0(f), \mathrm{s}^1(f))$.', '$\lambda(f) \le \sqrt{\mathrm{s}^0(f)\,\mathrm{s}^1(f)}$.']
+  refs: [ABKRT21]
+  see_also: [s, s1, lambda]
+  confidence: high
+
+- id: s1
+  name: 1-sensitivity
+  symbol: '\mathrm{s}^1(f)'
+  category: combinatorial
+  order: 42
+  short: 'Sensitivity maximised only over 1-inputs.'
+  definition: '$\mathrm{s}^1(f) = \max_{x \in f^{-1}(1)} \mathrm{s}_x(f)$.'
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts: ['$\lambda(f) \le \sqrt{\mathrm{s}^0(f)\,\mathrm{s}^1(f)}$ [ABKRT21, Lemma 31].']
+  refs: [ABKRT21]
+  see_also: [s, s0, lambda]
+  confidence: high
+
+- id: bs
+  name: Block sensitivity
+  symbol: '\mathrm{bs}(f)'
+  category: combinatorial
+  order: 50
+  short: 'Max number of disjoint blocks of coordinates each of whose flips changes the output.'
+  definition: |
+    $\mathrm{bs}_x(f)$ is the maximum number of pairwise disjoint sets
+    $B_1,\dots,B_k \subseteq [n]$ with $f(x^{\oplus B_j}) \ne f(x)$ for all $j$;
+    $\mathrm{bs}(f) = \max_x \mathrm{bs}_x(f)$, and $\mathrm{bs}^b$ restricts to
+    $f^{-1}(b)$. Restricting to singleton blocks recovers sensitivity.
+    The $\ell$-bounded variant $\mathrm{bs}_\ell$ requires $|B_j| \le \ell$.
+  params: []
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes, note: 'Requires $x^{\oplus B_j} \in \mathrm{Dom}(f)$. Still a valid lower bound on $\mathrm{R}$ and $\mathrm{D}$, but is often trivially small for promise problems.'}
+    relation: {defined: no, note: 'Replaced by sabotage-style measures.'}
+  facts:
+    - '$\mathrm{bs}(f) \le \mathrm{D}(f)$ and $\mathrm{bs}(f) \le 3\,\mathrm{R}(f)$ [Nisan].'
+    - '$\mathrm{bs}(f) \le 2\deg(f)^2$ and $\mathrm{bs}(f) \le 6\widetilde{\deg}(f)^2$ [Nisan-Szegedy].'
+    - '$\mathrm{bs}(f) = O(\mathrm{Q}(f)^2)$.'
+    - '$\mathrm{bs}_\ell(f) = O(\mathrm{s}(f)^\ell)$ [Kenyon-Kutin].'
+    - 'Whether $\mathrm{D}(f) = O(\mathrm{bs}(f)^2)$ is a long-standing open problem.'
+  refs: [Nisan91, NS94, KenyonKutin04, BdW02]
+  see_also: [s, fbs, RC, C, D]
+  confidence: high
+
+- id: fbs
+  name: Fractional block sensitivity
+  symbol: '\mathrm{fbs}(f)'
+  aliases: ['fractional certificate complexity (LP dual)', 'FC(f)']
+  category: combinatorial
+  order: 55
+  short: 'LP relaxation of block sensitivity; equals the LP relaxation of certificate complexity by duality.'
+  definition: |
+    $\mathrm{fbs}_x(f)$ is the optimum of the LP
+    $$\max \sum_{B} w_B \quad \text{s.t.}\quad \sum_{B \ni i} w_B \le 1\ \forall i,\quad w_B \ge 0,$$
+    where $B$ ranges over sensitive blocks of $x$. Its LP dual is the *fractional
+    certificate complexity* $\mathrm{FC}_x(f)$ (a fractional vertex cover of the blocks),
+    so $\mathrm{fbs} = \mathrm{FC}$ exactly.
+  settings:
+    total:   {defined: yes}
+    partial: {defined: yes}
+    relation: {defined: no}
+  equivalent:
+    - {measure: RC, form: {exp: 1, kind: theta}, statement: '$\mathrm{fbs}(f) = \Theta(\mathrm{RC}(f))$', refs: [KulkarniTal16, Aaronson08]}
+    - {measure: CA, form: {exp: 1, kind: theta}, statement: '$\mathrm{fbs}(f) = \Theta(\mathrm{CA}(f))$ for total $f$', refs: [ABIKPS17]}
+  facts:
+    - '$\mathrm{bs}(f) \le \mathrm{fbs}(f) \le \mathrm{C}(f)$.'
+    - '$\mathrm{fbs}(f) \le \mathrm{bs}(f)^{?}$ -- the best known separation is $\mathrm{fbs} = \Omega(\mathrm{bs}^{3/2})$ and the best upper bound is $\mathrm{fbs} = O(\mathrm{bs}^2)$ [GSS16].'
+    - '$\mathrm{fbs}(f) = O(\widetilde{\deg}(f)^2)$ [Kulkarni-Tal].'
+  refs: [KulkarniTal16, GSS16, Aaronson08]
+  see_also: [bs, RC, C, CA]
+  confidence: high
+
+- id: C
+  name: Certificate complexity
+  symbol: '\mathrm{C}(f)'
+  aliases: ['nondeterministic query complexity', 'N(f)']
+  category: combinatorial
+  order: 60
+  short: 'Max over inputs of the smallest partial assignment that fixes the value of f.'
+  definition: |
+    A *$b$-certificate* is a partial assignment $\rho$ such that $f(y) = b$ for
+    every $y$ in the domain consistent with $\rho$. $\mathrm{C}_x(f)$ is the size of
+    the smallest certificate for $f(x)$ consistent with $x$; $\mathrm{C}(f) = \max_x \mathrm{C}_x(f)$
+    and $\mathrm{C}^b(f) = \max_{x\in f^{-1}(b)} \mathrm{C}_x(f)$.
+
+    $\mathrm{C}^1$ and $\mathrm{C}^0$ are exactly the nondeterministic and
+    co-nondeterministic query complexities.
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes, note: 'The certificate only has to fix the value among *domain* inputs, which makes $\mathrm{C}$ much smaller for promise problems.'}
+    relation: {defined: yes, note: 'A certificate must fix *some* valid output; this is the natural "NP-verifiability" notion used e.g. for TFNP-style relations.'}
+  facts:
+    - '$\mathrm{bs}(f) \le \mathrm{C}(f) \le \mathrm{s}(f)\,\mathrm{bs}(f)$ [Nisan].'
+    - '$\mathrm{D}(f) \le \mathrm{C}^0(f)\,\mathrm{C}^1(f)$ [Blum-Impagliazzo; Hartmanis-Hemachandra; Tardos].'
+    - '$\mathrm{D}(f) \le \mathrm{C}^1(f)\,\mathrm{bs}(f)$ and $\mathrm{D}(f)\le \mathrm{C}^1(f)\deg(f)$ [BBCMdW01].'
+    - '$\mathrm{C}(f) \le \mathrm{D}(f)$ and $\mathrm{C}(f) \ge \mathrm{bs}(f) \ge \mathrm{s}(f)$.'
+  refs: [Nisan91, Tardos89, BBCMdW01, BdW02]
+  see_also: [C0, C1, UC, RC, bs, D]
+  confidence: high
+
+- id: C0
+  name: 0-certificate complexity
+  symbol: '\mathrm{C}^0(f)'
+  aliases: ['co-nondeterministic query complexity', 'C_0']
+  category: combinatorial
+  order: 61
+  short: 'Largest minimal certificate over 0-inputs; the co-nondeterministic query complexity.'
+  definition: |
+    $\mathrm{C}^0(f) = \max_{x \in f^{-1}(0)} \mathrm{C}_x(f)$: the number of queries a
+    nondeterministic algorithm needs to *certify* that $f(x) = 0$.
+    Note the notation clash in the literature: some papers write $\mathrm{C}_0$ for this,
+    others use $C^{(0)}$.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: partial, note: 'Only meaningful for relations with a distinguished "no" answer.'}}
+  facts:
+    - '$\mathrm{D}(f) \le \mathrm{C}^0(f)\,\mathrm{C}^1(f)$; this is tight for $\mathrm{AND}\circ\mathrm{OR}$.'
+    - '$\mathrm{C}(f) = \max(\mathrm{C}^0(f),\mathrm{C}^1(f))$.'
+    - '$\mathrm{C}^0(f) = \mathrm{C}^1(\bar f)$.'
+    - '$\mathrm{ndeg}(f) \le \mathrm{C}^1(f)$ and $\mathrm{rdeg}(f) \le \mathrm{C}(f)$.'
+  refs: [Tardos89, BdW02, deWolf03]
+  see_also: [C, C1, ndeg, NQ]
+  confidence: high
+
+- id: C1
+  name: 1-certificate complexity
+  symbol: '\mathrm{C}^1(f)'
+  aliases: ['nondeterministic query complexity', 'C_1']
+  category: combinatorial
+  order: 62
+  short: 'Largest minimal certificate over 1-inputs; the nondeterministic query complexity.'
+  definition: '$\mathrm{C}^1(f) = \max_{x \in f^{-1}(1)} \mathrm{C}_x(f)$.'
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
+  facts: ['$\mathrm{D}(f) \le \mathrm{C}^1(f)\,\mathrm{bs}(f)$ [BBCMdW01, Thm 11].']
+  refs: [BBCMdW01, BdW02]
+  see_also: [C, C0]
+  confidence: high
+
+- id: Cmin
+  name: Minimum certificate complexity
+  symbol: '\mathrm{C}_{\min}(f)'
+  category: combinatorial
+  order: 63
+  short: 'Min (rather than max) over inputs of the smallest certificate.'
+  definition: |
+    $\mathrm{C}_{\min}(f) = \min_x \mathrm{C}_x(f)$. Appears in the study of
+    "every function has a short certificate somewhere" and in the
+    $\mathrm{UC}_{\min}$ variant used by Ben-David-Hatami-Tal.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  refs: [BHT17]
+  see_also: [C, UCmin]
+  confidence: medium
+
+- id: UC
+  name: Unambiguous certificate complexity
+  symbol: '\mathrm{UC}(f)'
+  aliases: ['unambiguous nondeterministic query complexity']
+  category: combinatorial
+  order: 70
+  short: 'Certificate complexity where the certificates form a partition-like unambiguous cover.'
+  definition: |
+    An *unambiguous* certificate family is a set of certificates such that every input
+    is consistent with exactly one of them (per output value). $\mathrm{UC}(f)$ is the
+    smallest $k$ such that such a family exists with all certificates of size $\le k$;
+    $\mathrm{UC}^b$ restricts to $b$-certificates and $\mathrm{UC}_{\min}$ takes the
+    min over inputs.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{C}(f) \le \mathrm{UC}(f) \le \mathrm{D}(f)$.'
+    - '$\mathrm{C}(f) = \Omega(\mathrm{UC}_{\min}(f)^{1.22})$ for an explicit family [BHT17].'
+    - '$\mathrm{D}(f) = O(\mathrm{UC}(f)^2)$; separations up to $\mathrm{D} = \tilde\Omega(\mathrm{UC}^2)$ come from the Göös-Pitassi-Watson function.'
+  refs: [BHT17, GPW18, KRS15]
+  see_also: [C, SP, D, UCmin]
+  confidence: medium
+
+- id: UCmin
+  name: Minimum unambiguous certificate complexity
+  symbol: '\mathrm{UC}_{\min}(f)'
+  category: combinatorial
+  order: 71
+  short: 'Min over inputs of the unambiguous certificate size.'
+  definition: 'The $\min_x$ version of $\mathrm{UC}$; the quantity in the $\mathrm{C}(f)=\Omega(\mathrm{UC}_{\min}(f)^{1.22})$ separation of [BHT17], which in turn drives the best known $\lambda$-vs-$\mathrm{C}$ separation.'
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  refs: [BHT17]
+  see_also: [UC, C, lambda]
+  confidence: medium
+
+- id: SP
+  name: Subcube partition complexity
+  symbol: '\mathrm{SP}(f)'
+  aliases: ['partition number', 'unambiguous DNF/CNF width']
+  category: combinatorial
+  order: 75
+  short: 'Smallest k such that the cube can be partitioned into monochromatic subcubes of codimension <= k.'
+  definition: |
+    The minimum $k$ such that $\{0,1\}^n$ (or $\mathrm{Dom}(f)$) can be partitioned into
+    subcubes of codimension at most $k$, each monochromatic for $f$.
+    $\mathrm{SP}$ is the query-complexity analogue of the *partition number* in
+    communication complexity; the deterministic-vs-partition question lifts to
+    $\mathrm{D}$ vs $\mathrm{SP}$.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{C}(f) \le \mathrm{SP}(f) \le \mathrm{D}(f)$ and $\mathrm{SP} \le \mathrm{UC}$.'
+    - '$\mathrm{D}(f) = O(\mathrm{SP}(f)^2)$; separations $\mathrm{D} = \tilde\Omega(\mathrm{SP}^{1.5})$ [KRS15] and $\tilde\Omega(\mathrm{SP}^2)$ [GPW18].'
+  refs: [KRS15, GPW18]
+  see_also: [UC, C, D]
+  confidence: medium
+
+- id: RC
+  name: Randomized certificate complexity
+  symbol: '\mathrm{RC}(f)'
+  category: combinatorial
+  order: 80
+  short: 'Cost of a randomized verifier that must detect, with constant probability, that the input has been changed to flip f.'
+  definition: |
+    $\mathrm{RC}_x(f)$ is the minimum $T$ such that there is a randomized algorithm making
+    $T$ queries which accepts $x$ with probability $\ge 1-\varepsilon$, and rejects with
+    probability $\ge 1/2$ any $y$ with $f(y)\ne f(x)$.
+    $\mathrm{RC}(f) = \max_x \mathrm{RC}_x(f)$. Aaronson showed
+    $\mathrm{RC} = \Theta(\mathrm{fbs})$.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  equivalent:
+    - {measure: fbs, form: {exp: 1, kind: theta}, statement: '$\mathrm{RC}(f) = \Theta(\mathrm{fbs}(f))$', refs: [Aaronson08, KulkarniTal16]}
+  facts:
+    - '$\mathrm{RC}(f) = \Theta(\mathrm{QC}(f)^2)$ where $\mathrm{QC}$ is quantum certificate complexity.'
+    - '$\mathrm{RC}(f) = O(\widetilde{\deg}(f)^2)$ [Kulkarni-Tal].'
+    - '$\mathrm{RC}(f) \le \mathrm{C}(f)$ and $\mathrm{RC}(f) \ge \mathrm{bs}(f)$.'
+  refs: [Aaronson08, KulkarniTal16, GSS16]
+  see_also: [fbs, QC, C, bs]
+  confidence: high
+
+- id: EC
+  name: Expectational certificate complexity
+  symbol: '\mathrm{EC}(f)'
+  category: combinatorial
+  order: 85
+  short: 'A relaxation of certificate complexity in which the certificate is a distribution and only expected agreement is required.'
+  definition: |
+    $\mathrm{EC}(f)$ is the smallest $k$ for which there are weight vectors
+    $w^x \in [0,1]^n$ with $\sum_i w^x_i \le k$ for every $x$, and
+    $\sum_{i : x_i \ne y_i} w^x_i w^y_i \ge 1$ for all $x,y$ with $f(x)\ne f(y)$.
+    It sits between fractional block sensitivity and certificate complexity and
+    upper-bounds the classical adversary bound.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{fbs}(f) \le \mathrm{EC}(f) \le \mathrm{C}(f)$.'
+    - '$\mathrm{CG}^{\mathrm{pub}}(f) = O(\mathrm{EC}(f))$ and $\mathrm{CG}(f) = O(\mathrm{EC}(f)^2)$ [CGLMSG23].'
+    - '$\mathrm{EC}(f) \le \mathrm{R}_0(f) = O(\mathrm{EC}(f)^2)$ -- the "quadratically tight" relation that motivated the definition [GJKKLSSV17].'
+  refs: [GJKKLSSV17, CGLMSG23]
+  see_also: [fbs, C, CA, CG, R0]
+  confidence: high
+
+- id: D_prod
+  name: Product-distribution distributional complexity
+  symbol: '\mathrm{D}^{\mathrm{prod}}(f)'
+  category: deterministic
+  order: 90
+  short: 'Max over *product* input distributions of the bounded-error distributional query complexity.'
+  definition: |
+    $\mathrm{D}^{\mathrm{prod}}_\varepsilon(f) = \max_{\mu \text{ product}} \mathrm{D}^{\mu}_\varepsilon(f)$,
+    where $\mathrm{D}^\mu_\varepsilon(f)$ is the least depth of a deterministic tree that errs
+    with probability $\le\varepsilon$ under $\mu$. By Yao's minimax
+    $\max_{\mu} \mathrm{D}^\mu_\varepsilon = \mathrm{R}_\varepsilon$ over *all* $\mu$;
+    restricting to product $\mu$ gives a (possibly much) smaller measure.
+  params:
+    - {name: eps, symbol: '\varepsilon', default: '1/3', description: 'error probability under the distribution'}
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
+  facts:
+    - '$\mathrm{D}^{\mathrm{prod}}(f) \le \mathrm{R}(f)$.'
+    - '$\mathrm{RS}(g) = \tilde\Omega(\mathrm{D}^{\mathrm{prod}}(g))$ for total $g$, hence $\mathrm{R}(f\circ g^n) = \tilde\Omega(\mathrm{R}(f)\,\mathrm{D}^{\mathrm{prod}}(g))$ [Sanyal24].'
+  refs: [Sanyal24, Yao77]
+  see_also: [R, Dmu, RS]
+  confidence: medium
+
+- id: Dmu
+  name: Distributional query complexity
+  symbol: '\mathrm{D}^{\mu}_{\varepsilon}(f)'
+  category: deterministic
+  order: 91
+  short: 'Least depth of a deterministic tree that is correct except with probability eps under the input distribution mu.'
+  definition: |
+    Fix a distribution $\mu$ on the domain. $\mathrm{D}^\mu_\varepsilon(f)$ is the smallest
+    depth of a deterministic decision tree $T$ with $\Pr_{x\sim\mu}[T(x)\ne f(x)] \le \varepsilon$.
+    Yao's minimax principle: $\mathrm{R}_\varepsilon(f) = \max_\mu \mathrm{D}^\mu_\varepsilon(f)$
+    (for the worst-case-cost version; see [[minimax]] for the subtleties with the
+    expected-cost version $\bar{\mathrm{R}}_\varepsilon$).
+  params:
+    - {name: eps, symbol: '\varepsilon', default: '1/3'}
+    - {name: mu, symbol: '\mu', default: 'worst case', description: 'input distribution'}
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
+  refs: [Yao77, Vereshchagin98, BenDavidBlais20minimax, BBGM22]
+  see_also: [R, Rbar, D_prod]
+  confidence: high

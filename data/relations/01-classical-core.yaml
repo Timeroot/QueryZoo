@@ -1,0 +1,373 @@
+# =====================================================================
+# RELATIONS, part 1: the classical core (D, R0, R, C, bs, s).
+#
+# SCHEMA -- each entry says everything known about bounding `from` in
+# terms of `to`, in one `setting`:
+#
+#   from:     measure id   (the LHS, i.e. the matrix ROW)
+#   to:       measure id   (the RHS, i.e. the matrix COLUMN)
+#   setting:  total | partial | relation
+#   status:   settled | gap | open | fails      (see data/site.yaml)
+#   upper:    list of {stmt, form, refs, note, conf, tight, todo}
+#             each `stmt` is a LaTeX inequality of the form
+#                 M1(f) <= <function of M2(f)>
+#             holding for ALL f in the setting. Include constants and
+#             log factors -- that is the whole point of this file.
+#   lower:    list of {stmt, form, witness, refs, note, conf}
+#             each `stmt` asserts a FAMILY f_n with
+#                 M1(f_n) >= <function of M2(f_n)>.
+#             `witness` is a function id from data/functions/*.yaml.
+#   notes:    free markdown
+#   see_also: ids of measures / concepts / functions
+#
+# `form` is the machine-readable shadow of `stmt`, and the only field
+# build.py reasons with (tightness classification, transitive closure):
+#
+#   form: {exp: 2, log: 1, kind: const}     # = O(M2^2 log M2)
+#
+#   exp:   the exponent (default 1)
+#   log:   how many log factors (default 0)
+#   kind:  exact     -- the inequality as written has NO hidden constant
+#          const     -- true up to a constant factor (O / explicit constant)
+#          theta     -- tight to constant factors in BOTH directions
+#          tilde     -- true up to unspecified polylog factors (O~ / Omega~)
+#          exp       -- 2^Theta(M2): exponentially related
+#          log       -- log(M2): logarithmically related
+#          none      -- provably no bound of any form (upper bullets)
+#          unbounded -- the family shows the ratio is unbounded (lower bullets)
+#   dir:   reverse -- this bullet actually bounds `to` in terms of `from`.
+#          Records often park the reverse-direction fact next to the
+#          forward one; this flag files it under the reverse pair instead
+#          of silently claiming it as a bound on `from`.
+#
+# Add `form` only when the statement really is a pointwise bound between
+# `from` and `to`. Chains through a third measure, statements with a free
+# parameter, and prose get no `form` and are simply not reasoned with.
+#
+# `conf` in {high, medium, low} records how sure the *transcription* is,
+# not how sure the community is. `todo` marks a hole to be filled.
+#
+# Where an entry has no `upper`, the pair page says "no upper bound of
+# this form is known"; where it has `status: fails`, it says "provably
+# no such bound exists".
+# =====================================================================
+
+relations:
+
+# ------------------------------------------------------- D vs R (total)
+- from: D
+  to: R
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{D}(f) \le 27\,\mathrm{R}(f)^3'
+      form: {exp: 3, kind: const}
+      refs: [Nisan91, BdW02]
+      note: 'Corollary 3 of [BdW02]. Proof: $\mathrm{D}\le\mathrm{bs}^3$ and $\mathrm{bs}\le 3\mathrm{R}$.'
+      conf: high
+    - stmt: '\mathrm{D}(f) \le \mathrm{C}^{(1)}(f)\cdot \mathrm{bs}(f) \le \mathrm{s}(f)\,\mathrm{bs}(f)^2'
+      refs: [BBCMdW01, Nisan91]
+      note: 'The route the cubic bound goes through; sometimes much better than $27\mathrm{R}^3$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{D}(f_n) = \widetilde\Omega\big(\mathrm{R}(f_n)^2\big)'
+      form: {exp: 2, kind: tilde}
+      witness: pointer
+      refs: [ABBLSS17]
+      note: 'Quadratic; whether the truth is $2$ or $3$ is a long-standing open problem.'
+      conf: high
+  notes: |
+    The gap $[2,3]$ has been open since Nisan 1991. Note the constant $27$
+    is not believed to be optimal either; for **monotone** $f$,
+    $\mathrm{D}(f) = O(\mathrm{R}(f)^2)$ [BdW02, Cor. 6].
+  see_also: [R, D, pointer, monotone]
+
+# ------------------------------------------------------ D vs R0 (total)
+- from: D
+  to: R0
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{D}(f) = O(\mathrm{R}_0(f)^2)'
+      form: {exp: 2, kind: const}
+      refs: [BdW02, Nisan91]
+      conf: medium
+      note: 'Via $\mathrm{C}(f)\le \mathrm{R}_0(f)$ and $\mathrm{D}(f)\le \mathrm{C}^{(0)}(f)\,\mathrm{C}^{(1)}(f)$ [Tardos89, BlumImpagliazzo87, HartmanisHemachandra87]: a zero-error algorithm must output a certificate on every input.'
+  lower:
+    - stmt: '\mathrm{D}(f_n) = \widetilde\Omega\big(\mathrm{R}_0(f_n)^2\big)'
+      form: {exp: 2, kind: tilde}
+      witness: pointer
+      refs: [ABBLSS17]
+  notes: |
+    Settled up to $n^{o(1)}$: the pointer function of [ABBLSS17] matches the
+    quadratic upper bound. Historically this was the first cell where the
+    "obvious" bound turned out to be tight.
+  see_also: [R0, C, pointer]
+
+# ----------------------------------------------------- R0 vs R (total)
+- from: R0
+  to: R
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{R}_0(f) = O\big(\mathrm{R}(f)^2\log \mathrm{R}(f)\big)'
+      form: {exp: 2, log: 1, kind: const}
+      refs: [KulkarniTal16]
+      note: 'The fine-grained form of the exponent-$2$ cell in the matrix. Improves $\mathrm{R}_0(f)=O(\mathrm{R}(f)^2\log n)$ [Midrijanis05]: the $\log n$ becomes $\log \mathrm{R}$.'
+      conf: high
+      tight: 'up to the log factor'
+    - stmt: '\mathrm{R}_0(f) \le \mathrm{D}(f) \le 27\,\mathrm{R}(f)^3'
+      form: {exp: 3, kind: const}
+      refs: [Nisan91, BdW02]
+      note: 'The bound you get for free; the cubic version is certainly correct.'
+      conf: high
+    - stmt: '\mathrm{R}_0(f) = O\big(\mathrm{EC}(f)^2\big) \text{ and } \mathrm{EC}(f)\le \mathrm{C}(f)\le \mathrm{EC}(f)^2'
+      refs: [GJKKLSSV17]
+      note: 'Expectational certificate complexity is the "quadratically tight" handle on $\mathrm{R}_0$; also $\mathrm{FC}(f)\le\mathrm{EC}(f)=O(\mathrm{FC}(f)^{3/2})$.'
+      conf: high
+    - stmt: '\mathrm{C}(f)\le \mathrm{R}_0(f) \le \mathrm{C}(f)^2'
+      refs: [GJKKLSSV17]
+      conf: high
+    - stmt: '\mathrm{R}_0(f) = O\big(\mathrm{Q}(f)^2\,\mathrm{Q}_0(f)\log n\big)'
+      refs: [Aaronson08]
+      note: 'A genuinely different route, through quantum measures.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}_0(f_n) = \widetilde\Omega\big(\mathrm{R}(f_n)^2\big)'
+      form: {exp: 2, kind: tilde}
+      witness: pointer
+      refs: [ABBLSS17]
+      conf: high
+  notes: |
+    Amplification is *not* what separates these two: $\mathrm{R}_0$ can be
+    quadratically larger than $\mathrm{R}$ because zero error forces the
+    algorithm to certify its answer on *every* input, and certificates can be
+    large where the bounded-error algorithm only needs to be right on average.
+    For **relations** (search problems) the two collapse -- see the
+    partial/relational file.
+  see_also: [EC, C, psD, R0]
+
+# ------------------------------------------------------ D vs C (total)
+- from: D
+  to: C
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{D}(f) \le \mathrm{C}^{(0)}(f)\cdot \mathrm{C}^{(1)}(f) \le \mathrm{C}(f)^2'
+      form: {exp: 2, kind: exact}
+      refs: [Tardos89, BlumImpagliazzo87, HartmanisHemachandra87, BdW02]
+      note: 'Corollary 2 of [BdW02]; proved three times independently around 1987-89.'
+      conf: high
+    - stmt: '\mathrm{D}(f) \le \mathrm{C}^{(1)}(f)\cdot \mathrm{bs}(f)'
+      refs: [BBCMdW01, BdW02]
+      note: 'Theorem 11 of [BdW02] -- the "repeatedly guess a consistent 1-certificate" algorithm. Often sharper than $\mathrm{C}^2$.'
+      conf: high
+    - stmt: '\mathrm{D}(f) \le \mathrm{C}^{(1)}(f)\cdot \deg(f)'
+      refs: [BdW02]
+      note: 'Theorem 14 of [BdW02]; incomparable to the previous line.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{D}(f_n) = \mathrm{C}(f_n)^2'
+      form: {exp: 2, kind: exact}
+      witness: ANDOR
+      note: '$\wedge_k\circ\vee_k$ on $n=k^2$ bits: $\mathrm{D}=n$, $\mathrm{C}=\sqrt n$.'
+      conf: high
+  see_also: [C, C0, C1, ANDOR]
+
+# ----------------------------------------------------- D vs bs (total)
+- from: D
+  to: bs
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{D}(f) \le \mathrm{s}(f)\,\mathrm{bs}(f)^2 \le \mathrm{bs}(f)^3'
+      form: {exp: 3, kind: exact}
+      refs: [Nisan91, BBCMdW01, BdW02]
+      note: 'Corollary 1 of [BdW02].'
+      conf: high
+    - stmt: '\mathrm{D}(f) \le \mathrm{bs}(f)\cdot \deg(f)'
+      refs: [Midrijanis04]
+      note: 'Midrijanis'' inequality -- the workhorse behind $\mathrm{D}=O(\deg^3)$, $\mathrm{D}=O(\widetilde{\deg}^4)$ and $\mathrm{D}=O(\mathrm{Q}^4)$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{D}(f_n) = \mathrm{bs}(f_n)^2'
+      form: {exp: 2, kind: exact}
+      witness: ANDOR
+      conf: high
+  notes: |
+    **Open problem** (Open problem 2 of [BdW02]): is
+    $\mathrm{D}(f) = O(\mathrm{bs}(f)^2)$? This would be optimal, witnessed by
+    $\wedge\circ\vee$.
+  see_also: [bs, ANDOR, open-D-vs-bs]
+
+# ------------------------------------------------------ D vs s (total)
+- from: D
+  to: s
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{D}(f) \le \mathrm{bs}(f)\cdot\deg(f) \le 2\deg(f)^3 \le 2\,\mathrm{s}(f)^6'
+      form: {exp: 6, kind: const}
+      refs: [Midrijanis04, NS94, Huang19]
+      note: 'The post-Huang chain. Before 2019 no polynomial bound was known at all -- this was *the* sensitivity conjecture.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{D}(f_n) = \widetilde\Omega\big(\mathrm{s}(f_n)^3\big)'
+      form: {exp: 3, kind: tilde}
+      refs: [BHT17]
+      witness: BHTfn
+      note: 'Cubic, from low-sensitivity functions built out of unambiguous certificates.'
+      conf: high
+  notes: |
+    The $[3,6]$ gap is the largest remaining gap in the whole total-function
+    matrix, and it propagates: every row's $\mathrm{s}$ column inherits it.
+  see_also: [s, Huang19, sensitivity-conjecture]
+
+# ----------------------------------------------------- C vs bs (total)
+- from: C
+  to: bs
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{C}(f) \le \mathrm{s}(f)\cdot \mathrm{bs}(f) \le \mathrm{bs}(f)^2'
+      form: {exp: 2, kind: exact}
+      refs: [Nisan91, BdW02]
+      note: 'Theorem 2 of [BdW02]. Uses: a minimal sensitive block has size $\le \mathrm{s}(f)$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{C}(f_n) = \Omega(\mathrm{bs}(f_n)^2)'
+      form: {exp: 2, kind: const}
+      refs: [GSS16]
+      witness: GSSfn
+      conf: high
+  see_also: [C, bs, s]
+
+# ------------------------------------------------------ C vs s (total)
+- from: C
+  to: s
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{C}(f) \le \mathrm{s}(f)\cdot\mathrm{bs}(f) \le 2\,\mathrm{s}(f)\deg(f)^2 \le 2\,\mathrm{s}(f)^5'
+      form: {exp: 5, kind: const}
+      refs: [Nisan91, NS94, Huang19]
+      conf: high
+  lower:
+    - stmt: '\mathrm{C}(f_n) = \widetilde\Omega(\mathrm{s}(f_n)^3)'
+      form: {exp: 3, kind: tilde}
+      refs: [BBGJK21]
+      witness: BBGJKfn
+      note: 'From the resolution of the Alon-Saks-Seymour-flavoured question about unambiguous DNFs.'
+      conf: high
+  see_also: [C, s, UC]
+
+# ----------------------------------------------------- bs vs s (total)
+- from: bs
+  to: s
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{bs}(f) \le 2\deg(f)^2 \le 2\,\mathrm{s}(f)^4'
+      form: {exp: 4, kind: const}
+      refs: [NS94, Huang19]
+      note: 'The first polynomial bound; Huang''s theorem $\deg\le\mathrm{s}^2$ supplied the missing step in 2019.'
+      conf: high
+    - stmt: '\mathrm{bs}_\ell(f) = O(\mathrm{s}(f)^\ell)'
+      refs: [KenyonKutin04]
+      note: '$\ell$-block sensitivity (blocks of size $\le \ell$); for $\ell = 2$ this is $O(\mathrm{s}^2)$, the conjectured truth for full $\mathrm{bs}$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{bs}(f_n) \ge \tfrac12\,\mathrm{s}(f_n)^2'
+      form: {exp: 2, kind: const}
+      witness: Rubinstein
+      refs: [Rubinstein95]
+      note: 'On $n = 4k^2$ variables: $\mathrm{s}=\sqrt n$, $\mathrm{bs}=n/2$.'
+      conf: high
+    - stmt: '\mathrm{bs}(f_n) \ge \tfrac23\,\mathrm{s}(f_n)^2 - \tfrac13\,\mathrm{s}(f_n)'
+      form: {exp: 2, kind: const}
+      refs: [AmbainisSun11]
+      note: 'The best known constant.'
+      conf: high
+  notes: |
+    **The sensitivity-vs-block-sensitivity question**: is
+    $\mathrm{bs}(f) = O(\mathrm{s}(f)^2)$? Everyone believes yes; the truth is
+    somewhere in $[2,4]$. This is what remains of the sensitivity conjecture
+    after Huang.
+  see_also: [s, bs, Rubinstein, open-bs-vs-s]
+
+# ------------------------------------------------- bs vs R, s vs R etc.
+- from: bs
+  to: R
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{bs}(f) \le 3\,\mathrm{R}(f)'
+      form: {exp: 1, kind: const}
+      refs: [Nisan91, BdW02]
+      note: 'Theorem 16 of [BdW02]: the algorithm must spend $\ge 1/3$ expected queries in each sensitive block.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{bs}(f_n) = \Omega(\mathrm{R}(f_n))'
+      form: {exp: 1, kind: const}
+      witness: PARITY
+      conf: high
+  see_also: [bs, R, RC]
+
+- from: RC
+  to: C
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{RC}(f) = \Theta(\mathrm{fbs}(f)) \le \mathrm{C}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [Aaronson08, KulkarniTal16]
+      note: 'Randomized certificate complexity is (up to constants) the LP relaxation of block sensitivity.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{RC}(f_n) = \Omega(\mathrm{C}(f_n))'
+      form: {exp: 1, kind: const}
+      witness: PARITY
+      conf: high
+  see_also: [RC, fbs, C, QC]
+
+- from: C
+  to: RC
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{C}(f) = O(\mathrm{RC}(f)^2)'
+      form: {exp: 2, kind: const}
+      refs: [Aaronson08, GSS16]
+      conf: medium
+  lower:
+    - stmt: '\mathrm{C}(f_n) = \Omega(\mathrm{RC}(f_n)^2)'
+      form: {exp: 2, kind: const}
+      refs: [GSS16]
+      witness: GSSfn
+      conf: high
+  see_also: [C, RC, fbs]
+
+# ------------------------------------------------------ degenerate rows
+- from: s
+  to: D
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{s}(f) \le \mathrm{bs}(f) \le \mathrm{C}(f) \le \mathrm{D}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BdW02]
+      note: 'Proposition 1 + Theorem 9 of [BdW02]. The whole left column of the matrix is this chain.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{s}(f_n) = \mathrm{D}(f_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      conf: high
+  notes: |
+    Absolute lower bound in the same family: if $f$ depends on all $n$
+    variables then $\mathrm{s}(f) \ge \tfrac12\log n - \tfrac12\log\log n +
+    \tfrac12$ [Simon83, BdW02, Thm 1], tight up to the $\log\log$ term for the
+    monotone address function [Wegener85]. Similarly
+    $\deg(f) \ge \log n - O(\log\log n)$ [NS94, BdW02, Thm 5], tight for
+    [[ADDR]].
+  see_also: [s, bs, C, D, PARITY, ADDR]

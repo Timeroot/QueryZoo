@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% from "macros.html" import measure_chip, setting_pill with context %}
+{% block title %}{{ site.title }}{% endblock %}
+
+{% block body %}
+<section class="hero">
+  <div class="wrap">
+    <h1>{{ site.title }}</h1>
+    <p class="sub">{{ site.subtitle }}</p>
+    <p class="lede">{{ site.tagline }}</p>
+    <div class="statbar">
+      <a href="{{ root }}measures/index.html"><b>{{ stats.measures }}</b> measures</a>
+      <a href="{{ root }}relations.html"><b>{{ stats.pairs }}</b> pairs</a>
+      <a href="{{ root }}relations.html"><b>{{ stats.relations }}</b> relation records</a>
+      <a href="{{ root }}functions/index.html"><b>{{ stats.functions }}</b> functions</a>
+      <a href="{{ root }}matrix.html"><b>{{ stats.cells }}</b> matrix cells</a>
+      <a href="{{ root }}concepts/index.html"><b>{{ stats.concepts }}</b> concepts</a>
+      <a href="{{ root }}open.html"><b>{{ stats.open }}</b> open problems</a>
+      <a href="{{ root }}refs.html"><b>{{ stats.refs }}</b> references</a>
+    </div>
+  </div>
+</section>
+
+<div class="wrap cols">
+  <div class="main-col">
+
+    <section class="card">
+      <h2>What this is</h2>
+      <p>Query complexity has a lot of measures and a lot of folklore. This site tries to put
+      the folklore in one place, in a form you can grep, correct, and extend.</p>
+      <p>For each ordered pair of measures \((M_1, M_2)\) we record, <em>separately for each of the
+      three settings</em>:</p>
+      <ul class="tick">
+        <li>the best known <b>upper bound</b> &mdash; a statement
+            \(M_1(f) = O(g(M_2(f)))\) that holds for <em>every</em> \(f\) in the setting,
+            with log factors kept rather than swept into \(\tilde O\) where anyone has bothered to pin them down;</li>
+        <li>the best known <b>lower bound / separation</b> &mdash; a family \(\{f_n\}\) with
+            \(M_1(f_n) = \Omega(g(M_2(f_n)))\), together with a link to the
+            <a href="{{ root }}functions/index.html">function</a> that witnesses it;</li>
+        <li>whether the two <b>meet</b> (<span class="pill st-settled">Settled</span>),
+            leave a <span class="pill st-gap">Gap</span>, are
+            <span class="pill st-open">Wide open</span>, or whether the relation provably
+            <span class="pill st-fails">has no bound</span> in that setting.</li>
+      </ul>
+      <p>Start with the <a href="{{ root }}matrix.html">exponent matrix</a> for the classical
+      13-measure picture, then click into a cell for the fine-grained statements.
+      <a href="{{ root }}concepts/reading-the-tables.html">How to read the tables</a> explains
+      the conventions.</p>
+    </section>
+
+    <section class="card">
+      <h2>The three settings</h2>
+      <p>Almost every interesting subtlety in this subject is a setting distinction, so it is a
+      first-class axis everywhere on this site.</p>
+      <div class="settinggrid">
+        {% for s in site.settings %}
+        <div class="settingbox s-{{ s.id }}">
+          <h3>{{ setting_pill(s.id) }} {{ s.name }}</h3>
+          <p>{{ s.blurb }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      <p class="dim">More: <a href="{{ root }}concepts/settings.html">Total vs partial vs relational</a>.</p>
+    </section>
+
+    <section class="card">
+      <h2>The measures</h2>
+      {% for cat in site.categories %}
+        {% if by_cat[cat.id] %}
+        <div class="catrow">
+          <h3><a href="{{ root }}measures/index.html#{{ cat.id }}">{{ cat.name }}</a>
+              <span class="dim">{{ cat.blurb }}</span></h3>
+          <div class="chips">
+            {% for m in by_cat[cat.id] %}{{ measure_chip(m.id) }}{% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </section>
+
+  </div>
+
+  <aside class="side-col">
+    <section class="card tight">
+      <h2>Start here</h2>
+      <ul class="linklist">
+        <li><a href="{{ root }}matrix.html">The exponent matrix</a><span>the published core, expandable to all {{ stats.measures }} measures</span></li>
+        <li><a href="{{ root }}concepts/reading-the-tables.html">Reading the tables</a><span>notation &amp; conventions</span></li>
+        <li><a href="{{ root }}concepts/settings.html">Total / partial / relation</a><span>what changes and why</span></li>
+        <li><a href="{{ root }}concepts/cheat-sheets.html">Cheat sheet</a><span>the chain of inequalities</span></li>
+        <li><a href="{{ root }}open.html">Open problems</a><span>{{ stats.open }} of them</span></li>
+      </ul>
+    </section>
+
+    <section class="card tight">
+      <h2>Health warning</h2>
+      <p>Entries carry a confidence marker. A
+      <span class="conf low">?</span> means the statement was written from memory or a secondary
+      source and has <em>not</em> been checked against the paper; a
+      <span class="conf med">&#183;</span> means the statement is believed right but the exact
+      constants and log factors were not re-derived. Unmarked entries were checked against the
+      cited source.</p>
+      <p>Nothing here is a substitute for reading the paper.</p>
+    </section>
+
+    <section class="card tight">
+      <h2>Editing</h2>
+      <p>All content is YAML under <code>data/</code>. Add a measure by adding a block to
+      <code>data/measures/*.yaml</code>; add a bound by adding a block to
+      <code>data/relations/*.yaml</code>. Then:</p>
+      <pre><code>python3 build.py --strict</code></pre>
+      <p><a href="{{ root }}editing.html">Full editing guide &rarr;</a></p>
+    </section>
+  </aside>
+</div>
+{% endblock %}

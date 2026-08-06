@@ -1,0 +1,233 @@
+# =====================================================================
+# RELATIONS, part 7: parameter dependence.
+#
+# Everywhere else in the zoo, "R" means R_{1/3} and "deg~" means deg~_{1/3}.
+# This file records what happens when you move the error parameter, and
+# how the worst-case / expected-cost ("Monte Carlo" vs "Las Vegas")
+# conventions interact.
+#
+# These entries carry an extra field:
+#   param : the parameter being varied (eps, gamma, k, p)
+# Schema otherwise as documented in 01-classical-core.yaml.
+# =====================================================================
+
+relations:
+
+# ---------------------------------------------------------- amplification
+- from: R
+  to: R
+  id: param-R-eps
+  param: eps
+  setting: partial
+  status: settled
+  headline: '\mathrm{R}_{\varepsilon}(f) \text{ as } \varepsilon \to 0'
+  upper:
+    - stmt: '\mathrm{R}_\varepsilon(f) = O\!\left(\frac{\log(1/\varepsilon)}{(1-2\delta)^2}\,\mathrm{R}_\delta(f)\right)\quad (0<\varepsilon<\delta<1/2)'
+      note: 'Repeat and take the majority; Chernoff. Holds in all three settings whenever the output is Boolean (for relations one needs to be able to compare outputs).'
+      conf: high
+  lower:
+    - stmt: '\exists f \text{ total}:\ \bar{\mathrm{R}}_\varepsilon(f) = \Omega\big(\mathrm{R}(f)\log(1/\varepsilon)\big)'
+      refs: [BlaisBrody19]
+      note: '**The amplification log factor is necessary.** This is the "bounded-error separation theorem".'
+      conf: high
+  notes: |
+    Consequences that matter elsewhere in the zoo:
+
+    * The $\log$ in the composition upper bound
+      $\mathrm{R}(f\circ g)=O(\mathrm{R}(f)\mathrm{R}(g)\log \mathrm{R}(f))$
+      cannot be removed by better amplification alone (see [[comp-R]]).
+    * $\mathrm{R}(\mathrm{MAJ}_n\circ g^n)=\Theta(n\,\bar{\mathrm{R}}_{1/n}(g))$
+      [GoosMaystre21] -- the composed problem sees $\bar{\mathrm{R}}$ at
+      error $1/n$, not $\mathrm{R}_{1/3}$.
+  see_also: [R, Rbar, comp-R, comp-MAJ, cost-conventions]
+
+- from: R
+  to: R
+  id: param-R-directsum
+  param: k
+  setting: partial
+  status: settled
+  headline: '\text{Strong direct sum: } \bar{\mathrm{R}}_\varepsilon(f^{k}) = \Theta\big(k\,\bar{\mathrm{R}}_{\varepsilon/k}(f)\big)'
+  upper:
+    - stmt: '\bar{\mathrm{R}}_\varepsilon(f^{k}) = O\big(k\,\bar{\mathrm{R}}_{\varepsilon/k}(f)\big)'
+      refs: [BlaisBrody19]
+      conf: high
+  lower:
+    - stmt: '\bar{\mathrm{R}}_\varepsilon(f^{k}) = \Omega\big(k\,\bar{\mathrm{R}}_{\varepsilon/k}(f)\big)'
+      refs: [BlaisBrody19]
+      conf: high
+  notes: |
+    The error parameter on the right is $\varepsilon/k$, **not** $\varepsilon$:
+    a strong direct sum statement is inherently a statement about
+    $\varepsilon$-dependence. Combined with the separation above this gives a
+    total $f$ with $\mathrm{R}(f^{k}) = \Theta(k\log k\cdot \mathrm{R}(f))$ --
+    solving $k$ independent copies is *strictly* more than $k$ times as hard.
+  see_also: [R, Rbar, BlaisBrody19]
+
+- from: R
+  to: Rbar
+  id: param-R-vs-Rbar
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\bar{\mathrm{R}}_\varepsilon(f) \le \mathrm{R}_\varepsilon(f)'
+      form: {exp: 1, kind: exact, dir: reverse}
+      note: 'Expected cost is at most worst-case cost, by definition.'
+      conf: high
+    - stmt: '\mathrm{R}_{\varepsilon+\delta}(f) \le \bar{\mathrm{R}}_\varepsilon(f)/\delta'
+      form: {exp: 1, kind: const}
+      note: 'Markov: truncate the algorithm after $\bar{\mathrm{R}}_\varepsilon(f)/\delta$ queries and output arbitrarily. So for constant error the two are within constants, e.g. $\mathrm{R}_{1/3}(f) = O(\bar{\mathrm{R}}_{1/6}(f))$.'
+      conf: high
+  notes: |
+    **The two conventions genuinely differ once $\varepsilon$ is not constant.**
+    That is why [BlaisBrody19] and [GoosMaystre21] state their theorems in
+    terms of $\bar{\mathrm{R}}_\varepsilon$: at error $1/n$ the Markov
+    conversion costs a factor $n$.
+
+    Note also the convention trap for zero error: **worst-case** cost with zero
+    error is exactly $\mathrm{D}(f)$, so $\mathrm{R}_0$ *must* be defined as
+    expected cost to be interesting. See [[cost-conventions]].
+  see_also: [R, Rbar, R0, D, cost-conventions]
+
+- from: Rbar
+  to: Dmu
+  id: param-minimax
+  param: eps
+  setting: partial
+  status: gap
+  headline: '\text{Yao minimax: } \bar{\mathrm{R}}_\varepsilon(f) \stackrel{?}{=} \Theta\big(\max_\mu \mathrm{D}^{\mu}_{\varepsilon}(f)\big)'
+  upper:
+    - stmt: '\bar{\mathrm{R}}_\varepsilon(f) = \Theta\big(\max_\mu \mathrm{D}^{\mu}_{\varepsilon}(f)\big)\ \text{ for constant } \varepsilon'
+      form: {exp: 1, kind: theta}
+      refs: [Yao77, Vereshchagin98]
+      note: 'LP duality / von Neumann. Works because expected cost is linear in the algorithm''s distribution -- this is why the minimax theorem is naturally about $\bar{\mathrm{R}}$ and not $\mathrm{R}$.'
+      conf: high
+  lower:
+    - stmt: '\text{FAILS for } \varepsilon = 1/2-o(1)'
+      refs: [BBGM22]
+      note: 'The **small-bias minimax** theorem is false: there is no single hard distribution capturing $\bar{\mathrm{R}}_{1/2-\gamma}$ as $\gamma\to 0$.'
+      conf: high
+  notes: |
+    [BenDavidBlais20minimax] give a different repair: a new minimax theorem
+    producing **one hard distribution that works at all bias levels at once**,
+    applicable to randomized query complexity, communication complexity,
+    approximate degree and approximate log-rank.
+  see_also: [Rbar, Dmu, R, BBGM22, BenDavidBlais20minimax, minimax]
+
+# ---------------------------------------------------------- quantum
+- from: Q
+  to: Q
+  id: param-Q-eps
+  param: eps
+  setting: partial
+  status: settled
+  headline: '\mathrm{Q}_{\varepsilon}(f) \text{ as } \varepsilon\to 0'
+  upper:
+    - stmt: '\mathrm{Q}_\varepsilon(f) = O\big(\mathrm{Q}(f)\log(1/\varepsilon)\big)'
+      note: 'Repetition + majority, exactly as classically.'
+      conf: high
+    - stmt: '\mathrm{Q}_\varepsilon(\mathrm{OR}_N) = \Theta\big(\sqrt{N\log(1/\varepsilon)}\big)'
+      refs: [BCWZ99]
+      witness: OR
+      note: '**Quantum amplification is cheaper**: $\sqrt{\log(1/\varepsilon)}$ rather than $\log(1/\varepsilon)$, against the classical $\Theta(N\log(1/\varepsilon))$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{Q}_\varepsilon(\mathrm{OR}_N) = \Omega\big(\sqrt{N\log(1/\varepsilon)}\big)'
+      refs: [BCWZ99]
+      conf: high
+  notes: |
+    So the "hidden constant in $\varepsilon$" is a *different function of
+    $\varepsilon$* in the quantum and classical worlds. Any statement of the
+    form "$\mathrm{R}=O(\mathrm{Q}^c)$" that hides $\varepsilon$-dependence is
+    hiding a genuine phenomenon.
+  see_also: [Q, R, OR, adeg, BCWZ99]
+
+- from: adeg
+  to: adeg
+  id: param-adeg-eps
+  param: eps
+  setting: total
+  status: settled
+  headline: '\widetilde{\deg}_{\varepsilon}(f) \text{ as } \varepsilon \to 0 \text{ and } \varepsilon\to 1/2'
+  upper:
+    - stmt: '\widetilde{\deg}_\varepsilon(f) = \Theta\big(\widetilde{\deg}_{1/3}(f) + \sqrt{n\log(1/\varepsilon)}\big)\quad (f \text{ symmetric})'
+      refs: [deWolf08eps, Sherstov08incl]
+      note: 'An exact characterisation for symmetric $f$. [Sherstov08incl] proved it up to logs; [deWolf08eps] removed them using the quantum-algorithm view.'
+      conf: high
+    - stmt: '\widetilde{\deg}_\varepsilon(f) = O\big(\widetilde{\deg}_{1/3}(f)\log(1/\varepsilon)\big) \text{ in general}'
+      note: 'Amplify with a low-degree amplification polynomial.'
+      conf: high
+  lower:
+    - stmt: '\lim_{\gamma\to 0}\widetilde{\deg}_{1/2-\gamma}(f) = \mathrm{sdeg}(f)'
+      note: 'As the error approaches $1/2$ the approximate degree degenerates to **sign degree** -- the $\mathsf{PP}$ / unbounded-error regime. So the whole $\varepsilon$-family interpolates between $\deg$ ($\varepsilon=0$) and $\mathrm{sdeg}$ ($\varepsilon\to1/2$).'
+      conf: high
+  notes: |
+    The $\varepsilon\to 1/2$ end is where $\mathrm{sdeg}$, $\mathrm{PostQ}$ and
+    $\mathrm{rdeg}_\varepsilon$ live; the $\varepsilon\to 0$ end is where $\deg$
+    and $\mathrm{Q}_E$ live. The zoo's default $\varepsilon = 1/3$ sits in the
+    middle purely by convention.
+  see_also: [adeg, deg, sdeg, ardeg, PostQ, Q]
+
+# ---------------------------------------------------------- zero error
+- from: R0
+  to: D
+  id: param-zero-error
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{R}_0(f) \le \mathrm{D}(f)'
+      form: {exp: 1, kind: exact}
+      conf: high
+    - stmt: '\text{Worst-case zero-error cost} = \mathrm{D}(f) \text{ exactly}'
+      note: 'A zero-error algorithm that always stops within $T$ queries yields a deterministic tree of depth $T$ by fixing the coins. Hence $\mathrm{R}_0$ is *only* interesting as an expected-cost measure. Same for $\mathrm{Q}_0$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}_0(\mathrm{NANDtree}_n) = \Theta(n^{0.7537\ldots})'
+      witness: NANDtree
+      refs: [SaksWigderson86]
+      note: 'The exponent is $\log_2\!\big((1+\sqrt{33})/4\big)$. Also $\mathrm{R}(\mathrm{NANDtree}_n)=\Theta(n^{0.7537\ldots})$ [Santha95], so here $\mathrm{R}_0=\Theta(\mathrm{R})$.'
+      conf: high
+  see_also: [R0, D, R, Q0, NANDtree, cost-conventions]
+
+- from: Q0
+  to: QE
+  id: param-Q-zero-error
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{Q}(f) \le \mathrm{Q}_0(f) \le \mathrm{Q}_E(f) \le \mathrm{D}(f)'
+      form: {exp: 1, kind: exact}
+      conf: high
+  lower:
+    - stmt: '\mathrm{Q}_0(\mathrm{OR}_N) = N'
+      form: {exp: 1, kind: const}
+      witness: OR
+      refs: [BCWZ99]
+      note: 'Zero-error quantum search gives **no** speedup at all -- one of the sharpest "bounded error is essential" facts in quantum query complexity.'
+      conf: high
+    - stmt: '\exists \text{ monotone total } f:\ \mathrm{R}_0(f)/\mathrm{Q}_0(f) \text{ nearly quadratic}'
+      refs: [BCWZ99]
+      note: 'Near-optimal zero-error quantum-classical separations for monotone functions and monotone graph properties (bearing on the evasiveness conjecture).'
+      conf: medium
+  see_also: [Q0, QE, Q, R0, OR, BCWZ99]
+
+# ---------------------------------------------------------- noise parameter
+- from: Np
+  to: Np
+  id: param-Np-p
+  param: p
+  setting: total
+  status: settled
+  headline: '\mathrm{N}_{p}(f) \text{ as a function of the flip probability } p'
+  upper:
+    - stmt: '\mathrm{N}_p(f) = O\!\left(\frac{\mathrm{R}(f)\log \mathrm{R}(f)}{(1-2p)^2}\right)'
+      refs: [FRPU94]
+      note: 'The $p$-dependence is the usual $1/(1-2p)^2$ Chernoff factor; the interesting content is the $\log \mathrm{R}$.'
+      conf: high
+  notes: |
+    For any *constant* $p<1/2$ the measure $\mathrm{N}_p$ is the same up to
+    constants, which is why the subscript is usually dropped. As $p\to 1/2$ it
+    degenerates in the same way $\mathrm{R}_{1/2-\gamma}$ does.
+    See [[noisy-models]] for the contrast with $\mathrm{noisyR}$, where the
+    *algorithm* chooses a bias per query and pays $\gamma^2$ for it.
+  see_also: [Np, noisyR, R, robustQ, noisy-models]

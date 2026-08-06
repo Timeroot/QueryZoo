@@ -1,0 +1,1088 @@
+# =====================================================================
+# Bibliography for the Query Complexity Zoo.
+#
+# Every entry is keyed by a short citation key (the thing you write in
+# `refs: [...]` lists elsewhere in the data files).
+#
+# Fields (all optional except `title`):
+#   authors : list of "Lastname, F." strings (or free text)
+#   title   : string
+#   venue   : conference / journal string
+#   year    : integer
+#   arxiv   : arXiv identifier, e.g. "2010.12629" or "quant-ph/9802049"
+#   eccc    : ECCC report id, e.g. "TR16-098"
+#   doi     : DOI
+#   url     : any other canonical URL (used if arxiv/doi absent)
+#   note    : free text shown under the entry
+#   aliases : other keys that resolve to this entry (e.g. the "[ABB+17]"
+#             style labels used in the source papers)
+#
+# Keys follow the usual "first letters of surnames + 2-digit year"
+# convention used in the literature, so they should look familiar.
+# =====================================================================
+
+# ---------------------------------------------------------------- surveys
+BdW02:
+  authors: [Buhrman, H., de Wolf, R.]
+  title: "Complexity measures and decision tree complexity: a survey"
+  venue: "Theoretical Computer Science 288(1):21-43"
+  year: 2002
+  doi: "10.1016/S0304-3975(01)00144-X"
+  url: "https://homepages.cwi.nl/~rdewolf/publ/qc/dectree.pdf"
+  note: "The classical starting point. Source of most of the exact constants recorded in this zoo for the deterministic/randomized/quantum-vs-degree relations."
+
+HKP11:
+  authors: [Hatami, P., Kulkarni, R., Pankratov, D.]
+  title: "Variations on the Sensitivity Conjecture"
+  venue: "Theory of Computing Library, Graduate Surveys 4"
+  year: 2011
+  doi: "10.4086/toc.gs.2011.004"
+  note: "Survey of s vs bs vs C vs deg, pre-Huang."
+
+BT22:
+  authors: [Bun, M., Thaler, J.]
+  title: "Approximate Degree in Classical and Quantum Computing"
+  venue: "Foundations and Trends in Theoretical Computer Science 15(3-4)"
+  year: 2022
+  doi: "10.1561/0400000107"
+  note: "Book-length survey of approximate degree; the reference for everything deg-tilde."
+
+ODonnell14:
+  authors: [O'Donnell, R.]
+  title: "Analysis of Boolean Functions"
+  venue: "Cambridge University Press"
+  year: 2014
+  url: "https://arxiv.org/abs/2105.10386"
+  note: "Standard reference for influence, noise sensitivity, Fourier weight, spectral norm."
+
+Ambainis18survey:
+  authors: [Ambainis, A.]
+  title: "Understanding Quantum Algorithms via Query Complexity"
+  venue: "Proc. ICM 2018"
+  year: 2018
+  arxiv: "1712.06349"
+
+Hamoudi25:
+  authors: [Hamoudi, Y.]
+  title: "A Brief Introduction to Quantum Query Complexity"
+  year: 2025
+  arxiv: "2508.08852"
+
+IJKKKSWW23:
+  aliases: ["IJK+23", "Iyer23"]
+  authors: [Iyer, V., Jain, S., Kothari, R., Kovacs-Deak, M., Kumar, V. M., Schaeffer, L., Wang, D., Whitmeyer, M.]
+  title: "On the Rational Degree of Boolean Functions and Applications"
+  year: 2023
+  arxiv: "2310.08004"
+  note: "Table 1 of this paper is the seed of the big matrix in this zoo. Introduces the rdeg column."
+
+# ------------------------------------------------- classical foundations
+Nisan91:
+  authors: [Nisan, N.]
+  title: "CREW PRAMs and Decision Trees"
+  venue: "SIAM Journal on Computing 20(6):999-1007"
+  year: 1991
+  doi: "10.1137/0220062"
+  note: "Introduces block sensitivity; proves C <= s*bs, bs <= 3R, D <= 27 R^3, and C = s = bs for monotone f."
+
+NS94:
+  authors: [Nisan, N., Szegedy, M.]
+  title: "On the degree of Boolean functions as real polynomials"
+  venue: "Computational Complexity 4:301-313"
+  year: 1994
+  doi: "10.1007/BF01263419"
+  note: "bs <= 2 deg^2 and bs <= 6 deg-tilde^2; D = O(deg^8); the sqrt(n) approximating polynomial for OR."
+
+NisanSmolensky:
+  aliases: ["NisanSmolensky94", "NS94smolensky"]
+  authors: [Nisan, N., Smolensky, R.]
+  title: "Unpublished; proof reproduced in [BdW02]"
+  year: 1994
+  note: "D(f) <= deg(f)^2 bs(f) <= 2 deg(f)^4."
+
+Midrijanis04:
+  authors: ["Midrijanis, G."]
+  title: "Exact quantum query complexity for total Boolean functions"
+  year: 2004
+  arxiv: "quant-ph/0403168"
+  note: "D(f) = O(deg(f)^3), improving Nisan-Smolensky's deg^4."
+
+BBCMdW01:
+  authors: [Beals, R., Buhrman, H., Cleve, R., Mosca, M., de Wolf, R.]
+  title: "Quantum Lower Bounds by Polynomials"
+  venue: "Journal of the ACM 48(4):778-797"
+  year: 2001
+  arxiv: "quant-ph/9802049"
+  note: "The polynomial method. deg <= 2 QE, deg-tilde <= 2 Q, D <= C1*bs, D = O(deg-tilde^6)."
+
+Simon83:
+  authors: [Simon, H.-U.]
+  title: "A tight Omega(log log n) bound on the time for parallel RAM's to compute nondegenerate Boolean functions"
+  venue: "FCT"
+  year: 1983
+  note: "s(f) >= (log n - log log n)/2 for f depending on all n variables."
+
+Rubinstein95:
+  aliases: ["Rub95"]
+  authors: [Rubinstein, D.]
+  title: "Sensitivity vs. block sensitivity of Boolean functions"
+  venue: "Combinatorica 15:297-299"
+  year: 1995
+  doi: "10.1007/BF01200762"
+  note: "First quadratic separation bs(f) = s(f)^2/2."
+
+KenyonKutin04:
+  authors: [Kenyon, C., Kutin, S.]
+  title: "Sensitivity, block sensitivity, and l-block sensitivity of Boolean functions"
+  venue: "Information and Computation 189(1):43-53"
+  year: 2004
+  doi: "10.1016/j.ic.2002.12.001"
+  note: "bs_l(f) = O(s(f)^l); in particular bs_2 = O(s^2)."
+
+AmbainisSun11:
+  authors: [Ambainis, A., Sun, X.]
+  title: "New separation between s(f) and bs(f)"
+  year: 2011
+  eccc: "TR11-116"
+  arxiv: "1108.3494"
+  note: "bs(f) >= (2/3) s(f)^2 - (1/3) s(f); the best known constant in the bs-vs-s separation."
+
+Chakraborty11:
+  authors: [Chakraborty, S.]
+  title: "On the sensitivity of cyclically-invariant Boolean functions"
+  venue: "Discrete Mathematics and Theoretical Computer Science 13(4)"
+  year: 2011
+  note: "Cyclically invariant function with s = Theta(bs^{1/3})... see also the 'minterm' constructions."
+
+Tardos89:
+  authors: [Tardos, G.]
+  title: "Query complexity, or why is it difficult to separate NP^A cap coNP^A from P^A by random oracles A?"
+  venue: "Combinatorica 9:385-392"
+  year: 1989
+  doi: "10.1007/BF02125350"
+  note: "D(f) <= C0(f) * C1(f). Independently by Blum-Impagliazzo and Hartmanis-Hemachandra."
+
+BlumImpagliazzo87:
+  authors: [Blum, M., Impagliazzo, R.]
+  title: "Generic oracles and oracle classes"
+  venue: "FOCS 1987"
+  year: 1987
+  note: "Independent proof of D <= C0*C1."
+
+HartmanisHemachandra87:
+  aliases: ["HH91", "HartmanisHemachandra91"]
+  authors: [Hartmanis, J., Hemachandra, L.]
+  title: "One-way functions, robustness, and non-isomorphism of NP-complete sets"
+  venue: "Structure in Complexity Theory"
+  year: 1987
+  note: "Independent proof of D <= C0*C1."
+
+SaksWigderson86:
+  authors: [Saks, M., Wigderson, A.]
+  title: "Probabilistic Boolean decision trees and the complexity of evaluating game trees"
+  venue: "FOCS 1986"
+  year: 1986
+  doi: "10.1109/SFCS.1986.44"
+  note: "R0(NAND-tree) = Theta(n^{0.7537...}); the alpha = log_2((1+sqrt(33))/4) exponent."
+
+Santha95:
+  authors: [Santha, M.]
+  title: "On the Monte Carlo Boolean decision tree complexity of read-once formulae"
+  venue: "Random Structures & Algorithms 6(1):75-87"
+  year: 1995
+  note: "Bounded-error version of Saks-Wigderson: R(NAND-tree) = Theta(n^{0.7537...})."
+
+Snir85:
+  authors: [Snir, M.]
+  title: "Lower bounds on probabilistic linear decision trees"
+  venue: "Theoretical Computer Science 38:69-82"
+  year: 1985
+  note: "The randomized algorithm for the AND-OR / NAND tree."
+
+Turan84:
+  authors: ["Turan, G."]
+  title: "The critical complexity of graph properties"
+  venue: "Information Processing Letters 18:151-153"
+  year: 1984
+  note: "s(f) >= ceil((n+1)/2) for non-constant symmetric f."
+
+NisanWigderson95:
+  aliases: ["NW95"]
+  authors: [Nisan, N., Wigderson, A.]
+  title: "On rank vs. communication complexity"
+  venue: "Combinatorica 15:557-565"
+  year: 1995
+  doi: "10.1007/BF01192527"
+  note: "Iterating Kushilevitz's 6-variable function: deg(f) = bs(f)^{1.63...}, i.e. exponent log_6 ... . Best known deg-vs-bs and deg-vs-s separation."
+
+vzGathenRoche97:
+  authors: [von zur Gathen, J., Roche, J. R.]
+  title: "Polynomials with two values"
+  venue: "Combinatorica 17(3):345-362"
+  year: 1997
+  note: "deg(f) = n - O(n^{0.548}) for all non-constant symmetric f."
+
+Paturi92:
+  authors: [Paturi, R.]
+  title: "On the degree of polynomials that approximate symmetric Boolean functions"
+  venue: "STOC 1992"
+  year: 1992
+  doi: "10.1145/129712.129758"
+  note: "Tight characterisation of deg-tilde for symmetric functions."
+
+Huang19:
+  authors: [Huang, H.]
+  title: "Induced subgraphs of hypercubes and a proof of the Sensitivity Conjecture"
+  venue: "Annals of Mathematics 190(3):949-955"
+  year: 2019
+  arxiv: "1907.00847"
+  note: "deg(f) <= s(f)^2. The proof in fact gives deg(f) <= lambda(f)^2."
+
+# --------------------------------------------------- separations (total)
+ABBLSS17:
+  aliases: ["ABB+17"]
+  authors: [Ambainis, A., Balodis, K., Belovs, A., Lee, T., Santha, M., Smotrovs, J.]
+  title: "Separations in Query Complexity Based on Pointer Functions"
+  venue: "Journal of the ACM 64(5), STOC 2016"
+  year: 2017
+  arxiv: "1506.04719"
+  note: "Cubic-free pointer functions: D vs R0 quadratic, D vs R quadratic, R0 vs R quadratic, D vs QE, D vs Q quartic, D vs deg-tilde quartic."
+
+ABK16:
+  authors: [Aaronson, S., Ben-David, S., Kothari, R.]
+  title: "Separations in Query Complexity Using Cheat Sheets"
+  venue: "STOC 2016"
+  year: 2016
+  arxiv: "1511.01937"
+  note: "Cheat-sheet technique. Q vs deg-tilde quartic, R vs Q, D vs Q quartic, and the general 'lifting a partial-function separation to a total function' machinery."
+
+GPW18:
+  authors: ["Goos, M.", Pitassi, T., Watson, T.]
+  title: "Deterministic Communication vs. Partition Number"
+  venue: "SIAM Journal on Computing 47(6), FOCS 2015"
+  year: 2018
+  eccc: "TR15-050"
+  note: "Total function with D = Omega-tilde(UC^2) / D vs subcube partition; used for the D vs deg entry."
+
+GJPW18:
+  authors: ["Goos, M.", Jayram, T. S., Pitassi, T., Watson, T.]
+  title: "Randomized Communication vs. Partition Number"
+  venue: "ACM Transactions on Computation Theory 10(1), ICALP 2017"
+  year: 2018
+  eccc: "TR17-052"
+
+BHT17:
+  authors: [Ben-David, S., Hatami, P., Tal, A.]
+  title: "Low-Sensitivity Functions from Unambiguous Certificates"
+  venue: "ITCS 2017"
+  year: 2017
+  arxiv: "1605.07084"
+  note: "Total function with D(f) = Omega-tilde(s(f)^3); also C(f) = Omega(UC_min(f)^{1.22})."
+
+GSS16:
+  authors: [Gilmer, J., Saks, M., Srinivasan, S.]
+  title: "Composition limits and separating examples for some Boolean function complexity measures"
+  venue: "Combinatorica 36(3):265-311, CCC 2013"
+  year: 2016
+  arxiv: "1306.0630"
+  note: "C vs RC quadratic; RC vs bs to the power 3/2."
+
+APV18:
+  authors: [Ambainis, A., "Prusis, K.", Vihrovs, J.]
+  title: "On Block Sensitivity and Fractional Block Sensitivity"
+  venue: "Lobachevskii Journal of Mathematics 39(7):967-969"
+  year: 2018
+  arxiv: "1710.05108"
+  note: "Simpler construction for the fbs vs bs 3/2 separation, with a better constant."
+
+KulkarniTal16:
+  authors: [Kulkarni, R., Tal, A.]
+  title: "On Fractional Block Sensitivity"
+  venue: "Chicago Journal of Theoretical Computer Science 2016(8)"
+  year: 2016
+  eccc: "TR13-168"
+  note: "fbs = Theta(RC); RC(f) = O(deg-tilde(f)^2); R0(f) = O(R(f) s(f) log RC(f)) -- one of the few genuinely log-factor relations known."
+
+Ambainis13:
+  aliases: ["Amb13"]
+  authors: [Ambainis, A.]
+  title: "Superlinear Advantage for Exact Quantum Algorithms"
+  venue: "STOC 2013"
+  year: 2013
+  arxiv: "1211.0721"
+  note: "First total function with QE(f) = O(D(f)^{1-eps}); gives the 1.15 exponents in the QE column."
+
+AmbainisGruslysEtAl16:
+  authors: [Ambainis, A., Iraids, J., Smotrovs, J.]
+  title: "Exact quantum query complexity of EXACT and THRESHOLD"
+  venue: "TQC 2013"
+  year: 2013
+  arxiv: "1302.1235"
+
+KRS15:
+  authors: [Kothari, R., Racicot-Desloges, D., Santha, M.]
+  title: "Separating Decision Tree Complexity from Subcube Partition Complexity"
+  venue: "RANDOM 2015"
+  year: 2015
+  arxiv: "1504.01339"
+
+Tal13:
+  authors: [Tal, A.]
+  title: "Properties and Applications of Boolean Function Composition"
+  venue: "ITCS 2013"
+  year: 2013
+  eccc: "TR12-163"
+  note: "Composition behaviour of s, bs, C, deg, deg-tilde, and the 'sensitivity composes' results."
+
+BunThaler17:
+  aliases: ["BT20", "BT17"]
+  authors: [Bun, M., Thaler, J.]
+  title: "A Nearly Optimal Lower Bound on the Approximate Degree of AC^0"
+  venue: "FOCS 2017; SIAM Journal on Computing 49(4) (2020)"
+  year: 2017
+  arxiv: "1703.05784"
+  note: "Cited as [BT20] (the SICOMP version) in the Iyer et al. table for the whole deg-tilde row: deg-tilde(f) can be quadratically larger than C, RC, bs, s and lambda."
+
+BKT18:
+  authors: [Bun, M., Kothari, R., Thaler, J.]
+  title: "The polynomial method strikes back: tight quantum query bounds via dual polynomials"
+  venue: "STOC 2018"
+  year: 2018
+  arxiv: "1710.09079"
+
+Sherstov21:
+  authors: [Sherstov, A. A.]
+  title: "Algorithmic polynomials"
+  venue: "SIAM Journal on Computing 49(6)"
+  year: 2020
+  note: "Near-optimal approximate degree upper bounds for surjectivity, element distinctness, etc."
+
+Meiburg26:
+  authors: [Meiburg, A.]
+  title: "Block Sensitivity can exceed Spectral Sensitivity Squared"
+  year: 2026
+  arxiv: "2608.00851"
+  note: "Refutes the ABKRT question 'is bs = O(lambda^2)?'. Total function on 2017584 variables with bs >= 14011, lambda <= 89.0162, so bs >= lambda^{2.127}. Formally verified in Lean."
+
+# ----------------------------------------------- spectral sensitivity, adversary
+ABKRT21:
+  aliases: ["ABK+21"]
+  authors: [Aaronson, S., Ben-David, S., Kothari, R., Rao, S., Tal, A.]
+  title: "Degree vs. Approximate Degree and Quantum Implications of Huang's Sensitivity Theorem"
+  venue: "STOC 2021"
+  year: 2021
+  arxiv: "2010.12629"
+  note: "Introduces spectral sensitivity lambda. deg <= lambda^2, lambda <= deg, lambda = O(deg-tilde), lambda <= sqrt(s0 s1), s <= lambda^2, deg = O(deg-tilde^2), D = O(Q^4), D = O(deg-tilde^4)."
+
+Koutsoupias93:
+  authors: [Koutsoupias, E.]
+  title: "Improvements on Khrapchenko's theorem"
+  venue: "Theoretical Computer Science 116(2):399-403"
+  year: 1993
+  note: "The measure K(f) later shown to equal spectral sensitivity lambda(f)."
+
+BarnumSaksSzegedy03:
+  authors: [Barnum, H., Saks, M., Szegedy, M.]
+  title: "Quantum query complexity and semi-definite programming"
+  venue: "CCC 2003"
+  year: 2003
+  note: "The spectral adversary SA(f); lambda <= SA = O(Q)."
+
+Ambainis02:
+  authors: [Ambainis, A.]
+  title: "Quantum lower bounds by quantum arguments"
+  venue: "Journal of Computer and System Sciences 64(4):750-767"
+  year: 2002
+  arxiv: "quant-ph/0002066"
+  note: "The (positive-weight) adversary method."
+
+HLS07:
+  authors: ["Hoyer, P.", "Lee, T.", "Spalek, R."]
+  title: "Negative weights make adversaries stronger"
+  venue: "STOC 2007"
+  year: 2007
+  arxiv: "quant-ph/0611054"
+  note: "The general (negative-weight) adversary bound Adv^pm."
+
+SpalekSzegedy06:
+  authors: ["Spalek, R.", "Szegedy, M."]
+  title: "All quantum adversary methods are equivalent"
+  venue: "Theory of Computing 2:1-18"
+  year: 2006
+  arxiv: "quant-ph/0409116"
+  note: "Shows the many published positive-weight adversary formulations coincide, and establishes the certificate-complexity barrier Adv(f) <= sqrt(C0(f) C1(f))."
+
+Zhang05:
+  authors: [Zhang, S.]
+  title: "On the power of Ambainis lower bounds"
+  venue: "Theoretical Computer Science 339(2-3):241-256"
+  year: 2005
+  arxiv: "quant-ph/0311060"
+  note: "Independently proves the certificate-complexity barrier for the positive-weight adversary method."
+
+Reichardt11:
+  authors: [Reichardt, B. W.]
+  title: "Reflections for quantum query algorithms"
+  venue: "SODA 2011"
+  year: 2011
+  arxiv: "1005.1601"
+  note: "Q(f) = Theta(Adv^pm(f)) for all (partial) Boolean functions: the adversary bound is tight."
+
+LMRSS11:
+  authors: [Lee, T., Mittal, R., Reichardt, B. W., "Spalek, R.", Szegedy, M.]
+  title: "Quantum query complexity of state conversion"
+  venue: "FOCS 2011"
+  year: 2011
+  arxiv: "1011.3020"
+  note: "Extends Adv^pm = Theta(Q) to non-Boolean output and state conversion."
+
+LLS06:
+  authors: [Laplante, S., Lee, T., Szegedy, M.]
+  title: "The quantum adversary method and classical formula size lower bounds"
+  venue: "Computational Complexity 15(2):163-196"
+  year: 2006
+  note: "Comparisons among adversary variants; K(f) <= SA(f)."
+
+LaplanteMagniez08:
+  authors: [Laplante, S., Magniez, F.]
+  title: "Lower bounds for randomized and quantum query complexity using Kolmogorov arguments"
+  venue: "SIAM Journal on Computing 38(1):46-62"
+  year: 2008
+  arxiv: "quant-ph/0311189"
+  note: "A Kolmogorov-complexity form of the classical adversary."
+
+Aaronson06:
+  authors: [Aaronson, S.]
+  title: "Lower bounds for local search by quantum arguments"
+  venue: "SIAM Journal on Computing 35(4):804-824"
+  year: 2006
+  arxiv: "quant-ph/0307149"
+  note: "The classical adversary method (relational adversary)."
+
+ABIKPS17:
+  authors: [Ambainis, A., Balodis, K., Iraids, J., Kokainis, M., "Prusis, K.", Smotrovs, J.]
+  title: "All Classical Adversary Methods are Equivalent for Total Functions"
+  venue: "STACS 2018"
+  year: 2018
+  arxiv: "1709.08985"
+  note: "For total functions, the classical adversary CA(f) = Theta(fbs(f)); they can be far apart for partial functions."
+
+Aaronson08:
+  authors: [Aaronson, S.]
+  title: "Quantum certificate complexity"
+  venue: "Journal of Computer and System Sciences 74(3):313-322, CCC 2003"
+  year: 2008
+  arxiv: "quant-ph/0210020"
+  note: "Introduces randomized certificate complexity RC and quantum certificate complexity QC; QC = Theta(sqrt(RC))."
+
+CGLMSG23:
+  authors: [Chakraborty, S., "Gal, A.", Laplante, S., Mittal, R., Sunny, A.]
+  title: "Certificate Games (and Consequences for the Classical Adversary Bound)"
+  venue: "ITCS 2023; extended version with M. Goos, 2025"
+  year: 2023
+  arxiv: "2211.03396"
+  note: "CG, CG^pub, CG^*, CG^ns. CG^pub = Theta(classical adversary). Single-bit private-coin version = lambda^2; single-bit public-coin version = Theta(s)."
+
+deWolf03:
+  authors: [de Wolf, R.]
+  title: "Nondeterministic quantum query and communication complexities"
+  venue: "SIAM Journal on Computing 32(3):681-699"
+  year: 2003
+  arxiv: "cs/0001014"
+  note: "Nondeterministic degree ndeg and nondeterministic quantum query complexity NQ = ceil(ndeg/2)."
+
+# ---------------------------------------------------- composition / minimax
+BenDavidKothari18:
+  authors: [Ben-David, S., Kothari, R.]
+  title: "Randomized query complexity of sabotaged and composed functions"
+  venue: "Theory of Computing 14(5), ICALP 2016"
+  year: 2018
+  arxiv: "1605.09071"
+  note: "Sabotage complexity RS. R(f o g) = Omega(R(f) RS(g)); RS composes perfectly; RS = O(R) and R = O(RS log RS) for total f."
+
+AGJKLMSS17:
+  authors: [Anshu, A., Gavinsky, D., Jain, R., Kundu, S., Lee, T., Mukhopadhyay, P., Santha, M., Sanyal, S.]
+  title: "A Composition Theorem for Randomized Query Complexity"
+  venue: "FSTTCS 2017"
+  year: 2017
+  arxiv: "1706.00335"
+
+Sanyal18:
+  authors: [Sanyal, S.]
+  title: "A composition theorem via conflict complexity"
+  year: 2018
+  arxiv: "1801.03285"
+  note: "Introduces conflict complexity chi(g); R(f o g^n) = Omega(R(f) chi(g))."
+
+GLSS19:
+  authors: [Gavinsky, D., Lee, T., Santha, M., Sanyal, S.]
+  title: "A Composition Theorem for Randomized Query Complexity via Max-Conflict Complexity"
+  venue: "ICALP 2019"
+  year: 2019
+  arxiv: "1811.10752"
+  note: "Max-conflict complexity chi-bar. R(f o g^n) = Omega(R(f) chi-bar(g)); chi-bar = Omega(sqrt(R)) even for partial g; chi-bar = Omega(RS); unbounded separation from RS."
+
+Li18:
+  authors: [Li, Y.]
+  title: "Conflict complexity is lower bounded by block sensitivity"
+  year: 2018
+  arxiv: "1810.08873"
+
+BenDavidBlais20minimax:
+  authors: [Ben-David, S., Blais, E.]
+  title: "A New Minimax Theorem for Randomized Algorithms"
+  venue: "FOCS 2020; Journal of the ACM 70(6) (2023)"
+  year: 2020
+  arxiv: "2002.10802"
+  note: "A single hard distribution that works at every bias level simultaneously; introduces noisy randomized query complexity noisyR and the forecasting-algorithm view."
+
+BenDavidBlais20composition:
+  authors: [Ben-David, S., Blais, E.]
+  title: "A Tight Composition Theorem for the Randomized Query Complexity of Partial Functions"
+  venue: "FOCS 2020"
+  year: 2020
+  arxiv: "2002.10809"
+  note: "R(f o g) = Omega(noisyR(f) R(g)); noisyR is the largest outer measure with this property; also disproves the randomized composition conjecture for partial functions."
+
+BBGM22:
+  authors: [Ben-David, S., Blais, E., "Goos, M.", Maystre, G.]
+  title: "Randomised Composition and Small-Bias Minimax"
+  venue: "FOCS 2022"
+  year: 2022
+  arxiv: "2208.12896"
+  note: "Linearised complexity LR: R(f o g) = Omega(R(f) LR(g)), and LR is the largest such inner measure. Also defines R* = lim_k R(f^{o k})^{1/k} in the open problems, and shows Yao's small-bias minimax fails at eps = 1/2 - o(1)."
+
+GoosMaystre21:
+  authors: ["Goos, M.", Maystre, G.]
+  title: "A Majority Lemma for Randomised Query Complexity"
+  venue: "CCC 2021"
+  year: 2021
+  eccc: "TR21-024"
+
+Sanyal24:
+  authors: [Sanyal, S.]
+  title: "Randomized Query Composition and Product Distributions"
+  venue: "STACS 2024; ACM Transactions on Computation Theory (2025)"
+  year: 2024
+  eccc: "TR24-016"
+  note: "RS(g) = Omega-tilde(D^prod(g)) for total g, hence R(f o g^n) = Omega-tilde(R(f) D^prod(g))."
+
+BlaisBrody19:
+  authors: [Blais, E., Brody, J.]
+  title: "Optimal Separation and Strong Direct Sum for Randomized Query Complexity"
+  venue: "CCC 2019"
+  year: 2019
+  eccc: "TR19-071"
+
+Vereshchagin98:
+  authors: [Vereshchagin, N. K.]
+  title: "Randomized Boolean decision trees: several remarks"
+  venue: "Theoretical Computer Science 207(2):329-342"
+  year: 1998
+  note: "Distributional characterisation of bounded-error expected query complexity; the bounded-error case of Yao's question."
+
+Yao77:
+  authors: [Yao, A. C.-C.]
+  title: "Probabilistic computations: Toward a unified measure of complexity"
+  venue: "FOCS 1977"
+  year: 1977
+  note: "Yao's minimax principle; raises the question of a distributional characterisation of R-bar_eps."
+
+Impagliazzo95:
+  authors: [Impagliazzo, R.]
+  title: "Hard-core distributions for somewhat hard problems"
+  venue: "FOCS 1995"
+  year: 1995
+
+BelovsLee20:
+  authors: [Belovs, A., Lee, T.]
+  title: "The quantum query complexity of composition with a relation"
+  year: 2020
+  arxiv: "2004.06439"
+  note: "Adversary bound for relations; perfect composition of a relation with a Boolean function."
+
+BenDavidKundu24:
+  authors: [Ben-David, S., Kundu, S.]
+  title: "Separations in query complexity for total search problems"
+  year: 2024
+  arxiv: "2410.16245"
+  note: "Alias of [BenDavidKundu24search]; kept because earlier data files cite this key."
+
+# ------------------------------------------------ partial functions / quantum speedups
+AaronsonAmbainis18:
+  authors: [Aaronson, S., Ambainis, A.]
+  title: "Forrelation: A Problem That Optimally Separates Quantum from Classical Computing"
+  venue: "SIAM Journal on Computing 47(3), STOC 2015"
+  year: 2018
+  arxiv: "1411.5729"
+  note: "1-query quantum vs Omega-tilde(sqrt(n)) randomized; conjectured k-Forrelation separation."
+
+AaronsonAmbainis14:
+  authors: [Aaronson, S., Ambainis, A.]
+  title: "The Need for Structure in Quantum Speedups"
+  venue: "Theory of Computing 10:133-166, ITCS 2011"
+  year: 2014
+  arxiv: "0911.0996"
+  note: "R(f) = O(Q(f)^{2 d}) style results for low-degree bounded functions; the Aaronson-Ambainis conjecture on influential variables."
+
+Tal20:
+  authors: [Tal, A.]
+  title: "Towards Optimal Separations between Quantum and Randomized Query Complexities"
+  venue: "FOCS 2020"
+  year: 2020
+  arxiv: "1912.12561"
+  note: "Q = O(1) vs R = Omega(n^{2/3-eps}) via Fourier growth of decision trees."
+
+BansalSinha21:
+  aliases: ["BS21"]
+  authors: [Bansal, N., Sinha, M.]
+  title: "k-Forrelation Optimally Separates Quantum and Classical Query Complexity"
+  venue: "STOC 2021"
+  year: 2021
+  arxiv: "2008.07003"
+  note: "Q(f) = k vs R(f) = Omega-tilde(n^{1-1/k})."
+
+SSW21:
+  aliases: ["SSW23"]
+  authors: [Sherstov, A. A., Storozhenko, A. A., Wu, P.]
+  title: "An Optimal Separation of Randomized and Quantum Query Complexity"
+  venue: "STOC 2021; SIAM Journal on Computing"
+  year: 2021
+  arxiv: "2008.10223"
+  note: "Q(f) <= k vs R(f) = Omega-tilde(n^{1 - 1/2k}); optimal by Aaronson-Ambainis / BGGS."
+
+BGGS21:
+  authors: [Bravyi, S., Gosset, D., Grier, D., Schaeffer, L.]
+  title: "Classical algorithms for Forrelation"
+  year: 2021
+  arxiv: "2102.06963"
+  note: "Matching classical upper bound showing the SSW separation is optimal."
+
+Simon97:
+  authors: [Simon, D. R.]
+  title: "On the power of quantum computation"
+  venue: "SIAM Journal on Computing 26(5):1474-1483"
+  year: 1997
+  note: "Exponential quantum speedup for a promise (partial) problem."
+
+BernsteinVazirani97:
+  authors: [Bernstein, E., Vazirani, U.]
+  title: "Quantum complexity theory"
+  venue: "SIAM Journal on Computing 26(5):1411-1473"
+  year: 1997
+
+DeutschJozsa92:
+  authors: [Deutsch, D., Jozsa, R.]
+  title: "Rapid solution of problems by quantum computation"
+  venue: "Proc. Royal Society A 439:553-558"
+  year: 1992
+
+Grover96:
+  authors: [Grover, L. K.]
+  title: "A fast quantum mechanical algorithm for database search"
+  venue: "STOC 1996"
+  year: 1996
+  arxiv: "quant-ph/9605043"
+
+BBBV97:
+  authors: [Bennett, C. H., Bernstein, E., Brassard, G., Vazirani, U.]
+  title: "Strengths and weaknesses of quantum computing"
+  venue: "SIAM Journal on Computing 26(5):1510-1523"
+  year: 1997
+  arxiv: "quant-ph/9701001"
+  note: "Q(OR) = Omega(sqrt(n))."
+
+Ambainis07:
+  authors: [Ambainis, A.]
+  title: "Quantum walk algorithm for element distinctness"
+  venue: "SIAM Journal on Computing 37(1):210-239"
+  year: 2007
+  arxiv: "quant-ph/0311001"
+
+YamakawaZhandry22:
+  authors: [Yamakawa, T., Zhandry, M.]
+  title: "Verifiable Quantum Advantage without Structure"
+  venue: "FOCS 2022"
+  year: 2022
+  arxiv: "2204.02063"
+  note: "Total NP search problem (a relation) with exponential quantum query advantage, even against the uniform distribution."
+
+Aaronson10:
+  authors: [Aaronson, S.]
+  title: "BQP and the polynomial hierarchy"
+  venue: "STOC 2010"
+  year: 2010
+  arxiv: "0910.4698"
+  note: "Fourier checking; introduces the forrelation-style separations."
+
+Aaronson05postselection:
+  authors: [Aaronson, S.]
+  title: "Quantum computing, postselection, and probabilistic polynomial-time"
+  venue: "Proc. Royal Society A 461:3473-3482"
+  year: 2005
+  arxiv: "quant-ph/0412187"
+
+MahadevdeWolf15:
+  authors: [Mahadev, U., de Wolf, R.]
+  title: "Rational approximations and quantum algorithms with postselection"
+  venue: "Quantum Information and Computation 15(3-4)"
+  year: 2015
+  arxiv: "1401.0912"
+  note: "PostQ_eps(f) = Theta(rdeg_eps(f))."
+
+# ------------------------------------------------------------ noisy models
+FRPU94:
+  authors: [Feige, U., Raghavan, P., Peleg, D., Upfal, E.]
+  title: "Computing with Noisy Information"
+  venue: "SIAM Journal on Computing 23(5):1001-1018"
+  year: 1994
+  doi: "10.1137/S0097539791195877"
+  note: "Introduces the noisy decision tree model N_p. Parity needs Theta(n log n) noisy queries; tight bounds for thresholds and symmetric functions."
+
+EvansPippenger98:
+  authors: [Evans, W., Pippenger, N.]
+  title: "Average-case lower bounds for noisy Boolean decision trees"
+  venue: "SIAM Journal on Computing 28(2):433-446"
+  year: 1998
+  note: "Fourier-spectral lower bounds for the noisy model; recovers and strengthens the n log n parity bound to the average case."
+
+ReischukSchmeltz91:
+  authors: [Reischuk, R., Schmeltz, B.]
+  title: "Reliable computation with noisy circuits and decision trees -- a general n log n lower bound"
+  venue: "FOCS 1991"
+  year: 1991
+
+Gu25noisy:
+  authors: ["(see arXiv listing)"]
+  title: "Tight Bounds for Noisy Computation of High-Influence Functions, Connectivity, and Threshold"
+  year: 2025
+  arxiv: "2502.04632"
+  note: "General total-influence-based Omega(n log n) lower bound in the noisy query model. CONFIRM author list."
+
+BNRdW05:
+  authors: [Buhrman, H., Newman, I., "Rohrig, H.", de Wolf, R.]
+  title: "Robust Polynomials and Quantum Algorithms"
+  venue: "STACS 2005; Theory of Computing Systems 40(4)"
+  year: 2005
+  arxiv: "quant-ph/0309220"
+  note: "Robust quantum query complexity: n noisy quantum queries suffice to recover all n bits, so quantum has no log n overhead for parity."
+
+# ------------------------------------------------------- Fourier-analytic
+BackursBavarian14:
+  authors: [Backurs, A., Bavarian, M.]
+  title: "On the sum of L1 influences"
+  venue: "CCC 2014"
+  year: 2014
+  arxiv: "1302.4625"
+  note: "Total L1 influence of a bounded degree-d function is at most poly(d), independent of n: O(d^3) in general, O(d^2) homogeneous."
+
+FHKL16:
+  authors: [Filmus, Y., Hatami, H., Keller, N., Lifshitz, N.]
+  title: "On the sum of the L1 influences of bounded functions"
+  venue: "Israel Journal of Mathematics 214(1):167-192"
+  year: 2016
+  arxiv: "1409.5793"
+  note: "Improves the bound to O(d^2) in general and O(d log d) for homogeneous functions."
+
+KKL88:
+  authors: [Kahn, J., Kalai, G., Linial, N.]
+  title: "The influence of variables on Boolean functions"
+  venue: "FOCS 1988"
+  year: 1988
+
+BOL85:
+  authors: [Ben-Or, M., Linial, N.]
+  title: "Collective coin flipping, robust voting schemes and minima of Banzhaf values"
+  venue: "FOCS 1985"
+  year: 1985
+
+OSSS05:
+  authors: [O'Donnell, R., Saks, M., Schramm, O., Servedio, R.]
+  title: "Every decision tree has an influential variable"
+  venue: "FOCS 2005"
+  year: 2005
+  arxiv: "cs/0508071"
+  note: "The OSSS inequality: Var(f) <= sum_i delta_i(T) Inf_i(f); implies I(f) >= Var(f)^2 ... and D(f) >= Var(f)/max_i Inf_i."
+
+STV17:
+  authors: [Sanyal, S.]
+  title: "Fourier sparsity and dimension"
+  venue: "Theory of Computing 15(11)"
+  year: 2019
+  note: "D(f) = O(sqrt(spar(f)) log spar(f)) for the parity decision tree / Fourier sparsity line of work."
+
+GopalanEtAl16:
+  authors: [Gopalan, P., O'Donnell, R., Servedio, R., Shpilka, A., Wimmer, K.]
+  title: "Testing Fourier dimensionality and sparsity"
+  venue: "SIAM Journal on Computing 40(4)"
+  year: 2011
+
+TsangWongXieZhang13:
+  authors: [Tsang, H. Y., Wong, C. H., Xie, N., Zhang, S.]
+  title: "Fourier sparsity, spectral norm, and the log-rank conjecture"
+  venue: "FOCS 2013"
+  year: 2013
+  arxiv: "1304.1245"
+  note: "deg(f) = O(log spar(f)) style bounds; the log-rank conjecture connection."
+
+# ---------------------------------------------- added after the first pass
+MinskyPapert69:
+  authors: [Minsky, M., Papert, S.]
+  title: "Perceptrons"
+  venue: "MIT Press, Cambridge MA"
+  year: 1969
+  note: "Origin of sign/threshold degree. sdeg(AND_n o OR_n) = Omega(n^{1/3}); the first threshold-degree lower bound."
+
+BBGJK21:
+  aliases: ["BBG+22"]
+  authors: [Balodis, K., Ben-David, S., "Goos, M.", Jain, S., Kothari, R.]
+  title: "Unambiguous DNFs and Alon-Saks-Seymour"
+  venue: "FOCS 2021"
+  year: 2021
+  arxiv: "2102.08348"
+  doi: "10.1109/FOCS52979.2021.00020"
+  note: "Cited as [BBG+22] in the Iyer et al. table. Source of the current best C-vs-s (cubic), C-vs-lambda (quartic), C-vs-deg (quadratic) and C-vs-deg-tilde (cubic) separations."
+
+AmbainisBelovs23:
+  authors: [Ambainis, A., Belovs, A.]
+  title: "An exponential separation between quantum query complexity and the polynomial degree"
+  venue: "CCC 2023"
+  year: 2023
+  arxiv: "2301.09218"
+  doi: "10.4230/LIPIcs.CCC.2023.24"
+  note: "Partial function with Q(f) exponentially larger than deg-tilde(f). Killed the hope that deg-tilde characterises Q even for promise problems."
+
+deWolf00:
+  authors: [de Wolf, R.]
+  title: "Characterization of non-deterministic quantum query and quantum communication complexity"
+  venue: "CCC 2000"
+  year: 2000
+  arxiv: "cs/0001014"
+  note: "Journal version is [deWolf03]. Defines ndeg and shows NQ(f) = ceil(ndeg(f)/2)."
+
+Fortnow03:
+  authors: [Fortnow, L.]
+  title: "Rational functions and decision-tree complexity (blog post)"
+  year: 2003
+  url: "https://blog.computationalcomplexity.org/2003/11/rational-functions-and-decision-tree.html"
+  note: "Where the motivation for the rdeg question (C=P cap coC=P vs PP relative to an oracle) is spelled out."
+
+NayakWu99:
+  authors: [Nayak, A., Wu, F.]
+  title: "The quantum query complexity of approximating the median and related statistics"
+  venue: "STOC 1999"
+  year: 1999
+  arxiv: "quant-ph/9804066"
+  note: "Tight quantum bounds for approximate counting / median; the standard tool for Q of symmetric functions."
+
+HoyerMoscadeWolf03:
+  authors: ["Hoyer, P.", Mosca, M., de Wolf, R.]
+  title: "Quantum search on bounded-error inputs"
+  venue: "ICALP 2003"
+  year: 2003
+  arxiv: "quant-ph/0304052"
+  note: "Q(AND_n o OR_n) = O(n) on n^2 bits, i.e. Theta(sqrt(N)) with no log factor. Robust quantum search."
+
+FGG08:
+  authors: [Farhi, E., Goldstone, J., Gutmann, S.]
+  title: "A quantum algorithm for the Hamiltonian NAND tree"
+  venue: "Theory of Computing 4:169-190"
+  year: 2008
+  arxiv: "quant-ph/0702144"
+  note: "Continuous-time O(sqrt(n)) algorithm for the balanced NAND tree."
+
+ACRSZ10:
+  authors: [Ambainis, A., Childs, A. M., Reichardt, B. W., "Spalek, R.", Zhu, S.]
+  title: "Any AND-OR formula of size N can be evaluated in time N^{1/2+o(1)} on a quantum computer"
+  venue: "SIAM Journal on Computing 39(6):2513-2530"
+  year: 2010
+  arxiv: "quant-ph/0703015"
+  note: "Discrete-query version of the NAND-tree algorithm; general AND-OR formulas."
+
+Beigel94:
+  authors: [Beigel, R.]
+  title: "Perceptrons, PP, and the polynomial hierarchy"
+  venue: "Computational Complexity 4:339-349"
+  year: 1994
+  note: "ODD-MAX-BIT: sign degree 1 but any low-weight PTF needs large degree; separates sdeg from deg-tilde and from D."
+
+BenDavidKundu24search:
+  authors: [Ben-David, S., Kundu, S.]
+  title: "Separations in query complexity for total search problems"
+  year: 2024
+  arxiv: "2410.16245"
+  note: "Query-complexity analogue of TFNP. Exponential Q vs deg-tilde and deg-tilde vs Adv separations for total search problems; translations relation <-> partial function; reproves [AmbainisBelovs23]."
+
+CDM23:
+  authors: [Chattopadhyay, A., Dahiya, Y., Mahajan, M.]
+  title: "Query Complexity of Search Problems"
+  venue: "MFCS 2023; computational complexity (2025)"
+  year: 2023
+  eccc: "TR23-039"
+  doi: "10.4230/LIPIcs.MFCS.2023.34"
+  note: "Multi-output/relational versions of s, bs, C. Cubic relation D(S) = O(psD(S)^3) for total search problems, improving the quartic bound of [GGR13]."
+
+GGR13:
+  authors: [Goldreich, O., Goldwasser, S., Ron, D.]
+  title: "On the possibilities and limitations of pseudodeterministic algorithms"
+  venue: "ITCS 2013"
+  year: 2013
+  eccc: "TR12-101"
+  note: "Introduces pseudo-determinism; quartic relation between deterministic and pseudo-deterministic query complexity of search problems."
+
+GIPS21:
+  authors: [Goldwasser, S., Impagliazzo, R., Pitassi, T., Santhanam, R.]
+  title: "On the pseudo-deterministic query complexity of NP search problems"
+  venue: "CCC 2021"
+  year: 2021
+  eccc: "TR21-003"
+  note: "Exponential separation between randomized and pseudo-deterministic query complexity; Omega(sqrt n) psD lower bound for SearchCNF."
+
+Spalek08:
+  authors: ["Spalek, R."]
+  title: "The multiplicative quantum adversary"
+  venue: "CCC 2008"
+  year: 2008
+  arxiv: "quant-ph/0703237"
+  note: "The multiplicative adversary method; strong direct product theorems."
+
+AmbainisdeWolf14:
+  authors: [Ambainis, A., de Wolf, R.]
+  title: "How low can approximate degree and quantum query complexity be for total Boolean functions?"
+  venue: "Computational Complexity 23(2):305-322"
+  year: 2014
+  arxiv: "1206.0717"
+  note: "Total f with deg-tilde(f) = O(log n) type extremal questions; the minimum possible approximate degree of a total function depending on n variables."
+
+BdW02erratum:
+  authors: [Buhrman, H., de Wolf, R.]
+  title: "Complexity measures and decision tree complexity: a survey -- constants used here"
+  year: 2002
+  note: "Bookkeeping entry: the exact constants (D <= 27 R^3, bs <= 2 deg^2, bs <= 6 deg-tilde^2, deg <= 2 QE, deg-tilde <= 2 Q, D <= C^1 bs) are quoted from Theorems 3.x-5.x of [BdW02]."
+
+GJKKLSSV17:
+  authors: [Gavinsky, D., Jain, R., Klauck, H., Kundu, S., Lee, T., Santha, M., Sanyal, S., Vihrovs, J.]
+  title: "Quadratically tight relations for randomized query complexity"
+  venue: "Theory of Computing Systems 64:101-119 (2020); CSR 2018"
+  year: 2017
+  eccc: "TR17-123"
+  arxiv: "1708.00822"
+  note: "Introduces expectational certificate complexity EC: EC(f) <= R0(f) = O(EC(f)^2), and fbs <= EC <= C. The reference for the EC row of this zoo."
+
+# ---------------------------------------- classical facts quoted via [BdW02]
+Shi00:
+  authors: [Shi, Y.]
+  title: "Lower bounds of quantum black-box complexity and degree of approximating polynomials by influence of Boolean variables"
+  venue: "Information Processing Letters 75(1-2):79-83"
+  year: 2000
+  doi: "10.1016/S0020-0190(00)00069-7"
+  note: "Total average sensitivity is a lower bound on approximate degree: I(f) <= deg-tilde(f). Quoted from [BdW02, Sec. 4.2]."
+
+
+
+vanDam98:
+  authors: [van Dam, W.]
+  title: "Quantum oracle interrogation: getting all information for almost half the price"
+  venue: "Proc. 39th FOCS, pages 362-367"
+  year: 1998
+  arxiv: "quant-ph/9805006"
+  note: "Q(f) <= n/2 + O(sqrt n) for every f on n bits -- the universal quantum upper bound."
+
+Ambainis99deg:
+  aliases: ["Ambainis99"]
+  authors: [Ambainis, A.]
+  title: "A note on quantum black-box complexity of almost all Boolean functions"
+  venue: "Information Processing Letters 71(1):5-7"
+  year: 1999
+  arxiv: "quant-ph/9811080"
+  note: "Almost all f have deg-tilde(f) >= n/2 - O(sqrt(n log n)), hence Q(f) >= n/4 - o(n)."
+
+Wegener85:
+  authors: [Wegener, I.]
+  title: "The critical complexity of all (monotone) Boolean functions and monotone graph properties"
+  venue: "Information and Control 67(1-3):212-222"
+  year: 1985
+  note: "The monotone address function shows Simon's s(f) >= (log n)/2 - O(log log n) bound is tight up to the lower-order term."
+
+WegenerZadori89:
+  authors: [Wegener, I., Zadori, L.]
+  title: "A note on the relations between critical and sensitive complexity"
+  venue: "Journal of Information Processing and Cybernetics 25:417-421"
+  year: 1989
+  note: "Sub-quadratic s-vs-C gaps predating Rubinstein."
+
+# ----------------------------------------------- LP / partition bounds
+JainKlauck10:
+  authors: [Jain, R., Klauck, H.]
+  title: "The partition bound for classical communication complexity and query complexity"
+  venue: "CCC 2010"
+  year: 2010
+  arxiv: "0910.4266"
+  note: "Introduces the partition bound; it subsumes the rectangle/corruption bound, the smooth rectangle bound, and in the query world randomized certificate complexity, block sensitivity and the approximate-degree bound."
+
+KLLRX15:
+  authors: [Kerenidis, I., Laplante, S., Lerays, V., Roland, J., Xiao, D.]
+  title: "Lower bounds on information complexity via zero-communication protocols and applications"
+  venue: "SIAM Journal on Computing 44(5)"
+  year: 2015
+  arxiv: "1204.1505"
+  note: "Introduces the relaxed partition bound and relates zero-communication protocols to LP relaxations; the query-complexity shadow of this is the certificate-game family."
+
+Sherstov12robust:
+  aliases: ["Sherstov12"]
+  authors: [Sherstov, A. A.]
+  title: "Making polynomials robust to noise"
+  venue: "STOC 2012; Theory of Computing 9:593-615 (2013)"
+  year: 2012
+  doi: "10.4086/toc.2013.v009a018"
+  note: "Every bounded degree-d polynomial has a degree-O(d) robust version, giving the approximate-degree composition UPPER bound deg~(f o g) = O(deg~(f) deg~(g)). The matching lower bound is open in general."
+
+CKMPSS23:
+  authors: [Chakraborty, S., Kayal, C., Mittal, R., Paraashar, M., Sanyal, S., Saurabh, N.]
+  title: "On the Composition of Randomized Query Complexity and Approximate Degree"
+  venue: "APPROX/RANDOM 2023"
+  year: 2023
+  arxiv: "2307.03900"
+  note: "Composition of R holds whenever R(f) = Theta(n) or f is (weakly) symmetric; first inner composition theorem for approximate degree, deg~(f o g) = Omega~(sqrt(bs(f)) deg~(g))."
+
+# ----------------------------------------------- error parameters
+BCWZ99:
+  aliases: ["BCdWZ99"]
+  authors: [Buhrman, H., Cleve, R., de Wolf, R., Zalka, C.]
+  title: "Bounds for small-error and zero-error quantum algorithms"
+  venue: "FOCS 1999, 358-368"
+  year: 1999
+  arxiv: "cs/9904019"
+  doi: "10.1109/SFFCS.1999.814607"
+  note: "Q_eps(OR_N) = Theta(sqrt(N log(1/eps))) -- quantum saves a sqrt on the amplification factor. Also zero-error quantum separations for monotone functions and graph properties."
+
+deWolf08eps:
+  authors: [de Wolf, R.]
+  title: "A note on quantum algorithms and the minimal degree of eps-error polynomials for symmetric functions"
+  venue: "Quantum Information and Computation 8(10):943-950"
+  year: 2008
+  arxiv: "0802.1816"
+  note: "deg~_eps(f) = Theta(deg~_{1/3}(f) + sqrt(n log(1/eps))) for symmetric f, without the log factors of Sherstov's version."
+
+Sherstov08incl:
+  authors: [Sherstov, A. A.]
+  title: "Approximate inclusion-exclusion for arbitrary symmetric functions"
+  venue: "CCC 2008; Computational Complexity 18(2)"
+  year: 2008
+  doi: "10.1007/s00037-009-0274-4"
+  note: "First characterisation of the eps-approximate degree of symmetric Boolean functions, up to logs."
+
+BlaisBrody19:
+  authors: [Blais, E., Brody, J.]
+  title: "Optimal Separation and Strong Direct Sum for Randomized Query Complexity"
+  venue: "CCC 2019"
+  year: 2019
+  arxiv: "1908.01020"
+  note: "Bounded-error separation theorem: a total f with Rbar_eps(f) = Omega(R(f) log(1/eps)), so the amplification log factor is necessary. Strong direct sum: Rbar_eps(f^k) = Theta(k Rbar_{eps/k}(f)). Together: R(f^k) = Theta(k log k R(f))."
+
+Midrijanis05:
+  authors: ["Midrijanis, G."]
+  title: "On randomized and quantum query complexities"
+  year: 2005
+  arxiv: "quant-ph/0501142"
+  note: "R0(f) = O(R(f)^2 log n); improved to O(R^2 log R) by [KulkarniTal16]."

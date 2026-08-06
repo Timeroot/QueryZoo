@@ -1,0 +1,63 @@
+# =====================================================================
+# MEASURES: linear-programming / relaxation bounds.
+# Schema documented in 01-deterministic.yaml.
+# =====================================================================
+
+measures:
+
+- id: prt
+  name: Partition bound
+  symbol: '\mathrm{prt}_{\varepsilon}(f)'
+  aliases: ['partition bound', '\mathrm{prt}(f)']
+  category: adversary
+  order: 60
+  short: 'LP relaxation of "cover the cube by few low-codimension monochromatic subcubes"; subsumes most classical lower bound techniques.'
+  definition: |
+    Imported into query complexity from communication complexity [JainKlauck10].
+    The LP has a variable $w_{C,z}\ge 0$ for every subcube $C$ (a partial assignment)
+    and output $z$, and asks to minimise $\sum_{C,z} w_{C,z}\,2^{-\mathrm{codim}(C)}$
+    subject to: for every input $x$, $\sum_{C \ni x} w_{C,f(x)} \ge 1-\varepsilon$ and
+    $\sum_{C\ni x, z} w_{C,z} = 1$. Then
+    $$\mathrm{prt}_\varepsilon(f) \;=\; \log_2 \Big(\text{optimum}\Big)\quad\text{(query version: the optimum itself).}$$
+    In the query setting one usually states it as: $\mathrm{prt}$ is the value of the LP
+    whose integral version is "partition the cube into monochromatic subcubes", so
+    $\mathrm{prt}(f) \le \mathrm{SP}(f) \le \mathrm{D}(f)$.
+  params:
+    - {name: eps, symbol: '\varepsilon', default: '1/3', description: 'Error parameter.'}
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes}
+    relation: {defined: yes, note: 'The LP formulation extends verbatim to relations; this is how lifting theorems for search problems are usually stated.'}
+  facts:
+    - '$\mathrm{prt}(f) = O(\mathrm{R}(f))$ -- it is a lower bound technique for randomized query complexity.'
+    - 'It subsumes randomized certificate complexity, block sensitivity, the approximate polynomial degree bound and the classical adversary bound.'
+    - '**But it is not tight:** there is a total $f$ with $\mathrm{RS}(f) \ge \mathrm{prt}(f)^{2-o(1)}$, hence $\mathrm{R}(f) \ge \mathrm{prt}(f)^{2-o(1)}$ [BenDavidKothari18, Thm 30].'
+    - 'Query-to-communication lifting theorems typically show $\mathrm{prt}$-type query bounds lift to communication bounds.'
+  refs: [JainKlauck10, BenDavidKothari18, KLLRX15]
+  see_also: [rprt, RS, R, SP, CA]
+  confidence: medium
+
+- id: rprt
+  name: Relaxed partition bound
+  symbol: '\overline{\mathrm{prt}}_{\varepsilon}(f)'
+  aliases: ['relaxed partition bound', '\mathrm{prt}^{\ast}']
+  category: adversary
+  order: 65
+  short: 'The partition bound with the "sums to exactly 1" constraint relaxed to an inequality; weaker but easier to bound.'
+  definition: |
+    Drop the equality constraint $\sum_{C\ni x,z} w_{C,z} = 1$ of the partition bound,
+    keeping only the covering requirement. The resulting LP value
+    $\overline{\mathrm{prt}}_\varepsilon(f) \le \mathrm{prt}_\varepsilon(f)$.
+    Its dual is a "smooth rectangle"-flavoured bound.
+  params:
+    - {name: eps, symbol: '\varepsilon', default: '1/3'}
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes}
+    relation: {defined: yes}
+  facts:
+    - '$\overline{\mathrm{prt}} \le \mathrm{prt} = O(\mathrm{R})$.'
+    - 'For **total search problems** there is an exponential separation between quantum information complexity (communication) and the relaxed partition bound [BenDavidKundu24search]; even the randomized-vs-$\overline{\mathrm{prt}}$ separation was previously unknown for total search problems.'
+  refs: [KLLRX15, BenDavidKundu24search]
+  see_also: [prt, cjdeg, CA]
+  confidence: medium

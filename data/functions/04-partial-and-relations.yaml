@@ -1,0 +1,321 @@
+# =====================================================================
+# FUNCTIONS: partial functions (promise problems) and relations
+# (search problems). This is where the polynomial relations of the
+# total world break down, often exponentially.
+# =====================================================================
+
+functions:
+
+- id: Forrelation
+  name: FORRELATION
+  symbol: '\mathrm{forr}'
+  aliases: ['Fourier correlation', '2-forrelation']
+  group: quantum
+  order: 40
+  kind: partial
+  arity: '$2n$ bits (two strings $x,y \in \{\pm1\}^n$)'
+  short: 'One quantum query vs $\widetilde\Theta(\sqrt n)$ randomized queries -- the maximal possible gap at $\mathrm{Q}=1$.'
+  definition: |
+    Decide whether $y$ is highly correlated with the Fourier transform of $x$.
+  formal: |
+    For $x, y \in \{-1,1\}^n$ with $n=2^m$, let
+    $$\Phi(x,y) \;=\; \frac{1}{n^{3/2}}\sum_{i,j\in\{0,1\}^m} x_i\,(-1)^{i\cdot j}\,y_j
+      \;=\; \frac{1}{\sqrt n}\,\langle \hat x, y\rangle .$$
+    $\mathrm{forr}(x,y) = 1$ if $\Phi(x,y) \ge 3/5$, $= 0$ if $|\Phi(x,y)| \le 1/100$,
+    and undefined otherwise.
+  values:
+    - {measure: Q,    value: '1', refs: [AaronsonAmbainis18], note: 'Prepare uniform superposition, query $x$, Hadamard, query $y$, Hadamard, measure.'}
+    - {measure: adeg, value: 'O(1)', note: '$\widetilde{\deg}\le 2\mathrm{Q} = 2$.'}
+    - {measure: R,    value: '\widetilde\Theta(\sqrt n)', refs: [AaronsonAmbainis18, Tal20], note: 'Lower bound $\Omega(\sqrt n/\log n)$ [AaronsonAmbainis18], improved to $\widetilde\Omega(\sqrt n)$ via Fourier growth of decision trees [Tal20]. Matching $O(\sqrt n)$ upper bound.'}
+    - {measure: D,    value: '\Theta(n)'}
+  witnesses:
+    - {of: [R, Q],    setting: partial, statement: '$\mathrm{R} = \widetilde\Omega(\mathrm{Q}^2 \cdot \sqrt n)$ -- with $\mathrm{Q}=1$ fixed, $\mathrm{R} = \widetilde\Theta(\sqrt n)$. No polynomial relation between R and Q for partial functions.', refs: [AaronsonAmbainis18, Tal20]}
+    - {of: [R, adeg], setting: partial, statement: '$\widetilde{\deg} = O(1)$ but $\mathrm{R}=\widetilde\Omega(\sqrt n)$.', refs: [AaronsonAmbainis18]}
+  notes: |
+    Aaronson-Ambainis also proved the *matching upper bound*: any partial $f$ with
+    $\mathrm{Q}(f)=k$ has $\mathrm{R}(f) = O(n^{1-1/(2k)})$. So Forrelation is
+    optimal, and $k$-Forrelation extends this to every $k$.
+  refs: [AaronsonAmbainis18, Tal20, AaronsonAmbainis14]
+  see_also: [kForrelation, cheatsheet, Q, R]
+
+- id: kForrelation
+  name: k-FORRELATION
+  symbol: '\mathrm{forr}_k'
+  group: quantum
+  order: 41
+  kind: partial
+  arity: '$kn$ bits'
+  short: 'Optimal $\mathrm{Q}$-vs-$\mathrm{R}$ separation for every $k$: $\mathrm{Q}=\lceil k/2\rceil$, $\mathrm{R}=\widetilde\Theta(n^{1-1/k})$.'
+  definition: |
+    The $k$-fold generalisation: given $x^1,\dots,x^k$, decide whether
+    $\langle x^1, H x^2, H x^3, \dots\rangle$-style alternating
+    Hadamard/pointwise-product composition is large.
+  formal: |
+    $$\Phi_k(x^1,\dots,x^k) = \frac{1}{n}\,\mathbf{1}^{\!\top} D_{x^1} H D_{x^2} H \cdots H D_{x^k}\, \mathbf{1},$$
+    where $H$ is the normalised Hadamard transform and $D_{x}$ is the diagonal
+    matrix with $x$ on the diagonal. Accept if $\Phi_k \ge$ a constant, reject if
+    $|\Phi_k|$ is small.
+  values:
+    - {measure: Q, value: '\lceil k/2\rceil', refs: [AaronsonAmbainis18]}
+    - {measure: R, value: '\widetilde\Theta\!\big(n^{1-1/k}\big)', refs: [BansalSinha21, SSW21], note: 'Lower bound proved independently by [BansalSinha21] and [SSW21]; matches the Aaronson-Ambainis upper bound $\mathrm{R}=O(n^{1-1/(2\mathrm{Q})})$.'}
+  witnesses:
+    - {of: [R, Q], setting: partial, statement: 'For every $k$: $\mathrm{Q}=k$ and $\mathrm{R}=\widetilde\Theta(n^{1-1/(2k)})$. **Optimal** -- this settles the partial-function R-vs-Q trade-off.', refs: [BansalSinha21, SSW21, AaronsonAmbainis18]}
+    - {of: [R, Q], setting: total, statement: 'Composed with cheat sheets, gives a *total* function with $\mathrm{R} = \widetilde\Omega(\mathrm{Q}^3)$ -- the best known total separation.', refs: [ABK16, BansalSinha21, SSW21]}
+  refs: [BansalSinha21, SSW21, AaronsonAmbainis18, BGGS21]
+  see_also: [Forrelation, cheatsheet]
+
+- id: Simon
+  name: Simon's problem
+  symbol: '\mathrm{SIMON}_n'
+  group: quantum
+  order: 42
+  kind: partial
+  arity: '$n2^n$ bits (a function table $g:\{0,1\}^n\to\{0,1\}^n$)'
+  short: 'The first exponential quantum speedup for a promise problem: $\mathrm{Q}=O(n)$ vs $\mathrm{R}=\Omega(2^{n/2})$.'
+  definition: |
+    Promise: $g$ is either injective, or two-to-one with $g(x)=g(x\oplus s)$ for
+    a hidden $s\ne 0$. Decide which (or, in the search version, find $s$).
+  formal: |
+    Input: the table of $g:\{0,1\}^n\to\{0,1\}^n$. Promise: either $g$ is
+    injective, or $\exists s \ne 0^n$ with $g(x)=g(y) \iff y \in \{x, x\oplus s\}$.
+  values:
+    - {measure: Q, value: 'O(n)', refs: [Simon97]}
+    - {measure: R, value: '\Theta(2^{n/2})', refs: [Simon97]}
+  witnesses:
+    - {of: [R, Q], setting: partial, statement: 'Exponential: $\mathrm{R} = 2^{\Omega(\mathrm{Q})}$. The relational (find-$s$) version gives the same separation for relations.', refs: [Simon97]}
+  refs: [Simon97, BernsteinVazirani97]
+  see_also: [DeutschJozsa, BV, YamakawaZhandry]
+
+- id: DeutschJozsa
+  name: Deutsch-Jozsa
+  symbol: '\mathrm{DJ}_n'
+  group: quantum
+  order: 43
+  kind: partial
+  arity: '$N=2^n$ bits'
+  short: 'Exact quantum: 1 query vs $N/2+1$ deterministic queries (but $\mathrm{R}=O(1)$).'
+  definition: 'Promise: $x$ is constant or exactly balanced. Decide which.'
+  formal: '$\mathrm{DJ}(x) = 0$ if $|x| = 0$ or $|x| = N$; $=1$ if $|x| = N/2$; undefined otherwise.'
+  values:
+    - {measure: QE, value: '1', refs: [DeutschJozsa92]}
+    - {measure: D,  value: 'N/2+1'}
+    - {measure: R,  value: 'O(1)', note: 'Two random samples suffice with bounded error -- so this is an *exact*-quantum-vs-deterministic separation only.'}
+  witnesses:
+    - {of: [D, QE], setting: partial, statement: 'Unbounded: $\mathrm{D}=N/2+1$ vs $\mathrm{Q}_E=1$.', refs: [DeutschJozsa92]}
+  refs: [DeutschJozsa92]
+  see_also: [BV, EH, Simon]
+
+- id: BV
+  name: Bernstein-Vazirani
+  symbol: '\mathrm{BV}_n'
+  group: quantum
+  order: 44
+  kind: partial
+  arity: '$2^n$ bits (or $n$ bits with an inner-product oracle)'
+  short: 'One exact quantum query recovers an $n$-bit secret that costs $n$ classical queries.'
+  definition: 'Promise: $x_i = \langle s, i\rangle \bmod 2$ for a hidden $s \in \{0,1\}^n$. Output $s$ (or one bit of it).'
+  values:
+    - {measure: QE, value: '1', refs: [BernsteinVazirani97]}
+    - {measure: D,  value: 'n'}
+    - {measure: R,  value: '\Omega(n)'}
+  witnesses:
+    - {of: [R, QE], setting: relation, statement: 'The "find $s$" version is a relation: $\mathrm{Q}_E=1$ vs $\mathrm{R}=\Omega(n)$.', refs: [BernsteinVazirani97]}
+  refs: [BernsteinVazirani97]
+  see_also: [DeutschJozsa, Simon, PARITY]
+
+- id: GroverSearch
+  name: Unstructured search (relation)
+  symbol: '\mathrm{SEARCH}_n'
+  group: relational
+  order: 45
+  kind: relation
+  arity: '$n$ bits'
+  short: 'The canonical relation: output any index $i$ with $x_i=1$.'
+  definition: |
+    $\mathrm{SEARCH}_n = \{(x,i) : x_i = 1\}$. As stated this is a *partial*
+    relation (nothing is valid on $x=0^n$); the total version adds
+    $(0^n, \bot)$.
+  formal: '$S = \{(x,i)\in\{0,1\}^n\times[n] : x_i = 1\} \cup \{(0^n,\bot)\}$.'
+  values:
+    - {measure: Q,  value: '\Theta(\sqrt n)', refs: [Grover96, BBBV97]}
+    - {measure: R,  value: '\Theta(n)'}
+    - {measure: D,  value: 'n'}
+  witnesses:
+    - {of: [R, Q], setting: relation, statement: '$\mathrm{R}=\Theta(\mathrm{Q}^2)$ for a relation, same as the decision version.', refs: [Grover96, BBBV97]}
+  refs: [Grover96, BBBV97]
+  see_also: [OR, ApproxHW, promiseFind1]
+
+- id: promiseFind1
+  name: FIND-1 under a density promise
+  symbol: '\mathrm{Find1}_{\ge n/2}'
+  group: relational
+  order: 46
+  kind: relation
+  arity: '$n$ bits'
+  short: 'The cleanest D-vs-R relational separation: $\mathrm{R}=O(1)$, $\mathrm{D}=n/2+1$.'
+  definition: |
+    Promise $|x| \ge n/2$; output any $i$ with $x_i = 1$. Sampling a single
+    random index succeeds with probability $\ge 1/2$, so $\mathrm{R}=O(1)$;
+    but an adversary can answer $0$ to a deterministic algorithm's first
+    $n/2$ queries.
+  values:
+    - {measure: R,  value: 'O(1)'}
+    - {measure: R0, value: 'O(1)', note: 'Zero error too: the algorithm *verifies* its own output, which is exactly why $\mathrm{R}_0=\Theta(\mathrm{R})$ for relations.'}
+    - {measure: D,  value: 'n/2+1'}
+    - {measure: psD, value: '\Omega(n)', conf: medium, note: 'Reproducibility is what costs: cf. ApproxHW.'}
+  witnesses:
+    - {of: [D, R],  setting: relation, statement: 'Unbounded: no function of $\mathrm{R}$ bounds $\mathrm{D}$ for *partial* relations.', refs: [GIPS21]}
+  refs: [GIPS21, CDM23]
+  see_also: [ApproxHW, GroverSearch, psD]
+
+- id: ApproxHW
+  name: Approximate Hamming weight
+  symbol: '\mathrm{ApproxHW}'
+  group: relational
+  order: 47
+  kind: relation
+  arity: '$n$ bits'
+  short: 'Total search problem with $\mathrm{R}=O(1)$ but $\mathrm{psD}=\Omega(n)$: reproducibility is exponentially expensive.'
+  definition: |
+    Output any integer $w$ with $\big|\,w - |x|\,\big| \le \varepsilon n$.
+    Random sampling gives an estimate with $O(1/\varepsilon^2)$ queries; but a
+    *pseudo-deterministic* algorithm must commit to one canonical $w$ for each
+    $x$, and near the boundaries that forces $\Omega(n)$ queries.
+  values:
+    - {measure: R,   value: 'O(1)'}
+    - {measure: psD, value: '\Omega(n)', refs: [CDM23, GIPS21]}
+    - {measure: D,   value: '\Omega(n)'}
+  witnesses:
+    - {of: [psD, R], setting: relation, statement: 'Exponential separation between pseudo-deterministic and randomized query complexity of a *total* search problem; also an $\exp(\Omega(n))$ separation in decision-tree **size**.', refs: [CDM23, GIPS21]}
+  refs: [CDM23, GIPS21, GGR13]
+  see_also: [psD, SearchCNF, promiseFind1]
+
+- id: SearchCNF
+  name: SearchCNF
+  symbol: '\mathrm{Search}(\varphi)'
+  group: relational
+  order: 48
+  kind: relation
+  arity: '$n$ bits (an assignment to an unsatisfiable CNF $\varphi$)'
+  short: 'The canonical TFNP-style query relation: given an assignment, output a falsified clause.'
+  definition: |
+    Fix an unsatisfiable $k$-CNF $\varphi$ on $n$ variables. Given an assignment
+    $x$, output (the index of) some clause of $\varphi$ falsified by $x$.
+    Total by unsatisfiability. This is the query-complexity home of TFNP$^{dt}$
+    and of resolution lower bounds.
+  values:
+    - {measure: R,   value: 'O(1) \text{ for random } k\text{-CNFs (sample a clause)}', conf: medium}
+    - {measure: psD, value: '\Omega(n^{1/3})', refs: [CDM23], note: '$\Omega(\sqrt n)$ in the related setting of [GIPS21]; also $\exp(\widetilde\Omega(n^{1/4}))$ in pseudo-deterministic decision-tree *size*.'}
+  refs: [GIPS21, CDM23]
+  see_also: [psD, ApproxHW]
+
+- id: GapMaj
+  name: Gap-Majority
+  symbol: '\mathrm{GapMaj}^{\delta}_{n}'
+  group: quantum
+  order: 49
+  kind: partial
+  arity: '$n$ bits'
+  short: 'The universal "hardest easy" promise problem; characterises noisy randomized complexity.'
+  definition: |
+    Promise $\big||x| - n/2\big| \ge \delta n$; output $1$ if $|x| \ge n/2+\delta n$
+    and $0$ if $|x| \le n/2-\delta n$.
+  formal: '$\mathrm{GapMaj}^\delta_n(x) = \mathbb{1}[|x| > n/2]$ restricted to $\{x : \big||x|-n/2\big| \ge \delta n\}$.'
+  values:
+    - {measure: R,      value: '\Theta(1/\delta^2)'}
+    - {measure: noisyR, value: '\Theta(n)', refs: [BenDavidBlais20composition], note: 'The composition $f \circ \mathrm{GapMaj}$ is exactly the construction that shows $\mathrm{R}$ does not compose, and $\mathrm{noisyR}$ was defined so that it does.'}
+    - {measure: Q,      value: '\Theta(1/\delta)'}
+  witnesses:
+    - {of: [noisyR, R], setting: partial, statement: 'Gap-Majority is the extremal example separating bias-purchasing (noisy) randomized complexity from ordinary randomized complexity.', refs: [BenDavidBlais20composition, BenDavidBlais20minimax]}
+  refs: [BenDavidBlais20composition, BenDavidBlais20minimax, BBGM22]
+  see_also: [noisyR, R, LR, chibar]
+
+- id: Collision
+  name: Collision problem
+  symbol: '\mathrm{COL}_n'
+  group: quantum
+  order: 50
+  kind: partial
+  arity: 'a function table $g:[n]\to[n]$'
+  short: '$\mathrm{Q}=\Theta(n^{1/3})$ vs $\mathrm{R}=\Theta(\sqrt n)$: a *polynomial-only* quantum speedup for a promise problem.'
+  definition: 'Promise: $g$ is one-to-one or two-to-one. Decide which.'
+  values:
+    - {measure: Q, value: '\Theta(n^{1/3})', refs: [Aaronson06]}
+    - {measure: R, value: '\Theta(\sqrt n)'}
+  refs: [Aaronson06, Ambainis07]
+  see_also: [ElementDistinctness, Simon]
+
+- id: ElementDistinctness
+  name: Element distinctness
+  symbol: '\mathrm{ED}_n'
+  group: quantum
+  order: 51
+  kind: total
+  arity: '$n$ symbols from a large alphabet'
+  short: '$\mathrm{Q}=\Theta(n^{2/3})$ vs $\mathrm{R}=\Theta(n)$; a total (non-Boolean-input) function.'
+  definition: 'Decide whether all $n$ input symbols are distinct.'
+  values:
+    - {measure: Q, value: '\Theta(n^{2/3})', refs: [Ambainis07], note: 'Quantum walk upper bound [Ambainis07]; lower bound from the polynomial method [Aaronson06].'}
+    - {measure: R, value: '\Theta(n)'}
+    - {measure: D, value: 'n'}
+  notes: 'A reminder that the "total function" theory in this zoo is for *Boolean* inputs; large alphabets change the picture (here $\mathrm{R}=\Theta(\mathrm{Q}^{3/2})$, which is fine, but the polynomial-relation proofs are alphabet-sensitive).'
+  refs: [Ambainis07, Aaronson06]
+  see_also: [Collision, Q]
+
+- id: AmbainisBelovsFn
+  name: Ambainis-Belovs function
+  symbol: 'f_{\mathrm{AB}}'
+  group: quantum
+  order: 52
+  kind: partial
+  arity: '$n$ bits'
+  short: 'Exponential separation between $\mathrm{Q}$ and $\deg$ for a partial function.'
+  definition: |
+    A partial function whose (exact) polynomial degree is exponentially smaller
+    than its quantum query complexity -- so the polynomial method is not merely
+    lossy but exponentially lossy in the promise setting.
+  witnesses:
+    - {of: [Q, deg], setting: partial, statement: '$\mathrm{Q}(f) = 2^{\Omega(\deg(f))}$-style: exponential.', refs: [AmbainisBelovs23]}
+  refs: [AmbainisBelovs23, BenDavidKundu24search]
+  see_also: [BDKrelation, deg, Q]
+  todo: 'Transcribe the construction from [AmbainisBelovs23].'
+
+- id: BDKrelation
+  name: Ben-David-Kundu total search problems
+  symbol: 'S_{\mathrm{BDK}}'
+  group: relational
+  order: 53
+  kind: relation
+  arity: '$n$ bits'
+  short: 'Exponential $\mathrm{Q}$-vs-$\widetilde{\deg}$ and $\mathrm{Q}$-vs-conical-junta-degree separations for *total* search problems.'
+  definition: |
+    A pair of translations (partial function $\to$ total search problem, and back)
+    that transports separations across the two settings, plus explicit total
+    search problems realising them.
+  witnesses:
+    - {of: [Q, adeg],  setting: relation, statement: 'Exponential separation between quantum query complexity and approximate degree for a **total** search problem.', refs: [BenDavidKundu24search]}
+    - {of: [Q, cjdeg], setting: relation, statement: 'Strengthened: exponential separation from the *larger* two-sided approximate non-negative (conical junta) degree -- previously not even a separation from $\mathrm{R}$ was known.', refs: [BenDavidKundu24search]}
+    - {of: [adeg, Adv], setting: relation, statement: 'Exponential separation between approximate degree and the positive quantum adversary.', refs: [BenDavidKundu24search]}
+  notes: 'Also gives a new proof of the Ambainis-Belovs partial-function separation, and lifts to an exponential quantum-information-complexity vs relaxed-partition-bound separation in communication complexity.'
+  refs: [BenDavidKundu24search, AmbainisBelovs23]
+  see_also: [cjdeg, AmbainisBelovsFn, psD]
+
+- id: YamakawaZhandry
+  name: Yamakawa-Zhandry problem
+  symbol: 'S_{\mathrm{YZ}}'
+  group: relational
+  order: 54
+  kind: relation
+  arity: 'random oracle'
+  short: 'Verifiable exponential quantum advantage for an NP search problem relative to a random oracle.'
+  definition: |
+    Find a codeword of a fixed error-correcting code all of whose symbols land in
+    a random oracle's preimage set. Quantum: $\mathrm{poly}$ queries; classical:
+    exponentially many, *and* solutions are efficiently verifiable.
+  values:
+    - {measure: Q, value: '\mathrm{poly}(n)', refs: [YamakawaZhandry22]}
+    - {measure: R, value: '2^{\Omega(n)}', refs: [YamakawaZhandry22]}
+  witnesses:
+    - {of: [R, Q], setting: relation, statement: 'Exponential, with efficiently checkable solutions -- the strongest form of query-model quantum advantage for a search problem.', refs: [YamakawaZhandry22]}
+  refs: [YamakawaZhandry22]
+  see_also: [Simon, BDKrelation, GroverSearch]

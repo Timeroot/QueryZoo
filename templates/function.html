@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% from "macros.html" import measure_chip, setting_pill, status_pill with context %}
+{% block title %}{{ f.name }} &middot; {{ site.title }}{% endblock %}
+
+{% block body %}
+<div class="wrap">
+  <div class="crumbs"><a href="{{ root }}functions/index.html">Functions</a> &rsaquo;
+    <a href="{{ root }}functions/index.html#{{ f.kind }}">{{ zoo.setting_by_id[f.kind].name }}</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">{% if f.symbol %}\({{ f.symbol }}\){% else %}{{ f.id }}{% endif %}</div>
+    <div>
+      <h1>{{ f.name }}</h1>
+      <p class="lede">{{ f.short | mdi }}</p>
+      <p class="aliases">
+        <span class="kindtag k-{{ f.kind }}">{{ f.kind }}</span>
+        <span class="grouptag g-{{ f.group }}">{{ f.group }}</span>
+        {% if f.arity %}<span class="tag">arity: {{ f.arity | mdi }}</span>{% endif %}
+        {% if f.aliases %}&mdash; also: {% for a in f.aliases %}<code>{{ a }}</code>{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}
+      </p>
+    </div>
+  </header>
+
+  {% if not f.formal %}
+  <div class="banner warn">
+    <b>Definition not yet transcribed.</b> This page gives a pointer and an informal description
+    only; the exact mathematical definition still needs to be written into
+    <code>{{ f._source }}</code> under <code>formal:</code>. Follow the references below.
+  </div>
+  {% endif %}
+  {% if f.todo %}<div class="banner todo"><b>TODO:</b> {{ f.todo | mdi }}</div>{% endif %}
+
+  <div class="cols">
+    <div class="main-col">
+
+      {% if f.definition %}
+      <section class="card">
+        <h2>Description</h2>
+        {{ f.definition | md }}
+      </section>
+      {% endif %}
+
+      {% if f.formal %}
+      <section class="card">
+        <h2>Formal definition</h2>
+        {{ f.formal | md }}
+      </section>
+      {% endif %}
+
+      {% if f['values'] %}
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+          {% for v in f['values'] %}
+            <tr>
+              <td class="nm">
+                {% if v.measure in zoo.measure %}{{ measure_chip(v.measure) }}
+                  <a href="{{ root }}measures/{{ v.measure }}.html">{{ zoo.measure[v.measure].name }}</a>
+                {% else %}{{ v.measure }}{% endif %}
+              </td>
+              <td class="val">{{ v.value | tex }}</td>
+              <td class="short">{{ v.note | mdi }}
+                {% if v.refs %}<span class="refs">{{ v.refs | cites }}</span>{% endif %}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </section>
+      {% endif %}
+
+      {% if f.witnesses %}
+      <section class="card">
+        <h2>Separations it witnesses</h2>
+        <ul class="witlist">
+          {% for w in f.witnesses %}
+          <li>
+            <div class="wpair">
+              {% if w.of and w.of[0] != '*' %}
+                {{ measure_chip(w.of[0]) }} <span class="vs">vs</span> {{ measure_chip(w.of[1]) }}
+                {% set slug = w.of[0] ~ '__' ~ w.of[1] %}
+                {% if (w.of[0], w.of[1]) in zoo.pairs %}
+                  <a class="go" href="{{ root }}pairs/{{ slug }}.html">pair &rarr;</a>
+                {% endif %}
+              {% else %}
+                <span class="tag">general</span>
+              {% endif %}
+              {% if w.setting %}{{ setting_pill(w.setting) }}{% endif %}
+            </div>
+            <div class="stmt">{{ w.statement | mdi }}</div>
+            {% if w.refs %}<div class="refs">{{ w.refs | cites }}</div>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+
+      {% if f.witness_for %}
+      <section class="card">
+        <h2>Cited as a witness by</h2>
+        <ul class="witlist compact">
+          {% for r, b, side in f.witness_for %}
+          <li>
+            <div class="wpair">
+              {{ measure_chip(r.from) }} <span class="vs">vs</span> {{ measure_chip(r.to) }}
+              {{ setting_pill(r.setting) }} {{ status_pill(r.status) }}
+              <a class="go" href="{{ root }}pairs/{{ r.from }}__{{ r.to }}.html#{{ r.id }}">open &rarr;</a>
+            </div>
+            <div class="stmt">{{ b.stmt | tex }}</div>
+            {% if b.refs %}<div class="refs">{{ b.refs | cites }}</div>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+
+      {% if f.notes %}
+      <section class="card">
+        <h2>Notes</h2>
+        {{ f.notes | md }}
+      </section>
+      {% endif %}
+    </div>
+
+    <aside class="side-col">
+      {% if f.refs %}
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+          {% for k in f.refs %}
+            {% set e = zoo.refs[zoo.ref_key[k]] if k in zoo.ref_key else none %}
+            <li>{{ xref(k) }} {% if e %}<span class="dim">{{ e.title }}</span>{% endif %}</li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+
+      {% if f.see_also %}
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist">{% for s in f.see_also %}<li>{{ xref(s) }}</li>{% endfor %}</ul>
+      </section>
+      {% endif %}
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>{{ f._source }}</code> &mdash; id <code>{{ f.id }}</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+{% endblock %}

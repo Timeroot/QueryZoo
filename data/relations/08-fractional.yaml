@@ -1,0 +1,241 @@
+# =====================================================================
+# RELATIONS, part 8: fractional block sensitivity.
+#
+# fbs is the LP relaxation of bs and, by LP duality, equals fractional
+# certificate complexity FC. It sits between bs and C, is Theta(RC), and
+# is the quantity QC and the classical adversary are really measuring.
+# Schema: see 01-classical-core.yaml.
+# =====================================================================
+
+relations:
+
+# ----------------------------------------------------- fbs vs bs (total)
+- from: fbs
+  to: bs
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{fbs}(f) \le \mathrm{C}(f) \le \mathrm{s}(f)\,\mathrm{bs}(f) \le \mathrm{bs}(f)^2'
+      form: {exp: 2, kind: exact}
+      refs: [Nisan91, Aaronson08]
+      note: 'Via $\mathrm{fbs}\le\mathrm{C}$ (the LP optimum is at most any integral certificate) and Nisan''s $\mathrm{C}\le\mathrm{s}\cdot\mathrm{bs}$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{fbs}(f_n) = \widetilde\Omega\big(\mathrm{bs}(f_n)^{3/2}\big)'
+      form: {exp: 1.5, kind: tilde}
+      witness: GSSfn
+      refs: [GSS16, APV18]
+      note: 'The largest known gap. [APV18] give a cleaner construction with a better constant, still at exponent $3/2$.'
+      conf: high
+  notes: |
+    The one place where the LP relaxation is known to be strictly weaker than
+    the combinatorial quantity, and by how much is open: the truth is somewhere
+    in $[3/2, 2]$. Everything else about $\mathrm{fbs}$ is pinned down.
+  see_also: [bs, C, RC, GSSfn, open-fbs-vs-bs]
+
+- from: bs
+  to: fbs
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{bs}(f) \le \mathrm{fbs}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [Aaronson08, Tal13]
+      note: 'Any set of disjoint sensitive blocks is a feasible integral solution to the LP.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{bs}(\mathrm{OR}_n) = \mathrm{fbs}(\mathrm{OR}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      refs: [Aaronson08]
+      note: 'At $0^n$ the $n$ singleton blocks are already an optimal fractional solution.'
+      conf: high
+  see_also: [bs, fbs]
+
+# ------------------------------------------------------ fbs vs C (total)
+- from: fbs
+  to: C
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{fbs}(f) \le \mathrm{C}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [Aaronson08, Tal13]
+      note: 'The dual reading: $\mathrm{fbs}=\mathrm{FC}$ is a fractional vertex cover, and any certificate is an integral one.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{fbs}(\mathrm{OR}_n) = \mathrm{C}(\mathrm{OR}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      conf: high
+  see_also: [C, fbs, RC]
+
+- from: C
+  to: fbs
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{C}(f) = O\big(\mathrm{fbs}(f)^2\big)'
+      form: {exp: 2, kind: const}
+      refs: [Tal13, GSS16, Aaronson08]
+      note: 'Rounding the fractional certificate; the same argument as $\mathrm{C}=O(\mathrm{RC}^2)$, since $\mathrm{fbs}=\Theta(\mathrm{RC})$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{C}(f_n) = \widetilde\Omega\big(\mathrm{fbs}(f_n)^2\big)'
+      form: {exp: 2, kind: tilde}
+      witness: GSSfn
+      refs: [GSS16]
+      note: 'Matches the upper bound: the quadratic loss in rounding the LP is real.'
+      conf: high
+  see_also: [C, fbs, RC, GSSfn]
+
+# ----------------------------------------------------- fbs vs RC (total)
+- from: fbs
+  to: RC
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{fbs}(f) = \Theta(\mathrm{RC}(f))'
+      form: {exp: 1, kind: theta}
+      refs: [Aaronson08, Tal13, KulkarniTal16]
+      note: 'Aaronson''s randomized certificate complexity is, up to a constant, the LP value: $\mathrm{RC}\le\mathrm{fbs}\le 2\,\mathrm{RC}$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{fbs}(f) \ge \mathrm{RC}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [Tal13]
+      conf: medium
+  notes: |
+    The two measures are the same thing wearing different hats: $\mathrm{RC}$ is
+    defined by a randomized verifier, $\mathrm{fbs}$ by an LP, and the LP is the
+    verifier's optimal strategy. Anything proved about one transfers to the other
+    with a constant factor, which is why the classical-core rows quote them
+    interchangeably.
+  see_also: [RC, fbs, CA]
+
+- from: RC
+  to: fbs
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{RC}(f) = \Theta(\mathrm{fbs}(f))'
+      form: {exp: 1, kind: theta}
+      refs: [Aaronson08, Tal13, KulkarniTal16]
+      conf: high
+  see_also: [RC, fbs]
+
+# ------------------------------------------------------ fbs vs s (total)
+- from: fbs
+  to: s
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{fbs}(f) \le \mathrm{C}(f) \le 2\,\mathrm{s}(f)^5'
+      form: {exp: 5, kind: const}
+      refs: [Huang19, Nisan91]
+      note: 'Post-Huang: $\mathrm{C}\le\mathrm{s}\cdot\mathrm{bs}\le 2\,\mathrm{s}\deg^2\le 2\,\mathrm{s}^5$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{fbs}(f_n) \ge \mathrm{bs}(f_n) \ge \tfrac23\,\mathrm{s}(f_n)^2 - \tfrac13\,\mathrm{s}(f_n)'
+      form: {exp: 2, kind: const}
+      witness: AmbainisSunFn
+      refs: [AmbainisSun11, Rubinstein95]
+      note: 'Inherited from $\mathrm{bs}$ vs $\mathrm{s}$. The cubic $\mathrm{C}$ vs $\mathrm{s}$ separation does *not* transfer, since it is exactly the integrality gap that $\mathrm{fbs}$ closes.'
+      conf: medium
+      todo: 'Is there a better-than-quadratic fbs vs s separation known?'
+  see_also: [s, bs, C, fbs]
+
+# ------------------------------------------------------ D, R vs fbs (total)
+- from: D
+  to: fbs
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{D}(f) \le \mathrm{C}^{(1)}(f)\cdot\mathrm{bs}(f) = O\big(\mathrm{fbs}(f)^3\big)'
+      form: {exp: 3, kind: const}
+      refs: [Aaronson08, Tal13, Nisan91]
+      note: 'Nisan''s bound with $\mathrm{C}=O(\mathrm{fbs}^2)$ and $\mathrm{bs}\le\mathrm{fbs}$. Stated by Aaronson as $\mathrm{R}_0 = O(\mathrm{FC}^3)$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{D}(\mathrm{TRIBES}_n) = \Theta(n) = \Theta\big(\mathrm{fbs}(\mathrm{TRIBES}_n)^2\big)'
+      form: {exp: 2, kind: const}
+      witness: TRIBES
+      refs: [Aaronson08]
+      note: 'Balanced Tribes on $\sqrt n\times\sqrt n$: $\mathrm{C}=\mathrm{fbs}=\Theta(\sqrt n)$ while $\mathrm{D}=n$.'
+      conf: medium
+  notes: |
+    Aaronson asks whether the exponent is 2 rather than 3 -- i.e. whether the
+    fractional certificate complexity already captures deterministic (indeed
+    zero-error randomized) query complexity quadratically. Note the same question
+    for $\mathrm{C}$ *is* settled at 2, so this is precisely about the integrality gap.
+  see_also: [D, R0, fbs, RC, TRIBES, open-R0-vs-fbs]
+
+- from: R
+  to: fbs
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{R}(f) \le \mathrm{R}_0(f) \le \mathrm{D}(f) = O\big(\mathrm{fbs}(f)^3\big)'
+      form: {exp: 3, kind: const}
+      refs: [Aaronson08]
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}(\mathrm{TRIBES}_n) = \Theta(n) = \Theta\big(\mathrm{fbs}(\mathrm{TRIBES}_n)^2\big)'
+      form: {exp: 2, kind: const}
+      witness: TRIBES
+      refs: [Aaronson08]
+      conf: medium
+  notes: |
+    $\mathrm{fbs}=\Theta(\mathrm{RC})$ is a *lower* bound technique for $\mathrm{R}$:
+    $\mathrm{R}(f)=\Omega(\mathrm{fbs}(f))$, since a bounded-error algorithm must in
+    particular find enough of a certificate. The content here is the converse direction.
+  see_also: [R, R0, fbs, RC, TRIBES]
+
+- from: fbs
+  to: R
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{fbs}(f) = O(\mathrm{R}(f))'
+      form: {exp: 1, kind: const}
+      refs: [Aaronson08, Tal13]
+      note: 'Equivalently $\mathrm{R}=\Omega(\mathrm{RC})$: run the algorithm, and the queried positions carry the fractional certificate.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{fbs}(\mathrm{OR}_n) = n = \Theta(\mathrm{R}(\mathrm{OR}_n))'
+      form: {exp: 1, kind: const}
+      witness: OR
+      conf: high
+  see_also: [R, fbs, RC]
+
+# ----------------------------------------------------- QC, adeg vs fbs (total)
+- from: QC
+  to: fbs
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{QC}(f) = \Theta\big(\sqrt{\mathrm{fbs}(f)}\big)'
+      form: {exp: 0.5, kind: theta}
+      refs: [Aaronson08, Tal13]
+      note: 'Aaronson''s $\mathrm{QC}=\Theta(\sqrt{\mathrm{RC}})$ with $\mathrm{RC}=\Theta(\mathrm{fbs})$. The Grover-style square root is exactly right, in both directions.'
+      conf: high
+  see_also: [QC, RC, fbs, Q]
+
+- from: RC
+  to: adeg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{RC}(f) = O\big(\widetilde{\deg}(f)^2\big)'
+      form: {exp: 2, kind: const}
+      refs: [KulkarniTal16]
+      note: 'Equivalently $\widetilde{\deg}(f)=\Omega(\sqrt{\mathrm{RC}(f)})$, answering a question of [Aaronson08]. Also gives $\mathrm{QC}=O(\widetilde{\deg})$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{RC}(\mathrm{OR}_n) = n = \Theta\big(\widetilde{\deg}(\mathrm{OR}_n)^2\big)'
+      form: {exp: 2, kind: const}
+      witness: OR
+      refs: [BBCMdW01]
+      note: 'At $0^n$ every singleton is a sensitive block, so $\mathrm{RC}=\Theta(n)$, while $\widetilde{\deg}(\mathrm{OR}_n)=\Theta(\sqrt n)$.'
+      conf: high
+  see_also: [RC, fbs, adeg, QC, OR]

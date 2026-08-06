@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% from "macros.html" import measure_chip, setting_pill, status_pill with context %}
+{% block title %}Relations &middot; {{ site.title }}{% endblock %}
+
+{% block body %}
+<div class="wrap">
+  <h1 class="pagetitle">Relations</h1>
+  <p class="lede">Every ordered pair \((M_1,M_2)\) the zoo has something to say about, with the
+  best recorded upper bound per setting. Rows are ordered by category. Filter by typing a measure
+  id, or click a status chip.</p>
+
+  <div class="relcontrols">
+    <input type="search" id="relfilter" placeholder="filter: D, Q, deg, sensitivity&hellip;" autocomplete="off">
+    <div class="segmented" id="relsetting">
+      <button class="on" data-set="all">all settings</button>
+      {% for s in site.settings %}<button data-set="{{ s.id }}">{{ s.short }}</button>{% endfor %}
+    </div>
+    <div class="segmented" id="relstatus">
+      <button class="on" data-st="all">any status</button>
+      {% for k, v in statuses.items() %}<button data-st="{{ k }}">{{ v.label }}</button>{% endfor %}
+    </div>
+    <span class="dim small" id="relcount"></span>
+  </div>
+
+  <div class="card">
+    <table class="listing relations-table" id="reltable">
+      <thead>
+        <tr>
+          <th>\(M_1\)</th><th>\(M_2\)</th><th class="c">total</th>
+          <th>Best upper bound recorded</th><th class="c">partial</th><th class="c">relation</th><th class="c">cell</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for p in rows %}
+        <tr data-search="{{ (p.a ~ ' ' ~ p.b ~ ' ' ~ p.ma.name ~ ' ' ~ p.mb.name) | lower }}"
+            data-sets="{{ p.summary.keys() | join(' ') }}"
+            data-statuses="{% for s, v in p.summary.items() %}{{ v.status }} {% endfor %}">
+          <td class="sym">{{ measure_chip(p.a) }}</td>
+          <td class="sym">{{ measure_chip(p.b) }}</td>
+          <td class="c">{% if p.summary.total %}{{ status_pill(p.summary.total.status) }}{% endif %}</td>
+          <td class="stmtcell">
+            {% if p.summary.total and p.summary.total.upper %}
+              <a href="{{ root }}pairs/{{ p.slug }}.html">{{ p.summary.total.upper.stmt | tex }}</a>
+            {% elif p.summary.partial and p.summary.partial.upper %}
+              <a href="{{ root }}pairs/{{ p.slug }}.html">{{ p.summary.partial.upper.stmt | tex }}</a>
+              <span class="minipill s-partial">partial</span>
+            {% elif p.summary.relation and p.summary.relation.upper %}
+              <a href="{{ root }}pairs/{{ p.slug }}.html">{{ p.summary.relation.upper.stmt | tex }}</a>
+              <span class="minipill s-relation">relation</span>
+            {% else %}
+              <a class="dim" href="{{ root }}pairs/{{ p.slug }}.html">separations only &rarr;</a>
+            {% endif %}
+          </td>
+          <td class="c">{% if p.summary.partial %}{{ status_pill(p.summary.partial.status) }}{% endif %}</td>
+          <td class="c">{% if p.summary.relation %}{{ status_pill(p.summary.relation.status) }}{% endif %}</td>
+          <td class="c">
+            {% if p.cell %}<a class="exp" href="{{ root }}pairs/{{ p.slug }}.html"><span class="a">{{ p.cell.a }}</span>,<span class="b">{{ p.cell.b }}</span></a>{% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if named %}
+  <section class="card">
+    <h2>Named relation records</h2>
+    <p class="dim">Some records are about a phenomenon rather than a single ordered pair
+    (composition theorems, parameter dependence). They carry a stable id you can link to.</p>
+    <table class="listing">
+      <thead><tr><th>id</th><th>Pair</th><th>Setting</th><th>Headline</th></tr></thead>
+      <tbody>
+        {% for r in named %}
+        <tr>
+          <td><code><a href="{{ root }}pairs/{{ r.from }}__{{ r.to }}.html#{{ r.id }}">{{ r.id }}</a></code></td>
+          <td class="sym">{{ measure_chip(r.from) }} {{ measure_chip(r.to) }}</td>
+          <td>{{ setting_pill(r.setting) }}</td>
+          <td class="short">{% if r.headline %}{{ r.headline | tex }}{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

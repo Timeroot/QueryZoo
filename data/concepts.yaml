@@ -1,0 +1,434 @@
+# =====================================================================
+# CONCEPTS: prose pages that the measure / relation pages link to with
+# [[wiki-links]] and see_also.
+#
+# Schema:
+#   id      : slug (this is what [[...]] resolves against)
+#   title   : page title
+#   order   : sort order in the concepts index
+#   blurb   : one-line summary (shown in the index)
+#   body    : markdown + LaTeX
+#   refs    : citation keys
+#   see_also: measure / function / concept / open-problem ids
+# =====================================================================
+
+concepts:
+
+- id: settings
+  title: "Total functions, partial functions, and relations"
+  order: 10
+  blurb: "The single most important distinction in this zoo: almost every polynomial relation is a theorem about total Boolean functions only."
+  body: |
+    Three kinds of computational problem appear in query complexity, and the
+    zoo keeps them strictly apart.
+
+    ### Total function
+    $f : \{0,1\}^n \to \{0,1\}$. Every input is legal, every input has exactly
+    one right answer. **This is the setting of essentially every polynomial
+    relation in the literature.** When a paper says "$\mathrm{D}(f) = O(\mathrm{R}(f)^3)$"
+    with no qualification, it means total $f$.
+
+    ### Partial function (promise problem)
+    $f : \mathrm{Dom}(f) \to \{0,1\}$ with $\mathrm{Dom}(f) \subseteq \{0,1\}^n$.
+    The algorithm may behave arbitrarily off the promise. Almost every
+    polynomial relation **fails**, usually spectacularly:
+
+    | relation | total | partial |
+    |---|---|---|
+    | $\mathrm{D}$ vs $\mathrm{R}$ | $\mathrm{D}=O(\mathrm{R}^3)$ | unbounded ([[promiseFind1]]) |
+    | $\mathrm{R}$ vs $\mathrm{Q}$ | $\mathrm{R}=O(\mathrm{Q}^4)$ | unbounded ([[Forrelation]], [[Simon]]) |
+    | $\mathrm{Q}$ vs $\widetilde{\deg}$ | polynomial | exponential [AmbainisBelovs23] |
+    | $\mathrm{D}$ vs $\mathrm{s}$ | $\mathrm{D}\le\mathrm{s}^4$ | unbounded |
+
+    What *does* survive: the trivial chain
+    $\mathrm{Q}\le\mathrm{R}\le\mathrm{R}_0\le\mathrm{D}$, the polynomial
+    method ($\widetilde{\deg}\le 2\mathrm{Q}$, $\widetilde{\deg}\le\mathrm{R}$),
+    and the general adversary characterisation
+    $\mathrm{Q}=\Theta(\mathrm{Adv}^{\pm})$. These never used totality.
+
+    Why do the combinatorial measures die? Because $\mathrm{s}$, $\mathrm{bs}$,
+    $\mathrm{C}$ and friends all measure *local* structure of the hypercube,
+    and a promise deletes most of the hypercube. A single promise can make
+    every input have an $O(1)$-size certificate while leaving the problem
+    maximally hard.
+
+    ### Relation / search problem
+    $S \subseteq \{0,1\}^n \times \mathcal{O}$ where every $x$ has at least one
+    valid output. The algorithm must output *some* $o$ with $(x,o)\in S$.
+    A **total search problem** is the query analogue of $\mathsf{TFNP}$.
+
+    Which measures still make sense?
+
+    * **Fine:** $\mathrm{D}$, $\mathrm{R}$, $\mathrm{R}_0$, $\mathrm{Q}$,
+      $\mathrm{Adv}^{\pm}$, $\mathrm{prt}$, $\mathrm{cjdeg}$,
+      $\overline{\mathrm{prt}}$, $\mathrm{DTsize}$.
+    * **Only meaningful here:** [[psD]] (pseudo-determinism) -- for a function
+      there is only one correct answer, so $\mathrm{psD}=\mathrm{R}$; for a
+      search problem, committing to a canonical answer can be exponentially
+      harder [CDM23].
+    * **Awkward or undefined:** anything defined through $f^{-1}(0)$ and
+      $f^{-1}(1)$ -- $\mathrm{s}$, $\mathrm{bs}$, $\mathrm{C}^0/\mathrm{C}^1$,
+      $\deg$, $\widetilde{\deg}$ (one can define these via the output relation
+      but the standard theorems do not apply). Approximate degree *is* usually
+      defined for search problems as the minimum degree of a "conical junta"-
+      style certificate; see [[cjdeg]].
+    * **Collapses:** $\mathrm{R}_0$ vs $\mathrm{R}$ largely collapses when
+      outputs are cheaply verifiable.
+
+    Total search problems are much closer to partial functions than to total
+    functions: [BenDavidKundu24search] give explicit conversions in both
+    directions, and use them to transport exponential separations back and forth.
+  refs: [BenDavidKundu24search, CDM23, AmbainisBelovs23, BdW02]
+  see_also: [D, R, Q, psD, cjdeg, Forrelation, promiseFind1, Simon]
+
+- id: cost-conventions
+  title: "Cost conventions: worst case, expected cost, zero error"
+  order: 20
+  blurb: "Why R_0 must be an expected-cost measure, and when worst-case and expected cost differ."
+  body: |
+    Two orthogonal choices define a randomized measure:
+
+    1. **Error model.** Zero error / one-sided error / bounded error /
+       unbounded error. ($\mathsf{ZPP}$ / $\mathsf{RP}$ / $\mathsf{BPP}$ /
+       $\mathsf{PP}$.)
+    2. **Cost model.** Worst-case number of queries over all coin flips, or
+       expected number of queries.
+
+    ### The zero-error trap
+    If you demand **zero error** and **worst-case cost**, you get
+    $\mathrm{D}(f)$ exactly: fix the coins of an always-correct depth-$T$
+    algorithm and you have a deterministic depth-$T$ tree. So
+    $\mathrm{R}_0$ and $\mathrm{Q}_0$ are, by necessity, expected-cost measures.
+
+    ### The bounded-error case
+    $\bar{\mathrm{R}}_\varepsilon(f) \le \mathrm{R}_\varepsilon(f)$ always, and
+    Markov + truncation gives
+    $\mathrm{R}_{\varepsilon+\delta}(f)\le \bar{\mathrm{R}}_\varepsilon(f)/\delta$.
+    So for *constant* error the two agree up to constants and nobody bothers to
+    distinguish them.
+
+    They stop agreeing as $\varepsilon \to 0$, and this is not pedantry:
+
+    * $\mathrm{R}(\mathrm{MAJ}_n\circ g^n)=\Theta(n\cdot\bar{\mathrm{R}}_{1/n}(g))$
+      [GoosMaystre21] -- the *expected* complexity at error $1/n$ is the right
+      quantity, and converting to $\mathrm{R}_{1/n}$ would cost a factor $n$.
+    * The strong direct sum $\bar{\mathrm{R}}_\varepsilon(f^k)=\Theta(k\bar{\mathrm{R}}_{\varepsilon/k}(f))$
+      [BlaisBrody19] is false for worst-case cost.
+    * Yao's minimax question is *about* expected cost; see [[minimax]].
+
+    ### Unbounded error
+    Letting $\varepsilon \to 1/2$ gives the $\mathsf{PP}$-flavoured measures:
+    [[sdeg]] (sign degree), [[PostQ]] (post-selected quantum), and
+    [[ardeg]]. See [[param-adeg-eps]].
+  refs: [BlaisBrody19, GoosMaystre21, Vereshchagin98, BdW02]
+  see_also: [R, Rbar, R0, Q0, sdeg, PostQ, minimax]
+
+- id: minimax
+  title: "Yao's minimax and its failures"
+  order: 30
+  blurb: "The distributional characterisation of randomized query complexity: what is true, what Vereshchagin fixed, and where it breaks."
+  body: |
+    ### The easy version (error minimax)
+    Fix a depth budget $T$. The game "algorithm picks a depth-$T$ tree,
+    adversary picks an input, payoff = probability of error" is zero-sum and
+    finite, so von Neumann gives
+    $$\mathrm{R}_\varepsilon(f) \;=\; \max_{\mu}\ \mathrm{D}^{\mu}_{\varepsilon}(f),$$
+    where $\mathrm{D}^\mu_\varepsilon(f)$ is the least depth of a deterministic
+    tree erring with probability $\le\varepsilon$ under $\mu$. No subtleties.
+
+    ### The hard version (cost minimax)
+    Now fix the error and minimise the *cost*. Yao (1977) asked whether
+    $$\bar{\mathrm{R}}_\varepsilon(f) \;\stackrel{?}{=}\; \Theta\Big(\max_\mu\ \bar{\mathrm{D}}^{\mu}_{\varepsilon}(f)\Big).$$
+    This is no longer a plain zero-sum game, because the error constraint is a
+    hard constraint rather than a payoff.
+
+    * **Yes for bounded error** [Vereshchagin98].
+    * **No for small bias** $\varepsilon = 1/2-o(1)$ [BBGM22].
+
+    ### The repair
+    [BenDavidBlais20minimax] prove a new minimax theorem producing a *single*
+    hard distribution that works at **all bias levels simultaneously**, and
+    show it applies to randomized query complexity, communication complexity,
+    approximate degree and approximate log-rank. This is the technical engine
+    behind the $\mathrm{noisyR}$ composition theorem.
+  refs: [Yao77, Vereshchagin98, BBGM22, BenDavidBlais20minimax]
+  see_also: [R, Rbar, Dmu, D_prod, noisyR, cost-conventions]
+
+- id: composition
+  title: "Composition"
+  order: 40
+  blurb: "Does M(f o g) = M(f) M(g)? The answer distinguishes the well-behaved measures from the rest, and has spawned a family of measures of its own."
+  body: |
+    For $f$ on $n$ bits and $g$ on $m$ bits, $f\circ g^n$ is the function on
+    $nm$ bits obtained by feeding $n$ disjoint copies of $g$ into $f$.
+
+    ### Scoreboard
+
+    | measure | composes? | reference |
+    |---|---|---|
+    | $\mathrm{D}$ | **exactly** | folklore |
+    | $\deg$ | **exactly** | [Tal13] |
+    | $\mathrm{Q}$ | up to constants, even for partial $f,g$ | [LMRSS11, Reichardt11] |
+    | $\mathrm{Adv}^{\pm}$ | **exactly** (SDP) | [HLS07] |
+    | $\mathrm{RS}$ | perfect lower bound $\mathrm{RS}(f\circ g)\ge\mathrm{RS}(f)\mathrm{RS}(g)$ | [BenDavidKothari18] |
+    | $\mathrm{R}$ | **NO** for partial $f,g$; open for total | [BenDavidBlais20composition] |
+    | $\widetilde{\deg}$ | upper bound yes, lower bound **open** | [Sherstov12robust, CKMPSS23] |
+    | $\mathrm{s}$, $\mathrm{bs}$, $\mathrm{C}$ | up to constants | [Tal13] |
+
+    ### Why $\mathrm{R}$ is hard
+    The natural algorithm for $f\circ g^n$ runs the outer algorithm and
+    amplifies each inner call to error $1/(3\mathrm{R}(f))$, costing
+    $O(\mathrm{R}(f)\mathrm{R}(g)\log \mathrm{R}(f))$. Two things can go wrong
+    with the matching lower bound:
+
+    1. The outer algorithm may tolerate *noisy* answers from the inner copies,
+       paying less than full price per copy. This is what [[noisyR]] measures,
+       and $\mathrm{R}(f\circ g^n)=\Omega(\mathrm{noisyR}(f)\mathrm{R}(g))$ is
+       the optimal theorem of that shape.
+    2. The outer algorithm may not need a *decision* from each inner copy, only
+       partial information. This is what [[chi]], [[chibar]], [[RS]] and
+       [[LR]] measure, and $\mathrm{R}(f\circ g^n)=\Omega(\mathrm{R}(f)\mathrm{LR}(g))$
+       is the optimal theorem of *that* shape.
+
+    Neither optimal theorem implies the conjecture, and for partial functions
+    the conjecture is simply false.
+
+    ### The inner hierarchy
+    $$\chi \;\lesssim\; \mathrm{RS} \;\lesssim\; \bar\chi \;\lesssim\; \mathrm{LR} \;\lesssim\; \mathrm{R},
+    \qquad \mathrm{LR} = \Omega(\sqrt{\mathrm{R}}).$$
+    All known separations in this chain use **partial** functions. For total
+    functions no separation is known anywhere in it -- including between
+    $\mathrm{RS}$ and $\mathrm{R}$, which is [[open-RS-vs-R]].
+  refs: [BenDavidKothari18, BenDavidBlais20composition, BBGM22, GLSS19, Sanyal18, Tal13, Sherstov12robust, CKMPSS23]
+  see_also: [comp-R, comp-adeg, comp-deg, comp-Q, comp-MAJ, RS, chi, chibar, LR, noisyR, Rstar]
+
+- id: noisy-models
+  title: "Two different noisy query models"
+  order: 50
+  blurb: "N_p (faulty oracle) and noisyR (bias purchasing) are NOT the same measure. Read this before using either."
+  body: |
+    The word "noisy" is used for two genuinely different things, and the zoo
+    keeps them as separate measures.
+
+    ### 1. Faulty oracle -- [[Np]]
+    Introduced by [FRPU94] (see also [ReischukSchmeltz91]). Every query answer
+    is independently flipped with probability $p$; the algorithm has no control
+    over this. Cost = number of queries.
+
+    * $\mathrm{N}_p(f) = O(\mathrm{R}(f)\log \mathrm{R}(f)/(1-2p)^2)$ -- repeat
+      and majority-vote.
+    * $\mathrm{N}_p(\mathrm{PARITY}_n)=\Theta(n\log n)$: the $\log$ is
+      **necessary** [FRPU94, EvansPippenger98].
+    * The quantum analogue [[robustQ]] behaves differently:
+      $\mathrm{Q}^{\mathrm{rob}}(\mathrm{PARITY}_n)=\Theta(n)$ -- **no log**
+      [BNRdW05].
+
+    ### 2. Bias purchasing -- [[noisyR]]
+    Introduced by [BenDavidBlais20composition]. The algorithm may query a bit
+    "at bias $\gamma$", receiving the correct value with probability
+    $\tfrac12+\gamma$, and pays $\gamma^2$ for it (so an exact query costs
+    $\Theta(1)$). The algorithm *chooses* the noise level per query.
+
+    * $\mathrm{noisyR}(f)\le\mathrm{R}(f)$.
+    * $\mathrm{noisyR}(f)=\Theta\big(\mathrm{R}(f\circ\mathrm{GapMaj}_n)/\mathrm{R}(\mathrm{GapMaj}_n)\big)$
+      -- an exact characterisation.
+    * $\mathrm{noisyR}$ is the largest measure $M$ with
+      $\mathrm{R}(f\circ g^n)=\Omega(M(f)\mathrm{R}(g))$.
+    * There are partial $f$ with $\mathrm{R}(f)=\mathrm{noisyR}(f)^{1+\Omega(1)}$;
+      this separation *is* the refutation of the randomized composition conjecture.
+
+    ### The difference in one line
+    In $\mathrm{N}_p$ the noise is **imposed** on the algorithm and the natural
+    question is "how much repetition do you need?"; in $\mathrm{noisyR}$ the
+    noise is **bought** by the algorithm and the natural question is "how little
+    information suffices?". Their behaviour on $\mathrm{PARITY}$ already differs:
+    $\mathrm{N}_p(\mathrm{PARITY}_n)=\Theta(n\log n)$ while
+    $\mathrm{noisyR}(\mathrm{PARITY}_n)=\Theta(n)$ (since
+    $\mathrm{R}(\mathrm{PARITY}_n)=\Theta(n)$ is full, and
+    $\mathrm{R}(f)=\Theta(n)\Rightarrow\mathrm{noisyR}(f)=\Theta(\mathrm{R}(f))$
+    [CKMPSS23]).
+  refs: [FRPU94, EvansPippenger98, ReischukSchmeltz91, BenDavidBlais20composition, BNRdW05, CKMPSS23, Gu25noisy]
+  see_also: [Np, noisyR, robustQ, R, GapMaj, PARITY, composition]
+
+- id: sensitivity-conjecture
+  title: "The sensitivity conjecture (now Huang's theorem)"
+  order: 60
+  blurb: "s, bs, C, deg, D are all polynomially related for total functions. Resolved in 2019; the exact exponents are still open."
+  body: |
+    For decades it was open whether sensitivity $\mathrm{s}(f)$ -- the most
+    local measure in the zoo -- is polynomially related to the rest.
+    [Nisan91] and [NS94] showed everything else is polynomially related:
+    $$\mathrm{s} \le \mathrm{bs} \le \mathrm{C} \le \mathrm{s}\cdot\mathrm{bs},\qquad
+    \mathrm{bs}\le 2\deg^2,\qquad \mathrm{D}\le 2\deg^4 .$$
+    The missing link was $\deg$ vs $\mathrm{s}$.
+
+    **Huang's theorem (2019):** $\deg(f) \le \mathrm{s}(f)^2$.
+
+    The proof is two pages: a signed adjacency matrix of the hypercube whose
+    eigenvalues are $\pm\sqrt n$, plus Cauchy interlacing, gives that every
+    induced subgraph of $Q_n$ on more than $2^{n-1}$ vertices has maximum
+    degree $\ge\sqrt n$. [ABKRT21] later gave the spectral refinement
+    $\deg(f)\le\lambda(f)^2$ with $\lambda\le\mathrm{s}$, which is where
+    [[lambda]] comes from.
+
+    ### What is still open
+    The exponents. Currently
+    $$\mathrm{bs}(f) \le \mathrm{s}(f)^4 \quad\text{(from } \mathrm{bs}\le 2\deg^2 \le 2\mathrm{s}^4),$$
+    while the best separation is $\mathrm{bs}(f)\ge\tfrac23\mathrm{s}(f)^2-\tfrac13\mathrm{s}(f)$
+    [AmbainisSun11], improving [Rubinstein95]. See [[open-bs-vs-s]].
+  refs: [Huang19, Nisan91, NS94, ABKRT21, Rubinstein95, AmbainisSun11, HKP11]
+  see_also: [s, bs, C, deg, lambda, D, open-bs-vs-s, Rubinstein]
+
+- id: monotone
+  title: "Monotone functions"
+  order: 70
+  blurb: "Everything collapses: s = bs = C, D <= s^2, and the quantum speedup is at most quadratic."
+  body: |
+    For monotone $f$:
+
+    * $\mathrm{s}(f) = \mathrm{bs}(f) = \mathrm{C}(f)$ [Nisan91].
+    * Hence $\mathrm{D}(f) \le \mathrm{C}^0(f)\mathrm{C}^1(f) \le \mathrm{s}(f)^2$
+      [BdW02, Cor. 5].
+    * $\mathrm{s}(f) \le \deg(f)$ [BdW02, Prop. 4].
+    * Therefore $\mathrm{D}(f)=O(\mathrm{R}(f)^2)$, $\mathrm{D}(f)=O(\mathrm{Q}_E(f)^2)$
+      and $\mathrm{D}(f)=O(\mathrm{Q}(f)^4)$ [BdW02, Cor. 6].
+    * **Monotone graph properties** have $\mathrm{Q}(f)=\Omega(n)$ on
+      $\binom{n}{2}$-bit inputs, i.e. $\Omega(N^{1/2})$ [ABKRT21, Thm 5] --
+      a quantum version of the Aanderaa-Karp-Rosenberg evasiveness programme.
+    * Zero-error quantum gives near-optimal separations for monotone graph
+      properties [BCWZ99].
+
+    Monotonicity is the standard sanity check: any conjectured
+    super-quadratic separation must use a non-monotone function.
+  refs: [Nisan91, BdW02, ABKRT21, BCWZ99]
+  see_also: [s, bs, C, D, Q, QE, sensitivity-conjecture]
+
+- id: cheat-sheets
+  title: "Cheat sheets: turning partial separations into total ones"
+  order: 80
+  blurb: "The Aaronson-Ben-David-Kothari trick that converts a partial-function separation into a total-function separation with the same exponents."
+  body: |
+    Most extremal examples in query complexity are naturally *partial*
+    ([[Forrelation]], [[kForrelation]]). The **cheat sheet** construction
+    [ABK16] turns a partial function $f$ into a total function $f_{\mathrm{CS}}$
+    while roughly preserving the measures of interest.
+
+    Sketch: $f_{\mathrm{CS}}$ takes $\ell$ independent inputs
+    $x^1,\dots,x^\ell$ to $f$ together with $2^\ell$ "cells", each holding a
+    claimed certificate. The string $f(x^1)\cdots f(x^\ell)$ addresses one
+    cell; the function outputs $1$ iff that cell contains valid certificates
+    for all $\ell$ answers. Off-promise inputs are handled because the
+    certificate check is a *total* condition.
+
+    Effects:
+    * $\mathrm{Q}(f_{\mathrm{CS}}) = \tilde\Theta(\mathrm{Q}(f))$ and similarly
+      for the other "algorithmic" measures.
+    * $\mathrm{R}(f_{\mathrm{CS}}) = \tilde\Theta(\mathrm{R}(f))$.
+    * Certificate-based measures ($\mathrm{C}$, $\mathrm{bs}$, $\mathrm{s}$)
+      become small, which is exactly what one wants for separations *from*
+      those measures.
+
+    This is how the cubic $\mathrm{R}$-vs-$\mathrm{Q}$ separation and the
+    quadratic $\mathrm{Q}$-vs-$\deg$ separation are obtained for total
+    functions from Forrelation-type partial functions.
+  refs: [ABK16, AaronsonAmbainis14, BansalSinha21, SSW21]
+  see_also: [cheatsheet, Forrelation, kForrelation, Q, R, deg, settings]
+
+- id: lifting
+  title: "Lifting: query complexity as a source of communication lower bounds"
+  order: 90
+  blurb: "Why query-complexity measures are studied so intensely: composed with a small gadget, they transfer to communication complexity."
+  body: |
+    A *lifting theorem* says: for a suitable two-party gadget $g$ on
+    $O(\log n)$ bits,
+    $$\mathrm{M}^{\mathrm{cc}}(f\circ g^n) \;=\; \Theta\big(\mathrm{M}(f)\cdot \log n\big)$$
+    for the appropriate pair of query and communication measures $\mathrm{M}$.
+    Known for deterministic [GPW18], randomized, and several LP-based measures.
+
+    Consequences visible in this zoo:
+
+    * The $\mathrm{D}$-vs-$\mathrm{SP}$ separation [GPW18] was found in order to
+      refute the log-approximate-rank / partition-number conjecture in
+      communication complexity.
+    * [BenDavidKothari18] note that a zero-error lifting theorem would imply a
+      bounded-error one, via sabotage complexity.
+    * The strong direct sum of [BlaisBrody19] lifts to
+      $\mathrm{R}^{\mathrm{cc}}(f^k)=\Theta(k\log k\cdot \mathrm{R}^{\mathrm{cc}}(f))$.
+    * The $\mathrm{D}^{\oplus}$-vs-Fourier-sparsity question is the query
+      analogue of the **log-rank conjecture**; see [[open-log-rank]].
+  refs: [GPW18, BenDavidKothari18, BlaisBrody19, TsangWongXieZhang13]
+  see_also: [D, SP, PDT, spar, RS, open-log-rank]
+
+- id: adversary-methods
+  title: "The adversary methods"
+  order: 100
+  blurb: "From Ambainis' 2000 lower bound to the SDP that exactly characterises quantum query complexity."
+  body: |
+    ### Positive weights -- [[Adv]]
+    Ambainis' original method, in the form
+    $\mathrm{Adv}(f)=\max_{\Gamma\ge 0}\|\Gamma\|/\max_i\|\Gamma\circ D_i\|$.
+    Špalek-Szegedy showed the spectral, weighted, Kolmogorov-complexity and
+    minimax formulations all coincide [SpalekSzegedy06].
+
+    **Barrier:** $\mathrm{Adv}(f)\le\sqrt{\mathrm{C}^0(f)\mathrm{C}^1(f)}$
+    [SpalekSzegedy06, Zhang05], strengthened to
+    $\sqrt{\mathrm{RC}^0(f)\mathrm{RC}^1(f)}$ [KulkarniTal16]. So the positive
+    adversary is useless for [[ElementDistinctness]], where $\mathrm{C}=2$ but
+    $\mathrm{Q}=\Theta(n^{2/3})$.
+
+    ### Negative weights -- [[Advpm]]
+    Dropping the non-negativity constraint gives $\mathrm{Adv}^{\pm}$, which
+    **exactly characterises** quantum query complexity:
+    $\mathrm{Q}(f)=\Theta(\mathrm{Adv}^{\pm}(f))$ [HLS07, Reichardt11, LMRSS11],
+    for total functions, partial functions, and state conversion. It is an SDP,
+    hence computable in principle, and it composes perfectly.
+
+    ### Classical analogues
+    [[CA]], the classical adversary bound, and the certificate-game family
+    [[CG]] / [[CGpub]] / [[CGstar]] / [[CGns]] [CGLMSG23]. All classical
+    adversary methods are equivalent for total functions [ABIKPS17]. Two
+    pleasant identities from the certificate-game paper: the single-bit
+    public-coin game is $\Theta(\mathrm{s}(f))$, and the single-bit private-coin
+    game is $\lambda(f)^2$.
+
+    ### Spectral sensitivity -- [[lambda]]
+    $\lambda(f)$, the spectral norm of the sensitivity graph, is the simplest
+    quantity below $\mathrm{Adv}$: $\lambda\le\mathrm{Adv}\le\mathrm{Adv}^{\pm}=\Theta(\mathrm{Q})$,
+    and $\sqrt{\mathrm{s}}\le\lambda\le\mathrm{s}$ [ABKRT21].
+  refs: [Ambainis02, SpalekSzegedy06, Zhang05, HLS07, Reichardt11, LMRSS11, ABKRT21, CGLMSG23, ABIKPS17, KulkarniTal16]
+  see_also: [Adv, Advpm, lambda, CA, CG, CGpub, CGstar, CGns, MAdv, gamma2, Q]
+
+- id: reading-the-tables
+  title: "How to read this zoo"
+  order: 5
+  blurb: "Conventions: what O(.) means here, what a 'witness' is, and how confident each entry is."
+  body: |
+    ### Relations
+    Every relation page is about an ordered pair $(\mathrm{M}_1,\mathrm{M}_2)$
+    in a fixed **setting** (total / partial / relation), and has two halves:
+
+    * **Upper bounds** -- statements $\mathrm{M}_1(f)=O(g(\mathrm{M}_2(f)))$
+      holding for *all* $f$ in that setting.
+    * **Lower bounds** -- statements $\exists$ a family $f_n$ with
+      $\mathrm{M}_1(f_n)=\Omega(g(\mathrm{M}_2(f_n)))$, together with the
+      **witness** function family, which links to its own page.
+
+    A relation is `settled` when the two match, `gap` when they do not,
+    `open` when the upper bound is conjectural, and `fails` when no bound
+    exists at all.
+
+    ### The exponent matrix
+    The big table reproduces (and updates) Table 1 of [IJKKKSWW23]: the cell in
+    row $\mathrm{M}_1$, column $\mathrm{M}_2$ records $a,b$ meaning
+    $$\mathrm{M}_1(f) = \Omega\big(\mathrm{M}_2(f)^{a}\big)\ \text{ is witnessed, and }\
+    \mathrm{M}_1(f) = O\big(\mathrm{M}_2(f)^{b}\big)\ \text{ is a theorem}.$$
+    A shaded cell means $a<b$ (a gap). Exponents hide $n^{o(1)}$ factors; the
+    per-pair pages carry the fine-grained statements with logs and constants.
+
+    ### Confidence
+    Entries carry `conf: high | medium | low`, reflecting how sure *the
+    editor of this zoo* is that the statement and attribution are right --
+    not how sure the community is. Anything marked `todo` is an admitted gap
+    in this database, not in the literature.
+  refs: [IJKKKSWW23]
+  see_also: [settings, cost-conventions]

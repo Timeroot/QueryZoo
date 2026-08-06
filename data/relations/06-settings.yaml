@@ -1,0 +1,226 @@
+# =====================================================================
+# RELATIONS, part 6: what changes between the three settings.
+#
+# Total functions      f : {0,1}^n -> {0,1}
+# Partial functions    f : Dom(f) -> {0,1},  Dom(f) subset {0,1}^n
+# Relations (search)   S subset {0,1}^n x O,  every x has >= 1 valid output
+#
+# Almost every polynomial relation in this zoo is a THEOREM ABOUT TOTAL
+# FUNCTIONS.  This file records the ones that survive, the ones that die,
+# and the ones that only exist here.
+# Schema documented in 01-classical-core.yaml.
+# =====================================================================
+
+relations:
+
+# ---------------------------------------------------- partial: everything dies
+- from: D
+  to: R
+  setting: partial
+  status: fails
+  upper:
+    - stmt: '\text{No bound. } \mathrm{D}(f)/\mathrm{R}(f) \text{ is unbounded.}'
+      form: {kind: none}
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}(\mathrm{promiseFind1}_n)=O(1),\ \mathrm{D}(\mathrm{promiseFind1}_n)=n/2+1'
+      form: {kind: unbounded}
+      witness: promiseFind1
+      note: 'The promise "at least half the bits are $1$" makes random sampling trivial and adversary arguments useless.'
+      conf: high
+  notes: |
+    This is the template for the whole partial-function setting: **every**
+    polynomial relation between a "hard" and an "easy" measure can be broken by
+    a promise, because promises destroy the combinatorial structure
+    (certificates, blocks, sensitivity) that the total-function proofs use.
+  see_also: [D, R, promiseFind1, settings]
+
+- from: R
+  to: Q
+  setting: partial
+  status: fails
+  upper:
+    - stmt: '\text{No bound. Unbounded (indeed exponential) separation.}'
+      form: {kind: none}
+      conf: high
+  lower:
+    - stmt: '\mathrm{Q}(\mathrm{Forrelation}_n)=1,\ \ \mathrm{R}(\mathrm{Forrelation}_n)=\tilde\Theta(\sqrt n)'
+      form: {kind: unbounded}
+      witness: Forrelation
+      refs: [AaronsonAmbainis14, BansalSinha21, SSW21]
+      note: 'And $\mathrm{Q}(\mathrm{Simon}_n)=O(n)$ vs $\mathrm{R}(\mathrm{Simon}_n)=2^{\Omega(n)}$ -- exponential.'
+      conf: high
+    - stmt: '\mathrm{Q}(k\text{-}\mathrm{Forrelation})=\lceil k/2\rceil,\ \mathrm{R}=\tilde\Theta(n^{1-1/k})'
+      witness: kForrelation
+      refs: [BansalSinha21, SSW21]
+      note: 'Optimal: $\mathrm{R}(f) = O(n^{1-1/(2\mathrm{Q}(f))})$-flavoured upper bounds hold in general, so this is the extremal shape.'
+      conf: high
+  notes: |
+    $\mathrm{Q}$ vs $\mathrm{R}$ is the single sharpest illustration of why the
+    three settings must be kept apart:
+
+    | setting | best known separation | upper bound |
+    |---|---|---|
+    | total | $\mathrm{R}=\tilde\Omega(\mathrm{Q}^3)$ | $\mathrm{R}\le\mathrm{D}=O(\mathrm{Q}^4)$ |
+    | partial | exponential | none |
+    | relation | exponential | none |
+  see_also: [R, Q, Forrelation, kForrelation, Simon, settings]
+
+- from: adeg
+  to: Q
+  setting: partial
+  status: fails
+  upper:
+    - stmt: '\widetilde{\deg}(f) \le 2\,\mathrm{Q}(f) \text{ still holds}'
+      form: {exp: 1, kind: const}
+      refs: [BBCMdW01]
+      note: 'The polynomial method is one of the very few things that survives promises intact -- it never used totality.'
+      conf: high
+  lower:
+    - stmt: '\exists \text{ partial } f:\ \mathrm{Q}(f) = 2^{\Omega(\widetilde{\deg}(f))}'
+      form: {kind: exp, dir: reverse}
+      refs: [AmbainisBelovs23, BenDavidKundu24search]
+      note: 'An **exponential** separation between quantum query complexity and approximate degree, so the polynomial method is arbitrarily lossy off-promise.'
+      conf: high
+  notes: |
+    For total $f$ the relation is $\mathrm{Q}=\Omega(\widetilde{\deg})$ and
+    $\mathrm{Q}=O(\widetilde{\deg}^{?})$ with the upper direction wide open but
+    at most polynomial (via $\mathrm{D}=O(\widetilde{\deg}^6)$). For partial $f$
+    the gap is unbounded.
+  see_also: [adeg, Q, Advpm, settings, AmbainisBelovs23]
+
+- from: adeg
+  to: Adv
+  setting: relation
+  status: fails
+  lower:
+    - stmt: '\exists \text{ total search problem } S:\ \widetilde{\deg}(S) = 2^{\Omega(\mathrm{Adv}(S))}'
+      form: {kind: exp}
+      refs: [BenDavidKundu24search]
+      note: 'Exponential separation between approximate degree and the *positive* quantum adversary, for a **total search problem**.'
+      conf: high
+  see_also: [adeg, Adv, settings, BenDavidKundu24search]
+
+- from: cjdeg
+  to: Q
+  setting: relation
+  status: fails
+  lower:
+    - stmt: '\exists \text{ total search problem } S:\ \mathrm{Q}(S) = 2^{\Omega(\mathrm{cjdeg}(S))}'
+      form: {kind: exp, dir: reverse}
+      refs: [BenDavidKundu24search]
+      note: 'Strengthens the $\mathrm{Q}$-vs-$\widetilde{\deg}$ separation, since conical junta degree is usually the *larger* measure. Even a $\mathrm{R}$-vs-$\mathrm{cjdeg}$ separation was not previously known for total search problems.'
+      conf: high
+  notes: |
+    Total search problems are the query analogue of $\mathsf{TFNP}$: they are
+    "total" in the sense that every input has a valid answer, but they still
+    admit the exponential separations one expects from partial functions.
+    [BenDavidKundu24search] give explicit conversions in both directions
+    between partial functions and total search problems, so the two settings
+    are much closer to each other than either is to total *functions*.
+  see_also: [cjdeg, Q, rprt, settings, BenDavidKundu24search]
+
+# ---------------------------------------------------- relations: collapses
+- from: R0
+  to: R
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{R}_0(S) = O(\mathrm{R}(S))\ \text{ for total search problems with verifiable outputs}'
+      form: {exp: 1, kind: const, inherit: false}
+      note: 'If a candidate output can be *checked* with $O(1)$ further queries (as for $\mathrm{SearchCNF}$, where one reads the falsified clause), then repeating a bounded-error algorithm until the check passes turns $\mathrm{R}$ into $\mathrm{R}_0$ at constant expected cost. This is why the Las Vegas / Monte Carlo distinction largely evaporates for search problems.'
+      conf: medium
+      todo: 'Pin down the exact hypothesis and a citation; the statement is folklore in the TFNP-query literature but the clean form is hypothesis-dependent.'
+  notes: |
+    Contrast with total *functions*, where $\mathrm{R}_0$ can be quadratically
+    larger than $\mathrm{R}$.
+  see_also: [R0, R, SearchCNF, settings]
+
+- from: D
+  to: psD
+  setting: relation
+  status: gap
+  upper:
+    - stmt: '\mathrm{D}(S) = O\big(\mathrm{psD}(S)^3\big)'
+      form: {exp: 3, kind: const}
+      refs: [CDM23]
+      note: 'Improves the quartic bound implicit in [GGR13]. Only meaningful for relations -- for functions $\mathrm{psD}=\mathrm{R}$ trivially.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{D}(S_n) = \tilde\Omega\big(\mathrm{psD}(S_n)^{?}\big)'
+      conf: low
+      todo: 'Best known lower-bound exponent for D vs psD not yet recorded.'
+  notes: |
+    **Pseudo-determinism only exists in the relational setting.** For a
+    function there is only one correct output, so $\mathrm{psD}=\mathrm{R}$;
+    for a search problem the algorithm must commit to a *canonical* valid
+    answer, which can be much harder.
+  see_also: [D, psD, R, settings, ApproxHW]
+
+- from: psD
+  to: R
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{R}(S) \le \mathrm{psD}(S) \le \mathrm{D}(S)'
+      form: {exp: 1, kind: exact, dir: reverse}
+      refs: [GGR13]
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}(\mathrm{ApproxHW}) = O(1),\ \ \mathrm{psD}(\mathrm{ApproxHW}) = \Omega(n)'
+      form: {kind: unbounded}
+      witness: ApproxHW
+      refs: [CDM23]
+      note: 'An **exponential** separation: guessing an approximate Hamming weight is trivial, committing to one canonical value is not.'
+      conf: high
+    - stmt: '\mathrm{psD}(\mathrm{SearchCNF}) = \Omega(n^{1/3}) \text{ for random } k\text{-CNFs}'
+      witness: SearchCNF
+      refs: [CDM23, GIPS21]
+      conf: high
+  see_also: [psD, R, D, ApproxHW, SearchCNF, settings]
+
+# ---------------------------------------------------- what survives
+- from: adeg
+  to: R
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\widetilde{\deg}(f) \le \mathrm{R}(f) \text{ and } \widetilde{\deg}(f)\le 2\mathrm{Q}(f),\ \text{ for total AND partial } f'
+      form: {exp: 1, kind: exact}
+      refs: [BdW02, BBCMdW01]
+      note: 'The polynomial method is *setting-agnostic*: the acceptance probability of any algorithm is a polynomial of degree $\le$ (twice) the number of queries, whatever the domain.'
+      conf: high
+  notes: |
+    Measures that survive the move to partial functions unchanged:
+    $\deg$-based lower bounds, $\mathrm{Adv}^{\pm}$ (still $=\Theta(\mathrm{Q})$),
+    $\mathrm{prt}$, and the trivial orderings
+    $\mathrm{Q}\le\mathrm{R}\le\mathrm{R}_0\le\mathrm{D}$.
+
+    Measures that become **meaningless or trivial**: $\mathrm{s}$, $\mathrm{bs}$,
+    $\mathrm{C}$ and friends can all be $O(1)$ while $\mathrm{D}=n$, because a
+    promise can force the "certificate" to be the promise itself.
+  see_also: [adeg, R, Q, Advpm, settings]
+
+- from: Q
+  to: Advpm
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{Q}(f) = \Theta(\mathrm{Adv}^{\pm}(f)) \text{ for total, partial, and state-conversion problems}'
+      form: {exp: 1, kind: theta}
+      refs: [LMRSS11, Reichardt11]
+      note: 'The general adversary bound characterises quantum query complexity in *all three* settings (for relations, via the state conversion / function evaluation framework). It is the one exact characterisation in this zoo that does not care about the setting.'
+      conf: high
+  see_also: [Q, Advpm, settings]
+
+- from: D_size
+  to: Q
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{Q}_{2/5}(S) = O\big(\sqrt{\mathrm{DTsize}(S)}\big)'
+      form: {exp: 0.5, kind: const, dir: reverse}
+      refs: [BdW02]
+      note: 'Holds for relations, and even when the decision tree is randomized -- one of the few bounds explicitly stated for the relational setting in the classical literature.'
+      conf: high
+  see_also: [D_size, Q, settings]

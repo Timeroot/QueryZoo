@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% block title %}Editing &middot; {{ site.title }}{% endblock %}
+
+{% block body %}
+<div class="wrap">
+  <h1 class="pagetitle">Editing the zoo</h1>
+  <p class="lede">All content is YAML under <code>data/</code>. Nothing factual lives in the
+  templates or in <code>build.py</code>. Edit a file, rebuild, reload.</p>
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card prose">
+        <h2>Build</h2>
+        <pre><code>python3 build.py --strict          # fails if any cross-reference is unresolved
+python3 build.py --serve 8000      # build then serve at http://localhost:8000/
+python3 -m http.server -d site 8000</code></pre>
+        <p><code>--strict</code> checks every citation key, every <code>see_also</code> id,
+        every <code>witness</code>, and every <code>[[wiki-link]]</code> against the union of
+        measure ids, function ids, concept ids, open-problem ids, relation ids, and reference
+        keys (including aliases). Use it before committing.</p>
+      </section>
+
+      <section class="card prose">
+        <h2>Where things live</h2>
+        <table class="listing">
+          <thead><tr><th>File</th><th>Holds</th></tr></thead>
+          <tbody>
+            <tr><td><code>data/site.yaml</code></td><td>title, navigation, the category list, the three settings, the status vocabulary</td></tr>
+            <tr><td><code>data/refs.yaml</code></td><td>bibliography &mdash; a flat map from citation key to entry</td></tr>
+            <tr><td><code>data/measures/*.yaml</code></td><td>one block per measure, under a top-level <code>measures:</code> list</td></tr>
+            <tr><td><code>data/functions/*.yaml</code></td><td>witness families, under <code>functions:</code></td></tr>
+            <tr><td><code>data/relations/*.yaml</code></td><td>the bounds, under <code>relations:</code> &mdash; this is the heart of the site</td></tr>
+            <tr><td><code>data/tables/*.yaml</code></td><td>the exponent matrix</td></tr>
+            <tr><td><code>data/concepts.yaml</code></td><td>prose pages</td></tr>
+            <tr><td><code>data/open_problems.yaml</code></td><td>open problems</td></tr>
+          </tbody>
+        </table>
+        <p>Files inside a directory are concatenated in filename order, so
+        <code>data/relations/08-whatever.yaml</code> is a perfectly good place for new material.</p>
+      </section>
+
+      <section class="card prose">
+        <h2>Adding a bound</h2>
+        <p>This is the common case. Append to any file in <code>data/relations/</code>:</p>
+<pre><code>relations:
+  - from: R              # the LHS measure id  (the matrix ROW)
+    to: Q                # the RHS measure id  (the matrix COLUMN)
+    setting: total       # total | partial | relation
+    status: gap          # settled | gap | open | fails
+    upper:
+      - stmt: '\mathrm{R}(f) = O\big(\mathrm{Q}(f)^4\big)'
+        form: {exp: 4, kind: const}    # machine-readable shadow of stmt
+        refs: [ABKRT21]
+        note: 'Via $\mathrm{R} \le \mathrm{D} = O(\mathrm{Q}^4)$.'
+        conf: high       # high | medium | low
+        tight: 'up to the exponent'
+    lower:
+      - stmt: '\mathrm{R}(f_n) = \tilde\Omega\big(\mathrm{Q}(f_n)^3\big)'
+        form: {exp: 3, kind: tilde}
+        witness: pointer # a function id from data/functions/
+        refs: [ABBLSS17]
+        conf: high
+    notes: |
+      Free markdown. Use $\LaTeX$ freely and [[wiki-links]] to any id.
+    see_also: [D, adeg, composition]</code></pre>
+        <p>Both <code>upper</code> and <code>lower</code> are optional. A bound is one bullet;
+        add as many as you like and they render in order, so put the strongest first.</p>
+        <p>Give the record an <code>id:</code> if it is about a phenomenon rather than the raw
+        pair (a composition theorem, an \(\varepsilon\)-dependence); it then gets a stable
+        anchor and appears on the <a href="{{ root }}relations.html">relations index</a>.
+        Optional extras: <code>headline</code>, <code>kind: composition</code>,
+        <code>param: eps</code>, <code>superseded_by: &lt;refkey&gt;</code>.</p>
+      </section>
+
+      <section class="card prose" id="derived">
+        <h2>The <code>form:</code> field, and what the build derives</h2>
+        <p>A <code>stmt</code> is LaTeX for a human. <code>form</code> is the same statement for
+        the build &mdash; the <em>only</em> field the engine reasons with. Without one, a bullet
+        still renders, it just does not take part in the matrix cells, the tightness chips or the
+        closure. With one:</p>
+<pre><code>form: {exp: 2, log: 1, kind: const}   # = O(M2^2 log M2)
+
+exp:     the exponent                       (default 1)
+log:     how many log factors               (default 0)
+kind:    exact    M1 &lt;= M2^exp, no hidden constant
+         const    O(...) or an explicit constant
+         theta    Theta(...): tight both ways -- also gives the converse edge
+         tilde    up to polylogs
+         exp      only an exponential bound   (upper side only)
+         log      only a logarithmic one      (upper side only)
+         none     no bound of this form exists (upper side only)
+         unbounded                            (lower side only)
+dir:     reverse -- this bullet really bounds `to` in terms of `from`,
+         so file it under the reverse pair rather than claim it here
+inherit: false -- do NOT propagate to other settings (side conditions!)</code></pre>
+        <p>An <code>equivalent:</code> entry on a measure page takes the same field, with
+        <code>setting:</code> defaulting to <code>total</code>.</p>
+
+        <h3>The three derivation rules</h3>
+        <ul class="tick">
+          <li><b>Transitive closure.</b> \(M_1 \le M_2^{p}\log^{a}M_2\) and
+          \(M_2 \le M_3^{q}\log^{b}M_3\) give \(M_1 = O(M_3^{pq}\log^{bp+a}M_3)\), up to four
+          steps. <code>exact</code> composed with <code>exact</code> stays exact,
+          <code>tilde</code> is contagious, and a cycle of exponent below 1 is reported as a data
+          error rather than rendered.</li>
+          <li><b>Separations pushed forward.</b> A family with \(M_1 \ge M_2^{p}\), plus a
+          universal \(M_3 = O(M_2^{r})\), separates \(M_1\) from \(M_3\) at exponent \(p/r\) on
+          that same family.</li>
+          <li><b>Setting inheritance.</b> Upper bounds travel from the general to the special
+          (relation &rarr; partial &rarr; total); separations and <code>none</code> travel the
+          other way (total &rarr; partial &rarr; relation), since a hard total function is a hard
+          partial function. Both are gated on the measure being defined in the target setting.
+          A bound with a side condition &mdash; &ldquo;for search problems with verifiable
+          outputs&rdquo; &mdash; must carry <code>inherit: false</code>, or it will quietly
+          become a false theorem about total functions.</li>
+        </ul>
+        <p>Everything derived is labelled as such wherever it appears, is dropped in favour of a
+        recorded statement of the same strength, and is never written back to the YAML. If a
+        derived bound looks wrong, the fix is in the data: read the derivation chain in the
+        tooltip, find the step that overstates, and correct or annotate that record.</p>
+      </section>
+
+      <section class="card prose">
+        <h2>Conventions worth keeping</h2>
+        <ul class="tick">
+          <li><b>Direction.</b> <code>from</code> is the quantity being bounded. An
+          <code>upper</code> entry on the pair \((M_1,M_2)\) is a statement
+          \(M_1 = O(g(M_2))\); a <code>lower</code> entry is a separation
+          \(M_1 = \Omega(g(M_2))\) on some family. Put the reverse direction in the reverse pair;
+          the two pages link to each other.</li>
+          <li><b>Keep the logs.</b> The whole point of the fine-grained layer is that
+          \(O(\mathrm{R}^2\log \mathrm{R})\) and \(\tilde O(\mathrm{R}^2)\) are different
+          statements. Write \(\tilde O\) only when the source does.</li>
+          <li><b>Say which setting.</b> A statement with no setting is a bug. If a bound is
+          known only for total functions, that is a <em>fact about the bound</em> and belongs
+          in the <code>total</code> record, with a <code>fails</code> record for
+          <code>partial</code> if there is a counterexample.</li>
+          <li><b>Bare-LaTeX fields.</b> <code>stmt:</code>, <code>headline:</code> and
+          <code>value:</code> hold LaTeX with no <code>$</code> delimiters &mdash; the templates
+          wrap them. Every other prose field is markdown, where you <em>do</em> write
+          <code>$&hellip;$</code>.</li>
+          <li><b>Confidence.</b> <code>conf: low</code> renders a visible <span class="conf low">?</span>.
+          Use it rather than deleting something you are unsure of, and pair it with
+          <code>todo:</code> saying what to check.</li>
+          <li><b>Witnesses are ids.</b> <code>witness: pointer</code>, not
+          &ldquo;the pointer function&rdquo;. If the function is not in the catalogue yet, add a
+          stub to <code>data/functions/</code> with just <code>id/name/short/refs</code>; the
+          page will show a &ldquo;definition not yet transcribed&rdquo; banner until someone
+          fills in <code>formal:</code>.</li>
+        </ul>
+      </section>
+
+      <section class="card prose">
+        <h2>Cross-references</h2>
+        <p>Anywhere in a markdown field you can write <code>[[D]]</code>, <code>[[pointer]]</code>,
+        <code>[[minimax]]</code>, <code>[[open-D-vs-bs]]</code>, or <code>[[Nisan91]]</code> and
+        it becomes a link with a sensible label; <code>[[D|the deterministic measure]]</code>
+        overrides the label. A bare <code>[Nisan91]</code> or <code>[BdW02, Cor. 1]</code> in
+        prose is auto-linked too, as long as the first token is a known citation key.</p>
+        <p>Ids are global and must be unique across measures, functions, concepts, open problems,
+        and named relations.</p>
+      </section>
+
+      <section class="card prose">
+        <h2>Adding a measure</h2>
+<pre><code>measures:
+  - id: Rbar
+    name: "Expected-cost randomized query complexity"
+    symbol: '\bar{\mathrm{R}}_\varepsilon(f)'
+    aliases: ["Las Vegas cost", "expected query complexity"]
+    category: randomized      # must be an id from site.yaml
+    order: 20                 # position within the category
+    short: "One line, shown in listings."
+    definition: |
+      Markdown + $\LaTeX$.
+    params:
+      - name: eps
+        symbol: '\varepsilon'
+        default: '1/3'
+        range: '[0, 1/2)'
+        description: "..."
+        dependence: |
+          Markdown block on how the measure moves with the parameter.
+    settings:
+      total:    {defined: true,  note: "..."}
+      partial:  {defined: true,  note: "..."}
+      relation: {defined: false, note: "why not"}
+    facts:
+      - '$\bar{\mathrm{R}} \le \mathrm{R}$ always.'
+    equivalent:
+      - measure: R
+        statement: 'Equal up to a constant for total $f$ ...'
+        form: {exp: 1, kind: theta}   # optional; see "form" above
+        setting: total
+        refs: [KulkarniTal16]
+    refs: [BdW02]
+    see_also: [R, cost-conventions]
+    confidence: high</code></pre>
+        <p>Adding it to the matrix is separate and optional: the matrix is a faithful copy of a
+        published table, kept in <code>data/tables/total-exponents.yaml</code> with any
+        deviations marked <code>updated: true</code> plus an <code>update_note</code>.</p>
+      </section>
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>Checklist for a new bound</h2>
+        <ul class="tick small">
+          <li>Read the source; do not paraphrase an abstract.</li>
+          <li>Note the theorem number in <code>note:</code>.</li>
+          <li>Check whether it is stated for total or all functions.</li>
+          <li>Keep log factors and \(\varepsilon\) dependence.</li>
+          <li>Name the witness, add a function stub if needed.</li>
+          <li>Run <code>python3 build.py --strict</code>.</li>
+        </ul>
+      </section>
+      <section class="card tight">
+        <h2>Gotchas</h2>
+        <ul class="tick small">
+          <li>YAML eats backslashes in double-quoted scalars. Use single quotes
+          (<code>'\mathrm{R}'</code>) or a block scalar (<code>|</code>) for LaTeX.</li>
+          <li><code>stmt:</code> is bare LaTeX &mdash; no <code>$</code>. Every other prose field
+          is markdown, where you <em>do</em> need <code>$</code>.</li>
+          <li>A <code>?</code> in a matrix cell must be quoted: <code>b: '?'</code>.</li>
+          <li>Duplicate ids are a build error, not a warning.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+</div>
+{% endblock %}

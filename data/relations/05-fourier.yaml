@@ -1,0 +1,194 @@
+# =====================================================================
+# RELATIONS, part 5: Fourier-analytic measures.
+# Schema documented in 01-classical-core.yaml.
+# =====================================================================
+
+relations:
+
+- from: Inf
+  to: s
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{I}(f) \le \mathrm{s}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [ODonnell14]
+      note: 'Total influence is the *average* number of sensitive coordinates, sensitivity the maximum. Equality for $\mathrm{PARITY}_n$ (both $=n$).'
+      witness: PARITY
+      conf: high
+  lower:
+    - stmt: '\mathrm{I}(f) \text{ can be exponentially smaller than } \mathrm{s}(f)'
+      witness: AND
+      note: '$\mathrm{I}(\wedge_n) = n\,2^{-(n-1)}$ while $\mathrm{s}(\wedge_n)=n$. Influence is an *average-case* measure, so it is not comparable to the worst-case zoo in the usual way.'
+      conf: high
+  notes: |
+    Influence-type measures sit slightly outside the main lattice: they lower
+    bound average-case rather than worst-case complexity. The useful direction
+    is always $\mathrm{I}(f) \le (\text{worst-case measure})$.
+  see_also: [Inf, s, MaxInf, D]
+
+- from: Inf
+  to: deg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{I}(f) \le \deg(f)'
+      form: {exp: 1, kind: exact}
+      note: '$\mathrm{I}(f)=\sum_S |S|\hat f(S)^2 \le \deg(f)\sum_S \hat f(S)^2 = \deg(f)$ by Parseval.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{I}(\mathrm{PARITY}_n)=\deg(\mathrm{PARITY}_n)=n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      conf: high
+  see_also: [Inf, deg]
+
+- from: Inf
+  to: adeg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{I}(f) = O(\widetilde{\deg}(f))'
+      form: {exp: 1, kind: const}
+      refs: [Shi00]
+      note: 'Shi''s theorem. Hence $\mathrm{I}(f)=O(\mathrm{Q}(f))$ -- a quantum algorithm cannot be much cheaper than the total influence of what it computes.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{I}(\mathrm{PARITY}_n)=n,\ \widetilde{\deg}(\mathrm{PARITY}_n)=n'
+      form: {exp: 1, kind: const}
+      witness: PARITY
+      conf: high
+  see_also: [Inf, adeg, Q, Shi00]
+
+- from: D
+  to: MaxInf
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{D}(f) \;\ge\; \frac{\mathrm{Var}(f)}{\mathrm{MaxInf}(f)}'
+      refs: [OSSS05]
+      note: '**OSSS inequality:** $\mathrm{Var}(f) \le \sum_i \delta_i(T)\,\mathrm{Inf}_i(f)$ for every decision tree $T$, where $\delta_i(T)$ is the probability that $T$ queries $i$. Summing, $\sum_i\delta_i(T) \le \mathrm{D}(f)$, so some coordinate has influence at least $\mathrm{Var}(f)/\mathrm{D}(f)$.'
+      conf: high
+  notes: |
+    OSSS is the standard route from "shallow decision tree" to "influential
+    variable", and is the classical shadow of the **Aaronson-Ambainis
+    conjecture**, which asks for the same conclusion from *bounded low-degree
+    polynomial* instead of *shallow decision tree*.
+  see_also: [D, MaxInf, Inf, Inf1, AaronsonAmbainis14, open-aaronson-ambainis]
+
+- from: MaxInf
+  to: adeg
+  setting: total
+  status: open
+  upper:
+    - stmt: '\text{(conjectured) } \mathrm{MaxInf}(p) \ge \mathrm{poly}\big(\mathrm{Var}(p)/\deg(p)\big) \text{ for bounded } p'
+      refs: [AaronsonAmbainis14]
+      note: '**The Aaronson-Ambainis conjecture.** A bounded degree-$d$ real polynomial with variance $\ge\varepsilon$ should have a variable of influence $\ge \mathrm{poly}(\varepsilon/d)$.'
+      conf: high
+      todo: 'open'
+  notes: |
+    Consequence if true: $\mathrm{R}(f) = \mathrm{poly}(\mathrm{Q}(f))$ for all
+    **total** $f$ -- and more generally, every bounded-error quantum query
+    algorithm on a product distribution can be simulated classically with
+    polynomially many queries. This is the main structural conjecture behind
+    "quantum speedups need structure".
+  see_also: [MaxInf, adeg, Q, R, Inf1, open-aaronson-ambainis]
+
+- from: Inf1
+  to: deg
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{I}^{1}(p) = O(\deg(p)^2) \text{ for bounded } p:\{-1,1\}^n\to[-1,1]'
+      form: {exp: 2, kind: const}
+      refs: [FHKL16]
+      note: 'Improves the $O(d^3)$ of [BackursBavarian14]. For *homogeneous* $p$ the bound is $O(d\log d)$.'
+      conf: high
+  lower:
+    - stmt: '\exists \text{ bounded } p:\ \mathrm{I}^{1}(p) = \Omega(\deg(p)\log\deg(p))'
+      form: {exp: 1, log: 1, kind: const}
+      refs: [FHKL16]
+      note: 'Matching the homogeneous upper bound; the truth for general bounded $p$ is between $d\log d$ and $d^2$.'
+      conf: medium
+  notes: |
+    Why this is a *query* statement: if a quantum algorithm makes $T$ queries
+    then its acceptance probability is a bounded polynomial of degree $\le 2T$,
+    so $L_1$-influence bounds for bounded polynomials transfer directly to
+    quantum query algorithms.
+  see_also: [Inf1, deg, Q, adeg]
+
+- from: NS
+  to: Inf
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{NS}_\delta(f) \le \delta\,\mathrm{I}(f)'
+      refs: [ODonnell14]
+      note: 'Union bound over which coordinate flip first changes $f$.'
+      conf: high
+  see_also: [NS, Inf, Stab]
+
+- from: NS
+  to: D
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{NS}_\delta(f) = O(\delta\,\mathrm{D}(f))'
+      refs: [ODonnell14, OSSS05]
+      note: 'Shallow decision trees are noise-stable. Equivalently, $\mathrm{NS}_{1/\mathrm{D}(f)}(f)=O(1)$.'
+      conf: high
+  notes: |
+    The quantitative form of this -- **Fourier growth** of decision trees,
+    $\sum_{|S|=k}|\hat f(S)| \le O(\sqrt{\mathrm{D}})^{k}$-type bounds -- is
+    the engine behind the near-optimal quantum-vs-randomized separations
+    [Tal20, BansalSinha21, SSW21].
+  see_also: [NS, D, Stab, Tal20, kForrelation]
+
+- from: L1
+  to: D
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\hat L_1(f) \le 2^{\mathrm{D}(f)}'
+      form: {kind: exp}
+      refs: [ODonnell14]
+      note: 'Write $f$ as a sum over the $\le 2^{\mathrm{D}}$ leaves; each subcube indicator has spectral norm $1$.'
+      conf: high
+  see_also: [L1, D, PDT, spar]
+
+- from: PDT
+  to: spar
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{D}^{\oplus}(f) = O\big(\sqrt{\mathrm{spar}(f)}\,\log \mathrm{spar}(f)\big)'
+      form: {exp: 0.5, log: 1, kind: const}
+      refs: [TsangWongXieZhang13]
+      conf: high
+    - stmt: '\text{(conjectured) } \mathrm{D}^{\oplus}(f) = \mathrm{polylog}(\mathrm{spar}(f))'
+      refs: [TsangWongXieZhang13]
+      note: 'The **query analogue of the log-rank conjecture**: composing it with an inner gadget and lifting gives log-rank for XOR functions.'
+      conf: high
+      todo: 'open'
+  lower:
+    - stmt: '\mathrm{spar}(f) \le 4^{\mathrm{D}^{\oplus}(f)},\ \text{i.e. } \mathrm{D}^{\oplus}(f)\ge \tfrac12\log_2\mathrm{spar}(f)'
+      form: {kind: log}
+      refs: [TsangWongXieZhang13]
+      conf: high
+  notes: |
+    Known unconditionally for special classes: $\mathrm{D}^{\oplus}(f) =
+    \mathrm{polylog}(\mathrm{spar}(f))$ when $f$ has small $\mathbb{F}_2$-degree,
+    or when $f$ is a "sparse" symmetric function [STV17].
+  see_also: [PDT, spar, L1, Fdim, open-log-rank]
+
+- from: deg
+  to: spar
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\deg(f) \le \log_2 \mathrm{spar}(f)'
+      form: {kind: log}
+      note: 'A degree-$d$ Fourier character needs its subsets; the support of a function of degree $d$ has size $\ge 2^{d}$ -- in fact $\mathrm{spar}(f)\ge 2^{\deg(f)}$ for total Boolean $f$.'
+      refs: [ODonnell14]
+      conf: high
+  see_also: [deg, spar, Fdim]

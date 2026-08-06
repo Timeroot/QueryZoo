@@ -1,0 +1,164 @@
+# =====================================================================
+# MEASURES: Fourier-analytic quantities
+#
+# Convention: unless stated otherwise these use the +-1 Fourier basis,
+#   f(x) = sum_S fhat(S) chi_S(x),   chi_S(x) = prod_{i in S} (-1)^{x_i}.
+# =====================================================================
+
+measures:
+
+- id: Inf
+  name: Total influence (L2 influence)
+  symbol: '\mathrm{I}(f)'
+  aliases: ['average sensitivity', 'as(f)', 'Inf(f)', 'sum of L2 influences']
+  category: fourier
+  order: 10
+  short: 'Expected number of sensitive coordinates on a uniformly random input; equals sum_S |S| fhat(S)^2.'
+  definition: |
+    For $f:\{0,1\}^n\to\{-1,1\}$ define
+    $$\mathrm{Inf}_i(f) = \Pr_x[f(x)\ne f(x^{\oplus i})],\qquad
+      \mathrm{I}(f) = \sum_{i=1}^n \mathrm{Inf}_i(f) = \sum_{S}|S|\,\hat f(S)^2 .$$
+    This is the "$L_2$" notion of influence: $\mathrm{Inf}_i(f) = \|D_i f\|_2^2$ where
+    $D_i f = \tfrac{1}{2}(f(x^{i\to 1}) - f(x^{i\to 0}))$. For **Boolean-valued** $f$ the
+    $L_1$ and $L_2$ notions coincide up to a factor; they diverge for bounded
+    real-valued $f$ (see [[Inf1]]).
+  settings:
+    total:   {defined: yes}
+    partial: {defined: partial, note: 'Needs a distribution on the domain; the uniform measure on the promise is the usual choice, but no standard convention exists.'}
+    relation: {defined: no}
+  facts:
+    - '$\mathrm{I}(f)\le \mathrm{s}(f)$ (average $\le$ max) and $\mathrm{I}(f)\le\mathrm{D}(f)$.'
+    - '$\mathrm{I}(f)\le\deg(f)$ for Boolean $f$ (each level contributes $|S|\hat f(S)^2$ and $\sum_S\hat f(S)^2=1$).'
+    - '**OSSS:** $\mathrm{Var}(f)\le\sum_i \delta_i(T)\mathrm{Inf}_i(f)$ for any decision tree $T$; hence a balanced $f$ has a variable of influence $\ge \mathrm{Var}(f)/\mathrm{D}(f)$.'
+    - '**KKL:** some $\mathrm{Inf}_i(f)\ge\Omega(\mathrm{Var}(f)\log n/n)$.'
+    - 'In the noisy model $\mathrm{N}_p$, high total influence forces $\Omega(n\log n)$ queries.'
+  refs: [ODonnell14, OSSS05, KKL88, BOL85, Gu25noisy]
+  see_also: [s, Inf1, MaxInf, NS, lambda]
+  confidence: high
+
+- id: Inf1
+  name: Total L1 influence
+  symbol: '\mathrm{I}^{1}(f)'
+  aliases: ['sum of L1 influences', 'Inf^{L1}']
+  category: fourier
+  order: 15
+  short: 'Sum over i of E_x |D_i f(x)|; differs from total influence for bounded real-valued f.'
+  definition: |
+    $$\mathrm{I}^1(f) \;=\; \sum_{i=1}^n \mathbb{E}_x\big|\,f(x) - f(x^{\oplus i})\,\big|\ \big/\ 2 .$$
+    For $f:\{0,1\}^n\to\{-1,1\}$ this equals $\mathrm{I}(f)$. For **bounded** $p:\{0,1\}^n\to[-1,1]$
+    (e.g. the acceptance probability of a quantum algorithm) it can be much larger than
+    the $L_2$ version, and bounding it in terms of degree alone was a question of
+    Aaronson-Ambainis motivated by quantum query complexity.
+  settings:
+    total:   {defined: yes, note: 'Really a measure of *bounded real-valued functions*, not just Boolean ones.'}
+    partial: {defined: partial}
+    relation: {defined: no}
+  facts:
+    - '$\mathrm{I}^1(p) = O(\deg(p)^3)$ for bounded $p$; $O(\deg(p)^2)$ for homogeneous $p$ [Backurs-Bavarian].'
+    - 'Improved to $O(\deg(p)^2)$ in general and $O(d\log d)$ for homogeneous $p$ [FHKL16], with a matching example for monotone functions.'
+    - 'A quantum algorithm making $T$ queries has acceptance probability $p$ with $\deg(p)\le 2T$, so these bounds transfer directly to query complexity.'
+    - 'Related open problem (Aaronson-Ambainis): every bounded degree-$d$ $p$ with $\mathrm{Var}(p)\ge\varepsilon$ has a variable with influence $\ge \mathrm{poly}(\varepsilon/d)$. Would imply $\mathrm{R}(f)=\mathrm{poly}(\mathrm{Q}(f))$ for all *total* $f$ ... and more.'
+  refs: [BackursBavarian14, FHKL16, AaronsonAmbainis14]
+  see_also: [Inf, MaxInf, adeg, Q]
+  confidence: high
+
+- id: MaxInf
+  name: Maximum influence
+  symbol: '\mathrm{MaxInf}(f)'
+  symbol_alt: '\max_i \mathrm{Inf}_i(f)'
+  category: fourier
+  order: 16
+  short: 'The largest single-coordinate influence.'
+  definition: '$\max_{i}\mathrm{Inf}_i(f)$. The quantity in the Aaronson-Ambainis conjecture and in OSSS-type inequalities.'
+  settings: {total: {defined: yes}, partial: {defined: partial}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{D}(f)\ge \mathrm{Var}(f)/\mathrm{MaxInf}(f)$ (OSSS).'
+    - 'For a bounded degree-$d$ function, $\mathrm{MaxInf} \ge \mathrm{Var}/(\text{something in } d)$ is the Aaronson-Ambainis conjecture -- open.'
+  refs: [OSSS05, AaronsonAmbainis14]
+  see_also: [Inf, Inf1, D]
+  confidence: high
+
+- id: NS
+  name: Noise sensitivity
+  symbol: '\mathrm{NS}_{\delta}(f)'
+  category: fourier
+  order: 20
+  short: 'Probability that f changes when each bit is flipped independently with probability delta.'
+  definition: |
+    $$\mathrm{NS}_\delta(f) = \Pr_{x,\,y\sim N_\delta(x)}[f(x)\ne f(y)]
+      = \tfrac12\Big(1-\sum_S (1-2\delta)^{|S|}\hat f(S)^2\Big).$$
+    Related to stability by $\mathrm{Stab}_\rho(f) = \sum_S \rho^{|S|}\hat f(S)^2$
+    with $\rho = 1-2\delta$.
+  params: [{name: delta, symbol: '\delta', default: 'variable', description: 'per-coordinate flip probability'}]
+  settings: {total: {defined: yes}, partial: {defined: partial}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{NS}_\delta(f)\le \delta\,\mathrm{I}(f)$.'
+    - '$\mathrm{NS}_{1/\mathrm{D}(f)}(f) = O(1)$-type bounds: shallow decision trees are noise-stable, which is the basis of many quantum-vs-classical separations via Fourier growth.'
+  refs: [ODonnell14, Tal20]
+  see_also: [Inf, Stab, Np]
+  confidence: high
+
+- id: Stab
+  name: Noise stability
+  symbol: '\mathrm{Stab}_{\rho}(f)'
+  category: fourier
+  order: 21
+  short: 'Correlation of f(x) and f(y) for rho-correlated x,y.'
+  definition: '$\mathrm{Stab}_\rho(f)=\mathbb{E}[f(x)f(y)]=\sum_S\rho^{|S|}\hat f(S)^2$ for $\rho$-correlated $x,y$.'
+  params: [{name: rho, symbol: '\rho', default: 'variable'}]
+  settings: {total: {defined: yes}, partial: {defined: partial}, relation: {defined: no}}
+  refs: [ODonnell14]
+  see_also: [NS, Inf]
+  confidence: high
+
+- id: L1
+  name: Spectral norm
+  symbol: '\hat{L}_1(f)'
+  aliases: ['Fourier L1 norm', '\|\hat f\|_1']
+  category: fourier
+  order: 30
+  short: 'Sum of absolute values of the Fourier coefficients.'
+  definition: |
+    $\hat L_1(f)=\sum_S|\hat f(S)|$. Also called the *spectral norm* or *approximate
+    spectral norm* (when only approximation is required, $\hat L_{1,\varepsilon}$).
+    Central in the log-rank conjecture and in learning theory
+    (the Kushilevitz-Mansour algorithm runs in $\mathrm{poly}(\hat L_1)$ time).
+  params: [{name: eps, symbol: '\varepsilon', default: '0', description: 'approximate version'}]
+  settings: {total: {defined: yes}, partial: {defined: partial}, relation: {defined: no}}
+  facts:
+    - '$\hat L_1(f)\le 2^{\mathrm{D}(f)}$ (sum the leaf indicators), and $\hat L_1(f)\ge 1$ always.'
+    - 'Bounds of the form $\mathrm{D}^{\oplus}(f) = O(\hat L_1(f)^2)$ hold; sharpening them is tied to the log-rank conjecture.'
+    - '$\deg(f)\le \log_2 \mathrm{spar}(f)$-type relations connect $\hat L_1$, $\mathrm{spar}$ and $\deg$.'
+    - 'For approximate versions, $\widetilde{\deg}(f)$ and $\hat L_{1,\varepsilon}(f)$ are the query analogues of approximate rank / approximate $\gamma_2$ in communication complexity.'
+  refs: [TsangWongXieZhang13, ODonnell14]
+  see_also: [spar, Fdim, PDT, deg]
+  confidence: medium
+
+- id: spar
+  name: Fourier sparsity
+  symbol: '\mathrm{spar}(f)'
+  aliases: ['\|\hat f\|_0', 'number of nonzero Fourier coefficients']
+  category: fourier
+  order: 31
+  short: 'Number of nonzero Fourier coefficients.'
+  definition: '$\mathrm{spar}(f)=|\{S : \hat f(S)\ne 0\}|$.'
+  settings: {total: {defined: yes}, partial: {defined: no}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{D}^{\oplus}(f)=O(\sqrt{\mathrm{spar}(f)}\log \mathrm{spar}(f))$; whether $\mathrm{poly}\log \mathrm{spar}$ suffices is the query analogue of the log-rank conjecture.'
+    - '$\deg(f)\le\log_2\mathrm{spar}(f)$.'
+    - '$\mathrm{spar}(f)\le 4^{\mathrm{D}^{\oplus}(f)}$.'
+  refs: [TsangWongXieZhang13, STV17, GopalanEtAl16]
+  see_also: [L1, PDT, Fdim, deg]
+  confidence: medium
+
+- id: Fdim
+  name: Fourier dimension
+  symbol: '\dim_{\mathbb{F}_2}(f)'
+  category: fourier
+  order: 32
+  short: 'Dimension of the F_2-span of the Fourier support.'
+  definition: 'The dimension of the linear span over $\mathbb{F}_2$ of $\{S : \hat f(S)\ne 0\}$, viewing sets as vectors. $\mathrm{D}^{\oplus}(f)\le\dim_{\mathbb{F}_2}(f)$ and this is the natural "number of relevant parities".'
+  settings: {total: {defined: yes}, partial: {defined: no}, relation: {defined: no}}
+  refs: [GopalanEtAl16]
+  see_also: [spar, PDT, L1]
+  confidence: medium

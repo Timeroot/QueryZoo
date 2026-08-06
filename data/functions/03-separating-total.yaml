@@ -1,0 +1,195 @@
+# =====================================================================
+# FUNCTIONS: purpose-built total functions from the separation
+# literature. Most of these are cited in the matrix rather than
+# described, so `formal` is often a stub -- populate as you go.
+# =====================================================================
+
+functions:
+
+- id: pointer
+  name: Pointer functions
+  symbol: 'g_{\mathrm{ABBLSS}}'
+  aliases: ['the ABB+17 functions', 'Goos-Pitassi-Watson-style pointer gadgets']
+  group: separating
+  order: 30
+  kind: total
+  arity: '$n$ bits (a grid of cells, each holding a value plus pointers)'
+  short: 'The construction that refuted the Saks-Wigderson conjecture and set most of the top-left corner of the matrix.'
+  definition: |
+    The input is an $m\times m$ grid of *cells*. Each cell holds a bit and a
+    pointer to another cell. The function asks whether there is a column all of
+    whose cells are marked, together with a pointer chain certifying it; the
+    pointers let a randomized algorithm follow a short path to the answer, while
+    a deterministic algorithm can be forced to explore much more of the grid.
+    Several variants of the payload/pointer structure give different separations.
+  values:
+    - {measure: D,  value: '\widetilde\Omega(n)'}
+    - {measure: R0, value: '\widetilde O(\sqrt n) \text{ (variant 1)}'}
+    - {measure: R,  value: '\widetilde O(\sqrt n) \text{ (variant 2, where } \mathrm{R}_0 = \widetilde\Omega(n))'}
+    - {measure: Q,  value: '\widetilde O(n^{1/4}) \text{ (variant 3)}'}
+    - {measure: adeg, value: '\widetilde O(n^{1/4}) \text{ (variant 3)}'}
+  witnesses:
+    - {of: [D, R0],   setting: total, statement: '$\mathrm{D} = \widetilde\Omega(\mathrm{R}_0^2)$, and $\mathrm{D}=O(\mathrm{R}_0^2)$, so this cell is **settled**. Refutes the Saks-Wigderson conjecture ($\mathrm{D}=O(\mathrm{R}_0^{1.33})$).', refs: [ABBLSS17]}
+    - {of: [R0, R],   setting: total, statement: '$\mathrm{R}_0 = \widetilde\Omega(\mathrm{R}^2)$, matching $\mathrm{R}_0 = \widetilde O(\mathrm{R}^2)$. **Settled.**', refs: [ABBLSS17]}
+    - {of: [D, R],    setting: total, statement: '$\mathrm{D}=\widetilde\Omega(\mathrm{R}^2)$ against the upper bound $\mathrm{D}\le 27\mathrm{R}^3$.', refs: [ABBLSS17]}
+    - {of: [D, Q],    setting: total, statement: '$\mathrm{D} = \widetilde\Omega(\mathrm{Q}^4)$, matching $\mathrm{D}=O(\mathrm{Q}^4)$. **Settled.**', refs: [ABBLSS17, ABKRT21]}
+    - {of: [D, adeg], setting: total, statement: '$\mathrm{D} = \widetilde\Omega(\widetilde{\deg}^4)$, matching $\mathrm{D}=O(\widetilde{\deg}^4)$. **Settled.**', refs: [ABBLSS17, ABKRT21]}
+    - {of: [R0, Q],   setting: total, statement: '$\mathrm{R}_0 = \widetilde\Omega(\mathrm{Q}^3)$ against the upper bound $\mathrm{R}_0=O(\mathrm{Q}^4)$.', refs: [ABBLSS17]}
+    - {of: [R, QE],   setting: total, statement: '$\mathrm{R} = \widetilde\Omega(\mathrm{Q}_E^{3/2})$.', refs: [ABBLSS17]}
+    - {of: [D, lambda], setting: total, statement: '$\mathrm{D} = \widetilde\Omega(\lambda^4)$ against $\mathrm{D}=O(\lambda^6)$.', refs: [ABBLSS17, ABKRT21]}
+  refs: [ABBLSS17, GPW18, GJPW18]
+  see_also: [cheatsheet, NANDtree]
+  todo: 'Transcribe the exact cell/pointer encoding and the variant table from [ABBLSS17, Section 2].'
+
+- id: cheatsheet
+  name: Cheat-sheet functions
+  symbol: 'f_{\mathrm{CS}}'
+  group: separating
+  order: 31
+  kind: total
+  arity: '$\mathrm{poly}(n)$ bits'
+  short: 'A generic transformation turning a *partial*-function separation into a *total*-function separation.'
+  definition: |
+    Given a partial function $f$ on $n$ bits, the cheat-sheet version $f_{\mathrm{CS}}$
+    takes $c$ independent inputs $x^1,\dots,x^c$ to $f$ plus $2^c$ "cheat-sheet"
+    cells; the cell indexed by the string $f(x^1)\cdots f(x^c)$ is required to
+    contain certificates for all $c$ answers. This makes the function **total**
+    (an input that violates the promise simply fails to be certified) while
+    preserving the cheap upper bound (solve all $c$ instances, look up the cell,
+    verify) and the expensive lower bound.
+  formal: |
+    See [ABK16, Definition 4]. Roughly: with $c = \Theta(\log n)$ copies,
+    $\mathrm{Q}(f_{\mathrm{CS}}) = \widetilde\Theta(\mathrm{Q}(f) + \text{(certificate verification)})$
+    and $\mathrm{R}(f_{\mathrm{CS}}) = \widetilde\Omega(\mathrm{R}(f))$.
+  witnesses:
+    - {of: [Q, adeg],   setting: total, statement: '$\mathrm{Q} = \widetilde\Omega(\widetilde{\deg}^4)$: approximate degree does **not** characterise quantum query complexity, even for total functions. Matches the upper bound $\mathrm{Q}\le\mathrm{D}=O(\widetilde{\deg}^4)$. **Settled.**', refs: [ABK16, ABKRT21]}
+    - {of: [QE, adeg],  setting: total, statement: '$\mathrm{Q}_E = \widetilde\Omega(\widetilde{\deg}^4)$.', refs: [ABK16]}
+    - {of: [Q, C],      setting: total, statement: '$\mathrm{Q} = \widetilde\Omega(\mathrm{C}^2)$, matching $\mathrm{Q}\le\mathrm{D}\le\mathrm{C}^2$. **Settled.**', refs: [ABK16]}
+    - {of: [Q, bs],     setting: total, statement: '$\mathrm{Q} = \widetilde\Omega(\mathrm{bs}^2)$ against $\mathrm{Q}=O(\mathrm{bs}^3)$.', refs: [ABK16]}
+    - {of: [Q, deg],    setting: total, statement: '$\mathrm{Q} = \widetilde\Omega(\deg^2)$ against $\mathrm{Q}=O(\deg^3)$.', refs: [ABK16]}
+    - {of: [QE, lambda], setting: total, statement: '$\mathrm{Q}_E = \widetilde\Omega(\lambda^4)$ against $O(\lambda^6)$.', refs: [ABK16]}
+    - {of: [R, Q],      setting: total, statement: 'Applying the cheat-sheet transformation to $k$-Forrelation gives a total function with $\mathrm{R} = \widetilde\Omega(\mathrm{Q}^3)$; the upper bound is $\mathrm{R}\le\mathrm{D}=O(\mathrm{Q}^4)$, so this cell is still **open** in $[3,4]$.', refs: [ABK16, BansalSinha21, SSW21]}
+  notes: |
+    Cheat sheets are the single most productive device in this table: every
+    partial-function speedup that comes with *short certificates* can be
+    "totalised". They cost polylog factors, which is why so many cells carry
+    $\widetilde\Omega$ rather than $\Omega$.
+  refs: [ABK16, BansalSinha21, SSW21]
+  see_also: [pointer, Forrelation, kForrelation]
+
+- id: BHTfn
+  name: Low-sensitivity function from unambiguous certificates
+  symbol: 'f_{\mathrm{BHT}}'
+  group: separating
+  order: 32
+  kind: total
+  arity: '$n$ bits'
+  short: 'The current record for D-vs-s: $\mathrm{D} = \widetilde\Omega(\mathrm{s}^3)$.'
+  definition: |
+    Built from a function with small *unambiguous* certificate complexity by a
+    composition that keeps sensitivity low while forcing deterministic (and
+    quantum) algorithms to work hard.
+  witnesses:
+    - {of: [D, s],  setting: total, statement: '$\mathrm{D} = \widetilde\Omega(\mathrm{s}^3)$ against the upper bound $\mathrm{D}=O(\mathrm{s}^6)$ (Huang + Midrijanis).', refs: [BHT17, Huang19, Midrijanis04]}
+    - {of: [R0, s], setting: total, statement: '$\mathrm{R}_0 = \widetilde\Omega(\mathrm{s}^3)$.', refs: [BHT17]}
+    - {of: [R, s],  setting: total, statement: '$\mathrm{R} = \widetilde\Omega(\mathrm{s}^3)$.', refs: [BHT17]}
+    - {of: [Q, s],  setting: total, statement: '$\mathrm{Q} = \widetilde\Omega(\mathrm{s}^3)$.', refs: [BHT17]}
+    - {of: [C, UCmin], setting: total, statement: '$\mathrm{C} = \Omega(\mathrm{UC}_{\min}^{1.22})$.', refs: [BHT17]}
+  refs: [BHT17]
+  see_also: [s, UC, UCmin, BBGJKfn]
+  todo: 'Transcribe the construction from [BHT17].'
+
+- id: BBGJKfn
+  name: Unambiguous-DNF / Alon-Saks-Seymour function
+  symbol: 'f_{\mathrm{BBGJK}}'
+  group: separating
+  order: 33
+  kind: total
+  arity: '$n$ bits'
+  short: 'Sets the C row: $\mathrm{C}=\widetilde\Omega(\mathrm{s}^3)$, $\widetilde\Omega(\lambda^4)$, $\widetilde\Omega(\deg^2)$, $\widetilde\Omega(\widetilde{\deg}^3)$.'
+  definition: |
+    Comes from the resolution of the Alon-Saks-Seymour problem via unambiguous
+    DNFs: a total function whose certificate complexity is much larger than its
+    unambiguous certificate complexity, sensitivity, degree and spectral
+    sensitivity.
+  witnesses:
+    - {of: [C, s],      setting: total, statement: '$\mathrm{C} = \widetilde\Omega(\mathrm{s}^3)$; upper bound $\mathrm{C}\le \mathrm{s}\cdot\mathrm{bs} \le 2\mathrm{s}^5$.', refs: [BBGJK21]}
+    - {of: [C, lambda], setting: total, statement: '$\mathrm{C} = \widetilde\Omega(\lambda^4)$; upper bound $\mathrm{C}\le\mathrm{D}=O(\lambda^6)$.', refs: [BBGJK21]}
+    - {of: [C, deg],    setting: total, statement: '$\mathrm{C} = \widetilde\Omega(\deg^2)$; upper bound $\mathrm{C}\le\mathrm{D}=O(\deg^3)$.', refs: [BBGJK21]}
+    - {of: [C, adeg],   setting: total, statement: '$\mathrm{C} = \widetilde\Omega(\widetilde{\deg}^3)$; upper bound $\mathrm{C}\le\mathrm{D}=O(\widetilde{\deg}^4)$.', refs: [BBGJK21]}
+  refs: [BBGJK21]
+  see_also: [C, UC, s, BHTfn]
+  todo: 'Transcribe the construction from [BBGJK21].'
+
+- id: GSSfn
+  name: Gilmer-Saks-Srinivasan functions
+  symbol: 'f_{\mathrm{GSS}}'
+  group: separating
+  order: 34
+  kind: total
+  arity: '$n$ bits'
+  short: 'Separates C from RC quadratically and RC from bs by a $3/2$ power.'
+  definition: |
+    Two constructions studying the limits of composition for
+    $\mathrm{C}$, $\mathrm{RC}$ and $\mathrm{bs}$.
+  witnesses:
+    - {of: [C, RC],  setting: total, statement: '$\mathrm{C} = \widetilde\Omega(\mathrm{RC}^2)$, matching $\mathrm{C}=O(\mathrm{RC}^2)$. **Settled.**', refs: [GSS16]}
+    - {of: [C, bs],  setting: total, statement: '$\mathrm{C} = \widetilde\Omega(\mathrm{bs}^2)$, matching $\mathrm{C} \le \mathrm{s}\cdot\mathrm{bs} \le \mathrm{bs}^2$. **Settled.**', refs: [GSS16, Nisan91]}
+    - {of: [RC, bs], setting: total, statement: '$\mathrm{RC} = \widetilde\Omega(\mathrm{bs}^{3/2})$ against the upper bound $\mathrm{RC} = O(\mathrm{bs}^2)$.', refs: [GSS16]}
+  refs: [GSS16, KulkarniTal16]
+  see_also: [C, RC, bs, fbs]
+
+- id: GPWfn
+  name: Goos-Pitassi-Watson partition-number function
+  symbol: 'f_{\mathrm{GPW}}'
+  group: separating
+  order: 35
+  kind: total
+  arity: '$n$ bits'
+  short: 'The query-side function behind "deterministic communication vs partition number"; gives $\mathrm{D}=\widetilde\Omega(\deg^2)$.'
+  definition: |
+    A total function built to have small subcube-partition complexity but large
+    deterministic complexity. Lifting it with a gadget yields the corresponding
+    communication separation.
+  witnesses:
+    - {of: [D, deg], setting: total, statement: '$\mathrm{D} = \widetilde\Omega(\deg^2)$; upper bound $\mathrm{D}=O(\deg^3)$ [Midrijanis04]. Cell still **open** in $[2,3]$.', refs: [GPW18, Midrijanis04]}
+    - {of: [D, SP],  setting: total, statement: 'Deterministic complexity is superlinear in the logarithm of the subcube-partition number.', refs: [GPW18]}
+  refs: [GPW18]
+  see_also: [SP, UC, deg, GJPWfn]
+
+- id: GJPWfn
+  name: Goos-Jayram-Pitassi-Watson function
+  symbol: 'f_{\mathrm{GJPW}}'
+  group: separating
+  order: 36
+  kind: total
+  arity: '$n$ bits'
+  short: 'Randomized analogue of GPW: $\mathrm{R}_0, \mathrm{R} = \widetilde\Omega(\deg^2)$.'
+  definition: 'The randomized-communication-vs-partition-number construction, read as a query-complexity function.'
+  witnesses:
+    - {of: [R0, deg], setting: total, statement: '$\mathrm{R}_0 = \widetilde\Omega(\deg^2)$ against $\mathrm{R}_0 = O(\deg^3)$.', refs: [GJPW18]}
+    - {of: [R, deg],  setting: total, statement: '$\mathrm{R} = \widetilde\Omega(\deg^2)$ against $\mathrm{R} = O(\deg^3)$.', refs: [GJPW18]}
+  refs: [GJPW18]
+  see_also: [GPWfn, deg, R0]
+
+- id: Ambainis13fn
+  name: Ambainis' exact-quantum function
+  symbol: 'f_{\mathrm{Amb}}'
+  group: separating
+  order: 37
+  kind: total
+  arity: '$n$ bits'
+  short: 'The first total function with a superlinear exact quantum speedup: $\mathrm{Q}_E = O(\mathrm{D}^{0.8675})$.'
+  definition: |
+    Built from a 4-bit gadget that an exact quantum algorithm computes with fewer
+    queries than any deterministic one, amplified by composition.
+  values:
+    - {measure: QE, value: 'O(\mathrm{D}^{0.8675})', refs: [Ambainis13]}
+  witnesses:
+    - {of: [D, QE],  setting: total, statement: '$\mathrm{D} = \Omega(\mathrm{Q}_E^{1.15})$; the source of every "$1.15$" in the $\mathrm{Q}_E$ column. Upper bound $\mathrm{D}=O(\mathrm{Q}_E^3)$.', refs: [Ambainis13, Midrijanis04]}
+    - {of: [C, QE],  setting: total, statement: '$\mathrm{C} = \Omega(\mathrm{Q}_E^{1.15})$.', refs: [Ambainis13]}
+    - {of: [RC, QE], setting: total, statement: '$\mathrm{RC} = \Omega(\mathrm{Q}_E^{1.15})$.', refs: [Ambainis13]}
+    - {of: [bs, QE], setting: total, statement: '$\mathrm{bs} = \Omega(\mathrm{Q}_E^{1.15})$.', refs: [Ambainis13]}
+    - {of: [s, QE],  setting: total, statement: '$\mathrm{s} = \Omega(\mathrm{Q}_E^{1.15})$.', refs: [Ambainis13]}
+  refs: [Ambainis13, AmbainisGruslysEtAl16]
+  see_also: [QE, D, PARITY]

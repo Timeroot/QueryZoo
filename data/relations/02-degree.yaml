@@ -1,0 +1,355 @@
+# =====================================================================
+# RELATIONS, part 2: polynomial degree (deg, deg-tilde, rdeg, ...).
+# Schema documented in 01-classical-core.yaml.
+# =====================================================================
+
+relations:
+
+# ---------------------------------------------------- deg vs s (Huang)
+- from: deg
+  to: s
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\deg(f) \le \mathrm{s}(f)^2'
+      form: {exp: 2, kind: exact}
+      refs: [Huang19]
+      note: 'Huang''s sensitivity theorem, via a signed adjacency matrix of the hypercube and Cauchy interlacing. Equivalent form: every induced subgraph of $Q_n$ on $>2^{n-1}$ vertices has max degree $\ge\sqrt n$.'
+      conf: high
+    - stmt: '\deg(f) \le \lambda(f)^2 \le \mathrm{s}(f)^2'
+      refs: [ABKRT21]
+      note: 'Theorem 1 of [ABKRT21] -- the spectral strengthening, since $\lambda(f)\le\mathrm{s}(f)$ always.'
+      conf: high
+  lower:
+    - stmt: '\deg(f_n) = \mathrm{s}(f_n)^2'
+      form: {exp: 2, kind: exact}
+      witness: ANDOR
+      note: '$\wedge_k\circ\vee_k$: $\deg = k^2$, $\mathrm{s}=k$. Optimal, so this cell is closed.'
+      conf: high
+  notes: |
+    For **monotone** $f$ the inequality reverses and improves:
+    $\mathrm{s}(f)\le\deg(f)$ [BdW02, Prop. 4], and $\mathrm{C}=\mathrm{s}=\mathrm{bs}$
+    [Nisan91].
+  see_also: [s, lambda, deg, Huang19, sensitivity-conjecture]
+
+# --------------------------------------------------- bs vs deg
+- from: bs
+  to: deg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{bs}(f) \le 2\deg(f)^2'
+      form: {exp: 2, kind: const}
+      refs: [NS94, BdW02]
+      note: 'Theorem 4 of [BdW02]; proved by symmetrising to a univariate polynomial and applying Ehlich-Zeller / Rivlin-Cheney.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{bs}(f_n) = \Omega\big(\deg(f_n)^{\log 6/\log 3}\big) = \Omega(\deg(f_n)^{1.6309})'
+      form: {exp: 1.6309, kind: const}
+      witness: Kushilevitz
+      refs: [NisanWigderson95]
+      note: 'Iterating Kushilevitz'' $6$-variable function ($\mathrm{D}=\mathrm{s}=6$, $\deg=3$) $k$ times gives $\mathrm{bs}=6^k$, $\deg=3^k$. Reported in [NisanWigderson95]; the same family gives the $1.63$ entries in the $\mathrm{s}$, $\mathrm{bs}$ and $\mathrm{RC}$ rows of the $\deg$ column.'
+      conf: high
+  see_also: [bs, deg, NS94]
+
+- from: bs
+  to: adeg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{bs}(f) \le 6\,\widetilde{\deg}(f)^2'
+      form: {exp: 2, kind: const}
+      refs: [NS94, BdW02]
+      note: 'Theorem 7 of [BdW02] -- the bounded-error analogue, same symmetrisation proof.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{bs}(\mathrm{OR}_n) = n = \Theta(\widetilde{\deg}(\mathrm{OR}_n)^2)'
+      form: {exp: 2, kind: const}
+      witness: OR
+      note: '$\widetilde{\deg}(\mathrm{OR}_n)=\Theta(\sqrt n)$ [NS94], so the constant-$6$ bound is tight up to the constant.'
+      conf: high
+  see_also: [bs, adeg, OR]
+
+# --------------------------------------------- deg vs approximate deg
+- from: deg
+  to: adeg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\deg(f) = O(\widetilde{\deg}(f)^2)'
+      form: {exp: 2, kind: const}
+      refs: [ABKRT21]
+      note: 'Theorem 4 of [ABKRT21]. Resolves a conjecture; the proof goes through $\deg\le\lambda^2$ and a bound on $\lambda$ by $\widetilde{\deg}$.'
+      conf: high
+  lower:
+    - stmt: '\deg(\mathrm{OR}_n) = n = \Theta(\widetilde{\deg}(\mathrm{OR}_n)^2)'
+      form: {exp: 2, kind: const}
+      witness: OR
+      refs: [NS94]
+      note: 'Optimal, witnessed by OR/AND: $\widetilde{\deg}(\mathrm{OR}_n) = \Theta(\sqrt n)$.'
+      conf: high
+  notes: |
+    Before [ABKRT21] the best bound was $\deg = O(\widetilde{\deg}^4)$ via
+    $\deg \le \mathrm{D}$ and $\mathrm{D} = O(\widetilde{\deg}^6)$; the quadratic
+    bound was a well-known conjecture.
+  see_also: [deg, adeg, Q, OR]
+
+- from: D
+  to: adeg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{D}(f) = O(\widetilde{\deg}(f)^4)'
+      form: {exp: 4, kind: const}
+      refs: [ABKRT21, Midrijanis04, NS94]
+      note: '$\mathrm{D}\le\mathrm{bs}\cdot\deg$ [Midrijanis04], $\mathrm{bs}\le 6\widetilde{\deg}^2$ [NS94], $\deg = O(\widetilde{\deg}^2)$ [ABKRT21].'
+      conf: high
+    - stmt: '\mathrm{D}(f) = O(\widetilde{\deg}(f)^6)'
+      form: {exp: 6, kind: const}
+      refs: [BBCMdW01, BdW02]
+      note: 'The historical bound (Theorem 13 of [BdW02]), improving Nisan-Szegedy''s $O(\widetilde{\deg}^8)$.'
+      conf: high
+      superseded_by: 'ABKRT21'
+  lower:
+    - stmt: '\mathrm{D}(f_n) = \widetilde\Omega(\widetilde{\deg}(f_n)^4)'
+      form: {exp: 4, kind: tilde}
+      witness: pointer
+      refs: [ABBLSS17]
+      conf: high
+  see_also: [D, adeg, Q, pointer]
+
+- from: D
+  to: deg
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{D}(f) \le \mathrm{bs}(f)\cdot\deg(f) \le 2\deg(f)^3'
+      form: {exp: 3, kind: const}
+      refs: [Midrijanis04, NS94]
+      conf: high
+    - stmt: '\mathrm{D}(f) \le \deg(f)^2\,\mathrm{bs}(f) \le 2\deg(f)^4'
+      form: {exp: 4, kind: const}
+      refs: [NisanSmolensky, BdW02]
+      note: 'Theorem 12 of [BdW02] -- the maxonomial argument; superseded by Midrijanis but still the cleanest proof.'
+      conf: high
+      superseded_by: 'Midrijanis04'
+  lower:
+    - stmt: '\mathrm{D}(f_n) = \widetilde\Omega(\deg(f_n)^2)'
+      form: {exp: 2, kind: tilde}
+      refs: [GPW18]
+      witness: GPWfn
+      conf: high
+  notes: |
+    **Open**: is $\mathrm{D}(f) = O(\deg(f)^2)$? This is one of the oldest
+    open questions in the area. A positive answer would also give
+    $\mathrm{D} = O(\widetilde{\deg}^4)$ by a second route.
+  see_also: [D, deg, open-D-vs-deg]
+
+# ----------------------------------------------------- adeg vs R
+- from: adeg
+  to: R
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\widetilde{\deg}(f) \le \mathrm{R}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BdW02, NS94]
+      note: 'Theorem 15 of [BdW02]: average the leaf-indicator polynomials of the deterministic trees in the mixture. No constant loss at all.'
+      conf: high
+  lower:
+    - stmt: '\widetilde{\deg}(f_n) = \Omega(\mathrm{R}(f_n))'
+      form: {exp: 1, kind: const}
+      witness: PARITY
+      conf: high
+  notes: |
+    The same proof gives $\widetilde{\deg}_\varepsilon(f)\le\mathrm{R}_\varepsilon(f)$
+    for every error $\varepsilon$, and $\deg(f)\le \mathrm{D}(f)$ in the exact case.
+    The *reverse* direction is where everything is hard: see [[R]] vs
+    [[adeg]] (quartic separation, [ABBLSS17]).
+  see_also: [adeg, R, D, deg]
+
+- from: R
+  to: adeg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{R}(f) = O(\widetilde{\deg}(f)^4)'
+      form: {exp: 4, kind: const}
+      refs: [ABKRT21]
+      note: 'Inherited from $\mathrm{D} = O(\widetilde{\deg}^4)$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}(f_n) = \widetilde\Omega(\widetilde{\deg}(f_n)^4)'
+      form: {exp: 4, kind: tilde}
+      witness: pointer
+      refs: [ABBLSS17]
+      note: 'The quartic $\mathrm{R}$-vs-$\widetilde{\deg}$ separation -- quadratically better than anything known before [ABBLSS17].'
+      conf: high
+  see_also: [R, adeg, pointer]
+
+# ------------------------------------------------------- rdeg
+- from: adeg
+  to: rdeg
+  setting: total
+  status: open
+  upper: []
+  lower:
+    - stmt: '\widetilde{\deg}(f_n) = \Omega(\mathrm{rdeg}(f_n)^{3/2})'
+      form: {exp: 1.5, kind: const}
+      witness: ANDEH
+      refs: [IJKKKSWW23]
+      note: 'Proposition 29: on $N=n^2$ input bits, $\wedge_n\circ\overline{\mathrm{EH}}_n$ has $\mathrm{rdeg}=\Theta(n)$ while $\widetilde{\deg}=\Theta(n^{3/2})$ (approximate-degree composition: $\Theta(\sqrt n)$ for the outer AND times $\Theta(n)$ for exact-half).'
+      conf: medium
+  notes: |
+    **No polynomial upper bound of $\widetilde{\deg}$ (or $\mathrm{D}$, $\mathrm{R}$,
+    $\mathrm{Q}$, $\deg$, ...) in terms of $\mathrm{rdeg}$ is known.** Fortnow
+    asked whether rational degree is polynomially related to the other
+    measures; the whole rdeg column of the matrix is "$a$, ?".
+    Known in the other direction: $\mathrm{rdeg}(f)\le\widetilde{\deg}(f)$ and
+    $\mathrm{rdeg}(f)\le\deg(f)$; also $\mathrm{rdeg}(f) = \Theta(\widetilde{\deg}(f))$
+    for symmetric $f$.
+  see_also: [rdeg, ardeg, ANDEH, open-rdeg]
+
+- from: lambda
+  to: rdeg
+  setting: total
+  status: open
+  lower:
+    - stmt: '\lambda(f_n) = \Theta(n^{3/2}) \text{ while } \mathrm{rdeg}(f_n)=\Theta(n)'
+      form: {exp: 1.5, kind: const}
+      witness: ANDEH
+      refs: [IJKKKSWW23]
+      note: 'In particular $\lambda(f)\le \mathrm{rdeg}(f)$ is **false**, answering a natural question negatively.'
+      conf: high
+  see_also: [lambda, rdeg, ANDEH]
+
+# ------------------------------------------------ deg vs QE, adeg vs Q
+- from: deg
+  to: QE
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\deg(f) \le 2\,\mathrm{Q}_E(f)'
+      form: {exp: 1, kind: const}
+      refs: [BBCMdW01, BdW02]
+      note: 'Theorem 17 of [BdW02]. Tight for PARITY: $\deg = n$, $\mathrm{Q}_E=\lceil n/2\rceil$.'
+      conf: high
+  lower:
+    - stmt: '\deg(\mathrm{PARITY}_n) = n = 2\,\mathrm{Q}_E(\mathrm{PARITY}_n)'
+      form: {exp: 1, kind: const}
+      witness: PARITY
+      conf: high
+  notes: |
+    **Open problem 4 of [BdW02]**: is $\mathrm{Q}_E(f) = O(\deg(f))$? No $f$ is
+    known with $\mathrm{Q}_E(f) > \deg(f)$.
+  see_also: [deg, QE, PARITY, open-QE-vs-deg]
+
+- from: adeg
+  to: Q
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\widetilde{\deg}(f) \le 2\,\mathrm{Q}(f)'
+      form: {exp: 1, kind: const}
+      refs: [BBCMdW01, BdW02]
+      note: 'Theorem 18 of [BdW02] -- the polynomial method. Holds for partial functions and any error too: $\widetilde{\deg}_\varepsilon(f)\le 2\mathrm{Q}_\varepsilon(f)$.'
+      conf: high
+  lower:
+    - stmt: '\widetilde{\deg}(\mathrm{PARITY}_n) = n = 2\,\mathrm{Q}(\mathrm{PARITY}_n)'
+      form: {exp: 1, kind: const}
+      witness: PARITY
+      conf: high
+  notes: |
+    **Open problem 4 of [BdW02]**: is $\mathrm{Q}(f)=O(\widetilde{\deg}(f))$ for
+    total $f$? Known false for **partial** functions -- exponentially so
+    [AmbainisBelovs23] -- and false even for **total search problems**
+    [BenDavidKundu24search]. For total Boolean functions the best known is
+    $\mathrm{Q} = O(\widetilde{\deg}^4)$, with a quartic separation from cheat
+    sheets [ABK16], so this cell is *settled at exponent 4*.
+  see_also: [adeg, Q, cjdeg, AmbainisBelovsFn, BDKrelation]
+
+- from: Q
+  to: adeg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{Q}(f) = O(\widetilde{\deg}(f)^4)'
+      form: {exp: 4, kind: const}
+      refs: [ABKRT21]
+      conf: high
+  lower:
+    - stmt: '\mathrm{Q}(f_n) = \widetilde\Omega(\widetilde{\deg}(f_n)^4)'
+      form: {exp: 4, kind: tilde}
+      refs: [ABK16]
+      witness: cheatsheet
+      conf: high
+  see_also: [Q, adeg, cheatsheet]
+
+# -------------------------------------------------------- deg vs Q
+- from: deg
+  to: Q
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\deg(f) = O(\mathrm{Q}(f)^2)'
+      form: {exp: 2, kind: const}
+      refs: [ABKRT21]
+      note: 'Theorem 3 of [ABKRT21].'
+      conf: high
+  lower:
+    - stmt: '\deg(\mathrm{AND}_n) = n = \Theta(\mathrm{Q}(\mathrm{AND}_n)^2)'
+      form: {exp: 2, kind: const}
+      witness: AND
+      conf: high
+  see_also: [deg, Q, AND]
+
+# --------------------------------------------------- absolute bounds
+- from: Q
+  to: D
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{Q}(f) \le \mathrm{R}(f) \le \mathrm{R}_0(f) \le \mathrm{D}(f) \le n'
+      form: {exp: 1, kind: exact}
+      note: 'The trivial chain.'
+      conf: high
+    - stmt: '\mathrm{Q}(f) \le n/2 + O(\sqrt n)'
+      refs: [vanDam98]
+      note: 'Quantum oracle interrogation: *every* $n$-bit function, even the hardest, costs only about half the classical worst case.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{Q}(\mathrm{PARITY}_n) = \lceil n/2\rceil'
+      form: {exp: 1, kind: const}
+      witness: PARITY
+      refs: [BBCMdW01]
+      conf: high
+    - stmt: '\text{almost all } f:\ \widetilde{\deg}(f) \ge n/2 - O(\sqrt{n\log n}),\ \text{so } \mathrm{Q}(f)\ge n/4-o(n)'
+      refs: [Ambainis99deg, BdW02]
+      conf: high
+  see_also: [Q, D, PARITY]
+
+# ------------------------------------------------------ deg~ vs RC / QC
+- from: adeg
+  to: RC
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\widetilde{\deg}(f) = \Omega\big(\sqrt{\mathrm{RC}(f)}\big),\ \text{ i.e. } \mathrm{RC}(f) = O\big(\widetilde{\deg}(f)^2\big)'
+      form: {exp: 2, kind: const, dir: reverse}
+      refs: [KulkarniTal16]
+      note: 'Solves a question of Aaronson. Since $\mathrm{QC}(f)=\Theta(\sqrt{\mathrm{RC}(f)})$ [Aaronson08], this says $\widetilde{\deg}(f)=\Omega(\mathrm{QC}(f))$: approximate degree is *always* at least as good a quantum lower bound as quantum certificate complexity.'
+      conf: high
+    - stmt: '\mathrm{fbs}(f) = O\big(\widetilde{\deg}(f)^2\big)'
+      refs: [KulkarniTal16]
+      note: 'Same statement, since $\mathrm{fbs}=\Theta(\mathrm{RC})$.'
+      conf: high
+  lower:
+    - stmt: '\widetilde{\deg}(f_n) = \tilde\Omega\big(\mathrm{RC}(f_n)^{?}\big)'
+      refs: [BunThaler17]
+      note: 'The $\widetilde{\deg}$-vs-$\mathrm{RC}$ cell of the matrix records exponent $2$; see the matrix for the witness.'
+      conf: medium
+  notes: |
+    Consequence for **transitive** functions on $n$ variables (all tight):
+    $\mathrm{RC}(f)=\Omega(\sqrt n)$, $\mathrm{QC}(f)=\Omega(n^{1/4})$ and
+    $\widetilde{\deg}(f)=\Omega(n^{1/4})$ [KulkarniTal16].
+  see_also: [adeg, RC, QC, fbs, Aaronson08]

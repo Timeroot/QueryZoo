@@ -1,0 +1,251 @@
+# =====================================================================
+# FUNCTIONS: composed / recursive families.
+# These are the workhorses of the "witness" column of the matrix,
+# because almost every measure composes (or nearly composes) and so a
+# constant-size gap can be amplified to a polynomial one.
+# =====================================================================
+
+functions:
+
+- id: ANDOR
+  name: AND-OR tree (depth 2)
+  symbol: '\mathrm{AND}_n \circ \mathrm{OR}_n'
+  aliases: ['\wedge\circ\vee', 'CNF-like read-once formula of depth 2']
+  group: composed
+  order: 20
+  kind: total
+  arity: '$N = n^2$ bits ($n$ blocks of $n$)'
+  short: 'The witness for the "$\wedge\circ\vee$" cells: $\mathrm{D}=N$ but every combinatorial measure is $\sqrt N$.'
+  definition: |
+    Split the input into $n$ blocks of $n$ bits. Output $1$ iff *every* block
+    contains at least one $1$.
+  formal: |
+    $$f(x^1,\dots,x^n) = \bigwedge_{j=1}^{n}\ \bigvee_{i=1}^{n} x^j_i,
+      \qquad x^j\in\{0,1\}^n,\ N = n^2 .$$
+  values:
+    - {measure: D,      value: 'N = n^2'}
+    - {measure: R0,     value: '\Theta(n^2)'}
+    - {measure: R,      value: '\Theta(n^2)', refs: [SaksWigderson86, Snir85]}
+    - {measure: Q,      value: '\Theta(n) = \Theta(\sqrt N)', refs: [HoyerMoscadeWolf03, BBBV97], note: 'Robust quantum search: no log factor.'}
+    - {measure: QE,     value: '\Theta(n^2)', note: '$\mathrm{Q}_E \ge \deg/2 = n^2/2$.'}
+    - {measure: deg,    value: 'n^2'}
+    - {measure: adeg,   value: '\Theta(n)'}
+    - {measure: sdeg,   value: '\Theta(n^{2/3})', refs: [MinskyPapert69], note: 'For the unbalanced version $\mathrm{AND}_{m}\circ\mathrm{OR}_{m^2}$ on $N=m^3$ bits, Minsky-Papert give $\mathrm{sdeg}=\Theta(N^{1/3})$.'}
+    - {measure: s,      value: 'n = \sqrt N'}
+    - {measure: bs,     value: 'n'}
+    - {measure: fbs,    value: 'n'}
+    - {measure: C,      value: 'n'}
+    - {measure: RC,     value: '\Theta(n)'}
+    - {measure: lambda, value: 'n', refs: [ABKRT21], note: '$\lambda$ is exactly multiplicative: $\lambda = \lambda(\mathrm{AND}_n)\lambda(\mathrm{OR}_n) = \sqrt n\cdot\sqrt n$.'}
+    - {measure: rdeg,   value: 'n', refs: [IJKKKSWW23], note: '$\mathrm{ndeg}(f) = n\cdot\mathrm{ndeg}(\mathrm{OR}_n) = n$ and $\mathrm{ndeg}(\bar f)=\mathrm{ndeg}(\mathrm{NOR}_n)=n$.'}
+  witnesses:
+    - {of: [D, C],    setting: total, statement: '$\mathrm{D}=\mathrm{C}^2$; matches the upper bound $\mathrm{D}\le \mathrm{C}^0\mathrm{C}^1 \le \mathrm{C}^2$.', refs: [BlumImpagliazzo87, HartmanisHemachandra87, Tardos89]}
+    - {of: [D, bs],   setting: total, statement: '$\mathrm{D} = \mathrm{bs}^2$ (upper bound is $\mathrm{bs}^3$).'}
+    - {of: [D, RC],   setting: total, statement: '$\mathrm{D} = \mathrm{RC}^2$ (upper bound is $\mathrm{RC}^3$).'}
+    - {of: [deg, s],  setting: total, statement: '$\deg = \mathrm{s}^2$; matches Huang''s $\deg \le \mathrm{s}^2$ exactly.', refs: [Huang19]}
+    - {of: [deg, C],  setting: total, statement: '$\deg = \mathrm{C}^2$.'}
+    - {of: [QE, C],   setting: total, statement: '$\mathrm{Q}_E = \mathrm{C}^2$.'}
+  refs: [SaksWigderson86, HoyerMoscadeWolf03, ABKRT21, Huang19, MinskyPapert69]
+  see_also: [OR, AND, NANDtree, ANDEH]
+
+- id: NANDtree
+  name: NAND tree (balanced AND-OR formula)
+  symbol: '\bar{\wedge}\text{-tree}'
+  aliases: ['Saks-Wigderson function', 'balanced binary NAND formula', 'read-once AND-OR formula']
+  group: composed
+  order: 21
+  kind: total
+  arity: '$N = 2^d$ leaves'
+  short: 'The Saks-Wigderson function: $\mathrm{R}_0 = \Theta(N^{0.7537})$, $\mathrm{Q}=\Theta(\sqrt N)$, $\deg = N$.'
+  definition: |
+    A complete binary tree of depth $d$ whose leaves are the input bits and
+    whose internal gates are all NAND. Equivalently, the balanced read-once
+    AND-OR formula with alternating levels.
+  formal: |
+    $$f_0(x)=x,\qquad f_{k}(x^{(1)},x^{(2)}) = \neg\big(f_{k-1}(x^{(1)}) \wedge f_{k-1}(x^{(2)})\big),$$
+    and $f = f_d$ on $N=2^d$ variables.
+  values:
+    - {measure: D,      value: 'N'}
+    - {measure: R0,     value: '\Theta\!\big(N^{\,0.753\ldots}\big)', refs: [SaksWigderson86, Santha95], note: 'The exponent is $\log_2\!\frac{1+\sqrt{33}}{4} = 0.75366\ldots$. Upper bound [SaksWigderson86], matching lower bound [SaksWigderson86]; [Santha95] extends the lower bound to bounded error.'}
+    - {measure: R,      value: '\Theta\!\big(N^{\,0.753\ldots}\big)', refs: [Santha95]}
+    - {measure: Q,      value: '\Theta(\sqrt{N})', refs: [FGG08, ACRSZ10], note: 'Continuous-time algorithm [FGG08], discrete-query version [ACRSZ10]; lower bound from $\lambda$.'}
+    - {measure: QE,     value: '\Theta(N)', note: '$\ge \deg/2$.'}
+    - {measure: deg,    value: 'N', note: 'True of any read-once formula.'}
+    - {measure: adeg,   value: '\Theta(\sqrt{N})'}
+    - {measure: s,      value: '\Theta(\sqrt{N})'}
+    - {measure: bs,     value: '\Theta(\sqrt{N})'}
+    - {measure: C,      value: '\Theta(\sqrt{N})'}
+    - {measure: RC,     value: '\Theta(\sqrt{N})'}
+    - {measure: lambda, value: '\sqrt{N}', note: '$\lambda(\mathrm{NAND}_2)=\sqrt2$ and $\lambda$ is multiplicative.'}
+  witnesses:
+    - {of: [D, R0],  setting: total, statement: '$\mathrm{D} = \Theta(\mathrm{R}_0^{1.327\ldots})$ -- for 30 years the best known D-vs-$\mathrm{R}_0$ separation, until [ABBLSS17] made it quadratic.', refs: [SaksWigderson86]}
+    - {of: [QE, R0], setting: total, statement: '$\mathrm{Q}_E = \Theta(\mathrm{R}_0^{1.33})$: the witness cited in the $\mathrm{Q}_E$-vs-$\mathrm{R}_0$ and $\mathrm{Q}_E$-vs-$\mathrm{R}$ cells.', refs: [ABKRT21]}
+    - {of: [deg, R],  setting: total, statement: '$\deg = \Theta(\mathrm{R}^{1.33})$: the best known deg-vs-R separation.', refs: [ABKRT21]}
+    - {of: [D, Q],    setting: total, statement: '$\mathrm{D}=\mathrm{Q}^2$; the *conjectured* extreme for read-once formulas.', refs: [FGG08]}
+  notes: |
+    The Saks-Wigderson conjecture -- that $\mathrm{D}(f) = O(\mathrm{R}_0(f)^{1.33})$
+    for all total $f$, i.e. that this function is extremal -- was refuted by
+    [ABBLSS17], who pushed the exponent to $2$ (which is optimal).
+  refs: [SaksWigderson86, Snir85, Santha95, FGG08, ACRSZ10]
+  see_also: [ANDOR, pointer, RMAJ3]
+
+- id: RMAJ3
+  name: Recursive MAJORITY-of-3
+  symbol: '\mathrm{MAJ}_3^{\circ d}'
+  aliases: ['iterated 3-majority', '3-MAJ tree']
+  group: composed
+  order: 22
+  kind: total
+  arity: '$N = 3^d$ bits'
+  short: 'The other classical recursive benchmark; its randomized complexity is still not pinned down.'
+  definition: 'The depth-$d$ ternary tree all of whose gates are $\mathrm{MAJ}_3$.'
+  formal: '$f_0(x)=x$, $f_k(x^{(1)},x^{(2)},x^{(3)}) = \mathrm{MAJ}_3\big(f_{k-1}(x^{(1)}),f_{k-1}(x^{(2)}),f_{k-1}(x^{(3)})\big)$, $f=f_d$.'
+  values:
+    - {measure: D,      value: 'N = 3^d'}
+    - {measure: R,      value: 'N^{c},\ c\in[0.9,\,0.9^{+}]', conf: medium, note: 'Bounded between $\Omega((2.57\ldots)^d)$ and $O((2.64\ldots)^d)$; the exact exponent is a well-known open problem.'}
+    - {measure: deg,    value: 'N'}
+    - {measure: s,      value: '2^d = N^{0.6309}'}
+    - {measure: bs,     value: '2^d'}
+    - {measure: C,      value: '2^d'}
+    - {measure: lambda, value: '2^d = N^{\log_3 2}', note: '$\lambda(\mathrm{MAJ}_3)=2$, multiplicativity.'}
+    - {measure: Q,      value: '\Theta(2^d)', refs: [Reichardt11], note: '$\mathrm{Adv}^{\pm}(\mathrm{MAJ}_3)=2$ and $\mathrm{Adv}^\pm$ composes perfectly, so $\mathrm{Q} = \Theta(\mathrm{Adv}^\pm(\mathrm{MAJ}_3)^d)$.'}
+  refs: [SaksWigderson86, Reichardt11, ABKRT21]
+  see_also: [MAJ, NANDtree]
+
+- id: Kushilevitz
+  name: Kushilevitz's function (iterated)
+  symbol: 'K^{\circ k}'
+  aliases: ['the 6-variable degree-3 function', 'Nisan-Wigderson example']
+  group: composed
+  order: 23
+  kind: total
+  arity: '$N = 6^k$ bits'
+  short: 'A 6-variable function with $\deg = 3$ and $\mathrm{s}=6$; iterating gives $\mathrm{s} = \deg^{1.63}$.'
+  definition: |
+    Kushilevitz exhibited a function $K:\{0,1\}^6\to\{0,1\}$ with $\deg(K)=3$ but
+    $\mathrm{s}(K)=\mathrm{bs}(K)=6$. Since $\deg$ is multiplicative under
+    composition and $\mathrm{bs}$ is (at least) multiplicative, iterating $K$
+    gives $\deg = N^{\log_6 3}=N^{0.6131}$ against $\mathrm{bs} = N$, i.e.
+    $\mathrm{bs} = \deg^{\log 6/\log 3} = \deg^{1.6309\ldots}$.
+  values:
+    - {measure: deg, value: '3^k = N^{0.6131}'}
+    - {measure: s,   value: 'N = 6^k'}
+    - {measure: bs,  value: 'N'}
+    - {measure: fbs, value: 'N'}
+    - {measure: RC,  value: '\Theta(N)'}
+    - {measure: C,   value: 'N'}
+    - {measure: D,   value: 'N'}
+  witnesses:
+    - {of: [bs, deg], setting: total, statement: '$\mathrm{bs} = \Omega(\deg^{1.63})$; the best known separation against the upper bound $\mathrm{bs}\le 2\deg^2$.', refs: [NisanWigderson95, NS94]}
+    - {of: [s, deg],  setting: total, statement: '$\mathrm{s} = \Omega(\deg^{1.63})$ vs the upper bound $\mathrm{s}\le\deg^2$ (Huang).', refs: [NisanWigderson95, Huang19]}
+    - {of: [RC, deg], setting: total, statement: '$\mathrm{RC} = \Omega(\deg^{1.63})$.', refs: [NisanWigderson95]}
+  refs: [NisanWigderson95, BdW02]
+  see_also: [deg, s, bs]
+  todo: 'Transcribe the explicit 6-variable truth table / polynomial for $K$ from [NisanWigderson95, Section 4] (attributed there to Kushilevitz).'
+
+- id: Rubinstein
+  name: Rubinstein's function
+  symbol: 'f_{\mathrm{Rub}}'
+  group: composed
+  order: 24
+  kind: total
+  arity: '$N=n^2$ bits'
+  short: 'The classical quadratic separation $\mathrm{bs} = \tfrac12\mathrm{s}^2$.'
+  definition: |
+    OR of $n$ copies of a gadget on $n$ bits that fires only on "two adjacent ones
+    and nothing else".
+  formal: |
+    Let $n$ be even. For $y \in \{0,1\}^n$ define
+    $$g(y) = 1 \iff \exists k\in[n/2]:\ y_{2k-1}=y_{2k}=1 \text{ and } y_j = 0 \text{ for all } j \notin \{2k-1,2k\}.$$
+    Then $f_{\mathrm{Rub}}(y^1,\dots,y^n) = \bigvee_{j=1}^n g(y^j)$ on $N = n^2$ bits.
+  values:
+    - {measure: s,  value: 'n = \sqrt N', note: 'Achieved at an input where each block has a single $1$ in an odd position.'}
+    - {measure: bs, value: 'n^2/2 = N/2', note: 'At $0^N$: the $n/2$ adjacent pairs inside each of the $n$ blocks are disjoint sensitive blocks.'}
+    - {measure: C,  value: '\Theta(N)'}
+    - {measure: D,  value: 'N'}
+  witnesses:
+    - {of: [bs, s], setting: total, statement: '$\mathrm{bs}(f) = \tfrac12 \mathrm{s}(f)^2$; improved constant $\mathrm{bs}\ge\tfrac23 \mathrm{s}^2 - \tfrac13\mathrm{s}$ by [AmbainisSun11].', refs: [Rubinstein95, AmbainisSun11]}
+    - {of: [RC, s], setting: total, statement: '$\mathrm{RC} = \Omega(\mathrm{s}^2)$ (since $\mathrm{RC}=\Theta(\mathrm{fbs})\ge\mathrm{bs}$); the witness in the RC-vs-s and bs-vs-s cells.', refs: [Rubinstein95]}
+  notes: |
+    The best known upper bound in the other direction is still exponential:
+    $\mathrm{bs}(f) \le \tfrac{e}{\sqrt{2\pi}} e^{\mathrm{s}(f)}\sqrt{\mathrm{s}(f)}$
+    [KenyonKutin04]. Whether $\mathrm{bs} = O(\mathrm{s}^2)$ -- the
+    *sensitivity-vs-block-sensitivity* question -- is wide open and is **not**
+    resolved by Huang's theorem.
+  refs: [Rubinstein95, AmbainisSun11, KenyonKutin04, Chakraborty11]
+  see_also: [s, bs, AmbainisSunFn]
+
+- id: AmbainisSunFn
+  name: Ambainis-Sun function
+  symbol: 'f_{\mathrm{AS}}'
+  group: composed
+  order: 25
+  kind: total
+  arity: '$N$ bits'
+  short: 'Improves Rubinstein''s constant to $\mathrm{bs} \ge \tfrac23 \mathrm{s}^2 - \tfrac13 \mathrm{s}$.'
+  definition: |
+    A refinement of Rubinstein's gadget: the inner function fires on certain
+    length-$3$ patterns rather than adjacent pairs, which buys a factor $4/3$.
+  values:
+    - {measure: bs, value: '\tfrac23\,\mathrm{s}^2 - \tfrac13\,\mathrm{s}'}
+  witnesses:
+    - {of: [bs, s], setting: total, statement: 'Current record constant for the quadratic bs-vs-s separation.', refs: [AmbainisSun11]}
+  refs: [AmbainisSun11]
+  see_also: [Rubinstein, s, bs]
+  todo: 'Transcribe the explicit gadget from [AmbainisSun11].'
+
+- id: ANDEH
+  name: AND composed with NOT-EXACT-HALF
+  symbol: '\mathrm{AND}_n \circ \overline{\mathrm{EH}}_n'
+  aliases: ['\wedge\circ\overline{\mathrm{EH}}']
+  group: composed
+  order: 26
+  kind: total
+  arity: '$N=n^2$ bits'
+  short: 'The witness for the whole rdeg column: $\mathrm{rdeg}=\Theta(n)$ while $\mathrm{s},\deg,\mathrm{D}=\Theta(n^2)$.'
+  definition: 'AND of $n$ copies of $\overline{\mathrm{EH}}_n$ (the negation of exact-half), on $N = n^2$ bits.'
+  formal: |
+    $$f(x^1,\dots,x^n) = \bigwedge_{j=1}^{n} \overline{\mathrm{EH}}_n(x^j)
+      = \bigwedge_{j=1}^{n} \mathbb{1}\Big[\textstyle\sum_i x^j_i \ne \tfrac n2\Big].$$
+  values:
+    - {measure: rdeg,   value: '\Theta(n) = \Theta(\sqrt N)', refs: [IJKKKSWW23], note: '$\mathrm{ndeg}(f) = n \cdot \mathrm{ndeg}(\overline{\mathrm{EH}}_n) = n$ and $\mathrm{ndeg}(\bar f) = \mathrm{ndeg}(\mathrm{EH}_n) \le n$.'}
+    - {measure: lambda, value: '\Theta(n^{3/2})', refs: [IJKKKSWW23], note: '$\lambda(\mathrm{AND}_n)\cdot\lambda(\overline{\mathrm{EH}}_n) = \sqrt n\cdot\Theta(n)$.'}
+    - {measure: s,      value: '\Theta(n^2)', refs: [IJKKKSWW23]}
+    - {measure: deg,    value: '\Theta(n^2)', refs: [IJKKKSWW23]}
+    - {measure: D,      value: '\Theta(n^2)'}
+    - {measure: Q,      value: '\Omega(n^{3/2})', note: 'From $\mathrm{Q}=\Omega(\lambda)$.'}
+  witnesses:
+    - {of: [D, rdeg],      setting: total, statement: '$\mathrm{D} = \Theta(\mathrm{rdeg}^2)$.', refs: [IJKKKSWW23]}
+    - {of: [deg, rdeg],    setting: total, statement: '$\deg = \Theta(\mathrm{rdeg}^2)$ -- the best known progress on Fortnow''s question.', refs: [IJKKKSWW23]}
+    - {of: [s, rdeg],      setting: total, statement: '$\mathrm{s} = \Theta(\mathrm{rdeg}^2)$.', refs: [IJKKKSWW23]}
+    - {of: [lambda, rdeg], setting: total, statement: '$\lambda = \Theta(\mathrm{rdeg}^{3/2})$; in particular $\lambda \le \mathrm{rdeg}$ is **false**, killing the hope of lower-bounding rdeg by spectral sensitivity.', refs: [IJKKKSWW23, ABKRT21]}
+  refs: [IJKKKSWW23]
+  see_also: [EH, AND, rdeg, ndeg, lambda]
+
+- id: MeiburgTournament
+  name: Meiburg's tournament-subcube function
+  symbol: 'f_{\mathrm{Mei}}'
+  group: composed
+  order: 27
+  kind: total
+  arity: '$2{,}017{,}584$ bits (base case); composed for the family'
+  short: 'Refutes $\mathrm{bs} = O(\lambda^2)$: a total function with $\mathrm{bs} \ge \lambda^{2.127}$.'
+  definition: |
+    The indicator of a union of $k$ subcubes of the Boolean cube, indexed by the
+    vertices of a *doubly regular tournament*; the remaining free choices in the
+    construction are fixed by the Lovász Local Lemma. Composing the base function
+    with itself gives an infinite family with $\lambda \to \infty$ and
+    $\mathrm{bs} = \Omega(\lambda^{2.127})$.
+  values:
+    - {measure: bs,     value: '\ge 14011 \text{ (base case)}', refs: [Meiburg26]}
+    - {measure: lambda, value: '\le 89.0162 \text{ (base case)}', refs: [Meiburg26]}
+  witnesses:
+    - {of: [bs, lambda], setting: total, statement: '$\mathrm{bs}(f_n) = \Omega(\lambda(f_n)^{2.127})$, so the bs-vs-$\lambda$ exponent lies in $[2.127,\,4]$, not $\{2\}$ as [ABKRT21] asked. The main result is formally verified in Lean.', refs: [Meiburg26]}
+  notes: |
+    Numerical (non-rigorous) evidence in the same paper suggests a 1255-variable
+    relative attains exponent $\approx 2.20$, and a 30-variable instance already
+    beats exponent $2$ with an exactly computable $\lambda$.
+    This is the single most recent change to the classical separation matrix:
+    the $\mathrm{bs}$-vs-$\lambda$ cell moved from "$2,4$" to "$2.127, 4$".
+  refs: [Meiburg26, ABKRT21]
+  see_also: [bs, lambda, AND]

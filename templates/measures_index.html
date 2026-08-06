@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% from "macros.html" import setting_pill with context %}
+{% block title %}Measures &middot; {{ site.title }}{% endblock %}
+
+{% block body %}
+<div class="wrap">
+  <h1 class="pagetitle">Measures</h1>
+  <p class="lede">Every complexity measure the zoo knows about, grouped by flavour.
+  The <span class="dot yes"></span>/<span class="dot no"></span>/<span class="dot maybe"></span>
+  columns say whether the measure is defined for
+  {% for s in site.settings %}<b>{{ s.short }}</b>{% if not loop.last %} / {% endif %}{% endfor %}
+  problems.</p>
+
+  <nav class="jump">
+    {% for cat in site.categories %}{% if by_cat[cat.id] %}
+      <a href="#{{ cat.id }}">{{ cat.name }} <span class="n">{{ by_cat[cat.id] | length }}</span></a>
+    {% endif %}{% endfor %}
+  </nav>
+
+  {% for cat in site.categories %}
+    {% if by_cat[cat.id] %}
+    <section class="card" id="{{ cat.id }}">
+      <h2 class="cathead cat-{{ cat.id }}">{{ cat.name }}</h2>
+      <p class="dim">{{ cat.blurb }}</p>
+      <table class="listing">
+        <thead>
+          <tr>
+            <th>Symbol</th><th>Name</th>
+            {% for s in site.settings %}<th class="c" title="{{ s.blurb }}">{{ s.short }}</th>{% endfor %}
+            <th>Parameters</th>
+            <th>What it is</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for m in by_cat[cat.id] %}
+          <tr>
+            <td class="sym"><a href="{{ root }}measures/{{ m.id }}.html">\({{ m.symbol }}\)</a></td>
+            <td class="nm"><a href="{{ root }}measures/{{ m.id }}.html">{{ m.name }}</a>
+                <div class="idtag">{{ m.id }}</div></td>
+            {% for s in site.settings %}
+              {% set d = m.settings[s.id] %}
+              <td class="c">
+                <span class="dot {% if d.defined == 'yes' %}yes{% elif d.defined == 'no' %}no{% else %}maybe{% endif %}"
+                      title="{{ d.note or d.defined }}"></span>
+              </td>
+            {% endfor %}
+            <td class="params">
+              {% for p in m.params %}<span class="ptag">\({{ p.symbol }}\)</span>{% endfor %}
+            </td>
+            <td class="short">{{ m.short | mdi }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </section>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}
