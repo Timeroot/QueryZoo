@@ -205,7 +205,8 @@ relations:
     - stmt: '\exists \text{ partial } g:\ \bar\chi(g)/\mathrm{RS}(g) \text{ unbounded}'
       form: {kind: unbounded}
       refs: [GLSS19]
-      conf: high
+      conf: low
+      todo: 'Check the attribution: the GLSS19 abstract claims only $\bar\chi = \Omega(\mathrm{RS})$, not a separation. A construction that does work: take a linear code $C'' \subseteq \mathbb{F}_2^n$ with distance and dual distance $\Omega(n)$, an index-$2$ subcode $C$ whose extra dual check also has weight $\Omega(n)$, and let $g = 0$ on $C$, $g = 1$ on $C''\setminus C$. Every sabotaged input has $\Omega(n)$ stars, so $\mathrm{RS}(g) = O(1)$, while $\Omega(n)$-wise independence gives $\mathrm{R}(g) = \Omega(n)$ and hence $\bar\chi(g) = \Omega(\sqrt n)$. Either verify GLSS19 or catalogue this family.'
   notes: |
     For **total** $g$ no separation is known between any of
     $\mathrm{RS}$, $\bar\chi$, $\mathrm{LR}$ and $\mathrm{R}$.
@@ -307,14 +308,20 @@ relations:
 # =========================================== noisy oracles
 - from: Np
   to: R
-  setting: total
+  setting: relation
   status: settled
   upper:
     - stmt: '\mathrm{N}_p(f) = O\big(\mathrm{R}(f)\log \mathrm{R}(f)\big)'
       form: {exp: 1, log: 1, kind: const}
-      note: 'Repeat each query $O(\log \mathrm{R})$ times and take the majority; union bound over the $\mathrm{R}$ queries. The constant depends on $p$ as $1/(1-2p)^2$.'
+      note: 'Repeat each query $O(\log \mathrm{R})$ times and take the majority; union bound over the $\mathrm{R}$ queries. The constant depends on $p$ as $1/(1-2p)^2$. This is a black-box simulation of the noiseless algorithm and is oblivious to what it outputs, so it holds for relations.'
       refs: [FRPU94]
       conf: high
+  see_also: [Np, R]
+
+- from: Np
+  to: R
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{N}_p(\mathrm{PARITY}_n) = \Theta(n\log n)'
       form: {exp: 1, log: 1, kind: const}

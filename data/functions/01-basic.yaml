@@ -174,7 +174,7 @@ functions:
     - {measure: bs,     value: 'n'}
     - {measure: fbs,    value: 'n'}
     - {measure: C,      value: 'n'}
-    - {measure: RC,     value: 'n'}
+    - {measure: RC,     value: '\lceil n/2\rceil', putative: true, note: 'A verifier must catch the flip of any single bit with probability $\ge 1/2$, so $\Pr[i \in S]\ge 1/2$ for every $i$ and $\mathbb{E}|S| \ge n/2$; a uniformly random half attains it. Note $\mathrm{RC} \ne \mathrm{fbs} = n$ here -- the constant in $\mathrm{RC}=\Theta(\mathrm{fbs})$ is real.'}
     - {measure: lambda, value: 'n', note: 'Sensitivity graph is the whole hypercube, which is $n$-regular.'}
     - {measure: rdeg,   value: 'n'}
     - {measure: ndeg,   value: 'n'}
@@ -409,10 +409,37 @@ functions:
     - {measure: fbs,    value: 'k+1', putative: true, note: 'Between $\mathrm{bs}=k+1$ and $\mathrm{C}=k+1$.'}
     - {measure: FC,     value: 'k+1', putative: true, note: 'Equal to $\mathrm{fbs}$ by LP duality.'}
     - {measure: R,      value: '\Theta(k)', putative: true, refs: [Nisan91], note: 'At most $\mathrm{D}=k+1$, and at least $\mathrm{bs}/3 = \Omega(k)$.'}
+    - {measure: L1,     value: '2^k', putative: true, note: 'Write $\mathrm{ADDR}_k = \sum_a \mathbb{1}[\mathrm{addr}=a]\cdot y_a$: each term has spectral norm $1$ and the $2^k$ terms have disjoint Fourier supports, so the norms add.'}
     - {measure: Dna,    value: 'k + 2^k', note: 'Every data bit is relevant, so a non-adaptive algorithm reads the entire table.'}
     - {measure: Rna,    value: '\Theta(2^k)', putative: true, note: 'A fixed distribution over $m$ data bits contains the addressed one with probability at most $m/2^k$; otherwise the algorithm is guessing an unbiased bit.'}
   refs: [GPW18, GJPW18]
   see_also: [ANDOR, pointer]
+
+- id: TreeNav
+  name: Binary tree navigation
+  symbol: '\mathrm{Nav}_k'
+  group: basic
+  order: 18.5
+  kind: total
+  arity: '$2^k - 1$ bits'
+  short: 'Adaptivity at its most extreme: $\mathrm{D}=k$ but every one of the $2^k-1$ variables is relevant.'
+  definition: |
+    Index the variables by the nodes of a complete binary tree of depth $k$, so
+    $x_0$ sits at the root and node $i$ has children $2i+1$ and $2i+2$. Walk the
+    tree: read $x_0$, and from node $i$ move to node $2i+1+x_i$. After $k$ reads
+    the walk is at a node of the bottom level; the output is the bit read there.
+  formal: |
+    $$\mathrm{Nav}_k(x) = x_{i_k}, \qquad i_0 = 0,\ \ i_{j+1} = 2 i_j + 1 + x_{i_j},$$
+    so $i_k \in \{2^{k-1}-1,\dots,2^k-2\}$ indexes the bottom level.
+  values:
+    - {measure: D,   value: 'k', note: 'The walk reads one variable per level.'}
+    - {measure: Dna, value: '2^k - 1', putative: true, note: 'Every variable is relevant: for the node $v$, take the input whose walk reaches $v$ and whose two subtrees below $v$ lead to bottom bits of opposite value. So a non-adaptive algorithm must read all of them, and $\mathrm{D}^{\mathrm{na}} = 2^{\mathrm{D}}-1$ exactly -- the extreme case of the bound $\mathrm{D}^{\mathrm{na}} \le 2^{\mathrm{D}}-1$.'}
+    - {measure: R,   value: '\Theta(k)', putative: true, note: 'At most $\mathrm{D}=k$. For the lower bound, on a uniformly random input each of the $k$ variables on the walk is sensitive with probability $1/2$, so $\mathrm{bs} = \Omega(k)$ and $\mathrm{R} \ge \mathrm{bs}/3$.'}
+    - {measure: Rna, value: '\Theta(2^k)', putative: true, note: 'On a uniformly random input the bottom node reached is uniform over the $2^{k-1}$ bottom nodes, and an algorithm that has not read it is guessing an unbiased bit; a fixed set of $m$ variables contains it with probability at most $m/2^{k-1}$.'}
+  witnesses:
+    - {of: [Dna, D], setting: total, statement: '$\mathrm{D}^{\mathrm{na}} = 2^{\mathrm{D}}-1$: exactly tight against the general bound, where $\mathrm{ADDR}_k$ is loose by a factor of two.'}
+    - {of: [Rna, R], setting: total, statement: '$\mathrm{R}^{\mathrm{na}} = 2^{\Theta(\mathrm{R})}$, against the general bound $\mathrm{R}^{\mathrm{na}} \le 2^{\mathrm{R}}-1$.'}
+  see_also: [ADDR, Dna, Rna, D]
 
 - id: TRIBES
   name: TRIBES

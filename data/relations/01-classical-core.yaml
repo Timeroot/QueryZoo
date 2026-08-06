@@ -315,14 +315,24 @@ relations:
 
 - from: RC
   to: C
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{RC}(f) = \Theta(\mathrm{fbs}(f)) \le \mathrm{C}(f)'
       form: {exp: 1, kind: exact}
       refs: [Aaronson08, KulkarniTal16]
-      note: 'Randomized certificate complexity is (up to constants) the LP relaxation of block sensitivity.'
+      note: |
+        Randomized certificate complexity is (up to constants) the LP relaxation of block
+        sensitivity. For the inequality itself: query a full certificate of $x$ and reject.
+        Every domain $y$ with $f(y)\ne f(x)$ must disagree with $x$ somewhere inside that
+        certificate, so it is caught with probability $1$ — no totality needed.
       conf: high
+  see_also: [RC, fbs, C, QC]
+
+- from: RC
+  to: C
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{RC}(f_n) = \Omega(\mathrm{C}(f_n))'
       form: {exp: 1, kind: const}

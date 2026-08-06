@@ -28,6 +28,11 @@ relations:
       witness: promiseFind1
       note: 'The promise "at least half the bits are $1$" makes random sampling trivial and adversary arguments useless.'
       conf: high
+    - stmt: '\mathrm{R}(\mathrm{GapMaj}_n) = O(1),\ \ \mathrm{D}(\mathrm{GapMaj}_n) = \Omega(n)'
+      form: {kind: unbounded}
+      witness: GapMaj
+      note: 'A partial *function*, not a relation, so the separation is witnessed inside this setting rather than inherited: sampling $O(1/\delta^2)$ bits decides the gap, while an adversary keeps both sides alive for $(1-2\delta)n$ deterministic queries.'
+      conf: high
   notes: |
     This is the template for the whole partial-function setting: **every**
     polynomial relation between a "hard" and an "easy" measure can be broken by
@@ -85,7 +90,7 @@ relations:
   notes: |
     For total $f$ the relation is $\mathrm{Q}=\Omega(\widetilde{\deg})$ and
     $\mathrm{Q}=O(\widetilde{\deg}^{?})$ with the upper direction wide open but
-    at most polynomial (via $\mathrm{D}=O(\widetilde{\deg}^6)$). For partial $f$
+    at most polynomial (via $\mathrm{D}=O(\widetilde{\deg}^4)$ [ABKRT21]). For partial $f$
     the gap is unbounded.
   see_also: [adeg, Q, Advpm, settings, AmbainisBelovs23]
 
@@ -171,7 +176,7 @@ relations:
       form: {kind: unbounded}
       witness: ApproxHW
       refs: [CDM23]
-      note: 'An **exponential** separation: guessing an approximate Hamming weight is trivial, committing to one canonical value is not.'
+      note: 'An **unbounded** separation, not merely exponential: $\mathrm{R}$ stays $O(1)$ while $\mathrm{psD}$ grows with $n$. Guessing an approximate Hamming weight is trivial; committing to one canonical value is not.'
       conf: high
     - stmt: '\mathrm{psD}(\mathrm{SearchCNF}) = \Omega(n^{1/3}) \text{ for random } k\text{-CNFs}'
       witness: SearchCNF

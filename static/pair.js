@@ -59,10 +59,12 @@
     return '<span class="pill setting s-' + sid + '" title="' + esc(s.blurb) + '">' +
       esc(s.short) + "</span>";
   }
-  function chip(kind) {
-    if (!META.chips[kind]) return "";
-    return '<span class="tchip c-' + kind + '" title="' + esc(META.chip_names[kind]) + '">' +
-      esc(META.chips[kind]) + "</span>";
+  function chip(kind, lower) {
+    var tbl = lower ? META.chips_lo : META.chips;
+    var names = lower ? META.chip_lo_names : META.chip_names;
+    if (!tbl || !tbl[kind]) return "";
+    return '<span class="tchip ' + (lower ? "lo " : "") + "c-" + kind + '" title="' +
+      esc(names[kind]) + '">' + esc(tbl[kind]) + "</span>";
   }
 
   /* --------------------------------------------------------- derivations */
@@ -77,8 +79,11 @@
     return "derived: " + tex(d.path.join(" \\to "));
   }
 
+  /* Every line in a cell's detail is either an upper bound or a separation --
+     including the non-polynomial ones. The bullet knows which it is. */
   function sidedet(v, label) {
     if (!v) return "";
+    if (v.side) label = v.side === "lower" ? "separation" : "upper";
     var h = '<div class="dline"><span class="dlbl">' + esc(label) + "</span>" +
       '<span class="dst">' + tex(v.tex) + "</span>";
     if (v.witness) h += '<span class="wit">witness: ' + witlink(v.witness) + "</span>";
@@ -154,6 +159,20 @@
     return h;
   }
 
+  /* Only a number can have come from the published exponent table; "exp",
+     "log" and the glyphs are the zoo's own vocabulary. */
+  function numeric(v) { return /^[0-9]/.test(String(v)); }
+
+  /* An exponential upper bound met by an exponential separation is as settled
+     as `2, 2` is -- say so rather than "exponential only". */
+  function verdictWord(d) {
+    var w = META.verdicts[d.verdict];
+    if ((d.verdict === "exp" || d.verdict === "log") && d.a !== "?" && d.b !== "?") {
+      return "settled, " + (d.verdict === "exp" ? "exponentially" : "logarithmically");
+    }
+    return w;
+  }
+
   function derivedCard(tok) {
     var h = '<section class="card derivedcard"><h2>Best bounds the zoo can justify ' +
       '<span class="dim">&mdash; computed from the records, per setting</span></h2>' +
@@ -163,18 +182,20 @@
       var d = tok[s.id];
       if (!d) return;
       h += '<tr class="v-' + d.verdict + '"><th>' + pill(s.id) + "</th>" +
-        '<td class="ex">' + esc(d.a) + "</td>" +
+        '<td class="ex">' + esc(d.a) + chip(d.chip_lo_kind, true) + "</td>" +
         '<td class="ex">' + esc(d.b) + chip(d.chip_kind) + "</td>" +
-        '<td class="vw">' + esc(META.verdicts[d.verdict]) +
+        '<td class="vw">' + esc(verdictWord(d)) +
+        (d.tight_exact ? " &mdash; with equality" : "") +
         (d.derived ? ' <span class="tag drv">derived</span>' : "") + "</td></tr>";
       h += '<tr class="det v-' + d.verdict + '"><td colspan="4">' +
-        sidedet(d.fails, "no bound") + sidedet(d.other, "bound") +
+        sidedet(d.fails, "upper") + sidedet(d.other_up, "upper") +
+        sidedet(d.other_lo, "separation") +
         sidedet(d.up, "upper") + sidedet(d.lo, "separation");
-      if (!d.up && d.b !== "?") {
+      if (!d.up && numeric(d.b)) {
         h += '<div class="dline"><span class="dlbl">upper</span>exponent ' +
           tex(d.b) + " from the matrix table</div>";
       }
-      if (!d.lo && d.a !== "?") {
+      if (!d.lo && numeric(d.a)) {
         h += '<div class="dline"><span class="dlbl">separation</span>exponent ' +
           tex(d.a) + " from the matrix table</div>";
       }

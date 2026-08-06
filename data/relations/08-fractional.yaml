@@ -115,12 +115,17 @@ relations:
 
 - from: RC
   to: fbs
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{RC}(f) = \Theta(\mathrm{fbs}(f))'
       form: {exp: 1, kind: theta}
       refs: [Aaronson08, Tal13, KulkarniTal16]
+      note: |
+        LP duality between the fractional cover defining $\mathrm{FC}_x$ and the fractional
+        packing defining $\mathrm{fbs}_x$, over the set $\{y \in \mathrm{Dom}(f) : f(y)\ne f(x)\}$,
+        plus reading a verifier's query distribution as a fractional cover. Everything is
+        per-input and already domain-restricted, so it holds for partial $f$.
       conf: high
   see_also: [RC, fbs]
 
@@ -211,13 +216,16 @@ relations:
 # ----------------------------------------------------- QC, adeg vs fbs (total)
 - from: QC
   to: fbs
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{QC}(f) = \Theta\big(\sqrt{\mathrm{fbs}(f)}\big)'
       form: {exp: 0.5, kind: theta}
       refs: [Aaronson08, Tal13]
-      note: 'Aaronson''s $\mathrm{QC}=\Theta(\sqrt{\mathrm{RC}})$ with $\mathrm{RC}=\Theta(\mathrm{fbs})$. The Grover-style square root is exactly right, in both directions.'
+      note: |
+        Aaronson's $\mathrm{QC}=\Theta(\sqrt{\mathrm{RC}})$ with $\mathrm{RC}=\Theta(\mathrm{fbs})$.
+        The Grover-style square root is exactly right, in both directions. Both factors hold for
+        partial $f$, so this does too.
       conf: high
   see_also: [QC, RC, fbs, Q]
 

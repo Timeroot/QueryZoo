@@ -592,8 +592,8 @@ measures:
   facts:
     - '$\mathrm{D}(f) \le \mathrm{D}^{\mathrm{na}}(f) \le n$.'
     - 'Adaptivity can save exponentially: $\mathrm{D}(\mathrm{ADDR}) = \log_2 n + 1$ while $\mathrm{D}^{\mathrm{na}}(\mathrm{ADDR}) = n + \log_2 n$, since every data bit is relevant.'
-    - 'There is no bound in the other direction at all: $\mathrm{D}^{\mathrm{na}}$ is not bounded by any function of $\mathrm{D}$ alone.'
+    - 'The other direction is exponential, not unbounded: $\mathrm{D}^{\mathrm{na}}(f) \le 2^{\mathrm{D}(f)}-1$, since a depth-$\mathrm{D}$ tree has at most that many internal nodes and so touches at most that many variables. Binary tree navigation $\mathrm{Nav}_k$ attains it exactly.'
     - '$\mathrm{D}^{\mathrm{na}}(f) \ge \mathrm{s}(f)$, $\mathrm{bs}(f)$, $\mathrm{deg}(f)$ and every other measure, since all of them are supported on relevant variables.'
   refs: [BdW02]
-  see_also: [D, Rna, ADDR, D_size]
+  see_also: [D, Rna, ADDR, TreeNav, D_size]
   confidence: medium

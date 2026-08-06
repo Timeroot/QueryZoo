@@ -21,13 +21,13 @@ if you need the site fully offline, drop `tex-chtml.js` into `static/` and point
 | | count |
 |---|---|
 | measures | 75 |
-| ordered pairs with an entry | 225 |
-| relation records (bounds and separations) | 141 |
-| witness functions | 41 |
+| ordered pairs with an entry | 226 |
+| relation records (bounds and separations) | 160 |
+| witness functions | 42 |
 | concept pages | 11 |
 | open problems | 14 |
 | references | 139 |
-| measure values recorded on function pages | 364 |
+| measure values recorded on function pages | 369 |
 
 The site generates one page per measure, function and concept, plus the exponent matrix, the
 relations index, the open-problem list, the bibliography, and this guide's on-site twin
@@ -136,7 +136,7 @@ form: {exp: 2, log: 1, kind: const}    # = O(M2^2 log M2)
 | --- | --- |
 | `exp` | the exponent (default `1`) |
 | `log` | how many log factors (default `0`) |
-| `kind` | `exact` (no hidden constant) · `const` (`O`) · `theta` (tight both ways) · `tilde` (up to polylogs) · `exp` · `log` · `none` (no such bound exists) · `unbounded` |
+| `kind` | `exact` (no hidden constant) · `const` (`O`) · `theta` (tight both ways) · `tilde` (up to polylogs) · `exp` · `log` (either side) · `none` (no such bound exists, upper only) · `unbounded` (the other measure stays `O(1)`, lower only) |
 | `dir` | `reverse`: this bullet really bounds `to` in terms of `from`, so file the edge under the reverse pair |
 | `inherit` | `false`: do **not** propagate to other settings — for bounds with side conditions |
 
@@ -175,7 +175,17 @@ to a single exponent; adding one where it belongs is a good contribution.
   different statements. Write `Õ` only where the source does.
 - **Say which setting.** A statement with no setting is a bug. If a bound is known only for
   total functions, that is a fact about the bound: record it under `total`, and add a `fails`
-  record under `partial` if there is a counterexample.
+  record under `partial` if there is a counterexample. Conversely, record a bound at the most
+  general setting its *proof* supports — a model inclusion like `R ≤ D` is a fact about
+  relations — and split the record if the same pair also carries a total-function separation,
+  since separations inherit the other way.
+- **`?` is not the same as "no bound".** `none`/`unbounded` assert a proved impossibility and
+  render `⊘`/`∞`; only write `unbounded` when one measure can be held at `O(1)` while the other
+  grows. If the two are merely exponentially related that is `exp`, and the cell says `exp, exp`
+  rather than pretending there is nothing to say.
+- **Let equality be derived.** An `exact` upper met by an `exact` separation at the same
+  exponent renders "settled — with equality"; you never mark it by hand. Recording the
+  attaining family (usually `PARITY` or `OR`) is what closes the cell.
 - **Confidence is visible.** `conf: low` renders a `?` badge on the page. Use it instead of
   deleting something you are unsure of, and pair it with `todo:` saying what to check.
 - **`putative: true` for anything unpublished.** A value or bullet that no source states --

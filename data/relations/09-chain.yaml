@@ -52,14 +52,24 @@ relations:
 
 - from: C
   to: D
-  setting: total
+  setting: relation
   status: settled
   upper:
     - stmt: '\mathrm{C}(f) \le \mathrm{D}(f)'
       form: {exp: 1, kind: exact}
       refs: [BdW02]
-      note: 'The queries a deterministic algorithm makes on $x$ are a certificate for $x$.'
+      note: |
+        The queries a deterministic algorithm makes on $x$ are a certificate for $x$: they
+        already fix the leaf, hence fix an output that is valid for every domain input
+        consistent with them. Nothing here needs $f$ to be total or single-valued, so the
+        bound is a statement about relations.
       conf: high
+  see_also: [C, D]
+
+- from: C
+  to: D
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{C}(\mathrm{PARITY}_n) = \mathrm{D}(\mathrm{PARITY}_n) = n'
       form: {exp: 1, kind: exact}
@@ -69,14 +79,23 @@ relations:
 
 - from: C
   to: R0
-  setting: total
-  status: gap
+  setting: relation
+  status: settled
   upper:
     - stmt: '\mathrm{C}(f) \le \mathrm{R}_0(f)'
       form: {exp: 1, kind: exact}
       refs: [GJKKLSSV17, BdW02]
-      note: 'A zero-error algorithm must output a certificate on every input, so it queries one.'
+      note: |
+        Fix any accepting run of a zero-error algorithm on $x$. The bits it queried certify
+        the output it produced, since the algorithm is never wrong on any consistent input.
+        The argument reads only the transcript, so it holds for relations too.
       conf: high
+  see_also: [C, R0]
+
+- from: C
+  to: R0
+  setting: total
+  status: gap
   lower:
     - stmt: '\mathrm{C}(\mathrm{PARITY}_n) = \mathrm{R}_0(\mathrm{PARITY}_n) = n'
       form: {exp: 1, kind: exact}
@@ -102,14 +121,27 @@ relations:
 
 - from: R
   to: R0
-  setting: total
+  setting: relation
   status: settled
   upper:
-    - stmt: '\mathrm{R}(f) \le \mathrm{R}_0(f)'
-      form: {exp: 1, kind: exact}
+    - stmt: '\mathrm{R}_{1/3}(f) \le \tfrac32\,\mathrm{R}_0(f)'
+      form: {exp: 1, kind: const}
       refs: [BdW02]
-      note: 'A zero-error algorithm is in particular a bounded-error one.'
+      note: |
+        A zero-error algorithm is in particular a bounded-error one — a model inclusion, so it
+        holds whatever the algorithm is asked to output. But mind the cost convention: since
+        $\mathrm{R}_0$ is *expected* cost (worst-case cost at zero error is just $\mathrm{D}$),
+        the conversion is Markov, not free. Truncate after $\tfrac32\mathrm{R}_0$ queries and
+        output a uniform bit: the truncation fires with probability $\le 2/3$ and is then wrong
+        half the time, so the error is $\le 1/3$. See [[cost-conventions]]; the clean
+        $\mathrm{R} \le \mathrm{R}_0$ holds only for $\bar{\mathrm{R}}$.
       conf: high
+  see_also: [R, R0]
+
+- from: R
+  to: R0
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{R}(\mathrm{PARITY}_n) = \mathrm{R}_0(\mathrm{PARITY}_n) = n'
       form: {exp: 1, kind: exact}
@@ -119,13 +151,20 @@ relations:
 
 - from: R
   to: D
-  setting: total
-  status: gap
+  setting: relation
+  status: settled
   upper:
     - stmt: '\mathrm{R}(f) \le \mathrm{R}_0(f) \le \mathrm{D}(f)'
       form: {exp: 1, kind: exact}
       refs: [BdW02]
+      note: 'Two model inclusions, neither of which looks at what is being computed.'
       conf: high
+  see_also: [R, D, R0]
+
+- from: R
+  to: D
+  setting: total
+  status: gap
   lower:
     - stmt: '\mathrm{R}(\mathrm{PARITY}_n) = \mathrm{D}(\mathrm{PARITY}_n) = n'
       form: {exp: 1, kind: exact}
@@ -138,14 +177,20 @@ relations:
 
 - from: Q
   to: R
-  setting: total
+  setting: relation
   status: settled
   upper:
     - stmt: '\mathrm{Q}(f) \le \mathrm{R}(f)'
       form: {exp: 1, kind: exact}
       refs: [BdW02]
-      note: 'A randomized algorithm is a (very restricted) quantum one.'
+      note: 'A randomized algorithm is a (very restricted) quantum one. The simulation uses no structure of the domain, so it is a fact about relations.'
       conf: high
+  see_also: [Q, R, D]
+
+- from: Q
+  to: R
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{Q}(\mathrm{PARITY}_n) = \lceil n/2\rceil = \tfrac12\,\mathrm{R}(\mathrm{PARITY}_n)'
       form: {exp: 1, kind: const}
@@ -156,13 +201,24 @@ relations:
 
 - from: Q
   to: Q0
-  setting: total
+  setting: relation
   status: settled
   upper:
     - stmt: '\mathrm{Q}(f) \le \mathrm{Q}_0(f)'
       form: {exp: 1, kind: exact}
       refs: [BdW02]
+      note: |
+        Definitional, and so setting-agnostic — but unlike the classical $\mathrm{R}$ versus
+        $\mathrm{R}_0$ case there is no Markov loss, because $\mathrm{Q}_0$ is worst-case cost
+        with an "inconclusive" outcome of probability $\le 1/2$. Replace $\bot$ by a uniform
+        random bit and the error is $\le 1/4$.
       conf: high
+  see_also: [Q, Q0, QE]
+
+- from: Q
+  to: Q0
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{Q}(\mathrm{PARITY}_n) = \mathrm{Q}_0(\mathrm{PARITY}_n) = \lceil n/2\rceil'
       form: {exp: 1, kind: exact}
@@ -172,13 +228,20 @@ relations:
 
 - from: QE
   to: D
-  setting: total
+  setting: relation
   status: settled
   upper:
     - stmt: '\mathrm{Q}_E(f) \le \mathrm{D}(f)'
       form: {exp: 1, kind: exact}
       refs: [BdW02]
+      note: 'A deterministic decision tree is an exact quantum algorithm that never uses superposition.'
       conf: high
+  see_also: [QE, D, Q0]
+
+- from: QE
+  to: D
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{Q}_E(\mathrm{OR}_n) = n = \mathrm{D}(\mathrm{OR}_n)'
       form: {exp: 1, kind: exact}
@@ -258,11 +321,18 @@ relations:
 - from: rdeg
   to: C
   setting: total
-  status: gap
+  status: settled
   upper:
     - stmt: '\mathrm{rdeg}(f) \le \mathrm{C}(f)'
       form: {exp: 1, kind: exact}
       refs: [IJKKKSWW23]
       note: 'Via $\mathrm{rdeg}(f)=\max\{\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f)\}$ and $\mathrm{ndeg}\le\mathrm{C}$.'
       conf: medium
-  see_also: [rdeg, C, ndeg]
+  lower:
+    - stmt: '\mathrm{rdeg}(\mathrm{PARITY}_n) = \mathrm{C}(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      refs: [IJKKKSWW23]
+      note: '$\mathrm{ndeg}(\oplus_n) = n$, so $\mathrm{rdeg}(\oplus_n) = n$; and every input of $\oplus_n$ needs the whole assignment as a certificate, so $\mathrm{C} = n$ too.'
+      conf: high
+  see_also: [rdeg, C, ndeg, PARITY]

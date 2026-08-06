@@ -118,6 +118,12 @@ relations:
       note: 'A star $K_{1,\mathrm{s}}$ sits inside the sensitivity graph, and $\lambda(K_{1,k})=\sqrt k$. Tight for AND: $\lambda(\wedge_n)=\sqrt n$, $\mathrm{s}(\wedge_n)=n$.'
       witness: AND
       conf: high
+    - stmt: '\lambda(\mathrm{PARITY}_n) = \mathrm{s}(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      refs: [ABKRT21]
+      note: 'The other end of $\sqrt{\mathrm{s}} \le \lambda \le \mathrm{s}$: the sensitivity graph of $\oplus_n$ is the whole hypercube $Q_n$, which is $n$-regular, so $\lambda = n = \mathrm{s}$.'
+      conf: high
   notes: |
     So $\sqrt{\mathrm{s}} \le \lambda \le \mathrm{s}$, and both ends are achieved.
     Huang''s theorem is the statement $\deg\le\mathrm{s}^2$; its spectral
@@ -179,13 +185,17 @@ relations:
 # ------------------------------------------------------- QC, RC
 - from: QC
   to: RC
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{QC}(f) = \Theta\big(\sqrt{\mathrm{RC}(f)}\big) = \Theta\big(\sqrt{\mathrm{fbs}(f)}\big)'
       form: {exp: 0.5, kind: theta}
       refs: [Aaronson08]
-      note: 'An exact characterisation, proved with Ambainis'' adversary method in both directions.'
+      note: |
+        An exact characterisation, proved with Ambainis' adversary method in both directions.
+        Both halves are per-input verification statements -- weighted Grover over the fractional
+        cover upward, the adversary bound downward -- and the adversary method is valid for
+        promise problems, so no totality enters.
       conf: high
   see_also: [QC, RC, fbs, Adv]
 
@@ -238,13 +248,19 @@ relations:
 # ------------------------------------------------------- NQ / ndeg
 - from: NQ
   to: ndeg
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{NQ}(f) = \lceil \mathrm{ndeg}(f)/2\rceil'
       form: {exp: 1, kind: theta}
       refs: [deWolf03]
-      note: 'An *exact* characterisation, not merely a polynomial relation: nondeterministic quantum query complexity is half the nondeterministic degree.'
+      note: |
+        An *exact* characterisation, not merely a polynomial relation: nondeterministic quantum
+        query complexity is half the nondeterministic degree. The acceptance amplitude of a
+        $T$-query algorithm is a degree-$2T$ polynomial nonzero exactly on the $1$-inputs, and
+        conversely $p$ may be rescaled by its maximum over the cube; nonvanishing is
+        scale-invariant and off-domain behaviour is unconstrained either way, so this is a
+        statement about partial functions.
       conf: high
   notes: |
     Also $\mathrm{ndeg}(f)\le\mathrm{C}^{1}(f)$, and $\mathrm{ndeg}$ can be
@@ -255,13 +271,18 @@ relations:
 # ------------------------------------------------------- PostQ / rdeg
 - from: PostQ
   to: ardeg
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{PostQ}_\varepsilon(f) = \Theta(\mathrm{rdeg}_\varepsilon(f))'
       form: {exp: 1, kind: theta}
       refs: [MahadevdeWolf15]
-      note: 'Post-selected quantum query complexity is characterised by *approximate rational* degree, exactly as $\mathrm{Q}$ is characterised (polynomially) by approximate degree.'
+      note: |
+        Post-selected quantum query complexity is characterised by *approximate rational* degree,
+        exactly as $\mathrm{Q}$ is characterised (polynomially) by approximate degree. Rational
+        degree is defined with no boundedness required off the domain, and the implementation
+        direction rescales $p$ and $q$ jointly, which leaves $p/q$ fixed -- so the characterisation
+        is a partial-function one.
       conf: high
   notes: |
     This is the reason rational degree is in the zoo at all: it is the natural

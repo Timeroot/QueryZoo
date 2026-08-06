@@ -128,7 +128,7 @@ measures:
   facts:
     - '$\hat L_1(f)\le 2^{\mathrm{D}(f)}$ (sum the leaf indicators), and $\hat L_1(f)\ge 1$ always.'
     - 'Bounds of the form $\mathrm{D}^{\oplus}(f) = O(\hat L_1(f)^2)$ hold; sharpening them is tied to the log-rank conjecture.'
-    - '$\deg(f)\le \log_2 \mathrm{spar}(f)$-type relations connect $\hat L_1$, $\mathrm{spar}$ and $\deg$.'
+    - 'Relations of the shape $\deg_2(f)\le \log_2(\mathrm{spar}(f)+1)$ connect $\hat L_1$, $\mathrm{spar}$ and degree. Note it is the $\mathbb{F}_2$-degree: the *real* degree is not bounded by sparsity at all, since $\chi_{[n]}$ has $\deg = n$ and $\mathrm{spar} = 1$.'
     - 'For approximate versions, $\widetilde{\deg}(f)$ and $\hat L_{1,\varepsilon}(f)$ are the query analogues of approximate rank / approximate $\gamma_2$ in communication complexity.'
   refs: [TsangWongXieZhang13, ODonnell14]
   see_also: [spar, Fdim, PDT, deg]
@@ -145,7 +145,7 @@ measures:
   settings: {total: {defined: yes}, partial: {defined: no}, relation: {defined: no}}
   facts:
     - '$\mathrm{D}^{\oplus}(f)=O(\sqrt{\mathrm{spar}(f)}\log \mathrm{spar}(f))$; whether $\mathrm{poly}\log \mathrm{spar}$ suffices is the query analogue of the log-rank conjecture.'
-    - '$\deg(f)\le\log_2\mathrm{spar}(f)$.'
+    - '$\deg_2(f)\le\log_2(\mathrm{spar}(f)+1)$. The real degree is **not** bounded by sparsity: $\oplus_n$ has $\deg = n$ and $\mathrm{spar} = 1$.'
     - '$\mathrm{spar}(f)\le 4^{\mathrm{D}^{\oplus}(f)}$.'
   refs: [TsangWongXieZhang13, STV17, GopalanEtAl16]
   see_also: [L1, PDT, Fdim, deg]

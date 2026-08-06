@@ -91,17 +91,29 @@ relations:
 
 - from: Rbar
   to: Dmu
-  id: param-minimax
+  id: param-minimax-rel
   param: eps
-  setting: partial
-  status: gap
-  headline: '\text{Yao minimax: } \bar{\mathrm{R}}_\varepsilon(f) \stackrel{?}{=} \Theta\big(\max_\mu \mathrm{D}^{\mu}_{\varepsilon}(f)\big)'
+  setting: relation
+  status: settled
+  headline: '\text{Yao minimax: } \bar{\mathrm{R}}_\varepsilon(f) = \Theta\big(\max_\mu \mathrm{D}^{\mu}_{\varepsilon}(f)\big)'
   upper:
     - stmt: '\bar{\mathrm{R}}_\varepsilon(f) = \Theta\big(\max_\mu \mathrm{D}^{\mu}_{\varepsilon}(f)\big)\ \text{ for constant } \varepsilon'
       form: {exp: 1, kind: theta}
       refs: [Yao77, Vereshchagin98]
-      note: 'LP duality / von Neumann. Works because expected cost is linear in the algorithm''s distribution -- this is why the minimax theorem is naturally about $\bar{\mathrm{R}}$ and not $\mathrm{R}$.'
+      note: |
+        LP duality / von Neumann over (deterministic algorithms) $\times$ (inputs). Works because
+        expected cost is linear in the algorithm's distribution -- this is why the minimax theorem
+        is naturally about $\bar{\mathrm{R}}$ and not $\mathrm{R}$. The payoff matrix never refers
+        to the output being unique, so the theorem is about relations.
       conf: high
+  see_also: [Rbar, Dmu, R]
+
+- from: Rbar
+  to: Dmu
+  id: param-minimax
+  param: eps
+  setting: partial
+  status: gap
   lower:
     - stmt: '\text{FAILS for } \varepsilon = 1/2-o(1)'
       refs: [BBGM22]
@@ -182,6 +194,11 @@ relations:
       note: 'A zero-error algorithm that always stops within $T$ queries yields a deterministic tree of depth $T$ by fixing the coins. Hence $\mathrm{R}_0$ is *only* interesting as an expected-cost measure. Same for $\mathrm{Q}_0$.'
       conf: high
   lower:
+    - stmt: '\mathrm{R}_0(\mathrm{PARITY}_n) = \mathrm{D}(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      note: 'A zero-error algorithm must read every bit on every input, so even the *expected* cost is exactly $n$: randomness buys nothing here, not even a constant.'
+      conf: high
     - stmt: '\mathrm{R}_0(\mathrm{NANDtree}_n) = \Theta(n^{0.7537\ldots})'
       witness: NANDtree
       refs: [SaksWigderson86]
@@ -191,19 +208,27 @@ relations:
 
 - from: Q0
   to: QE
-  id: param-Q-zero-error
-  setting: total
-  status: gap
+  id: param-Q-zero-error-rel
+  setting: relation
+  status: settled
   upper:
     - stmt: '\mathrm{Q}(f) \le \mathrm{Q}_0(f) \le \mathrm{Q}_E(f) \le \mathrm{D}(f)'
       form: {exp: 1, kind: exact}
+      note: 'Pure model inclusion at every step, so the chain is a statement about relations.'
       conf: high
+  see_also: [Q0, QE, Q, R0]
+
+- from: Q0
+  to: QE
+  id: param-Q-zero-error
+  setting: total
+  status: gap
   lower:
-    - stmt: '\mathrm{Q}_0(\mathrm{OR}_N) = N'
-      form: {exp: 1, kind: const}
+    - stmt: '\mathrm{Q}_0(\mathrm{OR}_n) = \mathrm{Q}_E(\mathrm{OR}_n) = n'
+      form: {exp: 1, kind: exact}
       witness: OR
-      refs: [BCWZ99]
-      note: 'Zero-error quantum search gives **no** speedup at all -- one of the sharpest "bounded error is essential" facts in quantum query complexity.'
+      refs: [BCWZ99, BBCMdW01]
+      note: 'Zero-error quantum search gives **no** speedup at all -- one of the sharpest "bounded error is essential" facts in quantum query complexity -- and the exact-quantum value is the same $n$, so the definitional inequality is attained with nothing to spare.'
       conf: high
     - stmt: '\exists \text{ monotone total } f:\ \mathrm{R}_0(f)/\mathrm{Q}_0(f) \text{ nearly quadratic}'
       refs: [BCWZ99]

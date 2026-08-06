@@ -445,7 +445,7 @@ measures:
     partial:  {defined: yes, note: 'The interesting case: property testing lives here.'}
     relation: {defined: yes}
   facts:
-    - '$\mathrm{R}(f) \le \mathrm{R}^{\mathrm{na}}(f) \le \mathrm{D}^{\mathrm{na}}(f)$.'
+    - '$\mathrm{R}(f) \le \mathrm{R}^{\mathrm{na}}(f) \le \mathrm{D}^{\mathrm{na}}(f)$, and in the other direction $\mathrm{R}^{\mathrm{na}}_\varepsilon(f) \le 2^{\mathrm{R}_\varepsilon(f)}-1$: sample a tree from the optimal distribution and read every variable it could ever query.'
     - 'Yao''s minimax applies verbatim: $\mathrm{R}^{\mathrm{na}}_\varepsilon(f) = \max_\mu \mathrm{D}^{\mathrm{na},\mu}_\varepsilon(f)$, the max over input distributions of the best *fixed* query set of that size.'
     - 'Adaptivity can save exponentially even with randomness: $\mathrm{R}(\mathrm{ADDR}) = \Theta(\log n)$ while $\mathrm{R}^{\mathrm{na}}(\mathrm{ADDR}) = \Theta(n)$, since a fixed distribution over $k$ data bits finds the addressed bit with probability $\le k/n$ and must otherwise guess.'
     - 'For $\mathrm{OR}_n$ adaptivity buys nothing: $\mathrm{R}(\mathrm{OR}_n) = \Theta(n) = \mathrm{R}^{\mathrm{na}}(\mathrm{OR}_n)$.'

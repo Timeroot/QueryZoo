@@ -560,6 +560,11 @@ body.dim-tight.view-relation td.mcell[data-vr="settled"] { opacity: 0.4; }
 .tchip.c-theta { color: #2b6ca3; }
 .tchip.c-tilde { color: #9a6b1f; }
 .tchip.c-const { color: #8a8375; }
+/* Same idea on the separation side, and the one chip that speaks for the
+   whole cell: the bound is exact and a family attains it. */
+.tchip.lo { vertical-align: super; margin: 0 0 0 1px; }
+.tchip.c-attained { color: #2f6f4f; font-weight: 700; }
+.exp.attained { font-weight: 600; }
 /* Derived: no one wrote this down, the closure worked it out. Hiding them
    leaves exactly the recorded data -- so the cell loses its colour too. */
 .exp.drv { border-bottom: 1px dotted var(--dim); }

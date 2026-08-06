@@ -67,14 +67,25 @@ relations:
 
 - from: FC
   to: EC
-  setting: total
-  status: gap
+  setting: partial
+  status: settled
   upper:
     - stmt: '\mathrm{FC}(f) \le \mathrm{EC}(f)'
       form: {exp: 1, kind: exact}
       refs: [GJKKLSSV17]
-      note: 'An expectational certificate assignment $\{w^x\}$ is, at each $x$, feasible for the fractional certificate LP up to the product structure: $\sum_{i: x_i\ne y_i} w^x_i \ge \sum_{i: x_i \ne y_i} w^x_i w^y_i \ge 1$.'
+      note: |
+        An expectational certificate assignment $\{w^x\}$ is, at each $x$, feasible for the
+        fractional certificate LP up to the product structure:
+        $\sum_{i: x_i\ne y_i} w^x_i \ge \sum_{i: x_i \ne y_i} w^x_i w^y_i \ge 1$.
+        The inequality is checked pairwise on $(x,y)$ with $f(x)\ne f(y)$, and restricting
+        to a domain only removes constraints from both LPs, so it survives to partial $f$.
       conf: high
+  see_also: [FC, EC, fbs, C]
+
+- from: FC
+  to: EC
+  setting: total
+  status: gap
   lower:
     - stmt: '\mathrm{FC}(\mathrm{OR}_n) = \mathrm{EC}(\mathrm{OR}_n) = n'
       form: {exp: 1, kind: exact}
@@ -307,11 +318,12 @@ relations:
 - from: rank
   to: D_size
   setting: total
-  status: gap
+  status: settled
   upper:
     - stmt: '\mathrm{rank}(f) \le \log_2 \mathrm{DTsize}(f)'
       form: {kind: log}
       refs: [EhrenfeuchtHaussler89]
+      note: 'A rank-$r$ tree contains a complete binary tree of depth $r$, hence has at least $2^r$ leaves.'
       note: 'A tree of rank $r$ contains a complete binary tree of depth $r$ as a minor, hence has at least $2^r$ leaves.'
       conf: high
   see_also: [rank, D_size, D]
@@ -320,76 +332,139 @@ relations:
 
 - from: D
   to: Dna
-  setting: total
+  setting: relation
   status: settled
   upper:
     - stmt: '\mathrm{D}(f) \le \mathrm{D}^{\mathrm{na}}(f)'
       form: {exp: 1, kind: exact}
-      note: 'An adaptive algorithm may ignore the answers.'
+      note: |
+        An adaptive algorithm may ignore the answers: read the non-adaptive set $S$ in
+        any order and finish. The argument never looks at what has to be *output*, so it
+        is a statement about relations, and the partial- and total-function versions are
+        inherited from it rather than recorded separately.
       conf: high
+  see_also: [D, Dna, Rna]
+
+- from: D
+  to: Dna
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{D}(\mathrm{PARITY}_n) = \mathrm{D}^{\mathrm{na}}(\mathrm{PARITY}_n) = n'
       form: {exp: 1, kind: exact}
       witness: PARITY
+      note: 'Equality, not merely the exponent: the inequality above is attained on the nose, so there is nothing left to shave here -- not even a constant.'
       conf: high
-  see_also: [D, Dna, Rna]
+  see_also: [D, Dna]
+
+- from: Dna
+  to: D
+  setting: relation
+  status: settled
+  headline: '\mathrm{D}^{\mathrm{na}}(f) \le 2^{\mathrm{D}(f)} - 1'
+  upper:
+    - stmt: '\mathrm{D}^{\mathrm{na}}(f) \le 2^{\mathrm{D}(f)} - 1'
+      form: {kind: exp}
+      putative: true
+      note: |
+        Not "no bound": an exponential one. A decision tree of depth $\mathrm{D}$ has at
+        most $2^{\mathrm{D}}-1$ internal nodes, hence queries at most that many distinct
+        variables; reading all of them non-adaptively determines the whole path, and with
+        it the tree's output. Nothing here is specific to Boolean output, so it holds for
+        relations.
+      conf: high
+  see_also: [Dna, D, Rna, TreeNav, ADDR]
 
 - from: Dna
   to: D
   setting: total
-  status: fails
-  upper:
-    - stmt: '\text{No bound: } \mathrm{D}^{\mathrm{na}}(f)/\mathrm{D}(f) \text{ is unbounded.}'
-      form: {kind: none}
-      conf: high
+  status: settled
   lower:
-    - stmt: '\mathrm{D}^{\mathrm{na}}(\mathrm{ADDR}_k) = k + 2^k,\quad \mathrm{D}(\mathrm{ADDR}_k) = k+1'
-      form: {kind: unbounded}
-      witness: ADDR
-      note: 'Every data bit of the addressing function is relevant, so a non-adaptive algorithm must read all of them; an adaptive one reads the address and then one data bit. Exponential in the input length.'
+    - stmt: '\mathrm{D}^{\mathrm{na}}(\mathrm{Nav}_k) = 2^k - 1 = 2^{\mathrm{D}(\mathrm{Nav}_k)} - 1'
+      form: {kind: exp}
+      witness: TreeNav
+      putative: true
+      note: 'The exponential bound is attained exactly, with no constant to spare: binary tree navigation has $\mathrm{D}=k$ and all $2^k-1$ variables relevant.'
       conf: high
-  see_also: [Dna, D, Rna, ADDR]
+    - stmt: '\mathrm{D}^{\mathrm{na}}(\mathrm{ADDR}_k) = k + 2^k,\quad \mathrm{D}(\mathrm{ADDR}_k) = k+1'
+      witness: ADDR
+      note: 'The textbook witness, loose against the bound by a factor of two ($2^{\mathrm{D}}-1 = 2^{k+1}-1$).'
+      conf: high
+  see_also: [Dna, D, TreeNav, ADDR]
+
+- from: R
+  to: Rna
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{R}_\varepsilon(f) \le \mathrm{R}^{\mathrm{na}}_\varepsilon(f)'
+      form: {exp: 1, kind: exact}
+      note: 'Same argument as for $\mathrm{D}$, at every error level, and again it says nothing about the output: a relation is fine.'
+      conf: high
+  see_also: [R, Rna, Dna]
 
 - from: R
   to: Rna
   setting: total
   status: settled
-  upper:
-    - stmt: '\mathrm{R}_\varepsilon(f) \le \mathrm{R}^{\mathrm{na}}_\varepsilon(f)'
-      form: {exp: 1, kind: exact}
-      conf: high
   lower:
     - stmt: '\mathrm{R}(\mathrm{PARITY}_n) = \mathrm{R}^{\mathrm{na}}(\mathrm{PARITY}_n) = n'
       form: {exp: 1, kind: exact}
       witness: PARITY
+      note: 'Equality: randomness buys nothing on parity, adaptive or not.'
       conf: high
-  see_also: [R, Rna, Dna]
+  see_also: [R, Rna]
+
+- from: Rna
+  to: R
+  setting: relation
+  status: settled
+  headline: '\mathrm{R}^{\mathrm{na}}_\varepsilon(f) \le 2^{\mathrm{R}_\varepsilon(f)} - 1'
+  upper:
+    - stmt: '\mathrm{R}^{\mathrm{na}}_\varepsilon(f) \le 2^{\mathrm{R}_\varepsilon(f)} - 1'
+      form: {kind: exp}
+      putative: true
+      note: |
+        A randomized algorithm is a distribution over deterministic trees of depth
+        $\mathrm{R}_\varepsilon$. Sample one, read the at most $2^{\mathrm{R}_\varepsilon}-1$
+        variables it could ever query, and simulate it: that is a non-adaptive algorithm
+        with the same error. So this direction is exponential, not unbounded.
+      conf: high
+  see_also: [Rna, R, Dna, TreeNav]
 
 - from: Rna
   to: R
   setting: total
-  status: fails
-  upper:
-    - stmt: '\text{No bound: } \mathrm{R}^{\mathrm{na}}(f)/\mathrm{R}(f) \text{ is unbounded.}'
-      form: {kind: none}
-      conf: high
+  status: settled
   lower:
+    - stmt: '\mathrm{R}^{\mathrm{na}}(\mathrm{Nav}_k) = \Theta(2^k),\quad \mathrm{R}(\mathrm{Nav}_k) = \Theta(k)'
+      form: {kind: exp}
+      witness: TreeNav
+      putative: true
+      note: 'Matches the upper bound up to the constant in the exponent: $\mathrm{R}^{\mathrm{na}} = 2^{\Theta(\mathrm{R})}$.'
+      conf: high
     - stmt: '\mathrm{R}^{\mathrm{na}}(\mathrm{ADDR}_k) = \Theta(2^k),\quad \mathrm{R}(\mathrm{ADDR}_k) = \Theta(k)'
-      form: {kind: unbounded}
       witness: ADDR
-      note: 'A fixed distribution over query sets of size $m$ hits the addressed data bit with probability at most $m/2^k$ (after paying for the $k$ address bits), and otherwise the algorithm is guessing an unbiased bit; so $m = \Omega(2^k)$ is needed for error $1/3$.'
+      note: 'A fixed distribution over $m$ data bits contains the addressed one with probability at most $m/2^k$, and otherwise the algorithm is guessing an unbiased bit; so $m = \Omega(2^k)$ is needed for error $1/3$.'
       conf: medium
       putative: true
   see_also: [Rna, R, Dna, ADDR]
 
 - from: Rna
   to: Dna
-  setting: total
-  status: gap
+  setting: relation
+  status: settled
   upper:
     - stmt: '\mathrm{R}^{\mathrm{na}}(f) \le \mathrm{D}^{\mathrm{na}}(f)'
       form: {exp: 1, kind: exact}
+      note: 'A fixed query set is a (degenerate) distribution over query sets — a model inclusion, so it says nothing about the setting.'
       conf: high
+  see_also: [Rna, Dna]
+
+- from: Rna
+  to: Dna
+  setting: total
+  status: gap
   lower:
     - stmt: '\mathrm{R}^{\mathrm{na}}(\mathrm{PARITY}_n) = \mathrm{D}^{\mathrm{na}}(\mathrm{PARITY}_n) = n'
       form: {exp: 1, kind: exact}
@@ -415,6 +490,12 @@ relations:
       witness: AND
       refs: [NS94, Paturi92]
       note: 'The one-sided relaxation buys nothing on the AND side: a polynomial bounded on all of $\{0,1\}^n \setminus \{1^n\}$ and large at $1^n$ still needs degree $\Omega(\sqrt n)$ by the Markov-brothers argument.'
+      conf: high
+    - stmt: '\widetilde{\deg}_+(\mathrm{PARITY}_n) = \widetilde{\deg}(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      refs: [MinskyPapert69, NS94]
+      note: 'Squeezed with no room at all: $\mathrm{sdeg}(\oplus_n) = n \le \widetilde{\deg}_+(\oplus_n) \le \widetilde{\deg}(\oplus_n) = n$. So on parity one-sidedness buys literally nothing, not even a constant.'
       conf: high
   see_also: [odeg, adeg, sdeg, deg]
 

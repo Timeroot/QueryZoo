@@ -17,6 +17,11 @@ relations:
       witness: PARITY
       conf: high
   lower:
+    - stmt: '\mathrm{I}(\mathrm{PARITY}_n) = \mathrm{s}(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      note: 'Every coordinate is sensitive at every input, so the average and the maximum coincide: the inequality is attained with nothing to spare.'
+      conf: high
     - stmt: '\mathrm{I}(f) \text{ can be exponentially smaller than } \mathrm{s}(f)'
       witness: AND
       note: '$\mathrm{I}(\wedge_n) = n\,2^{-(n-1)}$ while $\mathrm{s}(\wedge_n)=n$. Influence is an *average-case* measure, so it is not comparable to the worst-case zoo in the usual way.'
@@ -154,7 +159,14 @@ relations:
       refs: [ODonnell14]
       note: 'Write $f$ as a sum over the $\le 2^{\mathrm{D}}$ leaves; each subcube indicator has spectral norm $1$.'
       conf: high
-  see_also: [L1, D, PDT, spar]
+  lower:
+    - stmt: '\hat L_1(\mathrm{ADDR}_k) = 2^k = 2^{\mathrm{D}(\mathrm{ADDR}_k)-1}'
+      form: {kind: exp}
+      witness: ADDR
+      putative: true
+      note: 'Write $\mathrm{ADDR}_k = \sum_a \mathbb{1}[\mathrm{addr} = a]\cdot y_a$. Each term has spectral norm $1$, and the $2^k$ terms have disjoint Fourier supports (they differ in which $y$-variable appears), so the norms add. With $\mathrm{D} = k+1$ this is a factor $2$ from the bound.'
+      conf: high
+  see_also: [L1, D, PDT, spar, ADDR]
 
 - from: PDT
   to: spar
@@ -184,11 +196,45 @@ relations:
 - from: deg
   to: spar
   setting: total
+  status: fails
+  upper:
+    - stmt: '\text{No bound: } \deg(f) \text{ is not bounded by any function of } \mathrm{spar}(f).'
+      form: {kind: none}
+      conf: high
+  lower:
+    - stmt: '\deg(\oplus_n) = n,\quad \mathrm{spar}(\oplus_n) = 1'
+      form: {kind: unbounded}
+      witness: PARITY
+      note: |
+        A single character $\chi_{[n]}$ has full real degree and Fourier sparsity $1$, so
+        sparsity constrains the real degree not at all. The true theorem is the
+        $\mathbb{F}_2$-degree one recorded below; conflating $\deg$ with $\deg_2$ here is
+        an easy mistake, since for most familiar functions the two happen to agree.
+      conf: high
+  see_also: [deg, deg2, spar, Fdim]
+
+- from: deg2
+  to: spar
+  setting: total
   status: settled
   upper:
-    - stmt: '\deg(f) \le \log_2 \mathrm{spar}(f)'
+    - stmt: '\deg_2(f) \le \log_2\big(\mathrm{spar}(f)+1\big)'
       form: {kind: log}
-      note: 'A degree-$d$ Fourier character needs its subsets; the support of a function of degree $d$ has size $\ge 2^{d}$ -- in fact $\mathrm{spar}(f)\ge 2^{\deg(f)}$ for total Boolean $f$.'
-      refs: [ODonnell14]
+      putative: true
+      note: |
+        Restrict to a set $S$ with $|S| = d = \deg_2(f)$ carrying a top $\mathbb{F}_2$-monomial.
+        The restriction $g$ (as a $0/1$-valued function on $d$ bits) still contains
+        $\prod_{i\in S} x_i$, so $\sum_x g(x)$ is odd. For the $\pm1$ encoding
+        $h = 1-2g$ and any $T\ne\emptyset$,
+        $\hat h(T) = -2^{1-d}\sum_x g(x)\chi_T(x)$, and $\sum_x g(x)\chi_T(x) \equiv \sum_x g(x)
+        \pmod 2$ is odd, hence nonzero. So all $2^d-1$ non-empty coefficients survive, and
+        restriction never increases sparsity. The $+1$ is not slack: $\oplus_n$ has
+        $\deg_2 = 1$ and $\mathrm{spar} = 1$, so the bound is attained.
       conf: high
-  see_also: [deg, spar, Fdim]
+  lower:
+    - stmt: '\deg_2(\mathrm{OR}_n) = n = \log_2 \mathrm{spar}(\mathrm{OR}_n)'
+      form: {kind: log}
+      witness: OR
+      note: 'Attained again at the other end: $\mathrm{spar}(\mathrm{OR}_n) = 2^n$ and the $\mathbb{F}_2$-polynomial of $\mathrm{OR}_n$ contains $x_1\cdots x_n$.'
+      conf: high
+  see_also: [deg2, spar, PDT, Fdim]

@@ -16,9 +16,11 @@
     {% if not d %}<span class="none">&nbsp;</span>
     {% elif d.glyph %}<span class="glyph g-{{ d.verdict }}" title="{{ d.glyph_name }}">{{ d.glyph }}</span>
     {% else %}
-      <span class="exp{% if d.derived %} drv{% endif %}"
+      <span class="exp{% if d.derived %} drv{% endif %}{% if d.tight_exact %} attained{% endif %}"
         ><span class="a">{{ d.a }}</span><span class="comma">,</span><span class="b">{{ d.b }}</span
-        >{% if d.chip %}<span class="tchip c-{{ d.chip_kind }}">{{ d.chip }}</span>{% endif %}</span>
+        >{% if d.tight_exact %}<span class="tchip c-attained"
+           title="settled with equality: the upper bound is exact and a family attains it">=</span>
+        {%- elif d.chip %}<span class="tchip c-{{ d.chip_kind }}">{{ d.chip }}</span>{% endif %}</span>
     {% endif %}
   </span>
 {% endmacro %}
@@ -31,16 +33,17 @@
     <span class="tl">{{ short }}</span>
     <span class="tv v-{{ d.verdict }}">{{ verdict_word[d.verdict] }}</span>
     {% if d.fails %}<div class="tstmt">{{ d.fails.tex | tex }}</div>{% endif %}
-    {% if d.other %}<div class="tstmt">{{ d.other.tex | tex }}</div>{% endif %}
+    {% if d.other_up %}<div class="tstmt">{{ d.other_up.tex | tex }}</div>{% endif %}
+    {% if d.other_lo %}<div class="tstmt lo">sep: {{ d.other_lo.tex | tex }}</div>{% endif %}
     {% if d.up %}
       <div class="tstmt">{{ d.up.tex | tex }}{% if d.up.chip %} <span class="tchip c-{{ d.up.kind }}">{{ d.up.chip }}</span>{% endif %}</div>
       {% if d.up.deriv %}<div class="tipnote">{{ derivline(d.up.deriv) }}</div>{% endif %}
-    {% elif d.b != '?' %}<div class="tstmt">upper bound exponent \({{ d.b }}\) <span class="dim">(matrix table)</span></div>
+    {% elif d.b[0] in '0123456789' %}<div class="tstmt">upper bound exponent \({{ d.b }}\) <span class="dim">(matrix table)</span></div>
     {% endif %}
     {% if d.lo %}
       <div class="tstmt lo">sep: {{ d.lo.tex | tex }}</div>
       {% if d.lo.deriv %}<div class="tipnote">{{ derivline(d.lo.deriv) }}</div>{% endif %}
-    {% elif d.a != '?' %}<div class="tstmt lo">separation exponent \({{ d.a }}\) <span class="dim">(matrix table)</span></div>
+    {% elif d.a[0] in '0123456789' %}<div class="tstmt lo">separation exponent \({{ d.a }}\) <span class="dim">(matrix table)</span></div>
     {% endif %}
   </div>
   {% endif %}
@@ -256,6 +259,12 @@
           the constant being explicit on the pair page where it is known</li>
         <li><span class="tchip">&nbsp;</span> no chip &mdash; only the exponent is on record,
           with the \(o(1)\) unquantified</li>
+        <li><span class="tchip c-attained">=</span> <b>attained</b> &mdash; the upper bound is
+          exact <em>and</em> a family meets it with equality. The pair is settled with nothing
+          left to shave, not even a constant: \(\mathrm{D}\) vs \(\mathrm{D}^{\mathrm{na}}\)
+          reads <span class="exp attained"><span class="a">1</span><span class="comma">,</span><span class="b">1</span><span class="tchip c-attained">=</span></span>
+          because \(\mathrm{D}\le\mathrm{D}^{\mathrm{na}}\) always and
+          \(\oplus_n\) has \(\mathrm{D}=\mathrm{D}^{\mathrm{na}}=n\).</li>
       </ul>
       <p class="dim">So \(\mathrm{QC}\) vs \(\mathrm{RC}\) reads
       <span class="exp"><span class="a">0.5</span><span class="comma">,</span><span class="b">0.5</span><span class="tchip c-theta">&Theta;</span></span>:
@@ -288,8 +297,12 @@
           exists in this setting &mdash; the usual fate of a polynomial relation on partial functions</li>
         <li><span class="glyph g-unbounded">&infin;</span> unbounded: \(M_1\) can be arbitrarily
           large at fixed \(M_2\)</li>
-        <li><span class="glyph g-exp">2&#8319;</span> / <span class="glyph g-log">log</span>
-          only an exponential (resp. logarithmic-type) bound is known</li>
+        <li><b>exp</b> / <b>log</b> in place of an exponent &mdash; the relationship is
+          real but not polynomial. A cell reading
+          <span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">exp</span></span>
+          is as settled as \(2,2\) is: \(\mathrm{D}^{\mathrm{na}}\) vs \(\mathrm{D}\) has
+          \(\mathrm{D}^{\mathrm{na}} \le 2^{\mathrm{D}}-1\) and a family attaining it.
+          A single side reading <b>exp</b> means only that side is known.</li>
         <li><span class="glyph">&#8728;</span> on the <b>diagonal</b>: records about a measure and
           itself &mdash; composition theorems, \(\varepsilon\)-dependence</li>
         <li>blank &mdash; nothing recorded and nothing derivable for that ordered pair</li>

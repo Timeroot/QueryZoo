@@ -613,6 +613,16 @@ class Zoo:
 
         for key, per_setting in best.items():
             for s, slot in per_setting.items():
+                # "no bound exists" and an actual bound cannot both be true.
+                # If the closure ever derives one against a recorded `none`,
+                # one of the two is wrong and we want to hear about it.
+                bad = [v for v in slot.get("verdicts", [])
+                       if v["kind"] in ("none", "unbounded")]
+                if bad and slot.get("up"):
+                    self.err(f"{key[0]} vs {key[1]} ({s}): a bullet says no bound "
+                             f"exists, but a bound of exponent "
+                             f"{fmt_exp(slot['up']['exp'])} is on the table "
+                             f"({slot['up']['origin']})")
                 slot["verdict"] = self._verdict(slot)
                 slot["derived"] = all(
                     x["origin"] != "recorded"
@@ -961,6 +971,27 @@ _CHIP_NAME = {
     "tilde": "tight up to polylogarithmic factors",
     "const": "up to a constant factor",
 }
+# The same question on the separation side: how tight is the witness family?
+# `exact` here is the strong statement -- a family attaining M1 >= M2^a with no
+# constant loss -- which, paired with an `exact` upper bound of the same
+# exponent, settles a pair completely rather than up to constants.
+_CHIP_LO = {
+    "exact": "\u2265",  # a family with M1 >= M2^a on the nose
+    "theta": "\u0398",  # M1 = Theta(M2^a) on the family
+    "tilde": "\u03a9\u0303",
+    "const": "\u03a9",
+}
+_CHIP_LO_NAME = {
+    "exact": "a family attains M1 >= M2^a exactly, with no constant loss",
+    "theta": "a family with M1 = Theta(M2^a)",
+    "tilde": "a family with M1 = Omega-tilde(M2^a): tight up to logs",
+    "const": "a family with M1 = Omega(M2^a)",
+}
+# What a cell shows in place of an exponent when the relationship is not
+# polynomial. `unbounded`/`none` keep their glyph; `exp`/`log` name themselves,
+# so a cell can read `exp, exp`: an exponential separation against an
+# exponential upper bound is just as settled as `2, 2`.
+_NONPOLY_LABEL = {"exp": "exp", "log": "log", "unbounded": "\u221e"}
 VERDICT_WORD = {
     "settled": "settled",
     "gap": "gap",
@@ -1053,9 +1084,12 @@ def _side_view(z, f, src):
     """One side of a cell, ready for a template."""
     if f is None:
         return None
+    lo = f["side"] == "lower"
     return {
         "exp": f["exp"], "e": fmt_exp(f["exp"]), "kind": f["kind"],
-        "chip": _CHIP.get(f["kind"], ""), "chip_name": _CHIP_NAME.get(f["kind"], ""),
+        "side": f["side"],
+        "chip": (_CHIP_LO if lo else _CHIP).get(f["kind"], ""),
+        "chip_name": (_CHIP_LO_NAME if lo else _CHIP_NAME).get(f["kind"], ""),
         "tex": _fact_tex(z, f), "refs": f.get("refs") or [],
         "witness": f.get("witness"), "note": f.get("note"),
         "origin": f["origin"], "src": src, "setting": f["setting"],
@@ -1089,11 +1123,21 @@ def _token(z, row, col, setting, cell):
         b_exp = pub_b
 
     fails = next((v for v in vs if v["kind"] == "none"), None)
-    other = next((v for v in vs if v["kind"] in ("unbounded", "exp", "log")), None)
+    # A non-polynomial statement is still a statement, and it has a side: an
+    # exponential *upper bound* goes in the upper column, an exponential
+    # *separation* in the separation column. Lumping them together was what
+    # made a cell read "no bound" on one line and "bound" on the next.
+    other_up = next((v for v in vs if v["side"] == "upper"
+                     and v["kind"] in ("exp", "log")), None)
+    other_lo = next((v for v in vs if v["side"] == "lower"
+                     and v["kind"] in ("unbounded", "exp", "log")), None)
+    unb = other_lo is not None and other_lo["kind"] == "unbounded"
     if fails is not None:
         verdict = "none"
-    elif b_exp is None and other is not None:
-        verdict = other["kind"]
+    elif b_exp is None and unb:
+        verdict = "unbounded"
+    elif b_exp is None and (other_up is not None or other_lo is not None):
+        verdict = (other_up or other_lo)["kind"]
     elif a_exp is not None and b_exp is not None:
         verdict = "settled" if abs(a_exp - b_exp) < 1e-9 else "gap"
     elif b_exp is not None:
@@ -1115,22 +1159,43 @@ def _token(z, row, col, setting, cell):
     if verdict == "none":
         drivers = [fails is not None and fails["origin"] == "recorded"]
     elif verdict in ("unbounded", "exp", "log"):
-        drivers = [other is not None and other["origin"] == "recorded"]
+        drivers = [v["origin"] == "recorded"
+                   for v in (other_up, other_lo) if v is not None]
     else:
         drivers = [written_down(f, src, pv, ex) for f, src, pv, ex in
                    ((up, b_src, pub_b, b_exp), (lo, a_src, pub_a, a_exp))
                    if ex is not None]
-    glyph, glyph_name = _VGLYPH.get(verdict, ("", ""))
+    # `none` and `unbounded` still get a glyph: there is nothing to put in the
+    # two columns, and "no bound at all" deserves to be shouted. `exp`/`log`
+    # do have something to say in each column, so they read like exponents.
+    glyph, glyph_name = (_VGLYPH.get(verdict, ("", ""))
+                         if verdict in ("none", "unbounded") else ("", ""))
+    a_txt = fmt_exp(a_exp) if a_exp is not None else "?"
+    b_txt = fmt_exp(b_exp) if b_exp is not None else "?"
+    if verdict in ("exp", "log"):
+        if other_lo is not None and a_exp is None:
+            a_txt = _NONPOLY_LABEL[other_lo["kind"]]
+        if other_up is not None and b_exp is None:
+            b_txt = _NONPOLY_LABEL[other_up["kind"]]
+    # The strongest thing a cell can say: the upper bound is an exact
+    # inequality and a family meets it with no constant to spare.
+    tight_exact = (verdict == "settled" and up is not None and lo is not None
+                   and up["kind"] == "exact" and lo["kind"] == "exact"
+                   and not up["log"] and not lo["log"])
     return {
         "verdict": verdict,
-        "a": fmt_exp(a_exp) if a_exp is not None else "?",
-        "b": fmt_exp(b_exp) if b_exp is not None else "?",
+        "a": a_txt,
+        "b": b_txt,
         "chip": _CHIP.get(up["kind"], "") if up else "",
         "chip_kind": up["kind"] if up else "",
+        "chip_lo": _CHIP_LO.get(lo["kind"], "") if lo else "",
+        "chip_lo_kind": lo["kind"] if lo else "",
+        "tight_exact": tight_exact,
         "glyph": glyph, "glyph_name": glyph_name,
         "up": _side_view(z, up, b_src), "lo": _side_view(z, lo, a_src),
         "fails": _side_view(z, fails, "zoo"),
-        "other": _side_view(z, other, "zoo") if other is not None and b_exp is None else None,
+        "other_up": _side_view(z, other_up, "zoo") if b_exp is None else None,
+        "other_lo": _side_view(z, other_lo, "zoo"),
         # "derived" = nothing a human wrote states this cell; the closure or
         # setting inheritance produced it. Flagged everywhere it is shown.
         "derived": bool(drivers) and not any(drivers),
@@ -1470,6 +1535,8 @@ class Builder:
             "verdicts": VERDICT_WORD,
             "chips": _CHIP,
             "chip_names": _CHIP_NAME,
+            "chips_lo": _CHIP_LO,
+            "chip_lo_names": _CHIP_LO_NAME,
             "source": (z.matrix or {}).get("source"),
         }, separators=(",", ":")))
 

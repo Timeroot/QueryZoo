@@ -157,9 +157,11 @@ relations:
       note: 'Theorem 15 of [BdW02]: average the leaf-indicator polynomials of the deterministic trees in the mixture. No constant loss at all.'
       conf: high
   lower:
-    - stmt: '\widetilde{\deg}(f_n) = \Omega(\mathrm{R}(f_n))'
-      form: {exp: 1, kind: const}
+    - stmt: '\widetilde{\deg}(\mathrm{PARITY}_n) = \mathrm{R}(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
       witness: PARITY
+      refs: [NS94, BBCMdW01]
+      note: 'Both sides are exactly $n$: parity needs all $n$ queries even at error $1/3$, and no polynomial of degree $<n$ approximates it. Theorem 15 of [BdW02] loses nothing here.'
       conf: high
   notes: |
     The same proof gives $\widetilde{\deg}_\varepsilon(f)\le\mathrm{R}_\varepsilon(f)$
@@ -306,13 +308,20 @@ relations:
 # --------------------------------------------------- absolute bounds
 - from: Q
   to: D
-  setting: total
+  setting: relation
   status: settled
   upper:
     - stmt: '\mathrm{Q}(f) \le \mathrm{R}(f) \le \mathrm{R}_0(f) \le \mathrm{D}(f) \le n'
       form: {exp: 1, kind: exact}
-      note: 'The trivial chain.'
+      note: 'The trivial chain: each step is a model inclusion, so none of it cares whether $f$ is total, partial or a relation.'
       conf: high
+  see_also: [Q, R, D]
+
+- from: Q
+  to: D
+  setting: total
+  status: settled
+  upper:
     - stmt: '\mathrm{Q}(f) \le n/2 + O(\sqrt n)'
       refs: [vanDam98]
       note: 'Quantum oracle interrogation: *every* $n$-bit function, even the hardest, costs only about half the classical worst case.'

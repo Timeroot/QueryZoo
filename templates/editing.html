@@ -87,15 +87,44 @@ kind:    exact    M1 &lt;= M2^exp, no hidden constant
          const    O(...) or an explicit constant
          theta    Theta(...): tight both ways -- also gives the converse edge
          tilde    up to polylogs
-         exp      only an exponential bound   (upper side only)
-         log      only a logarithmic one      (upper side only)
+         exp      exponential, on either side  (M1 &lt;= 2^M2, or 2^Omega(M2) apart)
+         log      logarithmic, on either side
          none     no bound of this form exists (upper side only)
-         unbounded                            (lower side only)
+         unbounded  M2 stays O(1) while M1 grows (lower side only)
 dir:     reverse -- this bullet really bounds `to` in terms of `from`,
          so file it under the reverse pair rather than claim it here
 inherit: false -- do NOT propagate to other settings (side conditions!)</code></pre>
         <p>An <code>equivalent:</code> entry on a measure page takes the same field, with
         <code>setting:</code> defaulting to <code>total</code>.</p>
+
+        <h3>What a cell then says</h3>
+        <p>A matrix cell is two exponents, <em>separation, upper</em>, each with a chip naming
+        how tight it is. The chips on the upper side are the ones above
+        (<code>=</code> for <code>exact</code>, \(\Theta\), \(\tilde O\), \(O\)); on the
+        separation side they read the other way (\(\ge\), \(\Theta\), \(\tilde\Omega\),
+        \(\Omega\)), because a separation is a family <em>attaining</em> the exponent.</p>
+        <ul class="tick">
+          <li><b>An <code>exact</code> upper met by an <code>exact</code> separation</b> at the
+          same exponent with no logs is the strongest state a pair can be in: not just
+          \(M_1 \le M_2\) but a family with \(M_1 = M_2\) on the nose. The build detects this
+          itself &mdash; you never mark it &mdash; and collapses the cell to a single
+          <code>=</code>, reading &ldquo;settled &mdash; with equality&rdquo;. Most of the
+          containment chains (\(\mathrm{RS} \le \mathrm{R} \le \mathrm{R}_0 \le \mathrm{D}
+          \le \mathrm{D}^{\mathrm{na}}\)) are settled this way by \(\mathrm{PARITY}_n\).</li>
+          <li><b>Non-polynomial pairs still get two entries.</b> An <code>exp</code> upper
+          beside an <code>exp</code> separation renders <code>exp, exp</code>: exponentially
+          bounded, and exponentially separated. \(\mathrm{D}^{\mathrm{na}}\) versus
+          \(\mathrm{D}\) is the model case &mdash;
+          \(\mathrm{D}^{\mathrm{na}} \le 2^{\mathrm{D}}-1\) always, with equality on
+          {{ xref('TreeNav') }}. Such a cell is <em>settled</em>; it is not a gap.</li>
+          <li><b>Reserve the glyphs.</b> \(\varnothing\) (<code>none</code>) and \(\infty\)
+          (<code>unbounded</code>) mean a proved impossibility, not an unfilled cell. An
+          unfilled cell is <code>?</code>. Before writing <code>unbounded</code>, check that
+          one measure really can be held at \(O(1)\) while the other grows &mdash; if instead
+          the two are exponentially related, that is <code>exp</code>, and the honest cell says
+          so. The build rejects a record that claims no bound exists while another bullet
+          supplies one.</li>
+        </ul>
 
         <h3>The three derivation rules</h3>
         <ul class="tick">
