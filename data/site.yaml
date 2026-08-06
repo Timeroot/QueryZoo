@@ -55,6 +55,55 @@ settings:
     short: "relation"
     blurb: "f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style."
 
+# The ladder: a hand-written rough ordering of the measures, biggest first,
+# shown as a fourth scope on the matrix page. The rule is one-directional --
+# if X <= Y for every total f then Y is above X -- and everything else is
+# judgement, with the more computational measure put higher. One representative
+# is kept from each family of measures that are equal up to constants
+# (fbs = FC = Theta(RC) = Theta(CA), Q = Theta(Adv^pm) = Theta(gamma_2^alpha),
+# ardeg = Theta(PostQ)), and measures with no stable place -- parity decision
+# trees and the Fourier quantities, the min-variants, anything whose value is a
+# choice of parameter such as D^mu -- are left out. `why` is optional and shows
+# as the row's tooltip.
+ladder:
+  - {id: Dna,    why: "the query set is fixed in advance: above every other measure, and up to 2^D - 1"}
+  - {id: Rna,    why: "non-adaptive too, so at most D^na; can be exponentially above R"}
+  - {id: D}
+  - {id: R0,     why: "zero error but randomized, so at most D"}
+  - {id: UC,     why: "unambiguous certificates: at least C, at most D"}
+  - {id: SP,     why: "a subcube partition is an unambiguous cover, so at most UC"}
+  - {id: C,      why: "at most SP, and at most R0"}
+  - {id: R,      why: "bounded error, so at most R0"}
+  - {id: Rbar,   why: "expected cost, so at most R"}
+  - {id: noisyR, why: "noisy copies are cheaper than queries, so at most R"}
+  - {id: LR,     why: "the largest measure with an inner composition theorem: at most R"}
+  - {id: RS,     why: "sabotage: at most max-conflict complexity, hence at most LR"}
+  - {id: EC,     why: "certificates as distributions: at most C, at least fbs"}
+  - {id: fbs,    why: "= FC = Theta(RC) = Theta(CA), the LP relaxation of C"}
+  - {id: bs,     why: "at most its own LP relaxation fbs"}
+  - {id: QE,     why: "exact quantum, so at most D"}
+  - {id: Q0,     why: "zero error rather than exact, so at most QE"}
+  - {id: Q,      why: "= Theta(Adv^pm) = Theta(gamma_2^alpha); at most Q0 and at most R"}
+  - {id: deg,    why: "at most D, and at most 2 QE"}
+  - {id: adeg,   why: "approximation is cheaper: at most deg, at most R, at most 2Q"}
+  - {id: s,      why: "at most bs; Huang puts D within s^6"}
+  - {id: Adv,    why: "positive weights only, so at most Adv^pm = Theta(Q)"}
+  - {id: rdeg,   why: "at most C; can be far below deg"}
+  - {id: ardeg,  why: "= Theta(PostQ); at most rdeg and at most adeg"}
+  - {id: odeg,   why: "one-sided approximation, so at most adeg"}
+  - {id: sdeg,   why: "at most odeg; 1 for MAJ, where D = n"}
+  - {id: lambda, why: "at most s and at most Adv, and never far below either"}
+
+ladder_note: >
+  A hand-drawn ordering, biggest at the top. The one rule it obeys is that if
+  $X \le Y$ for every total $f$ then $Y$ is above $X$; incomparable measures
+  are placed by eye, with the more computational one higher, so the reader can
+  see the direction of the whole table at a glance. It is a reading aid and
+  **not a theorem**: for any particular $f$ plenty of neighbouring pairs come
+  out the other way round -- $\mathrm{s}(\mathrm{OR}_n) = n$ sits well above
+  $\widetilde{\deg}(\mathrm{OR}_n) = \Theta(\sqrt n)$, for one. The list is
+  deliberately partial.
+
 # Top navigation.
 nav:
   - {label: "Overview",    href: "index.html"}

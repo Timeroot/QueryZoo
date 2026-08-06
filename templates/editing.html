@@ -26,7 +26,7 @@ python3 -m http.server -d site 8000</code></pre>
         <table class="listing">
           <thead><tr><th>File</th><th>Holds</th></tr></thead>
           <tbody>
-            <tr><td><code>data/site.yaml</code></td><td>title, navigation, the category list, the three settings, the status vocabulary</td></tr>
+            <tr><td><code>data/site.yaml</code></td><td>title, navigation, the category list, the three settings, the status vocabulary, the matrix ladder</td></tr>
             <tr><td><code>data/refs.yaml</code></td><td>bibliography &mdash; a flat map from citation key to entry</td></tr>
             <tr><td><code>data/measures/*.yaml</code></td><td>one block per measure, under a top-level <code>measures:</code> list</td></tr>
             <tr><td><code>data/functions/*.yaml</code></td><td>witness families, under <code>functions:</code></td></tr>
@@ -38,6 +38,14 @@ python3 -m http.server -d site 8000</code></pre>
         </table>
         <p>Files inside a directory are concatenated in filename order, so
         <code>data/relations/08-whatever.yaml</code> is a perfectly good place for new material.</p>
+        <p>The <code>ladder:</code> list in <code>data/site.yaml</code> is the one piece of
+        ordering nobody derived: the hand-written rough sort of the measures by size behind the
+        <b>Ladder</b> scope on the <a href="{{ root }}matrix.html">matrix page</a>.
+        Entries are <code>{id: R, why: 'one terse line'}</code>, biggest first, and
+        the rule to keep is that if \(X \le Y\) for every total \(f\) then \(Y\) comes first;
+        everything else is judgement. Ids are checked like any other cross-reference, so a typo
+        fails the build. Leave out anything with no stable place, and keep one representative per
+        family of measures that are equal up to constants.</p>
       </section>
 
       <section class="card prose">

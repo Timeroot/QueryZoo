@@ -141,6 +141,7 @@
       <button class="on" data-scope="core">Core {{ meta.counts.core }}</button>
       <button data-scope="recorded">With records {{ meta.counts.recorded }}</button>
       <button data-scope="all">All {{ meta.counts.all }}</button>
+      <button data-scope="ladder">Ladder {{ meta.counts.ladder }}</button>
     </div>
     <span class="lbl">View</span>
     <div class="segmented" id="matrix-view">
@@ -210,6 +211,34 @@
         <tr class="y-{{ r.m.id }}" data-cat="{{ r.m.category }}">
           <th class="rowhead cat-{{ r.m.category }}">
             <a href="{{ root }}measures/{{ r.m.id }}.html" title="{{ r.m.name }}">\({{ r.m.symbol }}\)</a>
+          </th>
+          {% for e in r.entries %}{{ mcell(e, r.m) }}{% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {# --------------------------------------------- the ladder, biggest first #}
+  <div class="matrixwrap wide mj-defer" id="wrap-ladder" hidden>
+    <table class="matrix all ladder" id="matrix-ladder">
+      <thead>
+        <tr>
+          <th class="corner"><span class="m1">\(M_1\)</span><span class="slash">/</span><span class="m2">\(M_2\)</span></th>
+          {% for e in lad %}
+          <th class="colhead cat-{{ e.m.category }}" data-col="{{ e.m.id }}">
+            <a href="{{ root }}measures/{{ e.m.id }}.html" title="{{ e.m.name }}">\({{ e.m.symbol }}\)</a>
+          </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in lad %}
+        <tr>
+          <th class="rowhead cat-{{ r.m.category }}">
+            <span class="rank">{{ loop.index }}</span>
+            <a href="{{ root }}measures/{{ r.m.id }}.html"
+               title="{{ r.m.name }}{% if r.why %} &mdash; {{ r.why }}{% endif %}">\({{ r.m.symbol }}\)</a>
           </th>
           {% for e in r.entries %}{{ mcell(e, r.m) }}{% endfor %}
         </tr>
@@ -318,6 +347,11 @@
       least one relation record. <b>All</b> shows all {{ meta.counts.all }} measures in the zoo,
       including ones whose pairs are entirely unpopulated &mdash; useful for seeing what is
       missing. Narrow either with the category chips.</p>
+      <p><b>Ladder</b> drops the grouping by subject and puts {{ meta.counts.ladder }} of the
+      measures in a rough order of size, biggest first, so the direction of the whole table is
+      visible by eye: the free \(1,1^{\le}\) inequalities collect <em>below</em> the diagonal,
+      where the row measure is the smaller one, and the real exponents and separations sit above
+      it. {{ site.ladder_note | mdi }}</p>
       <p class="dim">Blank means the zoo has no entry for that pair in that setting yet &mdash;
       it does <em>not</em> mean nothing is known; see {{ xref('settings') }}.</p>
     </div>

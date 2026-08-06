@@ -231,6 +231,23 @@ class Zoo:
                 self.err(f"duplicate relation id {rid}")
             self.relation_by_id[rid] = r
 
+        # site: the matrix ladder. Ids only, so they get checked like every
+        # other cross-reference; the order and the `why` are the human's.
+        ladder, seen = [], set()
+        for e in self.site.get("ladder") or []:
+            e = {"id": e} if isinstance(e, str) else dict(e)
+            mid = e.get("id")
+            if mid not in self.measure:
+                self.err(f"site.yaml: ladder entry '{mid}' is not a measure")
+                continue
+            if mid in seen:
+                self.err(f"site.yaml: ladder lists '{mid}' twice")
+                continue
+            seen.add(mid)
+            e.setdefault("why", None)
+            ladder.append(e)
+        self.site["ladder"] = ladder
+
         # concepts / open problems
         for c in self.concepts:
             c.setdefault("order", 999)
@@ -1436,6 +1453,15 @@ class Builder:
             {"row": m["id"], "m": m, "entries": [entry(m["id"], c["id"]) for c in allm]}
             for m in allm
         ]
+        # -- the ladder: the hand-written rough ordering from site.yaml, as a
+        # grid of its own. Same cells, its own row and column order.
+        ladder = z.site.get("ladder") or []
+        lad = [
+            {"row": e["id"], "m": z.measure[e["id"]], "why": e.get("why"),
+             "entries": [entry(e["id"], o["id"]) for o in ladder]}
+            for e in ladder
+        ]
+
         meta = {
             "measures": [
                 {"id": m["id"], "cat": m["category"], "scope": scope_of[m["id"]]} for m in allm
@@ -1444,6 +1470,7 @@ class Builder:
                 "core": len(core),
                 "recorded": len(recorded),
                 "all": len(allm),
+                "ladder": len(ladder),
             },
         }
         cat_counts = defaultdict(int)
@@ -1458,6 +1485,7 @@ class Builder:
             cols=cols,
             big=big,
             allm=allm,
+            lad=lad,
             meta=meta,
             meta_json=json.dumps(meta, separators=(",", ":")),
             cat_counts=cat_counts,
@@ -1465,7 +1493,8 @@ class Builder:
         )
         self.index_entry("matrix.html", "page", "Exponent matrix",
                          f"The {len(core)}x{len(core)} table of best-known exponents, "
-                         f"expandable to all {len(allm)} measures",
+                         f"expandable to all {len(allm)} measures, or to the "
+                         f"{len(ladder)}-measure ladder ordered by size",
                          t.get("convention", ""))
 
     def page_measures(self):

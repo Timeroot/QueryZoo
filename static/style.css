@@ -499,6 +499,11 @@ table.matrix.all .tchip { font-size: 8.5px; margin-left: 0.5px; }
 table.matrix.all .colhead { border-top: 3px solid var(--cc, transparent); }
 table.matrix.all .rowhead { border-left: 3px solid var(--cc, transparent); }
 table.matrix.all .colhead a, table.matrix.all .rowhead a { color: var(--cc, var(--ink)); }
+/* The ladder grid: same cells, hand-written order, so the rows are numbered
+   to make it clear that the order is the content. */
+table.matrix.ladder .rowhead .rank {
+  font-size: 10px; color: var(--dim); margin-right: 6px; font-variant-numeric: tabular-nums;
+}
 .mtnote { margin: 10px 2px 0; max-width: 900px; }
 
 /* Category chips. */

@@ -149,6 +149,10 @@
 
     var wrapCore = document.getElementById("wrap-core");
     var wrapAll = document.getElementById("wrap-all");
+    /* The ladder is a table of its own -- its rows and columns are in the
+       hand-written order from site.yaml, which no stylesheet could produce
+       out of the full grid. */
+    var wrapLadder = document.getElementById("wrap-ladder");
     var catbox = document.getElementById("matrix-cats");
     var countEl = document.getElementById("matrix-count");
     var catInputs = catbox ? catbox.querySelectorAll("input[type=checkbox]") : [];
@@ -157,31 +161,44 @@
       return SCOPE_RANK[m.scope] <= SCOPE_RANK[scope] && !offCats[m.cat];
     }
 
+    /* A grid is skipped at load (class mj-defer) because MathJax mismeasures
+       inside display:none; typeset it once, on first reveal. */
+    function reveal(wrap) {
+      if (!wrap || !wrap.classList.contains("mj-defer")) return;
+      wrap.classList.remove("mj-defer");
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([wrap]).catch(function () {});
+      }
+    }
+
     function applyScope() {
-      var hidden = [], shown = 0;
-      meta.measures.forEach(function (m) {
-        if (visible(m)) shown++;
-        else hidden.push("#matrix-all tr.y-" + m.id + ",#matrix-all .x-" + m.id);
-      });
-      sheet.textContent = hidden.length ? hidden.join(",") + "{display:none}" : "";
       var core = scope === "core";
+      var ladder = scope === "ladder";
+      var big = !core && !ladder;
+      var shown = 0;
+      if (big) {
+        var hidden = [];
+        meta.measures.forEach(function (m) {
+          if (visible(m)) shown++;
+          else hidden.push("#matrix-all tr.y-" + m.id + ",#matrix-all .x-" + m.id);
+        });
+        sheet.textContent = hidden.length ? hidden.join(",") + "{display:none}" : "";
+      }
       wrapCore.hidden = !core;
-      wrapAll.hidden = core;
-      if (catbox) catbox.hidden = core;
-      document.body.classList.toggle("scope-all", !core);
+      wrapAll.hidden = !big;
+      if (wrapLadder) wrapLadder.hidden = !ladder;
+      /* The chips filter the full grid only: the ladder is a hand-picked list,
+         so there is nothing sensible for them to do while it is showing. */
+      if (catbox) catbox.hidden = !big;
+      document.body.classList.toggle("scope-all", big);
       if (countEl) {
         countEl.textContent = core
           ? meta.counts.core + " x " + meta.counts.core + " published table"
-          : shown + " x " + shown + " of " + meta.counts.all + " measures";
+          : ladder
+            ? meta.counts.ladder + " measures, roughly ordered by size"
+            : shown + " x " + shown + " of " + meta.counts.all + " measures";
       }
-      /* The full grid is skipped at load (class mj-defer) because MathJax
-         mismeasures inside display:none; typeset it once, on first reveal. */
-      if (!core && wrapAll.classList.contains("mj-defer")) {
-        wrapAll.classList.remove("mj-defer");
-        if (window.MathJax && window.MathJax.typesetPromise) {
-          window.MathJax.typesetPromise([wrapAll]).catch(function () {});
-        }
-      }
+      reveal(big ? wrapAll : ladder ? wrapLadder : null);
     }
 
     bindSeg("matrix-scope", "data-scope", function (v) {
@@ -204,14 +221,15 @@
     if (ca) ca.addEventListener("click", function () { setAllCats(true); });
     if (cn) cn.addEventListener("click", function () { setAllCats(false); });
 
+    /* #recorded, #all, #ladder select a scope on load; the buttons are the
+       list of what is legal, so a new one needs no second registration. */
     var want = (location.hash || "").replace(/^#/, "");
-    if (SCOPE_RANK[want] !== undefined && want !== "core") {
+    var b = /^[a-z]+$/.test(want) && want !== "core"
+      ? mc.querySelector('[data-scope="' + want + '"]') : null;
+    if (b) {
       scope = want;
-      var b = mc.querySelector('[data-scope="' + want + '"]');
-      if (b) {
-        mc.querySelectorAll("[data-scope]").forEach(function (o) { o.classList.remove("on"); });
-        b.classList.add("on");
-      }
+      mc.querySelectorAll("[data-scope]").forEach(function (o) { o.classList.remove("on"); });
+      b.classList.add("on");
     }
     applyScope();
   }
