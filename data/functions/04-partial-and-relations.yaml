@@ -223,6 +223,7 @@ functions:
   formal: '$\mathrm{GapMaj}^\delta_n(x) = \mathbb{1}[|x| > n/2]$ restricted to $\{x : \big||x|-n/2\big| \ge \delta n\}$.'
   values:
     - {measure: R,      value: '\Theta(1/\delta^2)'}
+    - {measure: D,      value: '\Theta(n)', note: 'Independent of $\delta$, and the whole point of the example: $\mathrm{D}$ is unbounded in terms of $\mathrm{R}$ on partial functions. Adversary count: after $q$ queries returning $a$ ones, output $0$ is still consistent iff $a \le n/2-\delta n$ and output $1$ iff $a + (n-q) \ge n/2+\delta n$, so keeping both alive is possible exactly while $q \le (1-2\delta)n$ -- giving $\mathrm{D} = (1-2\delta)n + 1$ up to integrality, and $n$ queries always suffice.'}
     - {measure: noisyR, value: '\Theta(n)', refs: [BenDavidBlais20composition], note: 'The composition $f \circ \mathrm{GapMaj}$ is exactly the construction that shows $\mathrm{R}$ does not compose, and $\mathrm{noisyR}$ was defined so that it does.'}
     - {measure: Q,      value: '\Theta(1/\delta)'}
   witnesses:

@@ -202,7 +202,7 @@ relations:
       note: 'Max-conflict complexity dominates sabotage complexity for all partial $g$...'
       conf: high
   lower:
-    - stmt: '\exists \text{ partial } g:\ \bar\chi(g)/\mathrm{RS}(g) \text{ unbounded}'
+    - stmt: '\bar\chi(g) \text{ is unbounded in terms of } \mathrm{RS}(g) \text{ for partial } g'
       form: {kind: unbounded}
       refs: [GLSS19]
       conf: low

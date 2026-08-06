@@ -27,7 +27,7 @@ if you need the site fully offline, drop `tex-chtml.js` into `static/` and point
 | concept pages | 11 |
 | open problems | 14 |
 | references | 139 |
-| measure values recorded on function pages | 369 |
+| measure values recorded on function pages | 370 |
 
 The site generates one page per measure, function and concept, plus the exponent matrix, the
 relations index, the open-problem list, the bibliography, and this guide's on-site twin
@@ -188,10 +188,13 @@ to a single exponent; adding one where it belongs is a good contribution.
   attaining family (usually `PARITY` or `OR`) is what closes the cell.
 - **Confidence is visible.** `conf: low` renders a `?` badge on the page. Use it instead of
   deleting something you are unsure of, and pair it with `todo:` saying what to check.
-- **`putative: true` for anything unpublished.** A value or bullet that no source states --
-  worked out with pen and paper for this catalogue -- gets a `putative` badge, and the build
-  refuses it unless `note:` spells out the argument. Everything else is a transcription with
-  a citation.
+- **`putative: true` for unpublished *arguments*, not unpublished sentences.** A value that no
+  source states but that follows in a line -- a sandwich between two recorded values, a direct
+  application of a recorded `Θ` relation, reading a Fourier expansion off -- is just a fact:
+  record it with a `note:` giving the derivation and no badge. Reserve the badge for a real
+  argument worked out for this catalogue, where a reader should want to check the proof before
+  relying on it (`odeg(MAJ) = Θ(√n)`, `RC(PARITY) = ⌈n/2⌉`). The build refuses `putative`
+  unless `note:` spells the argument out.
 - **Witnesses are ids**, not prose. If the function is not catalogued yet, add a stub with
   `id/name/short/refs`; its page shows a "definition not yet transcribed" banner until someone
   fills in `formal:`.

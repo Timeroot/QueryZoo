@@ -19,7 +19,7 @@ relations:
   setting: partial
   status: fails
   upper:
-    - stmt: '\text{No bound. } \mathrm{D}(f)/\mathrm{R}(f) \text{ is unbounded.}'
+    - stmt: '\mathrm{D}(f) \text{ is known to be unbounded in terms of } \mathrm{R}(f).'
       form: {kind: none}
       conf: high
   lower:
@@ -45,7 +45,7 @@ relations:
   setting: partial
   status: fails
   upper:
-    - stmt: '\text{No bound. Unbounded (indeed exponential) separation.}'
+    - stmt: '\mathrm{R}(f) \text{ is known to be unbounded in terms of } \mathrm{Q}(f).'
       form: {kind: none}
       conf: high
   lower:

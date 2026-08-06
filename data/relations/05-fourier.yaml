@@ -163,7 +163,6 @@ relations:
     - stmt: '\hat L_1(\mathrm{ADDR}_k) = 2^k = 2^{\mathrm{D}(\mathrm{ADDR}_k)-1}'
       form: {kind: exp}
       witness: ADDR
-      putative: true
       note: 'Write $\mathrm{ADDR}_k = \sum_a \mathbb{1}[\mathrm{addr} = a]\cdot y_a$. Each term has spectral norm $1$, and the $2^k$ terms have disjoint Fourier supports (they differ in which $y$-variable appears), so the norms add. With $\mathrm{D} = k+1$ this is a factor $2$ from the bound.'
       conf: high
   see_also: [L1, D, PDT, spar, ADDR]
@@ -198,7 +197,7 @@ relations:
   setting: total
   status: fails
   upper:
-    - stmt: '\text{No bound: } \deg(f) \text{ is not bounded by any function of } \mathrm{spar}(f).'
+    - stmt: '\deg(f) \text{ is known to be unbounded in terms of } \mathrm{spar}(f).'
       form: {kind: none}
       conf: high
   lower:

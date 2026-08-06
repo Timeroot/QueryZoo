@@ -61,26 +61,26 @@ functions:
     - {measure: Inf,  value: 'n\,2^{1-n}', note: 'Vanishingly small: OR is very noise-stable.'}
     - {measure: Np,   value: '\Theta(n)', conf: medium, refs: [FRPU94], note: 'Constant-rate noise costs only a constant factor here, unlike PARITY.'}
     - {measure: FC,     value: 'n', refs: [Aaronson08], note: 'Equal to $\mathrm{fbs}$ by LP duality; the LP is integral here because at $0^n$ every coordinate must carry weight $1$.'}
-    - {measure: EC,     value: 'n', putative: true, refs: [GJKKLSSV17], note: 'Sandwiched between $\mathrm{fbs}=n$ and $\mathrm{C}=n$.'}
+    - {measure: EC,     value: 'n', refs: [GJKKLSSV17], note: 'Sandwiched between $\mathrm{fbs}=n$ and $\mathrm{C}=n$.'}
     - {measure: bs0,    value: 'n'}
     - {measure: bs1,    value: '1'}
     - {measure: Cmin,   value: '1', note: 'Any $1$-input is certified by a single $1$.'}
-    - {measure: UC,     value: 'n', putative: true, note: 'At least $\mathrm{C}=n$; and the "first $1$" family -- $x_1=\cdots=x_{i-1}=0,\,x_i=1$ for each $i$, together with $0^n$ -- is unambiguous with all certificates of size $\le n$.'}
-    - {measure: UCmin,  value: '1', putative: true, note: 'Same family: the certificate for $10^{n-1}$ has size $1$.'}
-    - {measure: SP,     value: 'n', putative: true, note: 'The subcube containing $0^n$ must fix all $n$ coordinates, since any free coordinate could be set to $1$; the "first $1$" tree achieves codimension $n$.'}
-    - {measure: rank,   value: '1', putative: true, note: 'The "first $1$" tree is a caterpillar -- every internal node has a leaf child -- and rank $0$ would mean $f$ is constant.'}
-    - {measure: D_size, value: 'n+1', putative: true, note: 'The caterpillar has $n+1$ leaves. Conversely the unique $0$-input sits at depth $n$ in any tree, and each of the $n$ branches leaving that path reaches a different leaf.'}
+    - {measure: UC,     value: 'n', note: 'At least $\mathrm{C}=n$; and the "first $1$" family -- $x_1=\cdots=x_{i-1}=0,\,x_i=1$ for each $i$, together with $0^n$ -- is unambiguous with all certificates of size $\le n$.'}
+    - {measure: UCmin,  value: '1', note: 'Same family: the certificate for $10^{n-1}$ has size $1$.'}
+    - {measure: SP,     value: 'n', note: 'The subcube containing $0^n$ must fix all $n$ coordinates, since any free coordinate could be set to $1$; the "first $1$" tree achieves codimension $n$.'}
+    - {measure: rank,   value: '1', note: 'The "first $1$" tree is a caterpillar -- every internal node has a leaf child -- and rank $0$ would mean $f$ is constant.'}
+    - {measure: D_size, value: 'n+1', note: 'The caterpillar has $n+1$ leaves. Conversely the unique $0$-input sits at depth $n$ in any tree, and each of the $n$ branches leaving that path reaches a different leaf.'}
     - {measure: Dna,    value: 'n', note: 'Every variable is relevant.'}
-    - {measure: Rna,    value: '\Theta(n)', putative: true, note: 'A fixed distribution over query sets of size $m$ leaves some coordinate unqueried with probability $\ge 1-m/n$, and $0^n$ versus $e_i$ is then undecidable; so $m=\Omega(n)$.'}
+    - {measure: Rna,    value: '\Theta(n)', note: 'A fixed distribution over query sets of size $m$ leaves some coordinate unqueried with probability $\ge 1-m/n$, and $0^n$ versus $e_i$ is then undecidable; so $m=\Omega(n)$.'}
     - {measure: QC,     value: '\Theta(\sqrt n)', refs: [Aaronson08], note: 'Quantum certificate complexity is $\Theta(\sqrt{\mathrm{RC}})$; for OR this is the Grover-verification bound.'}
     - {measure: NQ,     value: '1', refs: [deWolf03], note: '$\mathrm{NQ} = \lceil \mathrm{ndeg}/2\rceil$ and $\mathrm{ndeg}(\mathrm{OR})=1$.'}
-    - {measure: odeg,   value: '1', putative: true, refs: [BT22], note: '$p(x)=\sum_i x_i$ is $0$ at the unique $0$-input and $\ge 1$ at every $1$-input. The extreme case of one-sided approximation being cheaper than two-sided ($\widetilde{\deg}=\Theta(\sqrt n)$).'}
+    - {measure: odeg,   value: '1', refs: [BT22], note: '$p(x)=\sum_i x_i$ is $0$ at the unique $0$-input and $\ge 1$ at every $1$-input. The extreme case of one-sided approximation being cheaper than two-sided ($\widetilde{\deg}=\Theta(\sqrt n)$).'}
     - {measure: deg2,   value: 'n', note: 'Over $\mathbb{F}_2$, $\mathrm{OR}=1-\prod_i(1-x_i)$ contains the monomial $x_1\cdots x_n$.'}
-    - {measure: spar,   value: '2^n', putative: true, note: 'In the $\pm1$ encoding $(-1)^{\mathrm{OR}(x)} = -1 + 2^{1-n}\prod_i(1+\chi_i)$, so every one of the $2^n$ characters has a nonzero coefficient.'}
-    - {measure: L1,     value: '3 - 2^{2-n}', putative: true, refs: [ODonnell14], note: 'From the same expansion: $|-1+2^{1-n}| + (2^n-1)\,2^{1-n}$. The spectral norm of OR is below $3$ for every $n$ -- a useful reminder that $\hat L_1$ is not a proxy for query complexity.'}
-    - {measure: Fdim,   value: 'n', putative: true, note: 'The Fourier support is all of $2^{[n]}$, whose $\mathbb{F}_2$-span is everything.'}
+    - {measure: spar,   value: '2^n', note: 'In the $\pm1$ encoding $(-1)^{\mathrm{OR}(x)} = -1 + 2^{1-n}\prod_i(1+\chi_i)$, so every one of the $2^n$ characters has a nonzero coefficient.'}
+    - {measure: L1,     value: '3 - 2^{2-n}', refs: [ODonnell14], note: 'From the same expansion: $|-1+2^{1-n}| + (2^n-1)\,2^{1-n}$. The spectral norm of OR is below $3$ for every $n$ -- a useful reminder that $\hat L_1$ is not a proxy for query complexity.'}
+    - {measure: Fdim,   value: 'n', note: 'The Fourier support is all of $2^{[n]}$, whose $\mathbb{F}_2$-span is everything.'}
     - {measure: MaxInf, value: '2^{1-n}', note: 'By symmetry every coordinate has influence $\mathrm{I}(f)/n = 2^{1-n}$.'}
-    - {measure: RS,     value: '\Theta(n)', putative: true, refs: [BenDavidKothari18], note: 'At most $\mathrm{R}=\Theta(n)$. For the lower bound, take the sabotaged input with a single $\ast$ and zeros elsewhere: the value is undetermined, and finding the $\ast$ among $n$ positions needs $\Omega(n)$ queries.'}
+    - {measure: RS,     value: '\Theta(n)', refs: [BenDavidKothari18], note: 'At most $\mathrm{R}=\Theta(n)$. For the lower bound, take the sabotaged input with a single $\ast$ and zeros elsewhere: the value is undetermined, and finding the $\ast$ among $n$ positions needs $\Omega(n)$ queries.'}
   witnesses:
     - {of: [C, Q],      setting: total, statement: '$\mathrm{C} = \Theta(\mathrm{Q}^2)$ -- the "$2$" in the C-vs-Q cell (usually quoted with AND).', refs: [Grover96]}
     - {of: [deg, adeg], setting: total, statement: '$\deg = \Theta(\widetilde{\deg}^2)$, matching the ABKRT upper bound $\deg = O(\widetilde{\deg}^2)$.', refs: [NS94, ABKRT21]}
@@ -125,20 +125,20 @@ functions:
     - {measure: bs1,    value: 'n'}
     - {measure: fbs,    value: 'n'}
     - {measure: FC,     value: 'n'}
-    - {measure: EC,     value: 'n', putative: true, refs: [GJKKLSSV17], note: 'Sandwiched between $\mathrm{fbs}=n$ and $\mathrm{C}=n$.'}
+    - {measure: EC,     value: 'n', refs: [GJKKLSSV17], note: 'Sandwiched between $\mathrm{fbs}=n$ and $\mathrm{C}=n$.'}
     - {measure: Cmin,   value: '1', note: 'Any $0$-input is certified by a single $0$.'}
-    - {measure: UC,     value: 'n', putative: true, note: 'The "first $0$" family, mirroring OR.'}
-    - {measure: UCmin,  value: '1', putative: true, note: 'The certificate for $01^{n-1}$ in that family has size $1$.'}
-    - {measure: SP,     value: 'n', putative: true, note: 'The subcube containing $1^n$ must fix everything.'}
-    - {measure: rank,   value: '1', putative: true, note: 'Caterpillar tree: query the bits in order and stop at the first $0$.'}
-    - {measure: D_size, value: 'n+1', putative: true, note: 'Mirror of OR: the caterpillar has $n+1$ leaves and no tree has fewer.'}
+    - {measure: UC,     value: 'n', note: 'The "first $0$" family, mirroring OR.'}
+    - {measure: UCmin,  value: '1', note: 'The certificate for $01^{n-1}$ in that family has size $1$.'}
+    - {measure: SP,     value: 'n', note: 'The subcube containing $1^n$ must fix everything.'}
+    - {measure: rank,   value: '1', note: 'Caterpillar tree: query the bits in order and stop at the first $0$.'}
+    - {measure: D_size, value: 'n+1', note: 'Mirror of OR: the caterpillar has $n+1$ leaves and no tree has fewer.'}
     - {measure: Dna,    value: 'n', note: 'Every variable is relevant.'}
     - {measure: QC,     value: '\Theta(\sqrt n)', refs: [Aaronson08]}
     - {measure: NQ,     value: '\lceil n/2 \rceil', refs: [deWolf03], note: '$\mathrm{ndeg}(\mathrm{AND})=n$.'}
     - {measure: odeg,   value: '\Theta(\sqrt n)', putative: true, refs: [NS94, BT22], note: 'Unlike OR, the one-sided relaxation buys nothing: a polynomial bounded by $1/3$ on all of $\{0,1\}^n\setminus\{1^n\}$ and at least $2/3$ at $1^n$ still needs degree $\Omega(\sqrt n)$ by the Markov-brothers argument, and Chebyshev gives $O(\sqrt n)$.'}
-    - {measure: spar,   value: '2^n', putative: true, note: '$(-1)^{\mathrm{AND}(x)} = 1 - 2^{1-n}\prod_i(1-\chi_i)$: every character appears.'}
-    - {measure: L1,     value: '3 - 2^{2-n}', putative: true, refs: [ODonnell14], note: 'Same computation as for OR.'}
-    - {measure: Fdim,   value: 'n', putative: true, note: 'The Fourier support spans all of $\mathbb{F}_2^n$: it contains every singleton.'}
+    - {measure: spar,   value: '2^n', note: '$(-1)^{\mathrm{AND}(x)} = 1 - 2^{1-n}\prod_i(1-\chi_i)$: every character appears.'}
+    - {measure: L1,     value: '3 - 2^{2-n}', refs: [ODonnell14], note: 'Same computation as for OR.'}
+    - {measure: Fdim,   value: 'n', note: 'The Fourier support spans all of $\mathbb{F}_2^n$: it contains every singleton.'}
     - {measure: Inf,    value: 'n\,2^{1-n}'}
     - {measure: MaxInf, value: '2^{1-n}'}
   witnesses:
@@ -191,25 +191,25 @@ functions:
     - {measure: C1,     value: 'n'}
     - {measure: Cmin,   value: 'n', note: 'Every input needs the whole assignment; PARITY is evasive in the strongest sense.'}
     - {measure: FC,     value: 'n'}
-    - {measure: EC,     value: 'n', putative: true, note: 'Between $\mathrm{fbs}=n$ and $\mathrm{C}=n$.'}
-    - {measure: UC,     value: 'n', putative: true, note: 'The full binary tree is already an unambiguous partition, and $\mathrm{UC}\ge\mathrm{C}=n$.'}
-    - {measure: UCmin,  value: 'n', putative: true, note: 'Every certificate of every input is the whole assignment.'}
-    - {measure: SP,     value: 'n', putative: true, note: 'A monochromatic subcube must fix every coordinate.'}
-    - {measure: rank,   value: 'n', putative: true, note: 'Both children of every node of every tree for $\oplus_n$ compute a parity of the remaining variables, so the two ranks are equal at every level and the rank climbs by one each time.'}
-    - {measure: D_size, value: '2^n', putative: true, note: 'Every leaf is a full assignment.'}
+    - {measure: EC,     value: 'n', note: 'Between $\mathrm{fbs}=n$ and $\mathrm{C}=n$.'}
+    - {measure: UC,     value: 'n', note: 'The full binary tree is already an unambiguous partition, and $\mathrm{UC}\ge\mathrm{C}=n$.'}
+    - {measure: UCmin,  value: 'n', note: 'Every certificate of every input is the whole assignment.'}
+    - {measure: SP,     value: 'n', note: 'A monochromatic subcube must fix every coordinate.'}
+    - {measure: rank,   value: 'n', note: 'Both children of every node of every tree for $\oplus_n$ compute a parity of the remaining variables, so the two ranks are equal at every level and the rank climbs by one each time.'}
+    - {measure: D_size, value: '2^n', note: 'Every leaf is a full assignment.'}
     - {measure: Dna,    value: 'n'}
-    - {measure: Rna,    value: 'n', putative: true, note: 'Leaving any coordinate unqueried leaves the answer a fair coin flip.'}
-    - {measure: Q0,     value: '\lceil n/2 \rceil', putative: true, refs: [BBCMdW01], note: 'Sandwiched between $\mathrm{Q}=\lceil n/2\rceil$ and $\mathrm{Q_E}=\lceil n/2\rceil$.'}
+    - {measure: Rna,    value: 'n', note: 'Leaving any coordinate unqueried leaves the answer a fair coin flip.'}
+    - {measure: Q0,     value: '\lceil n/2 \rceil', refs: [BBCMdW01], note: 'Sandwiched between $\mathrm{Q}=\lceil n/2\rceil$ and $\mathrm{Q_E}=\lceil n/2\rceil$.'}
     - {measure: NQ,     value: '\lceil n/2 \rceil', refs: [deWolf03], note: '$\mathrm{ndeg}(\oplus_n)=n$.'}
-    - {measure: QC,     value: '\Theta(\sqrt n)', putative: true, refs: [Aaronson08], note: '$\mathrm{QC}=\Theta(\sqrt{\mathrm{RC}})$ and $\mathrm{RC}=n$. Verification is quadratically cheaper than computation even here.'}
-    - {measure: odeg,   value: 'n', putative: true, note: 'Squeezed between $\mathrm{sdeg}=n$ and $\widetilde{\deg}=n$.'}
+    - {measure: QC,     value: '\Theta(\sqrt n)', refs: [Aaronson08], note: '$\mathrm{QC}=\Theta(\sqrt{\mathrm{RC}})$ and $\mathrm{RC}=\lceil n/2\rceil$. Verification is quadratically cheaper than computation even here.'}
+    - {measure: odeg,   value: 'n', note: 'Squeezed between $\mathrm{sdeg}=n$ and $\widetilde{\deg}=n$.'}
     - {measure: deg2,   value: '1', note: 'Over $\mathbb{F}_2$ parity is linear -- the reason $\mathrm{D}^{\oplus}=1$.'}
     - {measure: Fdim,   value: '1', note: 'The Fourier support is the single set $[n]$.'}
     - {measure: MaxInf, value: '1', note: 'Every coordinate is always sensitive.'}
     - {measure: Inf1,   value: 'n', note: 'Boolean-valued, so the $L_1$ and $L_2$ influences agree.'}
     - {measure: NS,     value: '\tfrac12\big(1-(1-2\delta)^n\big)', refs: [ODonnell14], note: 'Exactly: the noise flips the answer iff an odd number of bits flip. Maximally noise-sensitive.'}
     - {measure: Stab,   value: '\rho^{\,n}', refs: [ODonnell14]}
-    - {measure: RS,     value: '\Theta(n)', putative: true, refs: [BenDavidKothari18], note: 'At most $\mathrm{R}=n$; and a sabotaged input with a single $\ast$ hides it among $n$ positions.'}
+    - {measure: RS,     value: '\Theta(n)', refs: [BenDavidKothari18], note: 'At most $\mathrm{R}=n$; and a sabotaged input with a single $\ast$ hides it among $n$ positions.'}
   witnesses:
     - {of: ['*', '*'], setting: total, statement: 'Every classical measure equals $n$, so PARITY certifies that all the "$1,1$" cells of the matrix are tight -- no measure in the left column can be asymptotically smaller than any in the top row on this family.', refs: [ABKRT21]}
     - {of: [D, PDT], setting: total, statement: '$\mathrm{D}=n$ but $\mathrm{D}^{\oplus}=1$: parity decision trees are incomparable to ordinary ones.', refs: [TsangWongXieZhang13]}
@@ -241,34 +241,34 @@ functions:
     - {measure: lambda, value: '(n+1)/2', note: 'The sensitivity graph is the middle-layer bipartite graph, which is $\tfrac{n+1}{2}$-regular, so $\lambda = \mathrm{s}$.'}
     - {measure: rdeg,   value: '\Theta(n)', refs: [IJKKKSWW23], note: 'Symmetric functions have $\mathrm{rdeg} = \Omega(\deg)$.'}
     - {measure: Inf,    value: '\Theta(\sqrt{n})'}
-    - {measure: R0,     value: '\Theta(n)', putative: true, note: 'Between $\mathrm{R}=\Theta(n)$ and $\mathrm{D}=n$. (The saving from stopping early once one side reaches $(n+1)/2$ is only $\Theta(\sqrt n)$.)'}
-    - {measure: Rbar,   value: '\Theta(n)', putative: true, note: 'Same sandwich; expected cost cannot help by more than a constant at constant error.'}
+    - {measure: R0,     value: '\Theta(n)', note: 'Between $\mathrm{R}=\Theta(n)$ and $\mathrm{D}=n$. (The saving from stopping early once one side reaches $(n+1)/2$ is only $\Theta(\sqrt n)$.)'}
+    - {measure: Rbar,   value: '\Theta(n)', note: 'Same sandwich; expected cost cannot help by more than a constant at constant error.'}
     - {measure: s0,     value: '(n+1)/2', note: 'At a $0$-input with exactly $(n-1)/2$ ones, each of the $(n+1)/2$ zeros is sensitive.'}
     - {measure: s1,     value: '(n+1)/2'}
     - {measure: bs0,    value: '(n+1)/2'}
     - {measure: bs1,    value: '(n+1)/2'}
     - {measure: C0,     value: '(n+1)/2'}
     - {measure: C1,     value: '(n+1)/2'}
-    - {measure: Cmin,   value: '(n+1)/2', putative: true, note: 'Every input needs a full majority-sized certificate, so the min and the max coincide.'}
-    - {measure: fbs,    value: '(n+1)/2', putative: true, refs: [Aaronson08], note: 'Squeezed: $\mathrm{bs}\le\mathrm{fbs}\le\mathrm{C}$ and both ends are $(n+1)/2$. The certificate LP is integral for MAJ.'}
-    - {measure: FC,     value: '(n+1)/2', putative: true, note: 'Equal to $\mathrm{fbs}$.'}
-    - {measure: EC,     value: '(n+1)/2', putative: true, refs: [GJKKLSSV17], note: 'Same squeeze, since $\mathrm{fbs}\le\mathrm{EC}\le\mathrm{C}$.'}
-    - {measure: RC,     value: '\Theta(n)', putative: true, refs: [Aaronson08], note: '$\mathrm{RC}=\Theta(\mathrm{fbs})=\Theta(n)$.'}
-    - {measure: CA,     value: '\Theta(n)', putative: true, refs: [ABIKPS17], note: 'The classical adversary equals $\Theta(\mathrm{fbs})$ for total functions.'}
-    - {measure: QC,     value: '\Theta(\sqrt n)', putative: true, refs: [Aaronson08], note: '$\mathrm{QC}=\Theta(\sqrt{\mathrm{RC}})$. Verifying a majority is quadratically cheaper than computing it.'}
+    - {measure: Cmin,   value: '(n+1)/2', note: 'Every input needs a full majority-sized certificate, so the min and the max coincide.'}
+    - {measure: fbs,    value: '(n+1)/2', refs: [Aaronson08], note: 'Squeezed: $\mathrm{bs}\le\mathrm{fbs}\le\mathrm{C}$ and both ends are $(n+1)/2$. The certificate LP is integral for MAJ.'}
+    - {measure: FC,     value: '(n+1)/2', note: 'Equal to $\mathrm{fbs}$.'}
+    - {measure: EC,     value: '(n+1)/2', refs: [GJKKLSSV17], note: 'Same squeeze, since $\mathrm{fbs}\le\mathrm{EC}\le\mathrm{C}$.'}
+    - {measure: RC,     value: '\Theta(n)', refs: [Aaronson08], note: '$\mathrm{RC}=\Theta(\mathrm{fbs})=\Theta(n)$.'}
+    - {measure: CA,     value: '\Theta(n)', refs: [ABIKPS17], note: 'The classical adversary equals $\Theta(\mathrm{fbs})$ for total functions.'}
+    - {measure: QC,     value: '\Theta(\sqrt n)', refs: [Aaronson08], note: '$\mathrm{QC}=\Theta(\sqrt{\mathrm{RC}})$. Verifying a majority is quadratically cheaper than computing it.'}
     - {measure: QE,     value: '\Theta(n)', refs: [BBCMdW01, AmbainisGruslysEtAl16], note: 'At least $\deg/2 = n/2$ and at most $n$; [AmbainisGruslysEtAl16] pin down the exact quantum complexity of threshold functions.'}
-    - {measure: ndeg,   value: '\le (n+1)/2', putative: true, note: '$\prod_{j=0}^{(n-1)/2}(|x|-j)$ vanishes exactly on the $0$-inputs.'}
+    - {measure: ndeg,   value: '\le (n+1)/2', note: '$\prod_{j=0}^{(n-1)/2}(|x|-j)$ vanishes exactly on the $0$-inputs.'}
     - {measure: odeg,   value: '\Theta(\sqrt n)', putative: true, note: 'Sharply below $\widetilde{\deg}(\mathrm{MAJ})=\Theta(n)$. A Chebyshev polynomial scaled to be $\le 1/3$ in absolute value on $\{0,\dots,(n-1)/2\}$ has grown past $2/3$ one step later, and nothing constrains it above; the matching $\Omega(\sqrt n)$ is the Markov-brothers bound on an interval with $\Theta(n)$ points.'}
     - {measure: rank,   value: '(n+1)/2', putative: true, note: 'Prover-Delayer: until one side has $(n+1)/2$ votes the Delayer may answer either way, scoring a point each time; the counting tree attains it.'}
     - {measure: Dna,    value: 'n', note: 'Every variable is relevant.'}
-    - {measure: Rna,    value: 'n - O(1)', putative: true, note: 'If two coordinates go unqueried the remaining bits can be balanced, leaving the answer a fair coin flip.'}
-    - {measure: RS,     value: '\Theta(n)', putative: true, refs: [BenDavidKothari18], note: 'At most $\mathrm{R}=\Theta(n)$; and the sabotaged input with $(n-1)/2$ ones, $(n-1)/2$ zeros and a single $\ast$ hides that $\ast$ among $n$ positions.'}
+    - {measure: Rna,    value: 'n - O(1)', note: 'If two coordinates go unqueried the remaining bits can be balanced, leaving the answer a fair coin flip.'}
+    - {measure: RS,     value: '\Theta(n)', refs: [BenDavidKothari18], note: 'At most $\mathrm{R}=\Theta(n)$; and the sabotaged input with $(n-1)/2$ ones, $(n-1)/2$ zeros and a single $\ast$ hides that $\ast$ among $n$ positions.'}
     - {measure: MaxInf, value: '\binom{n-1}{(n-1)/2}2^{1-n} = \Theta(1/\sqrt n)', refs: [ODonnell14], note: 'Every coordinate is pivotal exactly when the other $n-1$ split evenly.'}
     - {measure: Inf1,   value: '\Theta(\sqrt n)', note: 'Boolean-valued, so equal to $\mathrm{I}(f)$.'}
     - {measure: NS,     value: '\Theta(\sqrt\delta)', refs: [ODonnell14], note: 'As $n\to\infty$, $\mathrm{NS}_\delta \to \tfrac1\pi\arccos(1-2\delta)$. Majority is the *most* noise-stable of all low-influence functions (Majority Is Stablest).'}
     - {measure: Stab,   value: '\tfrac{2}{\pi}\arcsin\rho + o(1)', refs: [ODonnell14], note: 'Sheppard formula, in the $n\to\infty$ limit.'}
-    - {measure: spar,   value: '2^{n-1}', putative: true, refs: [ODonnell14], note: 'MAJ is odd, so only odd-size sets can appear, and the standard formula for $\widehat{\mathrm{MAJ}}(S)$ is nonzero for every one of them.'}
-    - {measure: Fdim,   value: 'n', putative: true, note: 'The support contains every singleton (odd sets of size $1$ have nonzero coefficient), so it spans $\mathbb{F}_2^n$.'}
+    - {measure: spar,   value: '2^{n-1}', refs: [ODonnell14], note: 'MAJ is odd, so only odd-size sets can appear, and the standard formula for $\widehat{\mathrm{MAJ}}(S)$ is nonzero for every one of them.'}
+    - {measure: Fdim,   value: 'n', note: 'The support contains every singleton (odd sets of size $1$ have nonzero coefficient), so it spans $\mathbb{F}_2^n$.'}
   refs: [Paturi92, BBCMdW01, IJKKKSWW23]
   see_also: [THR, EH, RMAJ3, SYM]
 
@@ -295,8 +295,8 @@ functions:
     - {measure: s1,     value: 'k', note: 'At an input with exactly $k$ ones every one is sensitive.'}
     - {measure: bs0,    value: 'n-k+1'}
     - {measure: bs1,    value: 'k'}
-    - {measure: fbs,    value: '\max\{k,\;n-k+1\}', putative: true, note: 'Between $\mathrm{bs}$ and $\mathrm{C}$, which coincide here.'}
-    - {measure: FC,     value: '\max\{k,\;n-k+1\}', putative: true, note: 'Equal to $\mathrm{fbs}$ by LP duality.'}
+    - {measure: fbs,    value: '\max\{k,\;n-k+1\}', note: 'Between $\mathrm{bs}$ and $\mathrm{C}$, which coincide here.'}
+    - {measure: FC,     value: '\max\{k,\;n-k+1\}', note: 'Equal to $\mathrm{fbs}$ by LP duality.'}
     - {measure: C,      value: '\max\{k,\;n-k+1\}'}
     - {measure: odeg,   value: '\Theta(\sqrt k)', putative: true, note: 'Only the $0$-side is constrained, and it is the interval $\{0,\dots,k-1\}$: Chebyshev on $k$ points gives $O(\sqrt k)$ and Markov gives $\Omega(\sqrt k)$. Compare $\widetilde{\deg} = \Theta(\sqrt{k(n-k+1)})$ -- one-sidedness removes the whole $n-k+1$ factor.'}
     - {measure: Dna,    value: 'n'}
@@ -406,12 +406,12 @@ functions:
     - {measure: C,   value: 'k+1'}
     - {measure: C0,     value: 'k+1'}
     - {measure: C1,     value: 'k+1'}
-    - {measure: fbs,    value: 'k+1', putative: true, note: 'Between $\mathrm{bs}=k+1$ and $\mathrm{C}=k+1$.'}
-    - {measure: FC,     value: 'k+1', putative: true, note: 'Equal to $\mathrm{fbs}$ by LP duality.'}
-    - {measure: R,      value: '\Theta(k)', putative: true, refs: [Nisan91], note: 'At most $\mathrm{D}=k+1$, and at least $\mathrm{bs}/3 = \Omega(k)$.'}
-    - {measure: L1,     value: '2^k', putative: true, note: 'Write $\mathrm{ADDR}_k = \sum_a \mathbb{1}[\mathrm{addr}=a]\cdot y_a$: each term has spectral norm $1$ and the $2^k$ terms have disjoint Fourier supports, so the norms add.'}
+    - {measure: fbs,    value: 'k+1', note: 'Between $\mathrm{bs}=k+1$ and $\mathrm{C}=k+1$.'}
+    - {measure: FC,     value: 'k+1', note: 'Equal to $\mathrm{fbs}$ by LP duality.'}
+    - {measure: R,      value: '\Theta(k)', refs: [Nisan91], note: 'At most $\mathrm{D}=k+1$, and at least $\mathrm{bs}/3 = \Omega(k)$.'}
+    - {measure: L1,     value: '2^k', note: 'Write $\mathrm{ADDR}_k = \sum_a \mathbb{1}[\mathrm{addr}=a]\cdot y_a$: each term has spectral norm $1$ and the $2^k$ terms have disjoint Fourier supports, so the norms add.'}
     - {measure: Dna,    value: 'k + 2^k', note: 'Every data bit is relevant, so a non-adaptive algorithm reads the entire table.'}
-    - {measure: Rna,    value: '\Theta(2^k)', putative: true, note: 'A fixed distribution over $m$ data bits contains the addressed one with probability at most $m/2^k$; otherwise the algorithm is guessing an unbiased bit.'}
+    - {measure: Rna,    value: '\Theta(2^k)', note: 'A fixed distribution over $m$ data bits contains the addressed one with probability at most $m/2^k$; otherwise the algorithm is guessing an unbiased bit.'}
   refs: [GPW18, GJPW18]
   see_also: [ANDOR, pointer]
 
@@ -433,9 +433,9 @@ functions:
     so $i_k \in \{2^{k-1}-1,\dots,2^k-2\}$ indexes the bottom level.
   values:
     - {measure: D,   value: 'k', note: 'The walk reads one variable per level.'}
-    - {measure: Dna, value: '2^k - 1', putative: true, note: 'Every variable is relevant: for the node $v$, take the input whose walk reaches $v$ and whose two subtrees below $v$ lead to bottom bits of opposite value. So a non-adaptive algorithm must read all of them, and $\mathrm{D}^{\mathrm{na}} = 2^{\mathrm{D}}-1$ exactly -- the extreme case of the bound $\mathrm{D}^{\mathrm{na}} \le 2^{\mathrm{D}}-1$.'}
-    - {measure: R,   value: '\Theta(k)', putative: true, note: 'At most $\mathrm{D}=k$. For the lower bound, on a uniformly random input each of the $k$ variables on the walk is sensitive with probability $1/2$, so $\mathrm{bs} = \Omega(k)$ and $\mathrm{R} \ge \mathrm{bs}/3$.'}
-    - {measure: Rna, value: '\Theta(2^k)', putative: true, note: 'On a uniformly random input the bottom node reached is uniform over the $2^{k-1}$ bottom nodes, and an algorithm that has not read it is guessing an unbiased bit; a fixed set of $m$ variables contains it with probability at most $m/2^{k-1}$.'}
+    - {measure: Dna, value: '2^k - 1', note: 'Every variable is relevant: for the node $v$, take the input whose walk reaches $v$ and whose two subtrees below $v$ lead to bottom bits of opposite value. So a non-adaptive algorithm must read all of them, and $\mathrm{D}^{\mathrm{na}} = 2^{\mathrm{D}}-1$ exactly -- the extreme case of the bound $\mathrm{D}^{\mathrm{na}} \le 2^{\mathrm{D}}-1$.'}
+    - {measure: R,   value: '\Theta(k)', note: 'At most $\mathrm{D}=k$. For the lower bound, on a uniformly random input each of the $k$ variables on the walk is sensitive with probability $1/2$, so $\mathrm{bs} = \Omega(k)$ and $\mathrm{R} \ge \mathrm{bs}/3$.'}
+    - {measure: Rna, value: '\Theta(2^k)', note: 'On a uniformly random input the bottom node reached is uniform over the $2^{k-1}$ bottom nodes, and an algorithm that has not read it is guessing an unbiased bit; a fixed set of $m$ variables contains it with probability at most $m/2^{k-1}$.'}
   witnesses:
     - {of: [Dna, D], setting: total, statement: '$\mathrm{D}^{\mathrm{na}} = 2^{\mathrm{D}}-1$: exactly tight against the general bound, where $\mathrm{ADDR}_k$ is loose by a factor of two.'}
     - {of: [Rna, R], setting: total, statement: '$\mathrm{R}^{\mathrm{na}} = 2^{\Theta(\mathrm{R})}$, against the general bound $\mathrm{R}^{\mathrm{na}} \le 2^{\mathrm{R}}-1$.'}
@@ -470,15 +470,15 @@ functions:
     - {measure: deg,    value: 'n', note: 'The multilinear polynomial $1-\prod_j(1-\prod_{i\in T_j} x_i)$ has the full monomial.'}
     - {measure: bs0,    value: '\Theta(n/\log n)'}
     - {measure: bs1,    value: '\Theta(\log n)', note: 'At most $\mathrm{C}^1 = w$, and the $w$ singletons inside the satisfied tribe achieve it.'}
-    - {measure: fbs,    value: '\Theta(n/\log n)', putative: true, note: 'Between $\mathrm{bs}$ and $\mathrm{C}$, which agree up to constants.'}
-    - {measure: FC,     value: '\Theta(n/\log n)', putative: true, note: 'Equal to $\mathrm{fbs}$ by LP duality.'}
-    - {measure: RC,     value: '\Theta(n/\log n)', putative: true, refs: [Aaronson08], note: '$\mathrm{RC}=\Theta(\mathrm{fbs})$.'}
-    - {measure: EC,     value: '\Theta(n/\log n)', putative: true, refs: [GJKKLSSV17], note: 'Between $\mathrm{fbs}$ and $\mathrm{C}$, which agree up to constants.'}
-    - {measure: Cmin,   value: '\Theta(\log n)', putative: true, note: 'The cheapest input to certify is a $1$-input: one satisfied tribe, $w=\Theta(\log n)$ bits.'}
-    - {measure: R0,     value: '\Theta(n)', putative: true, note: 'Between $\mathrm{R}=\Theta(n)$ and $\mathrm{D}=n$.'}
+    - {measure: fbs,    value: '\Theta(n/\log n)', note: 'Between $\mathrm{bs}$ and $\mathrm{C}$, which agree up to constants.'}
+    - {measure: FC,     value: '\Theta(n/\log n)', note: 'Equal to $\mathrm{fbs}$ by LP duality.'}
+    - {measure: RC,     value: '\Theta(n/\log n)', refs: [Aaronson08], note: '$\mathrm{RC}=\Theta(\mathrm{fbs})$.'}
+    - {measure: EC,     value: '\Theta(n/\log n)', refs: [GJKKLSSV17], note: 'Between $\mathrm{fbs}$ and $\mathrm{C}$, which agree up to constants.'}
+    - {measure: Cmin,   value: '\Theta(\log n)', note: 'The cheapest input to certify is a $1$-input: one satisfied tribe, $w=\Theta(\log n)$ bits.'}
+    - {measure: R0,     value: '\Theta(n)', note: 'Between $\mathrm{R}=\Theta(n)$ and $\mathrm{D}=n$.'}
     - {measure: Q,      value: '\Theta(\sqrt n)', refs: [Grover96, BT22], note: 'Grover over the $s$ tribes, Grover inside each: $\sqrt s\cdot\sqrt w = \sqrt n$. Tight, since $\widetilde{\deg}=\Theta(\sqrt n)$.'}
     - {measure: adeg,   value: '\Theta(\sqrt n)', refs: [BT22], note: 'As for any depth-two AND-OR tree on $n$ variables.'}
-    - {measure: lambda, value: '\Theta(\sqrt n)', putative: true, refs: [Huang19, ABKRT21], note: 'At most $\sqrt{\mathrm{s}^0\mathrm{s}^1} = \sqrt{\Theta(n/\log n)\cdot\Theta(\log n)} = \Theta(\sqrt n)$, and at least $\sqrt{\deg} = \sqrt n$ by Huang.'}
+    - {measure: lambda, value: '\Theta(\sqrt n)', refs: [Huang19, ABKRT21], note: 'At most $\sqrt{\mathrm{s}^0\mathrm{s}^1} = \sqrt{\Theta(n/\log n)\cdot\Theta(\log n)} = \Theta(\sqrt n)$, and at least $\sqrt{\deg} = \sqrt n$ by Huang.'}
     - {measure: NS,     value: '\tfrac12 - o(1)', refs: [ODonnell14], note: 'For any fixed $\delta>0$: TRIBES is the standard example of a *noise-sensitive* monotone function, because all its influences are $O(\log n/n)$.'}
     - {measure: Inf1,   value: '\Theta(\log n)', note: 'Boolean-valued, so equal to $\mathrm{I}(f)$.'}
     - {measure: Dna,    value: 'n', note: 'Every variable is relevant.'}

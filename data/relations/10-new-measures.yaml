@@ -121,7 +121,7 @@ relations:
   setting: total
   status: fails
   upper:
-    - stmt: '\text{No bound: } \mathrm{bs}(f)/\mathrm{bs}^0(f) \text{ is unbounded.}'
+    - stmt: '\mathrm{bs}(f) \text{ is known to be unbounded in terms of } \mathrm{bs}^0(f).'
       form: {kind: none}
       conf: high
   lower:
@@ -156,7 +156,7 @@ relations:
   setting: total
   status: fails
   upper:
-    - stmt: '\text{No bound: } \mathrm{bs}(f)/\mathrm{bs}^1(f) \text{ is unbounded.}'
+    - stmt: '\mathrm{bs}(f) \text{ is known to be unbounded in terms of } \mathrm{bs}^1(f).'
       form: {kind: none}
       conf: high
   lower:
@@ -298,7 +298,7 @@ relations:
   setting: total
   status: fails
   upper:
-    - stmt: '\text{No bound: } \mathrm{D}(f)/\mathrm{rank}(f) \text{ is unbounded.}'
+    - stmt: '\mathrm{D}(f) \text{ is known to be unbounded in terms of } \mathrm{rank}(f).'
       form: {kind: none}
       refs: [EhrenfeuchtHaussler89]
       note: 'Rank measures branching, not depth; a "caterpillar" tree has rank $1$ at any depth.'
@@ -365,7 +365,6 @@ relations:
   upper:
     - stmt: '\mathrm{D}^{\mathrm{na}}(f) \le 2^{\mathrm{D}(f)} - 1'
       form: {kind: exp}
-      putative: true
       note: |
         Not "no bound": an exponential one. A decision tree of depth $\mathrm{D}$ has at
         most $2^{\mathrm{D}}-1$ internal nodes, hence queries at most that many distinct
@@ -383,7 +382,6 @@ relations:
     - stmt: '\mathrm{D}^{\mathrm{na}}(\mathrm{Nav}_k) = 2^k - 1 = 2^{\mathrm{D}(\mathrm{Nav}_k)} - 1'
       form: {kind: exp}
       witness: TreeNav
-      putative: true
       note: 'The exponential bound is attained exactly, with no constant to spare: binary tree navigation has $\mathrm{D}=k$ and all $2^k-1$ variables relevant.'
       conf: high
     - stmt: '\mathrm{D}^{\mathrm{na}}(\mathrm{ADDR}_k) = k + 2^k,\quad \mathrm{D}(\mathrm{ADDR}_k) = k+1'
@@ -423,7 +421,6 @@ relations:
   upper:
     - stmt: '\mathrm{R}^{\mathrm{na}}_\varepsilon(f) \le 2^{\mathrm{R}_\varepsilon(f)} - 1'
       form: {kind: exp}
-      putative: true
       note: |
         A randomized algorithm is a distribution over deterministic trees of depth
         $\mathrm{R}_\varepsilon$. Sample one, read the at most $2^{\mathrm{R}_\varepsilon}-1$
@@ -440,14 +437,12 @@ relations:
     - stmt: '\mathrm{R}^{\mathrm{na}}(\mathrm{Nav}_k) = \Theta(2^k),\quad \mathrm{R}(\mathrm{Nav}_k) = \Theta(k)'
       form: {kind: exp}
       witness: TreeNav
-      putative: true
       note: 'Matches the upper bound up to the constant in the exponent: $\mathrm{R}^{\mathrm{na}} = 2^{\Theta(\mathrm{R})}$.'
       conf: high
     - stmt: '\mathrm{R}^{\mathrm{na}}(\mathrm{ADDR}_k) = \Theta(2^k),\quad \mathrm{R}(\mathrm{ADDR}_k) = \Theta(k)'
       witness: ADDR
       note: 'A fixed distribution over $m$ data bits contains the addressed one with probability at most $m/2^k$, and otherwise the algorithm is guessing an unbiased bit; so $m = \Omega(2^k)$ is needed for error $1/3$.'
       conf: medium
-      putative: true
   see_also: [Rna, R, Dna, ADDR]
 
 - from: Rna
@@ -504,7 +499,7 @@ relations:
   setting: total
   status: fails
   upper:
-    - stmt: '\text{No bound: } \widetilde{\deg}(f)/\widetilde{\deg}_+(f) \text{ is unbounded.}'
+    - stmt: '\widetilde{\deg}(f) \text{ is known to be unbounded in terms of } \widetilde{\deg}_+(f).'
       form: {kind: none}
       refs: [Sherstov14onesided]
       conf: high
@@ -539,7 +534,7 @@ relations:
   setting: total
   status: fails
   upper:
-    - stmt: '\text{No bound: } \widetilde{\deg}_+(f)/\mathrm{sdeg}(f) \text{ is unbounded.}'
+    - stmt: '\widetilde{\deg}_+(f) \text{ is known to be unbounded in terms of } \mathrm{sdeg}(f).'
       form: {kind: none}
       conf: high
   lower:

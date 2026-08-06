@@ -188,6 +188,13 @@ pair.html?a=R&amp;b=R                 the diagonal: composition, parameters</cod
           <li><b>Confidence.</b> <code>conf: low</code> renders a visible <span class="conf low">?</span>.
           Use it rather than deleting something you are unsure of, and pair it with
           <code>todo:</code> saying what to check.</li>
+          <li><b><code>putative</code> is for arguments, not for missing citations.</b> A value
+          no paper states but that follows in a line &mdash; sandwiched between two recorded
+          values, a recorded \(\Theta\) relation applied once, a Fourier expansion read off
+          &mdash; is just a fact: give it a <code>note:</code> with the derivation and no badge.
+          Reserve <code>putative: true</code> for a genuine argument worked out for this
+          catalogue, the kind a reader should check before relying on it. The build refuses the
+          badge unless <code>note:</code> spells the argument out.</li>
           <li><b>Witnesses are ids.</b> <code>witness: pointer</code>, not
           &ldquo;the pointer function&rdquo;. If the function is not in the catalogue yet, add a
           stub to <code>data/functions/</code> with just <code>id/name/short/refs</code>; the

@@ -1177,6 +1177,18 @@ def _token(z, row, col, setting, cell):
             a_txt = _NONPOLY_LABEL[other_lo["kind"]]
         if other_up is not None and b_exp is None:
             b_txt = _NONPOLY_LABEL[other_up["kind"]]
+    # A proved impossibility is not a mystery: wherever a column would otherwise
+    # read `?`, say what was proved. No upper bound exists at all, so the upper
+    # column is ∞ (`unbounded`) or ⊘ (`none`, no bound *of this form*); an
+    # unbounded separation is likewise ∞ rather than a missing exponent.
+    glyph_lo = unb and verdict in ("none", "unbounded")
+    if verdict in ("none", "unbounded"):
+        if b_exp is None:
+            b_txt = _VGLYPH[verdict][0]
+        if glyph_lo:
+            # an unbounded separation beats any exponent an inherited
+            # total-function family could contribute
+            a_txt = _VGLYPH["unbounded"][0]
     # The strongest thing a cell can say: the upper bound is an exact
     # inequality and a family meets it with no constant to spare.
     tight_exact = (verdict == "settled" and up is not None and lo is not None
@@ -1188,8 +1200,9 @@ def _token(z, row, col, setting, cell):
         "b": b_txt,
         "chip": _CHIP.get(up["kind"], "") if up else "",
         "chip_kind": up["kind"] if up else "",
-        "chip_lo": _CHIP_LO.get(lo["kind"], "") if lo else "",
-        "chip_lo_kind": lo["kind"] if lo else "",
+        # a chip qualifies an exponent; there is nothing to qualify about ∞
+        "chip_lo": _CHIP_LO.get(lo["kind"], "") if lo and not glyph_lo else "",
+        "chip_lo_kind": lo["kind"] if lo and not glyph_lo else "",
         "tight_exact": tight_exact,
         "glyph": glyph, "glyph_name": glyph_name,
         "up": _side_view(z, up, b_src), "lo": _side_view(z, lo, a_src),
