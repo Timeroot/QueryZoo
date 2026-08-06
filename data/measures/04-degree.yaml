@@ -216,3 +216,37 @@ measures:
   refs: [BenDavidKundu24search]
   see_also: [adeg, Q, Adv, R]
   confidence: medium
+
+- id: odeg
+  name: One-sided approximate degree
+  symbol: '\widetilde{\deg}_{+}(f)'
+  aliases: ['positive one-sided approximate degree', 'deg_+', 'one-sided approximation degree']
+  category: degree
+  order: 25
+  short: 'Approximate degree when the polynomial only has to be *large* on 1-inputs, not close to 1.'
+  definition: |
+    A real polynomial $p$ is a *one-sided approximation* to $f : \{0,1\}^n \to \{0,1\}$ if
+    $$|p(x)| \le 1/3 \ \text{ for all } x \in f^{-1}(0), \qquad
+      p(x) \ge 2/3 \ \text{ for all } x \in f^{-1}(1),$$
+    with **no upper bound imposed on the $1$-inputs**. $\widetilde{\deg}_+(f)$ is the least
+    degree of such a $p$. Relaxing the constraint on one side only makes this measure
+    asymmetric: $\widetilde{\deg}_+(f)$ and $\widetilde{\deg}_+(\bar f)$ are different
+    quantities, and the *conjunction* of the two conditions is ordinary approximate degree.
+
+    It is the query-complexity shadow of one-sided error: the dual object is a
+    one-sided dual polynomial, which is exactly what the AC$^0$ approximate-degree lower
+    bounds of the last decade construct.
+  params: [{name: eps, symbol: '\varepsilon', default: '1/3'}]
+  settings:
+    total:   {defined: yes}
+    partial: {defined: yes, note: 'The constraints are imposed only on $\mathrm{Dom}(f)$.'}
+    relation: {defined: no}
+  facts:
+    - '$\mathrm{sdeg}(f) \le \widetilde{\deg}_+(f) \le \widetilde{\deg}(f) \le \deg(f)$: an approximating polynomial is one-sided, and a one-sided one shifted by $1/2$ sign-represents $f$.'
+    - 'Both inequalities can be maximally loose, in opposite directions. $\widetilde{\deg}_+(\mathrm{OR}_n) = 1$ (take $p = \sum_i x_i$) while $\widetilde{\deg}(\mathrm{OR}_n) = \Theta(\sqrt n)$; $\mathrm{sdeg}(\mathrm{AND}_n) = 1$ while $\widetilde{\deg}_+(\mathrm{AND}_n) = \Theta(\sqrt n)$.'
+    - 'So $\widetilde{\deg}_+$ is not symmetric under negation: $\widetilde{\deg}_+(\mathrm{OR}_n) = 1$ but $\widetilde{\deg}_+(\mathrm{AND}_n) = \Theta(\sqrt n)$, and $\mathrm{AND}_n = \overline{\mathrm{OR}_n(\bar x)}$.'
+    - '$\max\{\widetilde{\deg}_+(f), \widetilde{\deg}_+(\bar f)\}$ is *not* known to be $\Theta(\widetilde{\deg}(f))$; recovering a two-sided approximation from two one-sided ones loses.'
+    - 'Used to prove $\widetilde{\deg}(\mathrm{AC}^0) = \Omega(n^{1-\delta})$ by composing one-sided dual witnesses [Sherstov14onesided, BunThaler17].'
+  refs: [Sherstov14onesided, BunThaler17, BT22]
+  see_also: [adeg, sdeg, deg, ndeg, Q]
+  confidence: medium

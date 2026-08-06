@@ -421,3 +421,34 @@ measures:
   refs: [GGR13, GIPS21, CDM23]
   see_also: [R, D, R0]
   confidence: high
+
+- id: Rna
+  name: Non-adaptive randomized query complexity
+  symbol: '\mathrm{R}^{\mathrm{na}}(f)'
+  aliases: ['oblivious randomized decision tree complexity']
+  category: randomized
+  order: 15
+  short: 'Bounded-error cost when the query set is drawn from a distribution fixed in advance, independent of the answers.'
+  definition: |
+    The algorithm samples a set $S \subseteq [n]$ from a distribution of its choosing,
+    learns $x|_S$, and outputs a guess that must be correct with probability $\ge 2/3$.
+    $\mathrm{R}^{\mathrm{na}}_\varepsilon(f)$ is the least $\max |S|$ over the support
+    (the worst-case version; the expected-cost version is the natural companion, as for
+    $\bar{\mathrm{R}}$).
+
+    Non-adaptivity is the standard restriction in property testing, where "adaptive vs
+    non-adaptive" is one of the two axes (the other being one-sided vs two-sided error).
+  params:
+    - {name: eps, symbol: '\varepsilon', default: '1/3', description: 'error probability'}
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes, note: 'The interesting case: property testing lives here.'}
+    relation: {defined: yes}
+  facts:
+    - '$\mathrm{R}(f) \le \mathrm{R}^{\mathrm{na}}(f) \le \mathrm{D}^{\mathrm{na}}(f)$.'
+    - 'Yao''s minimax applies verbatim: $\mathrm{R}^{\mathrm{na}}_\varepsilon(f) = \max_\mu \mathrm{D}^{\mathrm{na},\mu}_\varepsilon(f)$, the max over input distributions of the best *fixed* query set of that size.'
+    - 'Adaptivity can save exponentially even with randomness: $\mathrm{R}(\mathrm{ADDR}) = \Theta(\log n)$ while $\mathrm{R}^{\mathrm{na}}(\mathrm{ADDR}) = \Theta(n)$, since a fixed distribution over $k$ data bits finds the addressed bit with probability $\le k/n$ and must otherwise guess.'
+    - 'For $\mathrm{OR}_n$ adaptivity buys nothing: $\mathrm{R}(\mathrm{OR}_n) = \Theta(n) = \mathrm{R}^{\mathrm{na}}(\mathrm{OR}_n)$.'
+  refs: [BdW02]
+  see_also: [R, Dna, D, Rbar, ADDR]
+  confidence: medium

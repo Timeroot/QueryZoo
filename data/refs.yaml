@@ -1086,3 +1086,27 @@ Midrijanis05:
   year: 2005
   arxiv: "quant-ph/0501142"
   note: "R0(f) = O(R(f)^2 log n); improved to O(R^2 log R) by [KulkarniTal16]."
+
+EhrenfeuchtHaussler89:
+  authors: [Ehrenfeucht, A., Haussler, D.]
+  title: "Learning decision trees from random examples"
+  venue: "Information and Computation 82(3):231-246"
+  year: 1989
+  doi: "10.1016/0890-5401(89)90001-1"
+  note: "Introduces the rank of a decision tree and shows rank-r trees are learnable in n^O(r) time; source of the leaf-count bound sum_{i<=r} C(d,i)."
+
+GoosPitassi14:
+  authors: ["Goos, M.", "Pitassi, T."]
+  title: "Communication lower bounds via critical block sensitivity"
+  venue: "STOC 2014; SIAM Journal on Computing 47(5)"
+  year: 2014
+  arxiv: "1311.2355"
+  note: "Defines critical block sensitivity cbs(S) for search problems and lifts it to randomized communication lower bounds; recovers and strengthens the Beame-Pitassi-Segerlind monotone/proof-complexity bounds."
+
+Sherstov14onesided:
+  authors: ["Sherstov, A. A."]
+  title: "Breaking the Minsky-Papert barrier for constant-depth circuits"
+  venue: "STOC 2014"
+  year: 2014
+  doi: "10.1145/2591796.2591871"
+  note: "Systematic use of one-sided approximate degree (deg_+) for AC^0 lower bounds."

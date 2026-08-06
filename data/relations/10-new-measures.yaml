@@ -1,0 +1,471 @@
+# =====================================================================
+# RELATIONS, part 10: the measures added after the first pass --
+# FC (the certificate LP), the one-sided block sensitivities bs^0/bs^1,
+# critical block sensitivity, decision tree rank, non-adaptive D and R,
+# and one-sided approximate degree.
+#
+# Most of these attach to the zoo through a single exact edge (FC = fbs,
+# bs^0 <= bs, rank <= D, ...) and let the transitive closure do the rest;
+# what is recorded here is the edge and the family that shows the
+# reverse direction fails.
+# Schema: see 01-classical-core.yaml.
+# =====================================================================
+
+relations:
+
+# ================================================================== FC
+# FC and fbs are the two sides of one linear program, so this pair is an
+# equality and everything else about FC follows by closure through fbs.
+
+- from: FC
+  to: fbs
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{FC}(f) = \mathrm{fbs}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [Tal13, KulkarniTal16, Aaronson08]
+      note: 'LP duality, pointwise in $x$: the fractional certificate LP at $x$ and the fractional block sensitivity LP at $x$ are dual to each other, both feasible and bounded.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{FC}(f) = \mathrm{fbs}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [Tal13]
+      conf: high
+  notes: |
+    An equality, not a $\Theta$ -- the only such pair in the zoo besides the
+    trivial ones. See [[FC]] for why both names are kept.
+  see_also: [FC, fbs, RC, C]
+
+- from: fbs
+  to: FC
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{fbs}(f) = \mathrm{FC}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [Tal13, KulkarniTal16]
+      conf: high
+  lower:
+    - stmt: '\mathrm{fbs}(f) = \mathrm{FC}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [Tal13]
+      conf: high
+  see_also: [FC, fbs]
+
+- from: FC
+  to: fbs
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{FC}(f) = \mathrm{fbs}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [Tal13]
+      note: 'The duality argument never uses totality: only inputs in $\mathrm{Dom}(f)$ appear as constraints on either side.'
+      conf: high
+  see_also: [FC, fbs]
+
+- from: FC
+  to: EC
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{FC}(f) \le \mathrm{EC}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [GJKKLSSV17]
+      note: 'An expectational certificate assignment $\{w^x\}$ is, at each $x$, feasible for the fractional certificate LP up to the product structure: $\sum_{i: x_i\ne y_i} w^x_i \ge \sum_{i: x_i \ne y_i} w^x_i w^y_i \ge 1$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{FC}(\mathrm{OR}_n) = \mathrm{EC}(\mathrm{OR}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      conf: medium
+  notes: |
+    Whether $\mathrm{EC} = O(\mathrm{FC})$ -- equivalently whether the extra product
+    constraint in the expectational LP costs anything -- is open; the best known
+    upper bound is $\mathrm{EC} \le \mathrm{C} = O(\mathrm{FC}^2)$.
+  see_also: [FC, EC, fbs, C]
+
+# ================================================ one-sided sensitivity
+
+- from: bs0
+  to: bs
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{bs}^0(f) \le \mathrm{bs}(f)'
+      form: {exp: 1, kind: exact}
+      note: 'A maximum over a subset of the inputs.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{bs}^0(\mathrm{OR}_n) = \mathrm{bs}(\mathrm{OR}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      note: 'At $0^n$ all $n$ singletons are sensitive, and $0^n$ is a $0$-input.'
+      conf: high
+  see_also: [bs, bs1, s0, C0]
+
+- from: bs
+  to: bs0
+  setting: total
+  status: fails
+  upper:
+    - stmt: '\text{No bound: } \mathrm{bs}(f)/\mathrm{bs}^0(f) \text{ is unbounded.}'
+      form: {kind: none}
+      conf: high
+  lower:
+    - stmt: '\mathrm{bs}(\mathrm{AND}_n) = n,\quad \mathrm{bs}^0(\mathrm{AND}_n) = 1'
+      form: {kind: unbounded}
+      witness: AND
+      note: 'Every $0$-input of $\mathrm{AND}_n$ has exactly one sensitive block (the set of its zeros), so $\mathrm{bs}^0 = 1$ while $\mathrm{bs}^1 = n$ at $1^n$.'
+      conf: high
+  notes: |
+    $\mathrm{bs} = \max(\mathrm{bs}^0, \mathrm{bs}^1)$, so one of the two one-sided
+    quantities always equals $\mathrm{bs}$ -- but never both, and which one is not
+    determined by anything else.
+  see_also: [bs, bs0, bs1]
+
+- from: bs1
+  to: bs
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{bs}^1(f) \le \mathrm{bs}(f)'
+      form: {exp: 1, kind: exact}
+      conf: high
+  lower:
+    - stmt: '\mathrm{bs}^1(\mathrm{AND}_n) = \mathrm{bs}(\mathrm{AND}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: AND
+      conf: high
+  see_also: [bs, bs0, s1, C1]
+
+- from: bs
+  to: bs1
+  setting: total
+  status: fails
+  upper:
+    - stmt: '\text{No bound: } \mathrm{bs}(f)/\mathrm{bs}^1(f) \text{ is unbounded.}'
+      form: {kind: none}
+      conf: high
+  lower:
+    - stmt: '\mathrm{bs}(\mathrm{OR}_n) = n,\quad \mathrm{bs}^1(\mathrm{OR}_n) = 1'
+      form: {kind: unbounded}
+      witness: OR
+      conf: high
+  see_also: [bs, bs1]
+
+- from: s0
+  to: bs0
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{s}^0(f) \le \mathrm{bs}^0(f)'
+      form: {exp: 1, kind: exact}
+      note: 'Singleton blocks are blocks, and the maximisation is over the same set of inputs.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{s}^0(\mathrm{OR}_n) = \mathrm{bs}^0(\mathrm{OR}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      conf: high
+  see_also: [s0, bs0, s, bs]
+
+- from: s1
+  to: bs1
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{s}^1(f) \le \mathrm{bs}^1(f)'
+      form: {exp: 1, kind: exact}
+      conf: high
+  lower:
+    - stmt: '\mathrm{s}^1(\mathrm{AND}_n) = \mathrm{bs}^1(\mathrm{AND}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: AND
+      conf: high
+  see_also: [s1, bs1]
+
+- from: C0
+  to: bs0
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{C}^0(f) \le \mathrm{s}^1(f)\,\mathrm{bs}^0(f)'
+      refs: [Nisan91, BdW02]
+      note: 'Nisan''s argument, kept one-sided: take a maximal family of disjoint *minimal* sensitive blocks at a $0$-input $x$; each has size at most $\mathrm{s}^1(f)$ because flipping it lands on a $1$-input all of whose bits in the block are sensitive. Their union is a $0$-certificate. No `form:` -- the bound is a product of two other measures.'
+      conf: high
+    - stmt: '\mathrm{C}^0(f) \le \mathrm{s}(f)\,\mathrm{bs}^0(f) \le \mathrm{bs}(f)\,\mathrm{bs}^0(f)'
+      refs: [Nisan91]
+      conf: high
+  lower:
+    - stmt: '\mathrm{bs}^0(f) \le \mathrm{C}^0(f)'
+      form: {exp: 1, kind: exact, dir: reverse}
+      note: 'Disjoint sensitive blocks must each be touched by any certificate.'
+      conf: high
+  see_also: [C0, bs0, s1, bs, C]
+
+- from: C1
+  to: bs1
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{C}^1(f) \le \mathrm{s}^0(f)\,\mathrm{bs}^1(f)'
+      refs: [Nisan91, BdW02]
+      note: 'The mirror image of the $\mathrm{C}^0$ bound. This is the form actually used in $\mathrm{D} \le \mathrm{C}^0\mathrm{C}^1$-style arguments.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{bs}^1(f) \le \mathrm{C}^1(f)'
+      form: {exp: 1, kind: exact, dir: reverse}
+      conf: high
+  see_also: [C1, bs1, s0]
+
+# ============================================ critical block sensitivity
+
+- from: cbs
+  to: bs
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{cbs}(f) = \mathrm{bs}(f) \text{ for Boolean } f'
+      form: {exp: 1, kind: exact}
+      refs: [GoosPitassi14]
+      note: 'Every input of a function is critical and the solution function is forced to be $f$ itself, so the min-max degenerates.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{cbs}(f) = \mathrm{bs}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [GoosPitassi14]
+      conf: high
+  see_also: [cbs, bs, D]
+
+- from: D
+  to: cbs
+  setting: relation
+  status: gap
+  upper: []
+  lower:
+    - stmt: '\mathrm{cbs}(S) \le \mathrm{D}(S)'
+      form: {exp: 1, kind: exact, dir: reverse}
+      refs: [GoosPitassi14]
+      note: 'A depth-$d$ deterministic algorithm computes *some* solution function $s$, and any function computed by a depth-$d$ tree has $\mathrm{bs}(s,x)\le d$ at every $x$. So the min over solution functions is at most $\mathrm{D}(S)$.'
+      conf: high
+    - stmt: '\mathrm{D}(\mathrm{SearchCNF}) = \Omega(n) = \Omega(\mathrm{cbs}(\mathrm{SearchCNF}))'
+      witness: SearchCNF
+      refs: [GoosPitassi14]
+      note: 'For the false-clause search problem of a random unsatisfiable $k$-CNF the two coincide up to constants.'
+      conf: medium
+  notes: |
+    The point of $\mathrm{cbs}$ is not the query bound but the *lifted* one:
+    $\mathrm{R}^{cc}(S\circ g^n) = \Omega(\mathrm{cbs}(S))$ for a constant-size gadget
+    $g$ [GoosPitassi14]. Whether $\mathrm{D}(S) = \mathrm{poly}(\mathrm{cbs}(S))$ for
+    total search problems is the relational analogue of $\mathrm{D}$ vs $\mathrm{bs}$.
+  see_also: [cbs, D, bs, SearchCNF, psD]
+
+# ============================================================ rank
+
+- from: rank
+  to: D
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{rank}(f) \le \mathrm{D}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [EhrenfeuchtHaussler89]
+      note: 'The rank of a tree never exceeds its depth (induction: rank increases only when both children have equal rank).'
+      conf: high
+  lower:
+    - stmt: '\mathrm{rank}(\mathrm{PARITY}_n) = \mathrm{D}(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      note: 'Every subtree of every tree for $\mathrm{PARITY}_n$ has both children equally hard, so the rank is the depth.'
+      conf: high
+  see_also: [rank, D, D_size]
+
+- from: D
+  to: rank
+  setting: total
+  status: fails
+  upper:
+    - stmt: '\text{No bound: } \mathrm{D}(f)/\mathrm{rank}(f) \text{ is unbounded.}'
+      form: {kind: none}
+      refs: [EhrenfeuchtHaussler89]
+      note: 'Rank measures branching, not depth; a "caterpillar" tree has rank $1$ at any depth.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{rank}(\mathrm{OR}_n) = 1,\quad \mathrm{D}(\mathrm{OR}_n) = n'
+      form: {kind: unbounded}
+      witness: OR
+      conf: high
+  notes: |
+    What *is* true is a bound involving the arity: a rank-$r$ tree on $n$ variables has
+    at most $\sum_{i\le r}\binom{n}{i}$ leaves, so $\mathrm{DTsize}(f) \le
+    n^{O(\mathrm{rank}(f))}$ [EhrenfeuchtHaussler89]. This is why rank, not depth, is the
+    parameter in the classical decision-tree learning results.
+  see_also: [rank, D, D_size]
+
+- from: rank
+  to: D_size
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{rank}(f) \le \log_2 \mathrm{DTsize}(f)'
+      form: {kind: log}
+      refs: [EhrenfeuchtHaussler89]
+      note: 'A tree of rank $r$ contains a complete binary tree of depth $r$ as a minor, hence has at least $2^r$ leaves.'
+      conf: high
+  see_also: [rank, D_size, D]
+
+# ====================================================== non-adaptivity
+
+- from: D
+  to: Dna
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{D}(f) \le \mathrm{D}^{\mathrm{na}}(f)'
+      form: {exp: 1, kind: exact}
+      note: 'An adaptive algorithm may ignore the answers.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{D}(\mathrm{PARITY}_n) = \mathrm{D}^{\mathrm{na}}(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      conf: high
+  see_also: [D, Dna, Rna]
+
+- from: Dna
+  to: D
+  setting: total
+  status: fails
+  upper:
+    - stmt: '\text{No bound: } \mathrm{D}^{\mathrm{na}}(f)/\mathrm{D}(f) \text{ is unbounded.}'
+      form: {kind: none}
+      conf: high
+  lower:
+    - stmt: '\mathrm{D}^{\mathrm{na}}(\mathrm{ADDR}_k) = k + 2^k,\quad \mathrm{D}(\mathrm{ADDR}_k) = k+1'
+      form: {kind: unbounded}
+      witness: ADDR
+      note: 'Every data bit of the addressing function is relevant, so a non-adaptive algorithm must read all of them; an adaptive one reads the address and then one data bit. Exponential in the input length.'
+      conf: high
+  see_also: [Dna, D, Rna, ADDR]
+
+- from: R
+  to: Rna
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{R}_\varepsilon(f) \le \mathrm{R}^{\mathrm{na}}_\varepsilon(f)'
+      form: {exp: 1, kind: exact}
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}(\mathrm{PARITY}_n) = \mathrm{R}^{\mathrm{na}}(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      conf: high
+  see_also: [R, Rna, Dna]
+
+- from: Rna
+  to: R
+  setting: total
+  status: fails
+  upper:
+    - stmt: '\text{No bound: } \mathrm{R}^{\mathrm{na}}(f)/\mathrm{R}(f) \text{ is unbounded.}'
+      form: {kind: none}
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}^{\mathrm{na}}(\mathrm{ADDR}_k) = \Theta(2^k),\quad \mathrm{R}(\mathrm{ADDR}_k) = \Theta(k)'
+      form: {kind: unbounded}
+      witness: ADDR
+      note: 'A fixed distribution over query sets of size $m$ hits the addressed data bit with probability at most $m/2^k$ (after paying for the $k$ address bits), and otherwise the algorithm is guessing an unbiased bit; so $m = \Omega(2^k)$ is needed for error $1/3$.'
+      conf: medium
+      putative: true
+  see_also: [Rna, R, Dna, ADDR]
+
+- from: Rna
+  to: Dna
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{R}^{\mathrm{na}}(f) \le \mathrm{D}^{\mathrm{na}}(f)'
+      form: {exp: 1, kind: exact}
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}^{\mathrm{na}}(\mathrm{PARITY}_n) = \mathrm{D}^{\mathrm{na}}(\mathrm{PARITY}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      conf: high
+  see_also: [Rna, Dna]
+
+# ============================================ one-sided approximate degree
+
+- from: odeg
+  to: adeg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\widetilde{\deg}_+(f) \le \widetilde{\deg}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [Sherstov14onesided, BT22]
+      note: 'An $\varepsilon$-approximating polynomial satisfies the one-sided constraints.'
+      conf: high
+  lower:
+    - stmt: '\widetilde{\deg}_+(\mathrm{AND}_n) = \widetilde{\deg}(\mathrm{AND}_n) = \Theta(\sqrt n)'
+      form: {exp: 1, kind: theta}
+      witness: AND
+      refs: [NS94, Paturi92]
+      note: 'The one-sided relaxation buys nothing on the AND side: a polynomial bounded on all of $\{0,1\}^n \setminus \{1^n\}$ and large at $1^n$ still needs degree $\Omega(\sqrt n)$ by the Markov-brothers argument.'
+      conf: high
+  see_also: [odeg, adeg, sdeg, deg]
+
+- from: adeg
+  to: odeg
+  setting: total
+  status: fails
+  upper:
+    - stmt: '\text{No bound: } \widetilde{\deg}(f)/\widetilde{\deg}_+(f) \text{ is unbounded.}'
+      form: {kind: none}
+      refs: [Sherstov14onesided]
+      conf: high
+  lower:
+    - stmt: '\widetilde{\deg}(\mathrm{OR}_n) = \Theta(\sqrt n),\quad \widetilde{\deg}_+(\mathrm{OR}_n) = 1'
+      form: {kind: unbounded}
+      witness: OR
+      refs: [BT22]
+      note: '$p(x) = \sum_i x_i$ is $0$ at $0^n$ and at least $1$ everywhere else, which is all the one-sided definition asks for.'
+      conf: high
+  see_also: [adeg, odeg, OR]
+
+- from: sdeg
+  to: odeg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{sdeg}(f) \le \widetilde{\deg}_+(f)'
+      form: {exp: 1, kind: exact}
+      refs: [Sherstov14onesided, BT22]
+      note: 'If $|p|\le 1/3$ on $f^{-1}(0)$ and $p \ge 2/3$ on $f^{-1}(1)$ then $p - 1/2$ sign-represents $f$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{sdeg}(\mathrm{OR}_n) = \widetilde{\deg}_+(\mathrm{OR}_n) = 1'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      conf: high
+  see_also: [sdeg, odeg, adeg]
+
+- from: odeg
+  to: sdeg
+  setting: total
+  status: fails
+  upper:
+    - stmt: '\text{No bound: } \widetilde{\deg}_+(f)/\mathrm{sdeg}(f) \text{ is unbounded.}'
+      form: {kind: none}
+      conf: high
+  lower:
+    - stmt: '\widetilde{\deg}_+(\mathrm{AND}_n) = \Theta(\sqrt n),\quad \mathrm{sdeg}(\mathrm{AND}_n) = 1'
+      form: {kind: unbounded}
+      witness: AND
+      refs: [MinskyPapert69]
+      note: '$\sum_i x_i - (n - \tfrac12)$ sign-represents $\mathrm{AND}_n$ with degree $1$.'
+      conf: high
+  see_also: [odeg, sdeg, AND]

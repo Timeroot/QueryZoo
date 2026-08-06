@@ -429,3 +429,171 @@ measures:
   refs: [Yao77, Vereshchagin98, BenDavidBlais20minimax, BBGM22]
   see_also: [R, Rbar, D_prod]
   confidence: high
+
+# --------------------------------------------------------------------
+# Added later: the fractional certificate LP, the one-sided block
+# sensitivities, critical block sensitivity, rank, and non-adaptivity.
+# --------------------------------------------------------------------
+
+- id: FC
+  name: Fractional certificate complexity
+  symbol: '\mathrm{FC}(f)'
+  aliases: ['fractional vertex cover of the sensitive blocks', '\mathrm{C}^{*}(f)', 'LP certificate complexity']
+  category: combinatorial
+  order: 56
+  short: 'LP relaxation of certificate complexity: fractional weights on coordinates that must cover every disagreement.'
+  definition: |
+    $\mathrm{FC}_x(f)$ is the value of the linear program
+    $$\min \sum_{i\in[n]} w_i \quad\text{s.t.}\quad
+      \sum_{i\,:\,x_i \ne y_i} w_i \ \ge\ 1 \ \ \forall\, y \in \mathrm{Dom}(f)
+      \text{ with } f(y)\ne f(x), \qquad w \in [0,1]^n ,$$
+    and $\mathrm{FC}(f) = \max_x \mathrm{FC}_x(f)$. Setting $w$ to the indicator of a
+    certificate is feasible, so this is the LP relaxation of $\mathrm{C}_x(f)$.
+
+    The dual LP puts weights on *sensitive blocks* subject to each coordinate
+    receiving total weight at most $1$ -- that is exactly [[fbs]]. Both LPs are
+    feasible and bounded, so strong duality gives
+    $$\mathrm{FC}_x(f) = \mathrm{fbs}_x(f) \quad\text{for every } x,$$
+    an equality, not a $\Theta$. The zoo keeps the two names as separate entries
+    because the literature uses them for different purposes: $\mathrm{fbs}$ when
+    lower-bounding something by exhibiting blocks, $\mathrm{FC}$ when upper-bounding
+    something by exhibiting a fractional certificate (this is the form in which it
+    feeds $\mathrm{R}_0 = O(\mathrm{FC}\cdot\log)$-style rounding arguments and the
+    quantum certificate bound $\mathrm{QC} = \Theta(\sqrt{\mathrm{FC}})$).
+  params: []
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes, note: 'Only inputs $y$ *in the domain* impose constraints, so the LP has fewer constraints and $\mathrm{FC}$ shrinks, exactly as $\mathrm{C}$ does.'}
+    relation: {defined: no, note: 'No standard version; the sabotage measures play this role.'}
+  equivalent:
+    - {measure: fbs, form: {exp: 1, kind: exact}, statement: '$\mathrm{FC}(f) = \mathrm{fbs}(f)$ exactly, by LP duality', refs: [Tal13, KulkarniTal16, Aaronson08]}
+    - {measure: RC, form: {exp: 1, kind: theta}, statement: '$\mathrm{FC}(f) = \Theta(\mathrm{RC}(f))$', refs: [Aaronson08, KulkarniTal16]}
+  facts:
+    - '$\mathrm{bs}(f) \le \mathrm{FC}(f) = \mathrm{fbs}(f) \le \mathrm{EC}(f) \le \mathrm{C}(f)$.'
+    - '$\mathrm{C}(f) = O(\mathrm{FC}(f)^2)$ by randomised rounding, and the quadratic loss is real [GSS16].'
+    - '$\mathrm{FC}(f) = O(\widetilde{\deg}(f)^2)$ [KulkarniTal16].'
+    - 'For monotone $f$, $\mathrm{FC}(f) = \mathrm{C}(f)$: the LP has an integral optimum.'
+  refs: [Tal13, KulkarniTal16, Aaronson08, GSS16]
+  see_also: [fbs, C, RC, EC, QC, bs]
+  confidence: high
+
+- id: bs0
+  name: 0-block sensitivity
+  symbol: '\mathrm{bs}^0(f)'
+  category: combinatorial
+  order: 51
+  short: 'Block sensitivity maximised only over 0-inputs.'
+  definition: '$\mathrm{bs}^0(f) = \max_{x \in f^{-1}(0)} \mathrm{bs}_x(f)$.'
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{bs}(f) = \max(\mathrm{bs}^0(f), \mathrm{bs}^1(f))$ and $\mathrm{s}^0(f) \le \mathrm{bs}^0(f)$.'
+    - '$\mathrm{C}^0(f) \le \mathrm{s}^1(f)\,\mathrm{bs}^0(f)$: a minimal sensitive block of a $0$-input has size at most $\mathrm{s}^1(f)$, and a maximal disjoint family of them is a certificate [Nisan91].'
+    - 'The one-sided quantities are what the $\mathrm{D} \le \mathrm{C}^0\mathrm{C}^1$-style bounds actually use, and they can be wildly asymmetric: $\mathrm{bs}^0(\mathrm{OR}_n) = n$ while $\mathrm{bs}^1(\mathrm{OR}_n) = 1$.'
+  refs: [Nisan91, BdW02]
+  see_also: [bs, bs1, s0, C0]
+  confidence: high
+
+- id: bs1
+  name: 1-block sensitivity
+  symbol: '\mathrm{bs}^1(f)'
+  category: combinatorial
+  order: 52
+  short: 'Block sensitivity maximised only over 1-inputs.'
+  definition: '$\mathrm{bs}^1(f) = \max_{x \in f^{-1}(1)} \mathrm{bs}_x(f)$.'
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{bs}(f) = \max(\mathrm{bs}^0(f), \mathrm{bs}^1(f))$ and $\mathrm{s}^1(f) \le \mathrm{bs}^1(f)$.'
+    - '$\mathrm{C}^1(f) \le \mathrm{s}^0(f)\,\mathrm{bs}^1(f)$ [Nisan91], the one-sided form of $\mathrm{C} \le \mathrm{s}\cdot\mathrm{bs}$.'
+    - '$\mathrm{bs}^1(f) = \mathrm{bs}^0(\bar f)$, so every statement about one is a statement about the other with $f$ negated.'
+  refs: [Nisan91, BdW02]
+  see_also: [bs, bs0, s1, C1]
+  confidence: high
+
+- id: cbs
+  name: Critical block sensitivity
+  symbol: '\mathrm{cbs}(S)'
+  category: combinatorial
+  order: 58
+  short: 'Block sensitivity of a search problem: the adversary picks the input, but the algorithm picks which valid answer to commit to.'
+  definition: |
+    Defined for a search problem $S \subseteq \{0,1\}^n \times \mathcal{O}$. Call an input
+    $x$ *critical* if it has exactly one valid answer, $|S(x)| = 1$. A *solution function*
+    is any $s : \{0,1\}^n \to \mathcal{O}$ with $(x, s(x)) \in S$ for all $x$; for such an
+    $s$, $\mathrm{bs}(s,x)$ is the ordinary block sensitivity of $s$ at $x$ (blocks whose
+    flip changes the value of $s$, which is now not necessarily Boolean). Then
+    $$\mathrm{cbs}(S) \ =\ \min_{s} \ \max_{x \text{ critical}} \ \mathrm{bs}(s,x).$$
+    The minimum over $s$ is what makes this a measure of the *problem* rather than of a
+    particular algorithm: a search problem is only hard if *every* way of committing to
+    answers is sensitive somewhere on a critical input.
+  params: []
+  settings:
+    total:    {defined: degenerate, note: 'For a Boolean function every input is critical and $s = f$ is forced, so $\mathrm{cbs}(f) = \mathrm{bs}(f)$.'}
+    partial:  {defined: degenerate, note: 'Same collapse.'}
+    relation: {defined: yes, note: 'The setting it was invented for -- in particular for the "false clause" search problems $\mathrm{SearchCNF}$ attached to unsatisfiable CNFs.'}
+  facts:
+    - '$\mathrm{cbs}(f) = \mathrm{bs}(f)$ for Boolean $f$; the measure only says something new when an input has several valid answers.'
+    - 'Lifting: $\mathrm{R}^{cc}(S \circ g^n) = \Omega(\mathrm{cbs}(S))$ for a suitable constant-size gadget $g$ [GoosPitassi14]. This is the source of the tight monotone-circuit-depth and Cutting-Planes lower bounds obtained there.'
+    - 'For the false-clause search problem of a random $\Delta$-dense unsatisfiable $k$-CNF, $\mathrm{cbs} = \Omega(n)$; for the Tseitin search problem on a bounded-degree expander, $\mathrm{cbs} = \Omega(n)$ [GoosPitassi14].'
+    - 'The min over solution functions is essential: the *maximum* over $s$ can be large for trivially easy search problems.'
+  refs: [GoosPitassi14, CDM23]
+  see_also: [bs, RS, psD, SearchCNF, D]
+  confidence: medium
+
+- id: rank
+  name: Decision tree rank
+  symbol: '\mathrm{rank}(f)'
+  aliases: ['Ehrenfeucht-Haussler rank', 'Prover-Delayer game value']
+  category: deterministic
+  order: 25
+  short: 'The "Strahler number" of a decision tree: how much branching, rather than how much depth, the tree needs.'
+  definition: |
+    For a decision tree $T$, define $\mathrm{rank}$ bottom-up: a leaf has rank $0$; an
+    internal node whose children have ranks $r_1 \ge r_2$ has rank $r_1$ if $r_1 > r_2$
+    and $r_1 + 1$ if $r_1 = r_2$. So the rank counts how deep the *nested branching*
+    goes, ignoring long "caterpillar" paths. $\mathrm{rank}(f)$ is the minimum rank of a
+    decision tree computing $f$.
+
+    Equivalently it is the value of the Prover-Delayer game on $f$: the Delayer scores a
+    point whenever the Prover's next query is one the Delayer may answer either way.
+  params: []
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes}
+    relation: {defined: yes, note: 'Defined identically for search problems; this is the form used in proof complexity, where the rank of the false-clause search problem is the resolution depth-vs-width trade-off parameter.'}
+  facts:
+    - '$\mathrm{rank}(f) \le \mathrm{D}(f)$, and $\mathrm{rank}$ can be exponentially smaller: $\mathrm{rank}(\mathrm{OR}_n) = 1$ while $\mathrm{D}(\mathrm{OR}_n) = n$.'
+    - 'A tree of rank $r$ has at least $2^r$ leaves, so $\mathrm{rank}(f) \le \log_2 \mathrm{DTsize}(f)$.'
+    - 'A tree of rank $r$ and depth $d$ has at most $\sum_{i\le r}\binom{d}{i} \le (ed/r)^r$ leaves, so $\mathrm{DTsize}(f) \le n^{O(\mathrm{rank}(f))}$ -- this is the Ehrenfeucht-Haussler learning bound [EhrenfeuchtHaussler89].'
+    - '$\mathrm{rank}(f) \le \mathrm{rank}(T)$ for the *size*-optimal tree $T$; rank and size are the pair of measures that behave well under composition of read-once formulas.'
+  refs: [EhrenfeuchtHaussler89, BdW02]
+  see_also: [D, D_size, C, cbs]
+  confidence: medium
+
+- id: Dna
+  name: Non-adaptive deterministic query complexity
+  symbol: '\mathrm{D}^{\mathrm{na}}(f)'
+  aliases: ['oblivious decision tree complexity', 'number of relevant variables (total f)']
+  category: deterministic
+  order: 12
+  short: 'Fewest queries when the whole query set must be fixed in advance.'
+  definition: |
+    The algorithm chooses a set $S \subseteq [n]$ *before seeing the input*, learns
+    $x|_S$, and must then output $f(x)$. $\mathrm{D}^{\mathrm{na}}(f)$ is the smallest
+    such $|S|$.
+
+    For total $f$ this is exactly the number of relevant variables: $S$ works iff $f$
+    does not depend on any coordinate outside $S$. For partial $f$ it is smaller and
+    less trivial -- $S$ only has to determine $f$ on the promise.
+  params: []
+  settings:
+    total:    {defined: yes, note: '$\mathrm{D}^{\mathrm{na}}(f) = \#\{\text{relevant variables}\}$.'}
+    partial:  {defined: yes, note: 'Genuinely a complexity measure here: $S$ must separate $f^{-1}(0)$ from $f^{-1}(1)$ on the promise only.'}
+    relation: {defined: yes}
+  facts:
+    - '$\mathrm{D}(f) \le \mathrm{D}^{\mathrm{na}}(f) \le n$.'
+    - 'Adaptivity can save exponentially: $\mathrm{D}(\mathrm{ADDR}) = \log_2 n + 1$ while $\mathrm{D}^{\mathrm{na}}(\mathrm{ADDR}) = n + \log_2 n$, since every data bit is relevant.'
+    - 'There is no bound in the other direction at all: $\mathrm{D}^{\mathrm{na}}$ is not bounded by any function of $\mathrm{D}$ alone.'
+    - '$\mathrm{D}^{\mathrm{na}}(f) \ge \mathrm{s}(f)$, $\mathrm{bs}(f)$, $\mathrm{deg}(f)$ and every other measure, since all of them are supported on relevant variables.'
+  refs: [BdW02]
+  see_also: [D, Rna, ADDR, D_size]
+  confidence: medium

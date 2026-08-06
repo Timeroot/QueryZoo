@@ -20,19 +20,19 @@ if you need the site fully offline, drop `tex-chtml.js` into `static/` and point
 
 | | count |
 |---|---|
-| measures | 67 |
-| ordered pairs with an entry | 185 |
-| relation records (bounds and separations) | ~200 |
+| measures | 75 |
+| ordered pairs with an entry | 225 |
+| relation records (bounds and separations) | 141 |
 | witness functions | 41 |
 | concept pages | 11 |
-| open problems | 12 |
-| references | 135 |
+| open problems | 14 |
+| references | 139 |
 
 The site generates one page per measure, function and concept, plus the exponent matrix, the
 relations index, the open-problem list, the bibliography, and this guide's on-site twin
 (`editing.html`).
 
-**Pairs are not pages.** There are 67×67 = 4489 ordered pairs of measures and the build has
+**Pairs are not pages.** There are 75×75 = 5625 ordered pairs of measures and the build has
 something to say about roughly a quarter of them, mostly by derivation. Writing that many files
 would be silly, so `pair.html` renders any of them in the browser:
 
@@ -57,7 +57,7 @@ data/
   functions/*.yaml          witness families, under `functions:`
   relations/*.yaml          the bounds, under `relations:`   <- the heart of the site
   tables/*.yaml             the published 13x13 exponent matrix (the matrix page
-                            expands to all 67 measures using relation records)
+                            expands to all 75 measures using relation records)
   concepts.yaml             prose pages
   open_problems.yaml        open problems
 build.py                    loader + validator + renderer
