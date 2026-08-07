@@ -253,6 +253,7 @@ functions:
   order: 49.5
   kind: partial
   arity: '$n = k + 2^k$ bits (a $k$-bit address and a $2^k$-cell array over $\{0,1,2\}$, binary-encoded)'
+  scale: {var: k, subs: {n: '2^k'}, note: 'The array dominates the address, $n = k + 2^k = \Theta(2^k)$.'}
   short: 'The outer function that refutes the randomized composition conjecture: a *biased guess* at the index is good enough, which is cheap noisily and expensive classically.'
   definition: |
     The input is an address $a \in \{0,1\}^k$ together with an array

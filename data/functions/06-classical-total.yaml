@@ -92,6 +92,7 @@ functions:
   order: 27.5
   kind: total
   arity: '$N = m^3$ bits: $m$ blocks of $m^2$'
+  scale: {var: m, subs: {N: 'm^3'}}
   short: 'The unbalanced AND-OR tree, tuned so that Minsky-Papert''s $\min\{m,\sqrt b\}$ is maximised: $\mathrm{sdeg} = \Theta(N^{1/3})$.'
   definition: |
     $\mathrm{MP}_m = \mathrm{AND}_m \circ \mathrm{OR}_{m^2}$: split $N = m^3$ bits
@@ -145,6 +146,7 @@ functions:
   order: 37.5
   kind: total
   arity: '$N = \binom{m}{2}$ bits, one per edge of $K_m$, read as an orientation'
+  scale: {var: m, subs: {N: '\binom m2'}}
   short: 'The function that killed the log-approximate-rank conjecture: spectral norm $O(\sqrt N)$, but $\mathrm{SINK}\circ\mathrm{XOR}$ has randomized communication complexity $\Omega(\sqrt N)$.'
   definition: |
     An input orients every edge of the complete graph $K_m$. Output $1$ iff some
@@ -212,6 +214,7 @@ functions:
   order: 19.2
   kind: total
   arity: '$N = \binom{m}{2}$ bits, the adjacency matrix of an $m$-vertex graph'
+  scale: {var: m, subs: {N: '\binom m2'}}
   short: 'The nontrivial graph property that is nowhere near evasive: $\mathrm{D} = \Theta(m) = \Theta(\sqrt N)$ out of $N$ possible queries.'
   definition: |
     A graph is a *scorpion* if it has three special vertices -- a **sting** $s$ of
@@ -250,6 +253,7 @@ functions:
   order: 19.3
   kind: total
   arity: '$N = \binom{m}{2}$ bits, the adjacency matrix of an $m$-vertex graph'
+  scale: {var: m, subs: {N: '\binom m2'}}
   short: 'The monotone graph property everyone checks first: evasive, $\mathrm{R} = \Theta(N)$, and $\mathrm{Q} = \Theta(N^{3/4})$.'
   definition: 'Given the adjacency matrix of an undirected graph on $m$ labelled vertices, decide whether the graph is connected. Monotone (adding edges never disconnects) and nontrivial.'
   formal: '$$\mathrm{CONN}_m(G) = 1 \iff G \text{ has one connected component}.$$'

@@ -134,8 +134,24 @@ inherit: false -- do NOT propagate to other settings (side conditions!)</code></
           supplies one.</li>
         </ul>
 
-        <h3>The three derivation rules</h3>
+        <h3>The four derivation rules</h3>
         <ul class="tick">
+          <li><b>Separations read off the recorded values.</b> A function page lists
+          \(M(f)\) for as many measures as anyone could find, and any two of those values
+          are a separation nobody had to write down: \(\mathrm{C}_{\min}(\mathrm{OR}_n)=1\)
+          against \(\mathrm{UC}(\mathrm{OR}_n)=n\) says that \(\mathrm{UC}\) is not bounded
+          by <em>any</em> function of \(\mathrm{C}_{\min}\). The build parses the LaTeX of
+          every value into a growth rate (<code>growth.py</code>) and compares each ordered
+          pair on each family, producing a polynomial exponent, a \(2^{\Omega(\cdot)}\), or
+          &ldquo;unbounded&rdquo;. Three things keep it honest: the numerator must be a
+          <em>lower</em> bound on the first measure and the denominator an <em>upper</em>
+          bound on the second (so an \(O(\cdot)\) value can never witness a separation);
+          a value the parser cannot pin down exactly is skipped, never guessed at; and
+          &ldquo;unbounded&rdquo; is claimed only when the denominator settles on a
+          positive constant, since a measure that tends to \(0\) can still be bounded
+          below by a function of itself. Families with two genuinely free parameters are
+          skipped unless a <code>scale:</code> block says which one is the asymptotic
+          parameter.</li>
           <li><b>Transitive closure.</b> \(M_1 \le M_2^{p}\log^{a}M_2\) and
           \(M_2 \le M_3^{q}\log^{b}M_3\) give \(M_1 = O(M_3^{pq}\log^{bp+a}M_3)\), up to four
           steps. <code>exact</code> composed with <code>exact</code> stays exact,
@@ -260,6 +276,34 @@ pair.html?a=R&amp;b=R                 the diagonal: composition, parameters</cod
         <p>Adding it to the matrix is separate and optional: the matrix is a faithful copy of a
         published table, kept in <code>data/tables/total-exponents.yaml</code> with any
         deviations marked <code>updated: true</code> plus an <code>update_note</code>.</p>
+      </section>
+
+      <section class="card prose" id="scale">
+        <h2>Adding a function, and the <code>scale:</code> block</h2>
+        <p>A function's <code>values:</code> are not decoration: the build compares every pair of
+        them and turns the comparison into a separation (derivation rule 1 above). That only
+        works if it knows what the values are functions <em>of</em>.</p>
+<pre><code>functions:
+  - id: MinskyPapert
+    kind: total               # total | partial | relation
+    arity: '$N = m^3$ bits: $m$ blocks of $m^2$'
+    scale: {var: m, subs: {N: 'm^3'}}   # &larr; the asymptotic parameter, and
+    values:                             #   every other name in terms of it
+      - {measure: D,    value: 'N = m^3'}
+      - {measure: sdeg, value: '\Theta(m) = \Theta(N^{1/3})'}</code></pre>
+        <p>When every value is written in one variable, <code>scale:</code> can be left out and
+        the build infers it. Write one as soon as a family uses two names for the same parameter
+        (\(N\) and \(m\), \(N\) and \(d\)), and prefer the <em>smallest</em> of them as
+        <code>var</code>: with <code>var: d</code> and <code>subs: {N: '2^d'}</code> a value of
+        \(N^{0.753}\) stays exact, whereas the other direction would need \(2^{\log_2 N}\).
+        A family with two <em>genuinely</em> free parameters (\(\mathrm{THR}_k^n\),
+        \(k\)-distinctness) should have no <code>scale:</code>; the build skips it and says so in
+        the build report rather than picking one and inventing separations.</p>
+        <p>Values themselves are plain LaTeX. \(\Theta(\cdot)\) and a bare expression bound the
+        measure on both sides; \(O(\cdot)\) or \(\le\) only from above; \(\Omega(\cdot)\) or
+        \(\ge\) only from below &mdash; and the build respects that, so an \(O\) value will never
+        be used as the big side of a separation. Anything with a free \(\varepsilon\), a
+        <code>\text{if}</code> case split or an unresolved second parameter is skipped.</p>
       </section>
     </div>
 

@@ -61,7 +61,9 @@ data/
                             expands to all 75 measures using relation records)
   concepts.yaml             prose pages
   open_problems.yaml        open problems
-build.py                    loader + validator + renderer
+build.py                    loader + validator + derivation engine + renderer
+growth.py                   LaTeX -> growth rate, and the comparison of two of them
+                            (`python3 growth.py` runs its self-test); no dependencies
 templates/*.html            Jinja2
 static/style.css            styling
 static/app.js               client-side search, matrix views, table filters
@@ -95,6 +97,12 @@ Three layers, deliberately separate:
    carry a `form:` — the same statement in machine-readable form — which is what the build
    reasons with (see below).
 3. **Measures, functions, concepts, open problems** are the nodes those records point at.
+   A function's `values:` are part of the engine, not decoration: the build compares every pair
+   of them and emits the separation the pair proves (see the derived layer below). A family
+   whose values use two names for one parameter needs a `scale:` block saying which is
+   asymptotic and what the others are in terms of it — `scale: {var: m, subs: {N: '\binom m2'}}`
+   — and one with two *genuinely* free parameters should have none, so that the build skips it
+   rather than inventing separations.
 
 A relation is directional: `from` is the quantity being bounded, so an `upper` bullet on the
 pair `(M1, M2)` is a statement `M1 = O(g(M2))` and a `lower` bullet is a separation
@@ -151,9 +159,20 @@ form: {exp: 2, log: 1, kind: const}    # = O(M2^2 log M2)
 only the exponent is on record. An exponent alone cannot tell you whether `1,1` means a one-line
 inequality or a theorem with polylog slack; the chip can.
 
-From these the build derives three things, all labelled as derived wherever they appear, all
+From these the build derives four things, all labelled as derived wherever they appear, all
 losing to a recorded statement of the same strength, and none ever written back to the YAML:
 
+- **separations read off the function values** — a function page lists `M(f)` for as many
+  measures as anyone could find, and every two of those values are a separation nobody had to
+  write down: `C_min(OR) = 1` against `UC(OR) = n` proves `UC` is not bounded by *any* function
+  of `C_min`. `growth.py` parses the LaTeX of each value into a growth rate and compares each
+  ordered pair on each family, yielding a polynomial exponent, a `2^Ω(·)`, or `unbounded`. The
+  numerator must be a *lower* bound on the first measure and the denominator an *upper* bound on
+  the second, so an `O(·)` value can never witness a separation; a value the parser cannot pin
+  down exactly is skipped rather than guessed at; `unbounded` is claimed only when the
+  denominator settles on a positive constant, since a measure that tends to `0` can still be
+  bounded below by a function of itself; and a family with two free parameters is skipped unless
+  a `scale:` block says which one is asymptotic;
 - **transitive closure** — `M1 ≤ M2^p log^a M2` and `M2 ≤ M3^q log^b M3` give
   `M1 = O(M3^{pq} log^{bp+a} M3)`, up to four steps; `exact ∘ exact` stays exact, `tilde` is
   contagious, and a cycle of exponent `< 1` is reported as a data error;
@@ -169,11 +188,12 @@ Every build prints how much of this there is, and checks every derived total-fun
 against the published table:
 
 ```
-facts: 253 recorded, 148 by setting inheritance, 2549 by closure (174/239 bullets carry a `form:`)
-bounds: 1001 total, 160 partial, 30 relation (pair, setting) slots of 1197; 0 conflict(s) with the published table
+facts: 353 recorded, 5451 by setting inheritance, 5682 from function values, 124850 by closure (269/343 bullets carry a `form:`)
+values: 757 of 793 parsed on 38 families (8 families skipped, no single parameter); 5682 separations read off, 5177 of them the best on record
+bounds: 4602 total, 3826 partial, 568 relation (pair, setting) slots of 9316; 0 conflict(s) with the published table
 ```
 
-The ~65 bullets with no `form:` are chains, parameterised statements and prose that do not reduce
+The ~75 bullets with no `form:` are chains, parameterised statements and prose that do not reduce
 to a single exponent; adding one where it belongs is a good contribution.
 
 ## Conventions

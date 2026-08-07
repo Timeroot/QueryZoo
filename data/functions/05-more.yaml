@@ -104,6 +104,7 @@ functions:
   order: 57
   kind: total
   arity: 'the adjacency matrix of a graph on $m$ vertices: $n = \binom m2 = \Theta(m^2)$ bits'
+  scale: {var: m, subs: {n: '\binom m2'}}
   short: 'The flagship open problem of quantum query complexity: $\Omega(m)$ against $O(m^{5/4})$, stuck for twenty years.'
   definition: |
     Does the input graph contain a copy of $K_3$? One query reveals one entry of the

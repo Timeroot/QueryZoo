@@ -33,8 +33,12 @@
     <span class="tl">{{ short }}</span>
     <span class="tv v-{{ d.verdict }}">{{ verdict_word[d.verdict] }}</span>
     {% if d.fails %}<div class="tstmt">{{ d.fails.tex | tex }}</div>{% endif %}
-    {% if d.other_up %}<div class="tstmt">{{ d.other_up.tex | tex }}</div>{% endif %}
-    {% if d.other_lo %}<div class="tstmt lo">sep: {{ d.other_lo.tex | tex }}</div>{% endif %}
+    {% if d.other_up %}<div class="tstmt">{{ d.other_up.tex | tex }}</div>
+      {% if d.other_up.deriv %}<div class="tipnote">{{ derivline(d.other_up.deriv) }}</div>{% endif %}
+    {% endif %}
+    {% if d.other_lo %}<div class="tstmt lo">sep: {{ d.other_lo.tex | tex }}</div>
+      {% if d.other_lo.deriv %}<div class="tipnote">{{ derivline(d.other_lo.deriv) }}</div>{% endif %}
+    {% endif %}
     {% if d.up %}
       <div class="tstmt">{{ d.up.tex | tex }}{% if d.up.chip %} <span class="tchip c-{{ d.up.kind }}">{{ d.up.chip }}</span>{% endif %}</div>
       {% if d.up.deriv %}<div class="tipnote">{{ derivline(d.up.deriv) }}</div>{% endif %}
@@ -50,7 +54,11 @@
 {% endmacro %}
 
 {% macro derivline(v) %}
-  {%- if v.how == 'setting' -%}
+  {%- if v.vals -%}
+    derived: read off the recorded values{% if v.fn %} on {{ v.fn }}{% endif %},
+    {%- for x in v.vals %} \({{ x.m }} = {{ x.tex }}\){{ ' against' if loop.first }}{% endfor -%}
+    {%- if v.how == 'setting' %} (inherited from the {{ v.from_setting }} setting){% endif -%}
+  {%- elif v.how == 'setting' -%}
     derived: inherited from the {{ v.from_setting }} setting
   {%- elif v.how == 'push' -%}
     derived: the separation above, pushed through {{ v.steps | length - 1 }} recorded bound{{ '' if v.steps | length == 2 else 's' }}

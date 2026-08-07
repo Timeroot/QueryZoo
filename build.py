@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import math
 import os
 import re
 import shutil
@@ -22,6 +23,8 @@ from collections import Counter, defaultdict, OrderedDict
 from pathlib import Path
 
 import yaml
+
+import growth
 
 try:
     import mistune
@@ -190,6 +193,18 @@ class Zoo:
             f.setdefault("see_also", [])
             if f["kind"] not in ("total", "partial", "relation"):
                 self.err(f"function {f['id']}: bad kind {f['kind']}")
+            sc = f.get("scale")
+            if sc is not None:
+                if not isinstance(sc, dict) or "var" not in sc:
+                    self.err(f"function {f['id']}: `scale` needs a `var`")
+                    f["scale"] = None
+                else:
+                    extra = set(sc) - {"var", "subs", "note"}
+                    if extra:
+                        self.err(f"function {f['id']}: unknown key(s) in `scale`: "
+                                 f"{', '.join(sorted(extra))}")
+                    sc.setdefault("subs", {})
+                    sc.setdefault("note", None)
             for v in f["values"]:
                 v.setdefault("putative", False)
                 v.setdefault("refs", [])
@@ -391,14 +406,17 @@ class Zoo:
 
     # ------------------------------------------------------------ derivation
     #
-    # Three things are computed here and nowhere else. None of them is ever
+    # Four things are computed here and nowhere else. None of them is ever
     # written back to YAML; they are labelled "derived" wherever they surface.
     #
-    #   1. setting inheritance -- an upper bound proved for the more general
+    #   1. separations read off the recorded function values -- if some family
+    #      has M1 = n and M2 = 1 then M1 is unbounded in terms of M2, whether
+    #      or not anybody wrote a relation record saying so;
+    #   2. setting inheritance -- an upper bound proved for the more general
     #      class holds for the less general one, and a separation exhibited in
     #      the less general one is a separation in the more general one;
-    #   2. the transitive closure of the recorded upper bounds;
-    #   3. separations pushed through those upper bounds:
+    #   3. the transitive closure of the recorded upper bounds;
+    #   4. separations pushed through those upper bounds:
     #      M1(f_n) >= M2(f_n)^p together with M3 = O(M2^r) gives
     #      M1(f_n) >= M3(f_n)^{p/r} on the same family.
     #
@@ -406,10 +424,12 @@ class Zoo:
         self.facts = []
         self.derivation_notes = []
         self._collect_facts()
+        self._value_facts()
         self._inherit_settings()
         self.closure = {s: self._close(s) for s in self.settings}
         self._push_separations()
         self._best_bounds()
+        self._value_credits()
 
     # -- 0. every machine-readable statement in the data, as a directed fact
     def _collect_facts(self):
@@ -473,6 +493,177 @@ class Zoo:
                          from_theta=True, chain=[f])
                     fact(other, m["id"], s, "lower", back, eq, equiv=True,
                          from_theta=True, flipped=True, chain=[g])
+
+    # -- 0.5 separations read straight off the recorded values
+    #
+    # A function page records M(f) for as many measures as anyone could find.
+    # Every two of those values on the same family are a separation waiting to
+    # be read off: C_min(OR) = 1 against UC(OR) = n says UC is not bounded by
+    # any function of C_min at all, whether or not a relation record says so.
+    # Values are LaTeX, so growth.py turns them into growth rates first; what
+    # it cannot pin down exactly -- a second free parameter, an epsilon, a
+    # conditional value -- is skipped rather than guessed at, and counted in
+    # the build report.
+    #
+    # The soundness rule, and the only thing that makes any of this valid:
+    # the numerator must be a *lower* bound on M1 and the denominator an
+    # *upper* bound on M2. A value written `O(\sqrt n)` therefore cannot serve
+    # as a witness for M1, and `\Omega(n)` cannot serve as one for M2.
+    _CONF_RANK = {"high": 0, "medium": 1, "low": 2}
+
+    def _family_env(self, f):
+        """A family's asymptotic variable, as growth.py wants it.
+
+        One variable, declared by `scale:` when the values use more than one
+        name for it ($N = m^3$), inferred when they use exactly one.
+        """
+        sc = f.get("scale")
+        if sc:
+            env = {sc["var"]: growth.VAR}
+            for name, expr in (sc.get("subs") or {}).items():
+                try:
+                    env[name] = growth.parse_value(expr, {sc["var"]: growth.VAR}).lo
+                except growth.Unparsable as exc:
+                    self.err(f"function {f['id']}: scale substitution "
+                             f"{name} = {expr!r} does not parse ({exc})")
+                    return None, "unparsable `scale:`"
+            return env, None
+        names = set()
+        for v in f["values"]:
+            names |= growth.free_names(v.get("value") or "") or set()
+        if len(names) == 1:
+            return {names.pop(): growth.VAR}, None
+        if not names:
+            return None, "no value is a closed form"
+        return None, ("values use " + ", ".join(f"${n}$" for n in sorted(names))
+                      + " -- needs a `scale:` saying which is the parameter")
+
+    def _value_facts(self):
+        self.value_report = {"parsed": 0, "unparsed": 0, "families": 0,
+                             "skipped": [], "claims": 0}
+        rep = self.value_report
+        best = {}
+        for f in self.functions:
+            setting = f["kind"]
+            if setting not in self.settings:
+                continue
+            env, why = self._family_env(f)
+            if env is None:
+                if why and any(v.get("value") for v in f["values"]):
+                    rep["skipped"].append((f["id"], why))
+                continue
+            parsed, seen = {}, {}
+            for v in f["values"]:
+                mid, text = v.get("measure"), v.get("value")
+                if not mid or not text or mid not in self.measure:
+                    continue
+                try:
+                    g = growth.parse_value(text, env)
+                except growth.Unparsable:
+                    rep["unparsed"] += 1
+                    continue
+                rep["parsed"] += 1
+                if not self._defined(mid, setting):
+                    continue
+                if mid in seen and seen[mid] != text:
+                    # two different values for one measure: different variants
+                    # of the family, and nothing says they are the same family
+                    parsed.pop(mid, None)
+                    continue
+                seen[mid] = text
+                parsed[mid] = (g, v)
+            if len(parsed) < 2:
+                continue
+            rep["families"] += 1
+            for m1, (a, v1) in parsed.items():
+                for m2, (b, v2) in parsed.items():
+                    if m1 == m2 or a.lo is None or b.up is None:
+                        continue
+                    claim = growth.compare(a.lo, b.up)
+                    if claim is None:
+                        continue
+                    kind, exp = claim[0], 1.0
+                    if kind == "poly":
+                        exp = claim[1]
+                        if a.approx or b.approx:
+                            # the exponent was written as a truncated decimal
+                            # ("N^{0.753...}"); round down, never up
+                            exp = math.floor(exp * 100) / 100
+                        if exp <= 0:
+                            continue
+                        kind = "tilde" if (a.tilde or b.tilde) else "const"
+                    conf = max((v1.get("conf") or "high", v2.get("conf") or "high"),
+                               key=lambda c: self._CONF_RANK.get(c, 1))
+                    if (v1.get("putative") or v2.get("putative")) and conf == "high":
+                        conf = "medium"
+                    ent = {
+                        "a": m1, "b": m2, "setting": setting, "side": "lower",
+                        "exp": exp, "log": 0.0, "kind": kind,
+                        "poly": kind in _POLY_KINDS, "origin": "values",
+                        "chain": [], "stmt": None, "note": None, "rel": None,
+                        "refs": sorted(set(v1.get("refs") or [])
+                                       | set(v2.get("refs") or [])),
+                        "witness": f["id"], "conf": conf, "reverse": False,
+                        "inherit": True,
+                        "vals": [{"m": m1, "tex": v1["value"]},
+                                 {"m": m2, "tex": v2["value"]}],
+                    }
+                    slot = best.setdefault((m1, m2, setting), {})
+                    which = "poly" if ent["poly"] else "hard"
+                    cur = slot.get(which)
+                    if cur is None or self._value_key(ent) > self._value_key(cur):
+                        slot[which] = ent
+        for slot in best.values():
+            for ent in slot.values():
+                rep["claims"] += 1
+                self.facts.append(ent)
+
+    def _value_credits(self):
+        """What each family proves on its own, for its page.
+
+        Only the claims that survived as the best on record: a family that is
+        the third-best witness for a pair does not need to say so.
+        """
+        for f in self.functions:
+            f["proves"] = []
+        rank = {"unbounded": 0, "exp": 1}
+        for (a, b), per in self.best.items():
+            for setting, slot in per.items():
+                cands = [x for x in [slot.get("lo")] + (slot.get("verdicts") or [])
+                         if x is not None and x["origin"] == "values"
+                         and x["side"] == "lower"]
+                if not cands:
+                    continue
+                x = min(cands, key=lambda x: (rank.get(x["kind"], 2), -x["exp"]))
+                self.function[x["witness"]]["proves"].append(
+                    {"a": a, "b": b, "setting": setting, "kind": x["kind"],
+                     "exp": x["exp"], "tex": _fact_tex(self, x),
+                     "vals": x["vals"]})
+        midx = {mid: i for i, mid in enumerate(self.measure)}
+        for f in self.functions:
+            f["proves"].sort(key=lambda p: (rank.get(p["kind"], 2), -p["exp"],
+                                            midx[p["a"]], midx[p["b"]]))
+            # OR alone proves two thousand of these, and the strongest fourteen
+            # would otherwise all be about the same one or two measures. Deal
+            # them out in rounds that mention each measure at most once, so
+            # that the head of the list says something about the family.
+            rest, out = f["proves"], []
+            while rest:
+                seen, keep = set(), []
+                for p in rest:
+                    if p["a"] in seen or p["b"] in seen:
+                        keep.append(p)
+                        continue
+                    seen.update((p["a"], p["b"]))
+                    out.append(p)
+                rest = keep
+            f["proves"] = out
+
+    def _value_key(self, ent):
+        """Strongest claim wins; at equal strength, the better-attested one."""
+        hard = {"unbounded": 2, "exp": 1}.get(ent["kind"], 0)
+        return (hard, ent["exp"], ent["kind"] != "tilde",
+                -self._CONF_RANK.get(ent["conf"], 1))
 
     # -- 1. total <-> partial <-> relation
     def _defined(self, mid, setting):
@@ -583,7 +774,7 @@ class Zoo:
 
     # -- 4. the best fact of each kind, per (ordered pair, setting)
     def _best_bounds(self):
-        origin_rank = {"recorded": 0, "setting": 1, "closure": 2}
+        origin_rank = {"recorded": 0, "setting": 1, "values": 2, "closure": 3}
 
         def up_key(f):
             # strongest first, but at equal strength prefer the statement
@@ -635,11 +826,32 @@ class Zoo:
                 # one of the two is wrong and we want to hear about it.
                 bad = [v for v in slot.get("verdicts", [])
                        if v["kind"] in ("none", "unbounded")]
-                if bad and slot.get("up"):
+                up, lo = slot.get("up"), slot.get("lo")
+                if bad and up:
                     self.err(f"{key[0]} vs {key[1]} ({s}): a bullet says no bound "
                              f"exists, but a bound of exponent "
-                             f"{fmt_exp(slot['up']['exp'])} is on the table "
-                             f"({slot['up']['origin']})")
+                             f"{fmt_exp(up['exp'])} is on the table "
+                             f"({up['origin']} vs {bad[0]['origin']}"
+                             + (f", {bad[0]['witness']}" if bad[0]["witness"] else "")
+                             + ")")
+                # a separation stronger than the upper bound it sits under:
+                # one of the two is wrong, and with values in play this is the
+                # check that catches a mis-parsed or mistyped value
+                if up and lo and lo["exp"] > up["exp"] * (1 + 1e-9) + 1e-9:
+                    self.err(
+                        f"{key[0]} vs {key[1]} ({s}): separation of exponent "
+                        f"{fmt_exp(lo['exp'])} ({lo['origin']}"
+                        + (f", {lo['witness']}" if lo["witness"] else "")
+                        + f") beats the upper bound {fmt_exp(up['exp'])} "
+                        f"({up['origin']})")
+                hard = [v for v in slot.get("verdicts", []) if v["kind"] == "exp"]
+                if hard and up:
+                    self.err(
+                        f"{key[0]} vs {key[1]} ({s}): an exponential separation "
+                        f"({hard[0]['origin']}"
+                        + (f", {hard[0]['witness']}" if hard[0]["witness"] else "")
+                        + f") sits under a polynomial upper bound of exponent "
+                        f"{fmt_exp(up['exp'])} ({up['origin']})")
                 slot["verdict"] = self._verdict(slot)
                 slot["derived"] = all(
                     x["origin"] != "recorded"
@@ -1057,6 +1269,11 @@ def _tex_bound(z, f):
         lg = (r"\,\log %s(f)" % sb if abs(f["log"] - 1) < 1e-9
               else r"\,\log^{%s} %s(f)" % (fmt_exp(f["log"]), sb))
     if f["side"] == "lower":
+        if f["kind"] == "unbounded":
+            return (r"%s(f_n) \to \infty \ \text{ while } \ %s(f_n) = O(1)"
+                    % (sa, sb))
+        if f["kind"] == "exp":
+            return r"%s(f_n) = 2^{\Omega(%s(f_n))}" % (sa, sb)
         head = r"\widetilde\Omega" if f["kind"] == "tilde" else r"\Omega"
         return r"%s(f_n) = %s\big(%s(f_n)%s\big)" % (sa, head, sb, pw)
     if f["kind"] == "exact" and not lg:
@@ -1088,8 +1305,16 @@ def _derivation(z, f):
             "tex": _fact_tex(z, g), "refs": g.get("refs") or [],
             "setting": g["setting"], "a": g["a"], "b": g["b"],
             "side": g["side"], "witness": g.get("witness"),
+            "vals": [{"m": _sym(z, v["m"]), "tex": v["tex"]}
+                     for v in g.get("vals") or []],
         })
     d = {"how": f["origin"], "steps": steps, "path": [], "from_setting": f.get("from_setting")}
+    if f.get("vals"):
+        # a separation read off two recorded values on one family
+        d["vals"] = [{"m": _sym(z, v["m"]), "tex": v["tex"]} for v in f["vals"]]
+        fn = z.function.get(f.get("witness"))
+        d["fn"] = fn["name"] if fn else None
+        d["fnid"] = f.get("witness")
     if f["origin"] == "closure" and f["side"] == "upper":
         d["path"] = [_sym(z, i) for i in _chain_ids(f["chain"])]
     if f["origin"] == "closure" and f["side"] == "lower" and steps:
@@ -1144,10 +1369,16 @@ def _token(z, row, col, setting, cell):
     # exponential *upper bound* goes in the upper column, an exponential
     # *separation* in the separation column. Lumping them together was what
     # made a cell read "no bound" on one line and "bound" on the next.
-    other_up = next((v for v in vs if v["side"] == "upper"
-                     and v["kind"] in ("exp", "log")), None)
-    other_lo = next((v for v in vs if v["side"] == "lower"
-                     and v["kind"] in ("unbounded", "exp", "log")), None)
+    # strongest verdict first, and among equals the one somebody wrote down
+    def _vkey(rank):
+        return lambda v: (rank[v["kind"]], v["origin"] != "recorded")
+
+    other_up = min((v for v in vs if v["side"] == "upper"
+                    and v["kind"] in ("exp", "log")),
+                   key=_vkey({"log": 0, "exp": 1}), default=None)
+    other_lo = min((v for v in vs if v["side"] == "lower"
+                    and v["kind"] in ("unbounded", "exp", "log")),
+                   key=_vkey({"unbounded": 0, "exp": 1, "log": 2}), default=None)
     unb = other_lo is not None and other_lo["kind"] == "unbounded"
     if fails is not None:
         verdict = "none"
@@ -1790,9 +2021,20 @@ def report_derived(zoo):
             if lo and pa is not None and lo["exp"] > pa + 0.005:
                 clash += 1
 
+    vr = zoo.value_report
+    used = Counter(x["origin"] for per in zoo.best.values() for slot in per.values()
+                   for x in (slot.get("up"), slot.get("lo")) if x)
+    used += Counter(v["origin"] for per in zoo.best.values() for slot in per.values()
+                    for v in slot.get("verdicts", []))
+
     print(f"facts: {origins['recorded']} recorded, {origins['setting']} by setting "
-          f"inheritance, {origins['closure']} by closure "
+          f"inheritance, {origins['values']} from function values, "
+          f"{origins['closure']} by closure "
           f"({with_form}/{bullets} bullets carry a `form:`)")
+    print(f"values: {vr['parsed']} of {vr['parsed'] + vr['unparsed']} parsed on "
+          f"{vr['families']} families ({len(vr['skipped'])} families skipped, "
+          f"no single parameter); {vr['claims']} separations read off, "
+          f"{used['values']} of them the best on record")
     print("bounds: " + ", ".join(f"{cov[s]} {s}" for s in zoo.settings)
           + f" (pair, setting) slots of {slots}; "
           + f"{clash} conflict(s) with the published table")

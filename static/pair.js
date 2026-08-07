@@ -69,6 +69,13 @@
 
   /* --------------------------------------------------------- derivations */
   function derivSummary(d) {
+    if (d.vals) {
+      /* the separation is two recorded values on one family, compared */
+      var parts = d.vals.map(function (x) { return tex(x.m + " = " + x.tex); });
+      return "derived: read off the recorded values" +
+        (d.fn ? " on " + esc(d.fn) : "") + ", " + parts.join(" against ") +
+        (d.how === "setting" ? " (inherited from " + esc(d.from_setting) + ")" : "");
+    }
     if (d.how === "setting") {
       return "derived: holds because it holds for " + esc(d.from_setting) + " problems";
     }
@@ -88,7 +95,11 @@
       '<span class="dst">' + tex(v.tex) + "</span>";
     if (v.witness) h += '<span class="wit">witness: ' + witlink(v.witness) + "</span>";
     h += cites(v.refs);
-    if (v.deriv) {
+    if (v.deriv && !(v.deriv.steps || []).length) {
+      /* nothing to unfold: the summary is the whole derivation */
+      h += '<div class="deriv flat">' + derivSummary(v.deriv) + "</div>";
+      if (v.note) h += '<div class="note">' + v.note + "</div>";
+    } else if (v.deriv) {
       h += '<details class="deriv"><summary>' + derivSummary(v.deriv) + "</summary><ol class=\"dsteps\">";
       v.deriv.steps.forEach(function (st) {
         h += "<li><span class=\"dst\">" + tex(st.tex) + "</span>" +

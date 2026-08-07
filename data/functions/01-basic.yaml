@@ -13,6 +13,20 @@
 #               function is listed on the /functions "stubs" list.
 #   values    : list of {measure, value, note, refs, conf}
 #               `value` is LaTeX (no $). `conf` in {high, medium, low}.
+#               NOT decoration: the build compares every pair of values on a
+#               family and emits the separation it proves. \Theta(.) and bare
+#               expressions bound the measure from both sides, O(.)/\le only
+#               from above, \Omega(.)/\ge only from below, and that is
+#               respected -- an O(.) value can never witness a separation.
+#   scale     : {var, subs, note} -- the asymptotic parameter of the family,
+#               and every other name in terms of it, e.g.
+#                 scale: {var: m, subs: {N: '\binom m2'}}
+#               Needed only when the values use more than one name for the
+#               same parameter; with one name the build infers it. Prefer the
+#               smallest variable (var: d, subs: {N: '2^d'}), which keeps
+#               values like N^{0.753} exact. Omit it for a family with two
+#               genuinely free parameters -- the build then skips the family
+#               instead of inventing separations, and says so in its report.
 #   witnesses : list of {of: [M1, M2], setting, statement, refs}
 #               meaning: this family witnesses "M1 can be this much bigger
 #               than M2" in the given setting.  Use of: ['*','*'] for a

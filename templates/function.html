@@ -70,6 +70,36 @@
       </section>
       {% endif %}
 
+      {% if f.proves %}
+      <section class="card">
+        <h2>Separations its values prove <span class="dim">— computed, not recorded</span></h2>
+        <p class="dim small">Read straight off the table above by comparing two values: no
+        relation record states these, and where one does and says more, the record wins and the
+        pair is not listed here. {{ f.proves | length }} in total{% if f.proves | length > 14 %},
+        strongest first{% endif %}.</p>
+        <ul class="witlist compact">
+          {% for p in f.proves[:14] %}
+          <li>
+            <div class="wpair">
+              {{ measure_chip(p.a) }} <span class="vs">vs</span> {{ measure_chip(p.b) }}
+              {{ setting_pill(p.setting) }}
+              <a class="go" href="{{ pair_url(p.a, p.b) }}">pair &rarr;</a>
+            </div>
+            <div class="stmt">{{ p.tex | tex }}</div>
+            <div class="refs dim">from
+              {%- for v in p.vals %} \({{ zoo.measure[v.m].symbol }} = {{ v.tex }}\)
+              {{- ' against' if loop.first }}{% endfor %}</div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% if f.proves | length > 14 %}
+        <p class="dim small">&hellip; and {{ f.proves | length - 14 }} more, all of them visible
+        in the <a href="{{ root }}matrix.html">matrix</a> (widen it to all measures) and on the
+        pair pages.</p>
+        {% endif %}
+      </section>
+      {% endif %}
+
       {% if f.witnesses %}
       <section class="card">
         <h2>Separations it witnesses</h2>

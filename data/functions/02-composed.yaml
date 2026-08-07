@@ -15,6 +15,7 @@ functions:
   order: 20
   kind: total
   arity: '$N = n^2$ bits ($n$ blocks of $n$)'
+  scale: {var: n, subs: {N: 'n^2'}}
   short: 'The witness for the "$\wedge\circ\vee$" cells: $\mathrm{D}=N$ but every combinatorial measure is $\sqrt N$.'
   definition: |
     Split the input into $n$ blocks of $n$ bits. Output $1$ iff *every* block
@@ -72,6 +73,7 @@ functions:
   order: 21
   kind: total
   arity: '$N = 2^d$ leaves'
+  scale: {var: d, subs: {N: '2^d'}}
   short: 'The Saks-Wigderson function: $\mathrm{R}_0 = \Theta(N^{0.7537})$, $\mathrm{Q}=\Theta(\sqrt N)$, $\deg = N$.'
   definition: |
     A complete binary tree of depth $d$ whose leaves are the input bits and
@@ -130,6 +132,7 @@ functions:
   order: 22
   kind: total
   arity: '$N = 3^d$ bits'
+  scale: {var: d, subs: {N: '3^d'}}
   short: 'The other classical recursive benchmark; its randomized complexity is still not pinned down.'
   definition: 'The depth-$d$ ternary tree all of whose gates are $\mathrm{MAJ}_3$.'
   formal: '$f_0(x)=x$, $f_k(x^{(1)},x^{(2)},x^{(3)}) = \mathrm{MAJ}_3\big(f_{k-1}(x^{(1)}),f_{k-1}(x^{(2)}),f_{k-1}(x^{(3)})\big)$, $f=f_d$.'
@@ -169,6 +172,7 @@ functions:
   order: 23
   kind: total
   arity: '$N = 6^k$ bits'
+  scale: {var: k, subs: {N: '6^k'}}
   short: 'A 6-variable function with $\deg = 3$ and $\mathrm{s}=6$; iterating gives $\mathrm{s} = \deg^{1.63}$.'
   definition: |
     Kushilevitz exhibited a function $K:\{0,1\}^6\to\{0,1\}$ with $\deg(K)=3$ but
@@ -218,6 +222,7 @@ functions:
   order: 24
   kind: total
   arity: '$N=n^2$ bits'
+  scale: {var: n, subs: {N: 'n^2'}}
   short: 'The classical quadratic separation $\mathrm{bs} = \tfrac12\mathrm{s}^2$.'
   definition: |
     OR of $n$ copies of a gadget on $n$ bits that fires only on "two adjacent ones
@@ -286,6 +291,7 @@ functions:
   order: 26
   kind: total
   arity: '$N=n^2$ bits'
+  scale: {var: n, subs: {N: 'n^2'}}
   short: 'The witness for the whole rdeg column: $\mathrm{rdeg}=\Theta(n)$ while $\mathrm{s},\deg,\mathrm{D}=\Theta(n^2)$.'
   definition: 'AND of $n$ copies of $\overline{\mathrm{EH}}_n$ (the negation of exact-half), on $N = n^2$ bits.'
   formal: |

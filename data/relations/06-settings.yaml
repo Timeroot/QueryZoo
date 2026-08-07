@@ -129,16 +129,17 @@ relations:
 - from: R0
   to: R
   setting: relation
-  status: settled
+  status: gap
   upper:
     - stmt: '\mathrm{R}_0(S) = O(\mathrm{R}(S))\ \text{ for total search problems with verifiable outputs}'
-      form: {exp: 1, kind: const, inherit: false}
-      note: 'If a candidate output can be *checked* with $O(1)$ further queries (as for $\mathrm{SearchCNF}$, where one reads the falsified clause), then repeating a bounded-error algorithm until the check passes turns $\mathrm{R}$ into $\mathrm{R}_0$ at constant expected cost. This is why the Las Vegas / Monte Carlo distinction largely evaporates for search problems.'
+      note: 'If a candidate output can be *checked* with $O(1)$ further queries (as for $\mathrm{SearchCNF}$, where one reads the falsified clause), then repeating a bounded-error algorithm until the check passes turns $\mathrm{R}$ into $\mathrm{R}_0$ at constant expected cost. This is why the Las Vegas / Monte Carlo distinction largely evaporates for search problems. **Deliberately recorded without a `form:`**: the hypothesis is a property of the individual problem, not of the relational setting, so the collapse must not be fed to the transitive closure -- every total function is a relation, and [[pointer]] already separates $\mathrm{R}_0$ from $\mathrm{R}$ quadratically.'
       conf: medium
       todo: 'Pin down the exact hypothesis and a citation; the statement is folklore in the TFNP-query literature but the clean form is hypothesis-dependent.'
   notes: |
-    Contrast with total *functions*, where $\mathrm{R}_0$ can be quadratically
-    larger than $\mathrm{R}$.
+    For relations *in general* the picture is the one inherited from total
+    functions -- $\mathrm{R}_0$ can be quadratically larger than $\mathrm{R}$
+    ([[pointer]]) -- and the collapse above holds only under a verifiability
+    hypothesis on the search problem.
   see_also: [R0, R, SearchCNF, settings]
 
 - from: D
