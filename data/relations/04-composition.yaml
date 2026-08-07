@@ -347,6 +347,71 @@ relations:
   see_also: [Rstar, Q, LR, R]
 
 # =========================================== noisy oracles
+- from: R
+  to: Np
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{R}(f) = O\big(\mathrm{N}_p(f)\big)'
+      form: {exp: 1, kind: const}
+      note: |
+        The direction nobody writes down, because the simulation is one line: a *clean*
+        randomized algorithm runs the noisy one and flips each answer itself with
+        probability $p$ using its own coins. The transcript is distributed exactly as in the
+        noisy model, so the error is unchanged; Markov turns the expected query count into a
+        worst-case one at the cost of the constant. Nothing about the output is inspected,
+        so it holds for partial functions and relations.
+      refs: [FRPU94]
+      conf: high
+  notes: |
+    Together with $\mathrm{N}_p = O(\mathrm{R}\log \mathrm{R})$ this pins
+    $\mathrm{N}_p$ between $\mathrm{R}$ and $\mathrm{R}\log \mathrm{R}$, and
+    $\mathrm{PARITY}$ shows both ends are attained. Until 2026 this trivial
+    inequality was, remarkably, the *only* general lower bound on
+    $\mathrm{N}_p$ known -- see the $\mathrm{I}\to\mathrm{N}_p$ record and
+    [GLX26noisy].
+  see_also: [R, Np, Inf, noisy-models]
+
+- from: Inf
+  to: Np
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{I}(f)\log \mathrm{I}(f) = O\big(\mathrm{N}_p(f)\big),\quad\text{i.e.}\quad \mathrm{I}(f) = O\!\left(\frac{\mathrm{N}_p(f)}{\log \mathrm{N}_p(f)}\right)'
+      form: {exp: 1, log: -1, kind: const}
+      note: |
+        Equivalently $\mathrm{N}_p(f) = \Omega(\mathrm{I}(f)\log \mathrm{I}(f))$ for every
+        total Boolean $f$ -- the first general lower bound on $\mathrm{N}_p$ beyond
+        $\mathrm{N}_p \ge \Omega(\mathrm{R})$. Proved from degree statistics of certain
+        subgraphs of the hypercube, and it recovers most earlier noisy lower bounds up to
+        constants. It settles Open Problem 2 of [Gu25noisy], which had the statement only
+        at the top of the range ($\mathrm{I}(f) = \Omega(n)$, giving $\Theta(n\log n)$).
+      refs: [GLX26noisy, Gu25noisy]
+      conf: high
+  lower:
+    - stmt: '\mathrm{I}(\mathrm{PARITY}_n) = n,\quad \mathrm{N}_p(\mathrm{PARITY}_n) = \Theta(n\log n)'
+      form: {exp: 1, log: -1, kind: const}
+      witness: PARITY
+      refs: [FRPU94, EvansPippenger98]
+      note: 'So the bound is tight: the $\log$ cannot be dropped from $\mathrm{I}\log \mathrm{I} = O(\mathrm{N}_p)$.'
+      conf: high
+  notes: |
+    Read the arrow in the zoo's direction and this is a *bound on influence*: a
+    function with a lot of influence cannot be computed with few noisy queries.
+    Read it backwards and it is a *lower bound on* $\mathrm{N}_p$. It therefore
+    sits in this cell and not in $\mathrm{N}_p \to \mathrm{I}$, where the entry
+    is a separation (OR has $\mathrm{I} = n2^{1-n}$ but
+    $\mathrm{N}_p = \Theta(n)$) and where no upper bound exists at all: no
+    function of $\mathrm{I}$ bounds $\mathrm{N}_p$. Both statements say
+    "$\mathrm{N}_p$ is large compared to $\mathrm{I}$" and neither constrains
+    the other.
+
+    Stated for total Boolean $f$, where $\mathrm{I}(f)=\sum_S |S|\hat f(S)^2$ is
+    the usual total influence; the noisy model itself is happy with partial
+    functions and relations, but influence is not defined off a total domain
+    without choosing what happens outside the promise.
+  see_also: [Inf, Np, R, PARITY, OR, noisy-models, Inf1]
+
 - from: Np
   to: R
   setting: relation
@@ -374,9 +439,11 @@ relations:
       refs: [ReischukSchmeltz91]
       conf: high
   notes: |
-    High total influence is what forces the $\log$: recent work gives tight
-    bounds of the form $\mathrm{N}_p(f)=\Theta(n\log n)$ for high-influence $f$
-    and matching upper bounds otherwise [Gu25noisy]. The **quantum** analogue
+    High total influence is what forces the $\log$: $\mathrm{N}_p(f)=\Theta(n\log n)$
+    whenever $\mathrm{I}(f)=\Omega(n)$ [Gu25noisy], and since 2026 the scale-free
+    version $\mathrm{N}_p(f)=\Omega(\mathrm{I}(f)\log \mathrm{I}(f))$ holds for
+    every total $f$ [GLX26noisy] -- see the $\mathrm{I}\to\mathrm{N}_p$ record.
+    The **quantum** analogue
     behaves differently: $\mathrm{Q}^{\mathrm{rob}}(\mathrm{PARITY}_n)=\Theta(n)$
     with no log [BNRdW05].
   see_also: [Np, R, robustQ, Inf, PARITY, noisy-models]

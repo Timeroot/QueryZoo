@@ -754,11 +754,20 @@ ReischukSchmeltz91:
   year: 1991
 
 Gu25noisy:
-  authors: ["(see arXiv listing)"]
+  authors: [Gu, Y., Li, X., Xu, Y.]
   title: "Tight Bounds for Noisy Computation of High-Influence Functions, Connectivity, and Threshold"
+  venue: "COLT 2025"
   year: 2025
   arxiv: "2502.04632"
-  note: "General total-influence-based Omega(n log n) lower bound in the noisy query model. CONFIRM author list."
+  note: "N_p(f) = Theta(n log n) for every f with total influence Omega(n). Asks (Open Problem 2) whether the influence-based bound holds at all scales, i.e. N_p(f) = Omega(I(f) log I(f)); settled by [GLX26noisy]."
+
+GLX26noisy:
+  authors: [Gu, Y., Li, X., Xu, Y.]
+  title: "A Unified Lower Bound on the Noisy Query Complexity of Boolean Functions"
+  venue: "COLT 2026"
+  year: 2026
+  arxiv: "2606.11448"
+  note: "General N_p lower bound from degree statistics of subgraphs of the hypercube -- the first beyond the trivial N_p >= R. Yields N_p(f) = Omega(I(f) log I(f)) for all total f, settling Open Problem 2 of [Gu25noisy], and recovers most earlier noisy lower bounds up to constants."
 
 BNRdW05:
   authors: [Buhrman, H., Newman, I., "Rohrig, H.", de Wolf, R.]

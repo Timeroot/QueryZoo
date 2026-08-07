@@ -293,9 +293,10 @@ measures:
     - '$\mathrm{N}_p(f) = O(\mathrm{R}(f)\log \mathrm{R}(f))$ always (amplify each query by $O(\log \mathrm{R})$ repetitions and union bound).'
     - '$\mathrm{N}_p(\mathrm{PARITY}_n) = \Theta(n\log n)$ [FRPU94] -- the log factor is *necessary*, giving a genuine separation from $\mathrm{R}$.'
     - 'Average-case/Fourier lower bound: $\mathrm{N}_p(f) = \Omega\!\big(\sum_S |\hat f(S)|^2 |S| \log|S|\big)$-flavoured bounds [Evans-Pippenger].'
+    - '$\mathrm{N}_p(f) = \Omega(\mathrm{I}(f)\log \mathrm{I}(f))$ for every total $f$ [GLX26noisy] -- the first general lower bound beyond the trivial $\mathrm{N}_p(f) = \Omega(\mathrm{R}(f))$, and tight at PARITY.'
     - 'Almost all $f$ need $\Omega(n\log n)$ noisy queries [Reischuk-Schmeltz].'
     - 'Quantum contrast: the *robust* quantum query complexity of PARITY is $\Theta(n)$ -- no log factor [BNRdW05].'
-  refs: [FRPU94, EvansPippenger98, ReischukSchmeltz91, BNRdW05, Gu25noisy]
+  refs: [FRPU94, EvansPippenger98, ReischukSchmeltz91, BNRdW05, Gu25noisy, GLX26noisy]
   see_also: [R, noisyR, robustQ]
   confidence: high
 

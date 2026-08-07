@@ -247,7 +247,7 @@ concepts:
     $\mathrm{R}(\mathrm{PARITY}_n)=\Theta(n)$ is full, and
     $\mathrm{R}(f)=\Theta(n)\Rightarrow\mathrm{noisyR}(f)=\Theta(\mathrm{R}(f))$
     [CKMPSS23]).
-  refs: [FRPU94, EvansPippenger98, ReischukSchmeltz91, BenDavidBlais20composition, BNRdW05, CKMPSS23, Gu25noisy]
+  refs: [FRPU94, EvansPippenger98, ReischukSchmeltz91, BenDavidBlais20composition, BNRdW05, CKMPSS23, Gu25noisy, GLX26noisy]
   see_also: [Np, noisyR, robustQ, R, GapMaj, PARITY, composition]
 
 - id: sensitivity-conjecture
