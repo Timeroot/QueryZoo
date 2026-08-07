@@ -87,6 +87,7 @@ class Zoo:
         self.relations = load_collection("relations/*.yaml", "relations")
         self.concepts = load_yaml(DATA / "concepts.yaml")["concepts"]
         self.open_problems = load_yaml(DATA / "open_problems.yaml")["open_problems"]
+        self.priorities = load_yaml(DATA / "priorities.yaml")
         self.tables = {}
         for path in sorted(DATA.glob("tables/*.yaml")):
             doc = load_yaml(path)
@@ -1286,6 +1287,41 @@ def _fact_tex(z, f):
     return f.get("stmt") or _tex_bound(z, f)
 
 
+# Plain-text (no MathJax) rendering of a fact, for the gap report: that page
+# has thousands of rows and typesetting them would take longer than the build.
+_ORIGIN_TAG = {"recorded": "rec", "setting": "inh", "values": "val",
+               "closure": "cls"}
+
+
+def _plain_fact(z, f):
+    b = f["b"]
+    pw = "" if abs(f["exp"] - 1) < 1e-9 else f"^{fmt_exp(f['exp'])}"
+    lg = ""
+    if f["log"]:
+        lg = f" log {b}" if abs(f["log"] - 1) < 1e-9 else f" log^{fmt_exp(f['log'])} {b}"
+    if f["side"] == "lower":
+        if f["kind"] == "unbounded":
+            return f"{f['a']} unbounded, {b} = O(1)"
+        if f["kind"] == "exp":
+            return f"{f['a']} = 2^Omega({b})"
+        head = {"tilde": "Omega~", "theta": "Theta", "exact": ">="}.get(f["kind"], "Omega")
+        return (f"{f['a']} >= {b}{pw}" if head == ">="
+                else f"{f['a']} = {head}({b}{pw})")
+    if f["kind"] == "exact" and not lg:
+        return f"{f['a']} <= {b}{pw}"
+    head = {"theta": "Theta", "tilde": "O~"}.get(f["kind"], "O")
+    return f"{f['a']} = {head}({b}{pw}{lg})"
+
+
+def _plain_origin(f):
+    tag = _ORIGIN_TAG.get(f["origin"], f["origin"])
+    if f["origin"] == "closure" and f.get("chain"):
+        return tag + ": " + "->".join(_chain_ids(f["chain"]))
+    if f["origin"] == "values" and f.get("witness"):
+        return f"{tag}: {f['witness']}"
+    return tag
+
+
 def _chain_ids(chain):
     ids = []
     for g in chain:
@@ -1595,6 +1631,7 @@ class Builder:
         self.page_refs()
         self.page_relations_index()
         self.page_editing()
+        self.page_gaps()
 
         (self.out / "search-index.json").write_text(json.dumps(self.search, separators=(",", ":")))
 
@@ -1983,6 +2020,129 @@ class Builder:
 
     def page_editing(self):
         self.write("editing.html", "editing.html")
+
+    # ------------------------------------------------------------- gaps
+    # An internal worklist: every (measure, measure, setting) cell of the
+    # zoo, scored by how much a proof would be worth and by how wide open
+    # the question is. Deliberately not in the nav -- see data/priorities.yaml
+    # for the knobs and the reasoning.
+    def gap_rows(self):
+        z = self.zoo
+        P = z.priorities
+        W = P["measure_weight"]["weights"]
+        wdef = P["measure_weight"]["default"]
+        OPEN = P["openness"]
+        gc = P["gap_curve"]
+        gamma = P["importance_exponent"]
+        sw = P["setting_weight"]
+
+        # Cells named by an open problem, in either direction. `open-X-vs-Y`
+        # names its pair exactly; the rest are about a cluster of measures, so
+        # every pair among their see_also counts.
+        op_cells = {}
+        for o in z.open_problems:
+            named = re.fullmatch(r"open-(\w+)-vs-(\w+)", o["id"])
+            ms = ([named.group(1), named.group(2)] if named
+                  and named.group(1) in z.measure and named.group(2) in z.measure
+                  else [x for x in (o.get("see_also") or []) if x in z.measure])
+            for a in ms:
+                for b in ms:
+                    if a != b:
+                        op_cells.setdefault((a, b, o["setting"]), o["id"])
+
+        rows = []
+        ids = [m["id"] for m in z.measures]
+        for a in ids:
+            for b in ids:
+                if a == b:
+                    continue
+                pair = z.pairs.get((a, b))
+                for s in z.settings:
+                    da = z.measure[a]["settings"][s]["defined"]
+                    db = z.measure[b]["settings"][s]["defined"]
+                    # "no"/"unknown": the measure has no meaning here, so there
+                    # is no question to ask. "partial": there is one, but it is
+                    # a question about the definition first -- flagged `soft`.
+                    if da in ("no", "unknown") or db in ("no", "unknown"):
+                        continue
+                    soft = da != "yes" or db != "yes"
+                    slot = (z.best.get((a, b)) or {}).get(s) or {}
+                    up, lo = slot.get("up"), slot.get("lo")
+                    verdict = slot.get("verdict", "bare")
+
+                    key = verdict
+                    if verdict == "settled" and up and lo:
+                        loose = (up["log"] > lo["log"] + 1e-9
+                                 or (up["kind"] == "tilde" and lo["kind"] != "tilde"))
+                        key = "polylog" if loose else "settled"
+                    o_score = OPEN.get(key, 0.0)
+                    if verdict == "gap" and up and lo and up["exp"] > 0:
+                        r = max(0.0, min(1.0, lo["exp"] / up["exp"]))
+                        o_score = gc["base"] + gc["span"] * (1.0 - r)
+
+                    imp = math.sqrt(W.get(a, wdef) * W.get(b, wdef))
+                    score = (imp ** gamma) * o_score * sw.get(s, 1.0)
+                    op_id = op_cells.get((a, b, s))
+                    if op_id:
+                        score *= P["open_problem_boost"]
+                    if soft:
+                        score *= P["soft_definition"]
+                    recs = (pair or {}).get("by_setting", {}).get(s) or []
+                    if not recs:
+                        score *= P["undocumented_weight"]
+
+                    rows.append({
+                        "a": a, "b": b, "setting": s,
+                        "verdict": verdict, "key": key,
+                        "score": round(score, 2),
+                        "imp": round(imp, 2), "open": round(o_score, 2),
+                        "up": _plain_fact(z, up) if up else "",
+                        "lo": _plain_fact(z, lo) if lo else "",
+                        "up_src": _plain_origin(up) if up else "",
+                        "lo_src": _plain_origin(lo) if lo else "",
+                        "wit": (lo or {}).get("witness") or "",
+                        "recs": len(recs),
+                        "undoc": not recs, "soft": soft, "op": op_id,
+                    })
+        rows.sort(key=lambda r: (-r["score"], r["a"], r["b"], r["setting"]))
+        for i, r in enumerate(rows, 1):
+            r["rank"] = i
+        return rows
+
+    def page_gaps(self):
+        rows = self.gap_rows()
+        live = [r for r in rows if r["score"] > 0]
+        by_verdict = Counter(r["verdict"] for r in rows)
+        by_setting = Counter(r["setting"] for r in live)
+        # 10k rows of server-rendered <tr> is a 6 MB page; ship the data and
+        # let the page draw the slice it is showing.
+        payload = [[r["rank"], r["score"], r["a"], r["b"], r["setting"],
+                    ("polylog slack" if r["key"] == "polylog" else
+                     "nothing at all" if r["key"] == "bare" and r["undoc"] else
+                     VERDICT_WORD[r["verdict"]]),
+                    r["key"], r["up"], r["up_src"], r["lo"], r["lo_src"],
+                    r["wit"], (1 if r["undoc"] else 0) + (2 if r["soft"] else 0),
+                    r["op"] or ""] for r in live]
+        blob = json.dumps(payload, separators=(",", ":"))
+        self.write("gaps.html", "gaps.html", n_rows=len(live), total=len(rows),
+                   by_verdict=by_verdict, by_setting=by_setting,
+                   dropped=len(rows) - len(live), blob=_safe(blob))
+        (self.out / "gaps.json").write_text(blob)
+        # a grep-able dump of the same thing
+        out = ["\t".join(("rank", "score", "A", "B", "setting", "verdict",
+                          "imp", "open", "upper", "lower", "witness",
+                          "recs", "flags"))]
+        for r in live:
+            flags = ",".join(f for f, on in (("undocumented", r["undoc"]),
+                                             ("soft-def", r["soft"]),
+                                             (r["op"] or "", r["op"])) if on)
+            out.append("\t".join(str(x) for x in (
+                r["rank"], r["score"], r["a"], r["b"], r["setting"], r["verdict"],
+                r["imp"], r["open"],
+                (r["up"] + " [" + r["up_src"] + "]") if r["up"] else "-",
+                (r["lo"] + " [" + r["lo_src"] + "]") if r["lo"] else "-",
+                r["wit"] or "-", r["recs"], flags or "-")))
+        (self.out / "gaps.txt").write_text("\n".join(out) + "\n")
 
 
 class _safe(str):

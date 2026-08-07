@@ -1,0 +1,157 @@
+# =====================================================================
+# EDITORIAL WEIGHTS FOR THE INTERNAL GAP REPORT  (site/gaps.html)
+#
+# Nothing in this file is a fact about query complexity.  It is a set of
+# knobs that decides the order in which the gap report lists the ~16k
+# (measure, measure, setting) cells of the zoo, so that the ones worth
+# attacking float to the top.  The report is deliberately not linked from
+# anywhere on the site.
+#
+#     score = importance^gamma * openness * setting_weight * modifiers
+#     importance = sqrt(w[A] * w[B])          (geometric mean)
+#
+# Retune freely; `python3 build.py` re-sorts.
+# =====================================================================
+
+# ------------------------------------------------------- measure weight
+# 5   the two measures the field is organised around
+# 4   the classical/quantum core: anything in the 13x13 published table
+# 3   standard, widely used, appears in the literature under its own name
+# 2   a variant or a specialist tool
+# 1   defined here mostly for completeness, or not a query count at all
+measure_weight:
+  default: 2
+  weights:
+    # -- deterministic / randomized / quantum backbone
+    D: 5
+    R: 5
+    Q: 4.5          # "high" per the brief, nudged up: half the zoo is about Q vs R
+    R0: 4
+    QE: 4
+    Q0: 3.5
+    Rbar: 3
+    R1: 2.5
+    Dna: 2.5
+    Rna: 2
+    Dmu: 3
+    D_prod: 2.5
+    D_size: 3
+    rank: 2.5
+    PDT: 2
+    Np: 2
+    noisyR: 2.5
+    robustQ: 2.5
+    PostQ: 2.5
+    psD: 1.5
+
+    # -- combinatorial core
+    s: 4
+    bs: 4
+    C: 4
+    fbs: 3.5
+    C1: 3.5
+    C0: 3
+    RC: 3
+    lambda: 3
+    UC: 3
+    s0: 2.5
+    s1: 2.5
+    bs0: 2.5
+    bs1: 2.5
+    SP: 2.5
+    EC: 2.5
+    FC: 2.5
+    Cmin: 2
+    UCmin: 2
+    cbs: 2
+
+    # -- degree
+    deg: 4
+    adeg: 4
+    sdeg: 3
+    odeg: 2.5
+    rdeg: 2.5
+    ardeg: 2.5
+    ndeg: 2.5
+    cjdeg: 2
+    deg2: 2
+    degp: 2
+
+    # -- adversary / LP
+    Advpm: 4
+    Adv: 3.5
+    gamma2: 3
+    prt: 3
+    rprt: 2.5
+    CA: 2.5
+    MAdv: 2
+    QC: 2.5
+    NQ: 2.5
+    CG: 2
+    CGpub: 2
+    CGstar: 2
+    CGns: 2
+
+    # -- composition tools
+    RS: 3
+    LR: 2.5
+    chi: 2.5
+    chibar: 2.5
+    Rstar: 2.5
+
+    # -- Fourier-analytic quantities: real-valued, only loosely comparable
+    Inf: 2.5
+    L1: 2.5
+    Inf1: 2
+    MaxInf: 2
+    NS: 1.5
+    Stab: 1.5
+    spar: 2
+    Fdim: 1.5
+
+# --------------------------------------------------------- how open it is
+# Keyed by the engine's verdict for the cell (build.py: Zoo._verdict).
+# The wide-open end is "we have neither a bound nor an example"; the narrow
+# end is "we know the exponent and are arguing about logs".
+openness:
+  bare: 10        # no upper bound, no separation, nothing recorded either
+  lower: 8        # a separation, but no bound at all -- could be unbounded
+  upper: 6.5      # a bound, but no example showing any loss is needed
+  log: 5          # only a log-type separation, no upper bound
+  gap: 3          # both sides known, exponents differ -- see gap_curve
+  exp: 2.5        # exponential separation, no polynomial bound: how far up?
+  polylog: 1.5    # exponents agree, log factors do not
+  unbounded: 0.7  # answered: no bound exists
+  none: 0.5       # answered: recorded as impossible
+  settled: 0      # answered
+
+# For `gap` cells the score slides from `base` (a hair's-worth of gap) to
+# base + span (the separation is a square root of the upper bound or worse).
+gap_curve:
+  base: 3.0
+  span: 3.5
+
+# ------------------------------------------------------------- modifiers
+importance_exponent: 1.5      # how hard the measure weights dominate
+
+setting_weight:
+  total: 1.0
+  partial: 0.9
+  relation: 0.85
+
+# The measure is only loosely/nonstandardly defined in this setting
+# (`defined: partial` in the measure record). Real questions live here, but
+# they are questions about the definition first.
+soft_definition: 0.5
+
+# Cell is named in data/open_problems.yaml, or a record for it is marked
+# `status: open`.
+open_problem_boost: 1.3
+
+# Nothing at all is recorded for the cell: whatever the engine knows came
+# from inheritance, from a function value, or from the transitive closure.
+# Such a cell *looks* wide open, but part of that is bookkeeping rather than
+# mathematics -- somebody may well have settled it in 1994. Discounted, not
+# hidden: these are also the cheapest ones to close, and the `undocumented
+# only` filter on the page pulls them back up.
+undocumented_weight: 0.7

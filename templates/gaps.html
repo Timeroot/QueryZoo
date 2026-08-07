@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block title %}Gap report &middot; {{ site.title }}{% endblock %}
+
+{% block body %}
+<div class="wrap">
+  <h1 class="pagetitle">Gap report <span class="dim">&mdash; internal worklist, not linked from anywhere</span></h1>
+  <p class="lede">Every ordered pair of measures, in every setting where both are defined,
+  scored by how much closing it would be worth &times; how wide open it is. Sorted so the top
+  of the list is where a proof buys the most. Nothing here is a claim about the literature:
+  it is a claim about <em>what this zoo currently records</em>, so a high-scoring row is as
+  likely to mean "nobody entered it" as "nobody knows it" &mdash; the <code>undoc</code> flag
+  and the filters below separate the two. Both are worth walking down.</p>
+
+  <div class="card gapkey">
+    <p><code>score = importance<sup>1.5</sup> &times; openness &times; setting weight &times; modifiers</code>,
+    with <code>importance = sqrt(w[A]&middot;w[B])</code> over hand-assigned measure weights
+    (D, R = 5 &hellip; Fourier quantities = 1.5). Every knob lives in
+    <code>data/priorities.yaml</code>; edit and rebuild to re-sort.</p>
+    <p class="dim"><b>openness</b>:
+      nothing known 10 &middot; separation but no bound 8 &middot; bound but no separation 6.5 &middot;
+      log-type only 5 &middot; exponent gap 3&ndash;6.5 (by how wide) &middot;
+      exponential separation only 2.5 &middot; polylog slack 1.5 &middot;
+      known unbounded 0.7 &middot; known impossible 0.5 &middot; settled 0 (dropped).
+      <b>modifiers</b>: partial &times;0.9, relation &times;0.85; named open problem &times;1.3;
+      nothing recorded &times;0.7; measure only loosely defined in this setting &times;0.5.</p>
+    <p class="dim"><b>flags</b>: <span class="flag u">undoc</span> no relation record filed in this
+      direction (the reverse direction may have one) &mdash; everything shown was inherited,
+      read off a function value, or closed transitively &middot; <span class="flag s">soft</span> one of the two measures is only
+      loosely defined in this setting &middot; <span class="flag o">open-&hellip;</span> named in
+      <code>data/open_problems.yaml</code>.
+      <b>sources</b>: <code>rec</code> recorded &middot; <code>inh</code> inherited from a more
+      general setting &middot; <code>val</code> read off a function's value &middot;
+      <code>cls</code> transitive closure, chain shown.</p>
+    <p class="dim">{{ n_rows }} scoring cells of {{ total }} defined ones
+      ({{ dropped }} settled, hidden) &mdash;
+      {% for s, n in by_setting | dictsort %}{{ s }} {{ n }}{% if not loop.last %} &middot; {% endif %}{% endfor %}.
+      Verdicts across all cells:
+      {% for v, n in by_verdict.most_common() %}{{ verdict_word[v] }} {{ n }}{% if not loop.last %} &middot; {% endif %}{% endfor %}.
+      Dumps: <a href="gaps.txt">gaps.txt</a>, <a href="gaps.json">gaps.json</a>.</p>
+  </div>
+
+  <div class="gapctl card">
+    <input type="search" id="gf" placeholder="filter measures, e.g. &ldquo;D R&rdquo; or &ldquo;bs&rdquo;" autocomplete="off">
+    <span class="grp" id="gset">
+      <label><input type="checkbox" value="total" checked> total</label>
+      <label><input type="checkbox" value="partial" checked> partial</label>
+      <label><input type="checkbox" value="relation" checked> relation</label>
+    </span>
+    <span class="grp" id="gdoc">
+      <label><input type="radio" name="doc" value="" checked> all</label>
+      <label><input type="radio" name="doc" value="1"> undocumented</label>
+      <label><input type="radio" name="doc" value="0"> documented</label>
+    </span>
+    <span class="grp">
+      <label>state <select id="gv"><option value="">any</option></select></label>
+      <label>show <select id="gn">
+        <option value="200">200</option>
+        <option value="1000" selected>1000</option>
+        <option value="99999">everything</option>
+      </select></label>
+      <span class="dim" id="gcount"></span>
+    </span>
+  </div>
+
+  <table class="gaptab mj-defer">
+    <thead><tr>
+      <th>#</th><th>score</th><th>pair</th><th>set</th><th>state</th>
+      <th>best upper</th><th>from</th><th>best separation</th><th>from</th><th>flags</th>
+    </tr></thead>
+    <tbody id="gbody"></tbody>
+  </table>
+</div>
+
+<script id="gapdata" type="application/json">{{ blob }}</script>
+<style>
+.gapkey p { margin: 0 0 8px; font-size: 13px; }
+.gapctl { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; font-size: 13px; }
+.gapctl input[type=search] { padding: 5px 8px; min-width: 220px; }
+.gapctl .grp { display: flex; gap: 10px; align-items: center; }
+.gaptab { width: 100%; border-collapse: collapse; font: 12px/1.35 ui-monospace, Menlo, monospace; }
+.gaptab th { text-align: left; font: 600 10.5px var(--sans); text-transform: uppercase;
+  letter-spacing: .05em; color: var(--dim); border-bottom: 1px solid var(--rule);
+  padding: 6px 8px; position: sticky; top: 0; background: var(--bg, #fff); }
+.gaptab td { padding: 3px 8px; border-bottom: 1px solid #eee; vertical-align: top; }
+.gaptab td.n { text-align: right; color: var(--dim); }
+.gaptab td.sc { font-weight: 600; color: inherit; }
+.gaptab td.pr a { font-weight: 600; }
+.gaptab td.st { text-transform: uppercase; font-size: 10px; color: var(--dim); }
+.gaptab td.src { color: var(--dim); font-size: 11px; }
+.gaptab td.bd { white-space: nowrap; }
+.gaptab .v-bare { color: #b23; } .gaptab .v-lower { color: #c60; }
+.gaptab .v-upper { color: #a70; } .gaptab .v-gap { color: #268; }
+.flag { font-size: 10px; padding: 1px 4px; border-radius: 3px; background: #eee; margin-right: 3px; }
+.flag.u { background: #fde9d0; } .flag.s { background: #e6e6f2; } .flag.o { background: #d8f0dc; }
+</style>
+<script>
+(function () {
+  var DATA = JSON.parse(document.getElementById('gapdata').textContent);
+  // [rank, score, a, b, setting, word, key, up, upsrc, lo, losrc, wit, flags, op]
+  var body = document.getElementById('gbody');
+  var f = document.getElementById('gf'), n = document.getElementById('gn'),
+      v = document.getElementById('gv'), count = document.getElementById('gcount');
+  var sets = document.querySelectorAll('#gset input');
+  var docs = document.querySelectorAll('#gdoc input');
+
+  var seen = {};
+  DATA.forEach(function (r) { seen[r[6]] = r[5]; });
+  Object.keys(seen).forEach(function (k) {
+    var o = document.createElement('option');
+    o.value = k; o.textContent = seen[k]; v.appendChild(o);
+  });
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+  function draw() {
+    var q = f.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    var on = {}; sets.forEach(function (c) { on[c.value] = c.checked; });
+    var doc = ''; docs.forEach(function (c) { if (c.checked) doc = c.value; });
+    var lim = parseInt(n.value, 10), want = v.value;
+    var out = [], hits = 0;
+    for (var i = 0; i < DATA.length; i++) {
+      var r = DATA[i];
+      if (!on[r[4]]) continue;
+      if (want && r[6] !== want) continue;
+      if (doc === '1' && !(r[12] & 1)) continue;
+      if (doc === '0' && (r[12] & 1)) continue;
+      if (q.length) {
+        var k = (r[2] + ' ' + r[3]).toLowerCase();
+        var ok = true;
+        for (var j = 0; j < q.length; j++) if (k.indexOf(q[j]) < 0) { ok = false; break; }
+        if (!ok) continue;
+      }
+      hits++;
+      if (out.length >= lim) continue;
+      out.push('<tr><td class="n">' + r[0] + '</td><td class="n sc">' + r[1].toFixed(1) +
+        '</td><td class="pr"><a href="pair.html?a=' + r[2] + '&b=' + r[3] + '">' +
+        esc(r[2]) + ' &rarr; ' + esc(r[3]) + '</a></td>' +
+        '<td class="st">' + r[4][0] + '</td>' +
+        '<td class="vd v-' + r[6] + '">' + esc(r[5]) + '</td>' +
+        '<td class="bd">' + esc(r[7] || '–') + '</td><td class="src">' + esc(r[8]) + '</td>' +
+        '<td class="bd">' + esc(r[9] || '–') +
+          (r[11] ? ' <span class="dim">(' + esc(r[11]) + ')</span>' : '') +
+        '</td><td class="src">' + esc(r[10]) + '</td>' +
+        '<td class="fl">' + ((r[12] & 1) ? '<span class="flag u">undoc</span>' : '') +
+          ((r[12] & 2) ? '<span class="flag s">soft</span>' : '') +
+          (r[13] ? '<a class="flag o" href="open.html#' + r[13] + '">' + esc(r[13]) + '</a>' : '') +
+        '</td></tr>');
+    }
+    body.innerHTML = out.join('');
+    count.textContent = out.length + ' of ' + hits + ' matching';
+  }
+
+  [f, n, v].forEach(function (el) { el.addEventListener('input', draw); });
+  sets.forEach(function (c) { c.addEventListener('change', draw); });
+  docs.forEach(function (c) { c.addEventListener('change', draw); });
+  draw();
+})();
+</script>
+{% endblock %}
