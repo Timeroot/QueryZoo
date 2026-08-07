@@ -67,16 +67,16 @@ relations:
 - from: R
   to: Rbar
   id: param-R-vs-Rbar
-  setting: partial
+  setting: relation
   status: settled
   upper:
     - stmt: '\bar{\mathrm{R}}_\varepsilon(f) \le \mathrm{R}_\varepsilon(f)'
       form: {exp: 1, kind: exact, dir: reverse}
-      note: 'Expected cost is at most worst-case cost, by definition.'
+      note: 'Expected cost is at most worst-case cost, by definition. Purely a statement about the cost measure of a fixed algorithm, so it says nothing about what is being computed: it holds for relations.'
       conf: high
     - stmt: '\mathrm{R}_{\varepsilon+\delta}(f) \le \bar{\mathrm{R}}_\varepsilon(f)/\delta'
       form: {exp: 1, kind: const}
-      note: 'Markov: truncate the algorithm after $\bar{\mathrm{R}}_\varepsilon(f)/\delta$ queries and output arbitrarily. So for constant error the two are within constants, e.g. $\mathrm{R}_{1/3}(f) = O(\bar{\mathrm{R}}_{1/6}(f))$.'
+      note: 'Markov: truncate the algorithm after $\bar{\mathrm{R}}_\varepsilon(f)/\delta$ queries and output arbitrarily. So for constant error the two are within constants, e.g. $\mathrm{R}_{1/3}(f) = O(\bar{\mathrm{R}}_{1/6}(f))$. Truncation only ever adds error, and "output arbitrarily" is legal in every setting, so this too is a relational statement.'
       conf: high
   notes: |
     **The two conventions genuinely differ once $\varepsilon$ is not constant.**
@@ -156,6 +156,24 @@ relations:
 
 - from: adeg
   to: adeg
+  id: param-adeg-eps-partial
+  param: eps
+  setting: partial
+  status: settled
+  headline: '\widetilde{\deg}_{\varepsilon}(f) = O\big(\widetilde{\deg}_{1/3}(f)\log(1/\varepsilon)\big)'
+  upper:
+    - stmt: '\widetilde{\deg}_\varepsilon(f) = O\big(\widetilde{\deg}_{1/3}(f)\log(1/\varepsilon)\big) \text{ in general}'
+      note: |
+        Amplify with a low-degree amplification polynomial: if $A$ has degree $O(\log(1/\varepsilon))$,
+        maps $[0,1]$ into $[0,1]$, $[0,1/3]$ into $[0,\varepsilon]$ and $[2/3,1]$ into
+        $[1-\varepsilon,1]$, then $A \circ p$ works. Nothing here looks at the domain: the
+        partial-setting definition of $\widetilde{\deg}$ already demands $p \in [0,1]$ off the
+        promise, which is exactly the hypothesis $A$ needs, so the amplification is setting-agnostic.
+      conf: high
+  see_also: [adeg, deg, sdeg, Q]
+
+- from: adeg
+  to: adeg
   id: param-adeg-eps
   param: eps
   setting: total
@@ -164,10 +182,7 @@ relations:
   upper:
     - stmt: '\widetilde{\deg}_\varepsilon(f) = \Theta\big(\widetilde{\deg}_{1/3}(f) + \sqrt{n\log(1/\varepsilon)}\big)\quad (f \text{ symmetric})'
       refs: [deWolf08eps, Sherstov08incl]
-      note: 'An exact characterisation for symmetric $f$. [Sherstov08incl] proved it up to logs; [deWolf08eps] removed them using the quantum-algorithm view.'
-      conf: high
-    - stmt: '\widetilde{\deg}_\varepsilon(f) = O\big(\widetilde{\deg}_{1/3}(f)\log(1/\varepsilon)\big) \text{ in general}'
-      note: 'Amplify with a low-degree amplification polynomial.'
+      note: 'An exact characterisation for symmetric $f$ -- so, unlike the generic $\log(1/\varepsilon)$ amplification recorded one setting up, a genuinely total-function statement. [Sherstov08incl] proved it up to logs; [deWolf08eps] removed them using the quantum-algorithm view.'
       conf: high
   lower:
     - stmt: '\lim_{\gamma\to 0}\widetilde{\deg}_{1/2-\gamma}(f) = \mathrm{sdeg}(f)'
@@ -183,16 +198,24 @@ relations:
 # ---------------------------------------------------------- zero error
 - from: R0
   to: D
-  id: param-zero-error
-  setting: total
+  id: param-zero-error-rel
+  setting: relation
   status: settled
   upper:
     - stmt: '\mathrm{R}_0(f) \le \mathrm{D}(f)'
       form: {exp: 1, kind: exact}
+      note: 'A deterministic tree is a zero-error randomized algorithm with no randomness -- a model inclusion, and so a statement about relations. Compare the $\mathrm{Q}\le\mathrm{Q}_0\le\mathrm{Q}_E\le\mathrm{D}$ record just below.'
       conf: high
     - stmt: '\text{Worst-case zero-error cost} = \mathrm{D}(f) \text{ exactly}'
-      note: 'A zero-error algorithm that always stops within $T$ queries yields a deterministic tree of depth $T$ by fixing the coins. Hence $\mathrm{R}_0$ is *only* interesting as an expected-cost measure. Same for $\mathrm{Q}_0$.'
+      note: 'A zero-error algorithm that always stops within $T$ queries yields a deterministic tree of depth $T$ by fixing the coins. Hence $\mathrm{R}_0$ is *only* interesting as an expected-cost measure. Same for $\mathrm{Q}_0$. Fixing the coins says nothing about what is being computed, so this too is a relational statement.'
       conf: high
+  see_also: [R0, D, R, Q0, NANDtree, cost-conventions]
+
+- from: R0
+  to: D
+  id: param-zero-error
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{R}_0(\mathrm{PARITY}_n) = \mathrm{D}(\mathrm{PARITY}_n) = n'
       form: {exp: 1, kind: exact}
@@ -241,13 +264,18 @@ relations:
   to: Np
   id: param-Np-p
   param: p
-  setting: total
+  setting: relation
   status: settled
   headline: '\mathrm{N}_{p}(f) \text{ as a function of the flip probability } p'
   upper:
     - stmt: '\mathrm{N}_p(f) = O\!\left(\frac{\mathrm{R}(f)\log \mathrm{R}(f)}{(1-2p)^2}\right)'
       refs: [FRPU94]
-      note: 'The $p$-dependence is the usual $1/(1-2p)^2$ Chernoff factor; the interesting content is the $\log \mathrm{R}$.'
+      note: |
+        The $p$-dependence is the usual $1/(1-2p)^2$ Chernoff factor; the interesting content is the
+        $\log \mathrm{R}$. The proof simulates each clean query by the majority of
+        $O(\log \mathrm{R}/(1-2p)^2)$ noisy copies and union-bounds over the $\mathrm{R}$ queries,
+        which is a statement about the *oracle*, not about the output: it holds verbatim for partial
+        functions and relations.
       conf: high
   notes: |
     For any *constant* $p<1/2$ the measure $\mathrm{N}_p$ is the same up to

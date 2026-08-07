@@ -18,14 +18,23 @@ relations:
 
 - from: s
   to: bs
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{s}(f) \le \mathrm{bs}(f)'
       form: {exp: 1, kind: exact}
       refs: [Nisan91, BdW02]
-      note: 'Sensitivity is block sensitivity restricted to singleton blocks.'
+      note: |
+        Sensitivity is block sensitivity restricted to singleton blocks. Both maxima range over
+        $x \in \mathrm{Dom}(f)$ and count only blocks $B$ with $x^B \in \mathrm{Dom}(f)$, so the
+        inclusion is the same one line for line in the partial setting.
       conf: high
+  see_also: [s, bs, sensitivity-conjecture]
+
+- from: s
+  to: bs
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{s}(\mathrm{OR}_n) = \mathrm{bs}(\mathrm{OR}_n) = n'
       form: {exp: 1, kind: exact}
@@ -35,14 +44,25 @@ relations:
 
 - from: bs
   to: C
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{bs}(f) \le \mathrm{C}(f)'
       form: {exp: 1, kind: exact}
       refs: [Nisan91, BdW02]
-      note: 'A certificate for $x$ must intersect every sensitive block of $x$, and the blocks are disjoint.'
+      note: |
+        A certificate for $x$ must intersect every sensitive block of $x$, and the blocks are
+        disjoint. Partial functions change nothing: a sensitive block already has to satisfy
+        $x^B \in \mathrm{Dom}(f)$, and a certificate has to fix the value on every *domain*
+        input consistent with it, so a block disjoint from the certificate could not have been
+        sensitive.
       conf: high
+  see_also: [bs, C, fbs]
+
+- from: bs
+  to: C
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{bs}(\mathrm{OR}_n) = \mathrm{C}(\mathrm{OR}_n) = n'
       form: {exp: 1, kind: exact}
@@ -253,14 +273,25 @@ relations:
 
 - from: deg
   to: D
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\deg(f) \le \mathrm{D}(f)'
       form: {exp: 1, kind: exact}
       refs: [NS94, BdW02]
-      note: 'Sum the indicator polynomials of the accepting leaves of a depth-$\mathrm{D}$ tree.'
+      note: |
+        Sum the indicator polynomials of the accepting leaves of a depth-$\mathrm{D}$ tree. The
+        resulting polynomial is defined on the whole cube and agrees with the tree everywhere,
+        so in particular it represents $f$ on $\mathrm{Dom}(f)$ -- which is all $\deg$ of a
+        partial function asks for. (Off the domain the polynomial is free, which is exactly why
+        $\deg$ can be much smaller than $\mathrm{D}$ for promise problems.)
       conf: high
+  see_also: [deg, D, adeg]
+
+- from: deg
+  to: D
+  setting: total
+  status: settled
   lower:
     - stmt: '\deg(\mathrm{PARITY}_n) = \mathrm{D}(\mathrm{PARITY}_n) = n'
       form: {exp: 1, kind: exact}
@@ -270,14 +301,23 @@ relations:
 
 - from: adeg
   to: deg
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\widetilde{\deg}(f) \le \deg(f)'
       form: {exp: 1, kind: exact}
       refs: [NS94, BdW02]
-      note: 'The representing polynomial is in particular an approximating one.'
+      note: |
+        The representing polynomial is in particular an approximating one. Both degrees are
+        defined by constraints at the points of $\mathrm{Dom}(f)$ only, and the exact constraint
+        implies the approximate one pointwise, so the inequality is setting-agnostic.
       conf: high
+  see_also: [adeg, deg, rdeg]
+
+- from: adeg
+  to: deg
+  setting: total
+  status: settled
   lower:
     - stmt: '\widetilde{\deg}(\mathrm{PARITY}_n) = \deg(\mathrm{PARITY}_n) = n'
       form: {exp: 1, kind: exact}
@@ -288,18 +328,17 @@ relations:
 
 - from: ardeg
   to: adeg
-  setting: total
+  setting: partial
   status: gap
   upper:
     - stmt: '\mathrm{rdeg}_\varepsilon(f) \le \widetilde{\deg}_\varepsilon(f)'
       form: {exp: 1, kind: exact}
       refs: [IJKKKSWW23, MahadevdeWolf15]
-      note: 'A polynomial is a rational function with denominator 1.'
+      note: |
+        A polynomial is a rational function with denominator 1 -- a containment of feasible sets
+        for the very same pointwise constraints, which are imposed at the points of
+        $\mathrm{Dom}(f)$ whatever the setting.
       conf: high
-  lower:
-    - stmt: '\mathrm{rdeg}_\varepsilon(f_n) = \Omega\big(\widetilde{\deg}_\varepsilon(f_n)^{?}\big)'
-      todo: 'Best known separation of approximate rational degree from approximate degree.'
-      conf: low
   notes: |
     Careful: this is the *approximate* rational degree. The exact rational degree
     [[rdeg]] is **not** below $\widetilde{\deg}$ -- it is $\mathrm{rdeg}=\max\{\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f)\}$,
@@ -307,27 +346,51 @@ relations:
   see_also: [ardeg, adeg, rdeg, PostQ]
 
 - from: ardeg
-  to: rdeg
+  to: adeg
   setting: total
+  status: gap
+  lower:
+    - stmt: '\mathrm{rdeg}_\varepsilon(f_n) = \Omega\big(\widetilde{\deg}_\varepsilon(f_n)^{?}\big)'
+      todo: 'Best known separation of approximate rational degree from approximate degree.'
+      conf: low
+  see_also: [ardeg, adeg, rdeg, PostQ]
+
+- from: ardeg
+  to: rdeg
+  setting: partial
   status: gap
   upper:
     - stmt: '\mathrm{rdeg}_\varepsilon(f) \le \mathrm{rdeg}(f)'
       form: {exp: 1, kind: exact}
       refs: [IJKKKSWW23]
-      note: 'Exact rational representation is in particular an $\varepsilon$-approximation.'
+      note: |
+        Exact rational representation is in particular an $\varepsilon$-approximation. Again a
+        containment of feasible sets at the domain points, so it does not care about totality.
       conf: high
   see_also: [ardeg, rdeg, PostQ]
 
 - from: rdeg
   to: C
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{rdeg}(f) \le \mathrm{C}(f)'
       form: {exp: 1, kind: exact}
       refs: [IJKKKSWW23]
-      note: 'Via $\mathrm{rdeg}(f)=\max\{\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f)\}$ and $\mathrm{ndeg}\le\mathrm{C}$.'
+      note: |
+        Via $\mathrm{rdeg}(f)=\max\{\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f)\}$ and
+        $\mathrm{ndeg}\le\mathrm{C}$. The latter is the sum of the indicators of the minimal
+        $1$-certificates: it is positive on every $1$-input and vanishes on every $0$-input
+        *of the domain*, because a domain $0$-input consistent with a $1$-certificate would
+        contradict that certificate. Off-domain inputs are unconstrained, so the argument runs
+        unchanged for partial $f$.
       conf: medium
+  see_also: [rdeg, C, ndeg, PARITY]
+
+- from: rdeg
+  to: C
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{rdeg}(\mathrm{PARITY}_n) = \mathrm{C}(\mathrm{PARITY}_n) = n'
       form: {exp: 1, kind: exact}

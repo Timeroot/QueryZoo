@@ -150,12 +150,6 @@ relations:
   to: R
   setting: total
   status: settled
-  upper:
-    - stmt: '\widetilde{\deg}(f) \le \mathrm{R}(f)'
-      form: {exp: 1, kind: exact}
-      refs: [BdW02, NS94]
-      note: 'Theorem 15 of [BdW02]: average the leaf-indicator polynomials of the deterministic trees in the mixture. No constant loss at all.'
-      conf: high
   lower:
     - stmt: '\widetilde{\deg}(\mathrm{PARITY}_n) = \mathrm{R}(\mathrm{PARITY}_n) = n'
       form: {exp: 1, kind: exact}
@@ -164,6 +158,9 @@ relations:
       note: 'Both sides are exactly $n$: parity needs all $n$ queries even at error $1/3$, and no polynomial of degree $<n$ approximates it. Theorem 15 of [BdW02] loses nothing here.'
       conf: high
   notes: |
+    The bound itself, $\widetilde{\deg}\le\mathrm{R}$, is recorded one setting up --
+    the polynomial method never uses totality -- and inherited here; this record
+    keeps the total-function witness, which makes it tight.
     The same proof gives $\widetilde{\deg}_\varepsilon(f)\le\mathrm{R}_\varepsilon(f)$
     for every error $\varepsilon$, and $\deg(f)\le \mathrm{D}(f)$ in the exact case.
     The *reverse* direction is where everything is hard: see [[R]] vs
@@ -228,14 +225,24 @@ relations:
 # ------------------------------------------------ deg vs QE, adeg vs Q
 - from: deg
   to: QE
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\deg(f) \le 2\,\mathrm{Q}_E(f)'
       form: {exp: 1, kind: const}
       refs: [BBCMdW01, BdW02]
-      note: 'Theorem 17 of [BdW02]. Tight for PARITY: $\deg = n$, $\mathrm{Q}_E=\lceil n/2\rceil$.'
+      note: |
+        Theorem 17 of [BdW02] -- the exact-case polynomial method. The acceptance amplitude of a
+        $T$-query algorithm is a degree-$\le T$ polynomial in the input bits, so the acceptance
+        probability has degree $\le 2T$ and represents $f$ on every input the algorithm is
+        required to be right about. Nothing asks for that set to be all of $\{0,1\}^n$.
       conf: high
+  see_also: [deg, QE, PARITY, open-QE-vs-deg]
+
+- from: deg
+  to: QE
+  setting: total
+  status: settled
   lower:
     - stmt: '\deg(\mathrm{PARITY}_n) = n = 2\,\mathrm{Q}_E(\mathrm{PARITY}_n)'
       form: {exp: 1, kind: const}
@@ -250,18 +257,16 @@ relations:
   to: Q
   setting: total
   status: settled
-  upper:
-    - stmt: '\widetilde{\deg}(f) \le 2\,\mathrm{Q}(f)'
-      form: {exp: 1, kind: const}
-      refs: [BBCMdW01, BdW02]
-      note: 'Theorem 18 of [BdW02] -- the polynomial method. Holds for partial functions and any error too: $\widetilde{\deg}_\varepsilon(f)\le 2\mathrm{Q}_\varepsilon(f)$.'
-      conf: high
   lower:
     - stmt: '\widetilde{\deg}(\mathrm{PARITY}_n) = n = 2\,\mathrm{Q}(\mathrm{PARITY}_n)'
       form: {exp: 1, kind: const}
       witness: PARITY
       conf: high
   notes: |
+    The easy direction $\widetilde{\deg}\le 2\mathrm{Q}$ is the polynomial method, so it
+    is recorded for **partial** $f$ and inherited here; $\mathrm{PARITY}$ shows it is
+    tight already for total $f$.
+
     **Open problem 4 of [BdW02]**: is $\mathrm{Q}(f)=O(\widetilde{\deg}(f))$ for
     total $f$? Known false for **partial** functions -- exponentially so
     [AmbainisBelovs23] -- and false even for **total search problems**
@@ -315,17 +320,20 @@ relations:
       form: {exp: 1, kind: exact}
       note: 'The trivial chain: each step is a model inclusion, so none of it cares whether $f$ is total, partial or a relation.'
       conf: high
+    - stmt: '\mathrm{Q}(f) \le n/2 + O(\sqrt n)'
+      refs: [vanDam98]
+      note: |
+        Quantum oracle interrogation: *every* $n$-bit function, even the hardest, costs only
+        about half the classical worst case. The algorithm recovers the entire input $x$ with
+        high probability and never looks at what is to be computed from it, so it solves
+        partial functions and relations just as well.
+      conf: high
   see_also: [Q, R, D]
 
 - from: Q
   to: D
   setting: total
   status: settled
-  upper:
-    - stmt: '\mathrm{Q}(f) \le n/2 + O(\sqrt n)'
-      refs: [vanDam98]
-      note: 'Quantum oracle interrogation: *every* $n$-bit function, even the hardest, costs only about half the classical worst case.'
-      conf: high
   lower:
     - stmt: '\mathrm{Q}(\mathrm{PARITY}_n) = \lceil n/2\rceil'
       form: {exp: 1, kind: const}

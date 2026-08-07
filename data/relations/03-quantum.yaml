@@ -87,14 +87,25 @@ relations:
 # ------------------------------------------------------- Q vs lambda
 - from: Q
   to: lambda
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\lambda(f) \le \mathrm{Q}(f)\cdot O(1) \quad\text{i.e.}\quad \mathrm{Q}(f) = \Omega(\lambda(f))'
       form: {exp: 1, kind: const, dir: reverse}
       refs: [ABKRT21, BarnumSaksSzegedy03]
-      note: 'Spectral sensitivity is a quantum lower bound because $\lambda(f)\le\mathrm{Adv}(f)\le \mathrm{Adv}^{\pm}(f)=\Theta(\mathrm{Q}(f))$.'
+      note: |
+        Spectral sensitivity is a quantum lower bound because
+        $\lambda(f)\le\mathrm{Adv}(f)\le \mathrm{Adv}^{\pm}(f)=\Theta(\mathrm{Q}(f))$. Every link
+        of that chain holds for partial $f$ -- the sensitivity graph is built from the domain
+        edges, the eigenvector is a feasible adversary matrix, and $\mathrm{Adv}^\pm$
+        characterises $\mathrm{Q}$ off-promise too [LMRSS11] -- so the bound belongs here.
       conf: high
+  see_also: [lambda, Q, Adv]
+
+- from: Q
+  to: lambda
+  setting: total
+  status: settled
   lower:
     - stmt: '\lambda(\mathrm{PARITY}_n) = n,\ \mathrm{Q}(\mathrm{PARITY}_n)=\lceil n/2\rceil'
       form: {exp: 1, kind: const}
@@ -104,14 +115,24 @@ relations:
 
 - from: lambda
   to: s
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\lambda(f) \le \mathrm{s}(f)'
       form: {exp: 1, kind: exact}
       refs: [ABKRT21]
-      note: 'Spectral radius of the sensitivity graph is at most its maximum degree.'
+      note: |
+        Spectral radius of the sensitivity graph is at most its maximum degree -- a fact about
+        the graph, and for partial $f$ the graph simply has fewer edges (only pairs
+        $x, x^{i} \in \mathrm{Dom}(f)$ with $f(x)\ne f(x^i)$). Its maximum degree is
+        $\mathrm{s}(f)$ in either setting.
       conf: high
+  see_also: [lambda, s, deg, Huang19]
+
+- from: lambda
+  to: s
+  setting: total
+  status: settled
   lower:
     - stmt: '\sqrt{\mathrm{s}(f)} \le \lambda(f)'
       refs: [ABKRT21]
@@ -136,16 +157,11 @@ relations:
   to: Advpm
   setting: total
   status: settled
-  upper:
-    - stmt: '\mathrm{Q}(f) = \Theta(\mathrm{Adv}^{\pm}(f))'
-      form: {exp: 1, kind: theta}
-      refs: [HLS07, Reichardt11, LMRSS11]
-      note: 'The general adversary bound *characterises* bounded-error quantum query complexity, for total and partial functions and for state conversion. This is why $\mathrm{Adv}^{\pm}$ is not really a separate measure -- it is $\mathrm{Q}$ in SDP clothing.'
-      conf: high
   lower:
     - stmt: '\mathrm{Adv}^{\pm}(f)\le \mathrm{Q}(f)\cdot O(1)'
       form: {exp: 1, kind: const}
       refs: [HLS07]
+      note: 'The easy half of the characterisation -- [HLS07] proved the adversary is a valid lower bound; [Reichardt11, LMRSS11] the converse. Both halves are setting-agnostic, so the $\Theta$ is recorded for **relations** and inherited here.'
       conf: high
   notes: |
     Consequences: $\mathrm{Q}$ composes perfectly
@@ -155,13 +171,23 @@ relations:
 
 - from: Advpm
   to: Adv
-  setting: total
-  status: gap
+  setting: relation
+  status: settled
   upper:
     - stmt: '\mathrm{Adv}(f) \le \mathrm{Adv}^{\pm}(f)'
       form: {exp: 1, kind: exact, dir: reverse}
-      note: 'Trivial: the positive adversary is the negative adversary restricted to non-negative weights.'
+      note: |
+        Trivial: the positive adversary is the negative adversary restricted to non-negative
+        weights, i.e. a minimisation over a smaller feasible set. Both SDPs are written down
+        the same way whatever the domain and whatever is to be output, so the containment is a
+        fact about relations.
       conf: high
+  see_also: [Adv, Advpm, MAdv, ElementDistinctness]
+
+- from: Advpm
+  to: Adv
+  setting: total
+  status: gap
   lower:
     - stmt: '\mathrm{Adv}(f) \le \sqrt{\mathrm{C}^{0}(f)\,\mathrm{C}^{1}(f)}\ \text{ while } \mathrm{Q}(f) \text{ can be much larger}'
       refs: [SpalekSzegedy06, Zhang05]
@@ -210,13 +236,16 @@ relations:
 
 - from: Adv
   to: lambda
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\lambda(f) \le \mathrm{Adv}(f)'
       form: {exp: 1, kind: exact, dir: reverse}
       refs: [ABKRT21, BarnumSaksSzegedy03]
-      note: 'Plug the sensitivity-graph eigenvector into the positive adversary SDP.'
+      note: |
+        Plug the sensitivity-graph eigenvector into the positive adversary SDP. The adversary
+        matrix built this way is supported on domain pairs $x, x^i$ with $f(x)\ne f(x^i)$, which
+        is exactly where the SDP allows weight, so the construction is unchanged for partial $f$.
       conf: high
   see_also: [lambda, Adv]
 
@@ -331,13 +360,25 @@ relations:
 # ------------------------------------------------------- robust Q
 - from: robustQ
   to: Q
-  setting: total
+  setting: relation
   status: gap
   upper:
     - stmt: '\mathrm{Q}^{\mathrm{rob}}(f) = O(\mathrm{Q}(f)\log \mathrm{Q}(f))'
       form: {exp: 1, log: 1, kind: const}
       refs: [BNRdW05]
+      note: |
+        A black-box simulation: amplify each of the $\mathrm{Q}$ queries by
+        $O(\log \mathrm{Q})$ noisy ones and take a (reversible) majority, then union-bound.
+        The construction never inspects what the algorithm is computing, so it applies to
+        partial functions and relations verbatim.
       conf: high
+  see_also: [robustQ, Q, Np, noisyR, PARITY]
+
+- from: robustQ
+  to: Q
+  setting: total
+  status: gap
+  upper:
     - stmt: '\mathrm{Q}^{\mathrm{rob}}(\mathrm{PARITY}_n) = \Theta(n)'
       refs: [BNRdW05]
       note: '**No** $\log n$ overhead, unlike the classical noisy model where $\mathrm{N}_p(\mathrm{PARITY}_n)=\Theta(n\log n)$ [FRPU94, EvansPippenger98]. Quantum error-correction of the *oracle* is cheaper than classical repetition.'

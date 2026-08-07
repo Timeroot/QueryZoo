@@ -35,14 +35,24 @@ relations:
 
 - from: bs
   to: fbs
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{bs}(f) \le \mathrm{fbs}(f)'
       form: {exp: 1, kind: exact}
       refs: [Aaronson08, Tal13]
-      note: 'Any set of disjoint sensitive blocks is a feasible integral solution to the LP.'
+      note: |
+        Any set of disjoint sensitive blocks is a feasible integral solution to the LP. Both
+        objects are defined input by input, over the same constraint set
+        $\{y \in \mathrm{Dom}(f): f(y)\ne f(x)\}$, so an integral solution is a fractional one
+        for partial $f$ as well.
       conf: high
+  see_also: [bs, fbs]
+
+- from: bs
+  to: fbs
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{bs}(\mathrm{OR}_n) = \mathrm{fbs}(\mathrm{OR}_n) = n'
       form: {exp: 1, kind: exact}
@@ -55,20 +65,59 @@ relations:
 # ------------------------------------------------------ fbs vs C (total)
 - from: fbs
   to: C
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{fbs}(f) \le \mathrm{C}(f)'
       form: {exp: 1, kind: exact}
       refs: [Aaronson08, Tal13]
-      note: 'The dual reading: $\mathrm{fbs}=\mathrm{FC}$ is a fractional vertex cover, and any certificate is an integral one.'
+      note: |
+        The dual reading: $\mathrm{fbs}=\mathrm{FC}$ is a fractional vertex cover, and any
+        certificate is an integral one. The cover only has to hit the domain inputs of the other
+        value, which is exactly what a certificate for partial $f$ does, so the inequality is
+        setting-agnostic. (The *converse* is not: see the partial-setting record for
+        $\mathrm{C}$ vs $\mathrm{fbs}$, where the quadratic rounding bound dies.)
       conf: high
+  see_also: [C, fbs, RC]
+
+- from: fbs
+  to: C
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{fbs}(\mathrm{OR}_n) = \mathrm{C}(\mathrm{OR}_n) = n'
       form: {exp: 1, kind: exact}
       witness: OR
       conf: high
   see_also: [C, fbs, RC]
+
+- from: C
+  to: fbs
+  setting: partial
+  status: fails
+  upper:
+    - stmt: '\mathrm{C}(f) \text{ is known to be unbounded in terms of } \mathrm{fbs}(f).'
+      form: {kind: none}
+      conf: high
+  lower:
+    - stmt: '\mathrm{fbs}(\mathrm{GapMaj}^{\delta}_n) \le 1/(2\delta),\ \ \mathrm{C}(\mathrm{GapMaj}^{\delta}_n) > n/2-\delta n'
+      form: {kind: unbounded}
+      witness: GapMaj
+      note: |
+        Rounding the LP is the one step of the fractional family that needs totality, and
+        $\mathrm{GapMaj}$ kills it. Any block that flips the answer at a promise input must move at
+        least $2\delta n$ coordinates, so a fractional block assignment obeys
+        $2\delta n \sum_B w_B \le \sum_i \sum_{B \ni i} w_B \le n$, i.e. $\mathrm{fbs}\le 1/(2\delta)$.
+        A $1$-certificate, on the other hand, must fix more than $n/2-\delta n$ ones: fix fewer and
+        setting every free coordinate to $0$ gives a completion that is still inside the promise and
+        is a $0$-input. For constant $\delta$ that is $O(1)$ against $\Omega(n)$.
+      conf: high
+  notes: |
+    So $\mathrm{C}=O(\mathrm{fbs}^2)$, $\mathrm{C}=O(\mathrm{RC}^2)$ and the rest of
+    the "round the fractional certificate" family are **total-function theorems** --
+    even though the reverse inequalities $\mathrm{fbs}\le\mathrm{C}$ and
+    $\mathrm{fbs}=\Theta(\mathrm{RC})$ hold in every setting.
+  see_also: [C, fbs, RC, GapMaj, settings]
 
 - from: C
   to: fbs
@@ -92,14 +141,24 @@ relations:
 # ----------------------------------------------------- fbs vs RC (total)
 - from: fbs
   to: RC
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{fbs}(f) = \Theta(\mathrm{RC}(f))'
       form: {exp: 1, kind: theta}
       refs: [Aaronson08, Tal13, KulkarniTal16]
-      note: 'Aaronson''s randomized certificate complexity is, up to a constant, the LP value: $\mathrm{RC}\le\mathrm{fbs}\le 2\,\mathrm{RC}$.'
+      note: |
+        Aaronson's randomized certificate complexity is, up to a constant, the LP value:
+        $\mathrm{RC}\le\mathrm{fbs}\le 2\,\mathrm{RC}$. Both directions are per-input and
+        domain-restricted -- see the mirror record $\mathrm{RC}$ vs $\mathrm{fbs}$ -- so this
+        is a partial-function statement.
       conf: high
+  see_also: [RC, fbs, CA]
+
+- from: fbs
+  to: RC
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{fbs}(f) \ge \mathrm{RC}(f)'
       form: {exp: 1, kind: exact}
@@ -198,14 +257,25 @@ relations:
 
 - from: fbs
   to: R
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{fbs}(f) = O(\mathrm{R}(f))'
       form: {exp: 1, kind: const}
       refs: [Aaronson08, Tal13]
-      note: 'Equivalently $\mathrm{R}=\Omega(\mathrm{RC})$: run the algorithm, and the queried positions carry the fractional certificate.'
+      note: |
+        Equivalently $\mathrm{R}=\Omega(\mathrm{RC})$: run the algorithm, and the queried
+        positions carry the fractional certificate. Take $p_i = \Pr[\text{the algorithm queries } i
+        \text{ on } x]$; for any $y \in \mathrm{Dom}(f)$ with $f(y)\ne f(x)$ the algorithm must
+        distinguish $x$ from $y$, so $\sum_{i: x_i\ne y_i} p_i = \Omega(1)$. Only domain inputs
+        ever enter, so the argument does not use totality.
       conf: high
+  see_also: [R, fbs, RC]
+
+- from: fbs
+  to: R
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{fbs}(\mathrm{OR}_n) = n = \Theta(\mathrm{R}(\mathrm{OR}_n))'
       form: {exp: 1, kind: const}

@@ -298,14 +298,26 @@ relations:
 # ------------------------------------------------- bs vs R, s vs R etc.
 - from: bs
   to: R
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{bs}(f) \le 3\,\mathrm{R}(f)'
       form: {exp: 1, kind: const}
       refs: [Nisan91, BdW02]
-      note: 'Theorem 16 of [BdW02]: the algorithm must spend $\ge 1/3$ expected queries in each sensitive block.'
+      note: |
+        Theorem 16 of [BdW02]: the algorithm must spend $\ge 1/3$ expected queries in each
+        sensitive block. Nisan's argument only ever compares the algorithm's behaviour on $x$
+        and on $x^{B_i}$, and both of those are in $\mathrm{Dom}(f)$ by the definition of a
+        sensitive block, so it never uses totality. Concretely: if the algorithm touched
+        $B_i$ with probability $<1/3$ on $x$, its output distributions on $x$ and $x^{B_i}$
+        would be too close for it to be correct on both.
       conf: high
+  see_also: [bs, R, RC]
+
+- from: bs
+  to: R
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{bs}(f_n) = \Omega(\mathrm{R}(f_n))'
       form: {exp: 1, kind: const}
@@ -360,14 +372,24 @@ relations:
 # ------------------------------------------------------ degenerate rows
 - from: s
   to: D
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{s}(f) \le \mathrm{bs}(f) \le \mathrm{C}(f) \le \mathrm{D}(f)'
       form: {exp: 1, kind: exact}
       refs: [BdW02]
-      note: 'Proposition 1 + Theorem 9 of [BdW02]. The whole left column of the matrix is this chain.'
+      note: |
+        Proposition 1 + Theorem 9 of [BdW02]. The whole left column of the matrix is this chain,
+        and every link of it survives a promise: see the partial-setting records for
+        $\mathrm{s}\le\mathrm{bs}$ and $\mathrm{bs}\le\mathrm{C}$, and the *relational* record
+        for $\mathrm{C}\le\mathrm{D}$.
       conf: high
+  see_also: [s, bs, C, D, PARITY, ADDR]
+
+- from: s
+  to: D
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{s}(f_n) = \mathrm{D}(f_n) = n'
       form: {exp: 1, kind: exact}

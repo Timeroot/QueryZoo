@@ -76,10 +76,13 @@ relations:
   setting: partial
   status: fails
   upper:
-    - stmt: '\widetilde{\deg}(f) \le 2\,\mathrm{Q}(f) \text{ still holds}'
+    - stmt: '\widetilde{\deg}_\varepsilon(f) \le 2\,\mathrm{Q}_\varepsilon(f) \text{ still holds}'
       form: {exp: 1, kind: const}
-      refs: [BBCMdW01]
-      note: 'The polynomial method is one of the very few things that survives promises intact -- it never used totality.'
+      refs: [BBCMdW01, BdW02]
+      note: |
+        Theorem 18 of [BdW02], the polynomial method: one of the very few things that survives
+        promises intact -- it never used totality, and it holds at every error level. This is
+        the record the total-setting bound is inherited from.
       conf: high
   lower:
     - stmt: '\exists \text{ partial } f:\ \mathrm{Q}(f) = 2^{\Omega(\widetilde{\deg}(f))}'
@@ -194,7 +197,14 @@ relations:
     - stmt: '\widetilde{\deg}(f) \le \mathrm{R}(f) \text{ and } \widetilde{\deg}(f)\le 2\mathrm{Q}(f),\ \text{ for total AND partial } f'
       form: {exp: 1, kind: exact}
       refs: [BdW02, BBCMdW01]
-      note: 'The polynomial method is *setting-agnostic*: the acceptance probability of any algorithm is a polynomial of degree $\le$ (twice) the number of queries, whatever the domain.'
+      note: |
+        The polynomial method is *setting-agnostic*: the acceptance probability of any algorithm
+        is a polynomial of degree $\le$ (twice) the number of queries, whatever the domain.
+        Theorem 15 of [BdW02] for the randomized case -- average the leaf-indicator polynomials
+        of the deterministic trees in the mixture, with no constant loss at all -- and Theorem 18
+        for the quantum one. The approximation constraints are imposed only at the points of
+        $\mathrm{Dom}(f)$, which is why this is the record for the whole family; the total case
+        is inherited from here, and it is tight there ($\mathrm{PARITY}$).
       conf: high
   notes: |
     Measures that survive the move to partial functions unchanged:

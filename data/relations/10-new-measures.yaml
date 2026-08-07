@@ -21,12 +21,6 @@ relations:
   to: fbs
   setting: total
   status: settled
-  upper:
-    - stmt: '\mathrm{FC}(f) = \mathrm{fbs}(f)'
-      form: {exp: 1, kind: exact}
-      refs: [Tal13, KulkarniTal16, Aaronson08]
-      note: 'LP duality, pointwise in $x$: the fractional certificate LP at $x$ and the fractional block sensitivity LP at $x$ are dual to each other, both feasible and bounded.'
-      conf: high
   lower:
     - stmt: '\mathrm{FC}(f) = \mathrm{fbs}(f)'
       form: {exp: 1, kind: exact}
@@ -39,13 +33,23 @@ relations:
 
 - from: fbs
   to: FC
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{fbs}(f) = \mathrm{FC}(f)'
       form: {exp: 1, kind: exact}
       refs: [Tal13, KulkarniTal16]
+      note: |
+        The mirror of the $\mathrm{FC}$ vs $\mathrm{fbs}$ record: one LP duality, pointwise in
+        $x$, over the constraint set $\{y\in\mathrm{Dom}(f): f(y)\ne f(x)\}$. Nothing about the
+        duality cares whether that set came from a total function or a promise.
       conf: high
+  see_also: [FC, fbs]
+
+- from: fbs
+  to: FC
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{fbs}(f) = \mathrm{FC}(f)'
       form: {exp: 1, kind: exact}
@@ -101,13 +105,19 @@ relations:
 
 - from: bs0
   to: bs
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{bs}^0(f) \le \mathrm{bs}(f)'
       form: {exp: 1, kind: exact}
-      note: 'A maximum over a subset of the inputs.'
+      note: 'A maximum over a subset of the inputs -- of $\mathrm{Dom}(f)$ in the partial setting, which changes nothing.'
       conf: high
+  see_also: [bs, bs1, s0, C0]
+
+- from: bs0
+  to: bs
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{bs}^0(\mathrm{OR}_n) = \mathrm{bs}(\mathrm{OR}_n) = n'
       form: {exp: 1, kind: exact}
@@ -138,12 +148,19 @@ relations:
 
 - from: bs1
   to: bs
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{bs}^1(f) \le \mathrm{bs}(f)'
       form: {exp: 1, kind: exact}
+      note: 'A maximum over a subset of the inputs; the restriction to $\mathrm{Dom}(f)$ applies to both sides.'
       conf: high
+  see_also: [bs, bs0, s1, C1]
+
+- from: bs1
+  to: bs
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{bs}^1(\mathrm{AND}_n) = \mathrm{bs}(\mathrm{AND}_n) = n'
       form: {exp: 1, kind: exact}
@@ -168,13 +185,19 @@ relations:
 
 - from: s0
   to: bs0
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{s}^0(f) \le \mathrm{bs}^0(f)'
       form: {exp: 1, kind: exact}
-      note: 'Singleton blocks are blocks, and the maximisation is over the same set of inputs.'
+      note: 'Singleton blocks are blocks, and the maximisation is over the same set of inputs -- the $0$-inputs of $\mathrm{Dom}(f)$, promise or no promise.'
       conf: high
+  see_also: [s0, bs0, s, bs]
+
+- from: s0
+  to: bs0
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{s}^0(\mathrm{OR}_n) = \mathrm{bs}^0(\mathrm{OR}_n) = n'
       form: {exp: 1, kind: exact}
@@ -184,12 +207,19 @@ relations:
 
 - from: s1
   to: bs1
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{s}^1(f) \le \mathrm{bs}^1(f)'
       form: {exp: 1, kind: exact}
+      note: 'Singleton blocks are blocks; the mirror of the $\mathrm{s}^0$ vs $\mathrm{bs}^0$ record, and equally setting-agnostic.'
       conf: high
+  see_also: [s1, bs1]
+
+- from: s1
+  to: bs1
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{s}^1(\mathrm{AND}_n) = \mathrm{bs}^1(\mathrm{AND}_n) = n'
       form: {exp: 1, kind: exact}
@@ -277,14 +307,23 @@ relations:
 
 - from: rank
   to: D
-  setting: total
+  setting: relation
   status: settled
   upper:
     - stmt: '\mathrm{rank}(f) \le \mathrm{D}(f)'
       form: {exp: 1, kind: exact}
       refs: [EhrenfeuchtHaussler89]
-      note: 'The rank of a tree never exceeds its depth (induction: rank increases only when both children have equal rank).'
+      note: |
+        The rank of a tree never exceeds its depth (induction: rank increases only when both
+        children have equal rank). This is a fact about the tree, not about what it computes,
+        so it applies to whatever a depth-$\mathrm{D}$ tree is solving.
       conf: high
+  see_also: [rank, D, D_size]
+
+- from: rank
+  to: D
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{rank}(\mathrm{PARITY}_n) = \mathrm{D}(\mathrm{PARITY}_n) = n'
       form: {exp: 1, kind: exact}
@@ -317,14 +356,16 @@ relations:
 
 - from: rank
   to: D_size
-  setting: total
+  setting: relation
   status: settled
   upper:
     - stmt: '\mathrm{rank}(f) \le \log_2 \mathrm{DTsize}(f)'
       form: {kind: log}
       refs: [EhrenfeuchtHaussler89]
-      note: 'A rank-$r$ tree contains a complete binary tree of depth $r$, hence has at least $2^r$ leaves.'
-      note: 'A tree of rank $r$ contains a complete binary tree of depth $r$ as a minor, hence has at least $2^r$ leaves.'
+      note: |
+        A tree of rank $r$ contains a complete binary tree of depth $r$ as a minor, hence has at
+        least $2^r$ leaves. Pure tree combinatorics: the labels at the leaves never enter, so the
+        bound holds for partial functions and relations too.
       conf: high
   see_also: [rank, D_size, D]
 
@@ -471,14 +512,24 @@ relations:
 
 - from: odeg
   to: adeg
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\widetilde{\deg}_+(f) \le \widetilde{\deg}(f)'
       form: {exp: 1, kind: exact}
       refs: [Sherstov14onesided, BT22]
-      note: 'An $\varepsilon$-approximating polynomial satisfies the one-sided constraints.'
+      note: |
+        An $\varepsilon$-approximating polynomial satisfies the one-sided constraints -- a
+        pointwise implication at each $x \in \mathrm{Dom}(f)$, so a containment of feasible sets
+        in any setting. (One-sided approximate degree is in fact *most* used for partial
+        functions, where it is the natural measure for one-sided error.)
       conf: high
+  see_also: [odeg, adeg, sdeg, deg]
+
+- from: odeg
+  to: adeg
+  setting: total
+  status: settled
   lower:
     - stmt: '\widetilde{\deg}_+(\mathrm{AND}_n) = \widetilde{\deg}(\mathrm{AND}_n) = \Theta(\sqrt n)'
       form: {exp: 1, kind: theta}
@@ -514,14 +565,23 @@ relations:
 
 - from: sdeg
   to: odeg
-  setting: total
+  setting: partial
   status: settled
   upper:
     - stmt: '\mathrm{sdeg}(f) \le \widetilde{\deg}_+(f)'
       form: {exp: 1, kind: exact}
       refs: [Sherstov14onesided, BT22]
-      note: 'If $|p|\le 1/3$ on $f^{-1}(0)$ and $p \ge 2/3$ on $f^{-1}(1)$ then $p - 1/2$ sign-represents $f$.'
+      note: |
+        If $|p|\le 1/3$ on $f^{-1}(0)$ and $p \ge 2/3$ on $f^{-1}(1)$ then $p - 1/2$
+        sign-represents $f$. Both conditions are read off the same two sets of domain points,
+        so the implication holds verbatim for partial $f$.
       conf: high
+  see_also: [sdeg, odeg, adeg]
+
+- from: sdeg
+  to: odeg
+  setting: total
+  status: settled
   lower:
     - stmt: '\mathrm{sdeg}(\mathrm{OR}_n) = \widetilde{\deg}_+(\mathrm{OR}_n) = 1'
       form: {exp: 1, kind: exact}

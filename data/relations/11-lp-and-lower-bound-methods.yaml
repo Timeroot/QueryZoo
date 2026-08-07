@@ -316,15 +316,26 @@ relations:
 
 - from: Rstar
   to: R
-  setting: total
+  setting: partial
   status: settled
-  headline: 'The composition rate never exceeds $\mathrm{R}$, and equals it whenever $\mathrm{R}$ composes.'
   upper:
     - stmt: '\mathrm{R}^{*}(f) \le \mathrm{R}(f)'
       form: {exp: 1, kind: exact}
       refs: [BBGM22]
-      note: 'Immediate from $\mathrm{R}(f^{\circ k}) \le \mathrm{R}(f)^k$ (compose the algorithms and pay for error reduction only inside the constant). Strictness is exactly the failure of perfect composition.'
+      note: |
+        Immediate from $\mathrm{R}(f^{\circ k}) \le \mathrm{R}(f)^k$ (compose the algorithms and pay
+        for error reduction only inside the constant). Strictness is exactly the failure of perfect
+        composition. The composition upper bound never uses totality -- on an input of the composed
+        promise every inner block already lies in $\mathrm{Dom}(f)$ -- so the inequality holds for
+        partial $f$ as well.
       conf: high
+  see_also: [Rstar, R, LR]
+
+- from: Rstar
+  to: R
+  setting: total
+  status: settled
+  headline: 'The composition rate never exceeds $\mathrm{R}$, and equals it whenever $\mathrm{R}$ composes.'
   lower:
     - stmt: '\mathrm{R}^{*}(f) = \mathrm{R}(f)^{1-o(1)} \text{ for read-once formulas}'
       form: {exp: 1, kind: theta}
