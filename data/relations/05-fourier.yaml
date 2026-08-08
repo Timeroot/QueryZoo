@@ -65,6 +65,40 @@ relations:
       conf: high
   see_also: [Inf, adeg, Q, Shi00]
 
+- from: Inf
+  to: D_size
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{I}(f) \le \log_2 \mathrm{DTsize}(f)'
+      form: {kind: log}
+      refs: [ODonnell14]
+      note: |
+        Two standard steps. First, for any decision tree $T$ computing $f$,
+        $\mathrm{Inf}_i(f) \le \Pr_x[T \text{ queries } i]$ -- if $f(x)\ne f(x^{\oplus i})$
+        and $T$ never queried $i$, then $x$ and $x^{\oplus i}$ follow the same path
+        and get the same answer. Summing over $i$ gives
+        $\mathrm{I}(f) \le \mathbb{E}_x[\#\text{queries}]$. Second, in a tree where
+        no coordinate is queried twice a leaf at depth $d_\ell$ is reached with
+        probability exactly $2^{-d_\ell}$, so
+        $\mathbb{E}_x[\#\text{queries}] = \sum_\ell p_\ell \log_2(1/p_\ell)$ is the
+        entropy of a distribution on $\mathrm{DTsize}(f)$ outcomes, hence at most
+        $\log_2 \mathrm{DTsize}(f)$.
+      conf: high
+      putative: true
+  lower:
+    - stmt: '\mathrm{I}(\oplus_n) = n = \log_2 \mathrm{DTsize}(\oplus_n)'
+      form: {kind: log}
+      witness: PARITY
+      note: 'Attained exactly: the minimal tree for $\oplus_n$ is the full binary tree on $2^n$ leaves and every coordinate is fully influential.'
+      conf: high
+  notes: |
+    Strictly stronger than $\mathrm{I}(f)\le\mathrm{D}(f)$, since
+    $\log_2\mathrm{DTsize}\le\mathrm{D}$: a wide shallow tree bounds the
+    influence by its *size*, not its depth. The first step above is the same
+    observation that drives the OSSS inequality.
+  see_also: [Inf, D_size, D, MaxInf, PARITY]
+
 - from: D
   to: MaxInf
   setting: total
@@ -237,3 +271,21 @@ relations:
       note: 'Attained again at the other end: $\mathrm{spar}(\mathrm{OR}_n) = 2^n$ and the $\mathbb{F}_2$-polynomial of $\mathrm{OR}_n$ contains $x_1\cdots x_n$.'
       conf: high
   see_also: [deg2, spar, PDT, Fdim]
+
+- from: degp
+  to: spar
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\deg_p(\oplus_n) = n \ \text{ for every odd prime } p, \quad \mathrm{spar}(\oplus_n) = 1'
+      form: {kind: unbounded}
+      witness: PARITY
+      note: |
+        Fourier sparsity is a statement about the *real* representation and says nothing
+        about representations over $\mathbb{F}_p$. Parity is the extreme case in both
+        directions at once: a single Fourier coefficient, but over $\mathbb{F}_p$ with
+        $p$ odd it needs full degree, $\tfrac12\big(1 - \prod_i (1-2x_i)\big)$ being the
+        only representation. Over $\mathbb{F}_2$ the two collapse to $\deg_2 = 1$,
+        which is why the value string for [[PARITY]] has to split on $p$.
+      conf: high
+  see_also: [degp, spar, deg, PARITY]

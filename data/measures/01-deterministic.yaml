@@ -95,7 +95,8 @@ measures:
     partial:  {defined: yes}
     relation: {defined: yes, note: 'Defined identically; less studied.'}
   facts:
-    - '$\mathrm{D}^{\oplus}(f) \ge \log_2 \mathrm{spar}(f) / \text{(something)}$; the exact relation to Fourier sparsity is a major open problem.'
+    - '$\mathrm{D}^{\oplus}(f) \ge \tfrac12\log_2 \mathrm{spar}(f)$: a depth-$d$ parity tree has $\le 2^d$ leaves, each the indicator of a coset of a codimension-$\le d$ subspace, whose Fourier support has size $\le 2^d$; so $\mathrm{spar}(f) \le 4^{\,d}$.'
+    - 'Whether the converse $\mathrm{D}^{\oplus}(f) = \mathrm{polylog}\,\mathrm{spar}(f)$ holds -- the log-rank conjecture for parity decision trees -- is a major open problem.'
     - '$\mathrm{D}^{\oplus}(f) = O(\sqrt{\mathrm{spar}(f)}\,\log \mathrm{spar}(f))$ is known for total $f$.'
   refs: [TsangWongXieZhang13, Sanyal19]
   see_also: [D, spar, L1, deg2]
@@ -284,7 +285,10 @@ measures:
     $\mathrm{C}_{\min}(f) = \min_x \mathrm{C}_x(f)$. Appears in the study of
     "every function has a short certificate somewhere" and in the
     $\mathrm{UC}_{\min}$ variant used by Ben-David-Hatami-Tal.
-  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  settings:
+    total: {defined: yes}
+    partial: {defined: yes}
+    relation: {defined: yes, note: 'Inherited from [[C]], which *is* defined for relations: a certificate is a set of queries whose answers fix some valid output, and $\mathrm{C}_{\min}$ takes the min of $\mathrm{C}_x$ over $x$ rather than the max. Nothing in that reading needs a Boolean output. This flag previously read `no`, which silently dropped the recorded $\mathrm{C}_{\min}$ rows on [[GroverSearch]], [[promiseFind1]], [[ApproxHW]], [[YamakawaZhandry]] and [[TseitinExpander]]. Unlike $\mathrm{C}_{\min}$, the unambiguous variants [[UC]], [[UCmin]] and [[SP]] stay undefined here, because unambiguity is a statement about the fibres of the output and a relation need not have any.'}
   refs: [BHT17]
   see_also: [C, UCmin]
   confidence: medium
@@ -299,13 +303,16 @@ measures:
   definition: |
     An *unambiguous* certificate family is a set of certificates such that every input
     is consistent with exactly one of them (per output value). $\mathrm{UC}(f)$ is the
-    smallest $k$ such that such a family exists with all certificates of size $\le k$;
-    $\mathrm{UC}^b$ restricts to $b$-certificates and $\mathrm{UC}_{\min}$ takes the
-    min over inputs.
+    smallest $k$ such that such a family exists with all certificates of size $\le k$.
+    $\mathrm{UC}^b$ restricts to $b$-certificates, so that
+    $\mathrm{UC} = \max\{\mathrm{UC}^0, \mathrm{UC}^1\}$ and
+    $\mathrm{UC}_{\min} = \min\{\mathrm{UC}^0, \mathrm{UC}^1\}$ -- the *one-sided*
+    version, which asks for an unambiguous cover on only the cheaper side.
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
   facts:
     - '$\mathrm{C}(f) \le \mathrm{UC}(f) \le \mathrm{D}(f)$.'
     - '$\mathrm{C}(f) = \Omega(\mathrm{UC}_{\min}(f)^{1.22})$ for an explicit family [BHT17].'
+    - '$\mathrm{UC}(f) = \mathrm{SP}(f)$ exactly, for every $f$. Splitting a monochromatic subcube partition by colour gives an unambiguous family on each side, and conversely two unambiguous families glue into a partition. The two ids are kept apart only because the literature uses them in different places -- [[SP]] is what lifts to the communication partition number, $\mathrm{UC}$ is what appears in low-sensitivity constructions -- so $\mathrm{D}$ vs $\mathrm{SP}$ and $\mathrm{D}$ vs $\mathrm{UC}$ are one open problem, not two. The one-sided $\mathrm{UC}_{\min}$ has no such partner.'
     - '$\mathrm{D}(f) = O(\mathrm{UC}(f)^2)$; separations up to $\mathrm{D} = \tilde\Omega(\mathrm{UC}^2)$ come from the Göös-Pitassi-Watson function.'
   refs: [BHT17, GPW18, KRS15]
   see_also: [C, SP, D, UCmin]
@@ -316,11 +323,15 @@ measures:
   symbol: '\mathrm{UC}_{\min}(f)'
   category: combinatorial
   order: 71
-  short: 'Min over inputs of the unambiguous certificate size.'
-  definition: 'The $\min_x$ version of $\mathrm{UC}$; the quantity in the $\mathrm{C}(f)=\Omega(\mathrm{UC}_{\min}(f)^{1.22})$ separation of [BHT17], which in turn drives the best known $\lambda$-vs-$\mathrm{C}$ separation.'
+  short: 'The cheaper of the two one-sided unambiguous certificate complexities.'
+  definition: '$\mathrm{UC}_{\min}(f) = \min\{\mathrm{UC}^0(f),\ \mathrm{UC}^1(f)\}$ [BHT17, Sec. 2.5]: an unambiguous cover is demanded on only one side of the function, whichever side is cheaper. It is *not* a min over inputs -- $\mathrm{UC}_{\min}$ is still worst-case within the side it picks. It is the quantity in the $\mathrm{C}(f)=\Omega(\mathrm{UC}_{\min}(f)^{1.22})$ separation of [BHT17], which in turn drives the best known $\lambda$-vs-$\mathrm{C}$ separation.'
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{D}(f) \le \mathrm{UC}_{\min}(f)^2$ and $\mathrm{C}(f) \le \mathrm{UC}_{\min}(f)^2$ [BHT17, Sec. 2.7.2]; the communication-complexity analogue is due to Yannakakis and the query-side proof to Goos.'
+    - '$\mathrm{fbs}(f) \le 2\,\mathrm{UC}_{\min}(f) - 1$ [BHT17, Thm 9], and the factor $2$ cannot be removed. This is exactly why the unambiguous-certificate route cannot produce a super-quadratic $\mathrm{bs}$-vs-$\mathrm{s}$ separation.'
+    - '$\mathrm{UC}_{\min}(f) \le \mathrm{UC}(f)$, but $\mathrm{UC}_{\min}$ is *not* above $\mathrm{C}$ -- only above $\mathrm{fbs}$.'
   refs: [BHT17]
-  see_also: [UC, C, lambda]
+  see_also: [UC, C, lambda, fbs, D]
   confidence: medium
 
 - id: SP
@@ -339,8 +350,9 @@ measures:
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
   facts:
     - '$\mathrm{C}(f) \le \mathrm{SP}(f) \le \mathrm{D}(f)$ and $\mathrm{SP} \le \mathrm{UC}$.'
-    - '$\mathrm{D}(f) = O(\mathrm{SP}(f)^2)$; separations $\mathrm{D} = \tilde\Omega(\mathrm{SP}^{1.5})$ [KRS15] and $\tilde\Omega(\mathrm{SP}^2)$ [GPW18].'
-  refs: [KRS15, GPW18]
+    - '$\mathrm{D}(f) = O(\mathrm{SP}(f)^2)$, and this is essentially tight: [AKK16] give a total $f$ with $\mathrm{D}(f) = \tilde\Omega(\mathrm{SP}(f)^2)$, in fact already $\mathrm{R}(f) = \tilde\Omega(\mathrm{SP}(f)^2)$. The first separation of any kind is [KRS15]; the power-$1.5$ stage is the query half of [GPW18].'
+    - 'Quantum is *not* settled: $\mathrm{Q} = \tilde\Omega(\mathrm{SP}^{1.5})$ [AKK16] against the $O(\mathrm{SP}^2)$ ceiling. The quadratic quantum separation in [AKK16], like the $\log^2\chi_1$ bound of [GPW18], is against the **one-sided** partition number -- a different measure, and not one the zoo carries.'
+  refs: [KRS15, GPW18, AKK16]
   see_also: [UC, C, D]
   confidence: medium
 

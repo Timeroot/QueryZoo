@@ -221,7 +221,8 @@ relations:
   see_also: [cjdeg, adeg, Q]
 
 # ---------------------------------------------------------------------
-# The conflict measures: RS <= chi <= chibar <= LR <= R
+# The conflict measures: chi <= chibar <= LR <= R, and RS = O(chibar).
+# NB: chi and RS are *not* known to be comparable in either direction.
 # ---------------------------------------------------------------------
 
 - from: chi
@@ -443,6 +444,18 @@ relations:
 
 # ---------------------------------------------------------------------
 # Certificate games, private coin
+#
+# Scope warning.  [CGLMSG23] *defines* CG for possibly-partial functions,
+# but the quantitative sandwich below is collected in their Figure 1 as
+# "known relations among complexity measures for total functions", and the
+# two arguments one can check by hand are total-function arguments: the
+# certificate-product bound CG <= C^0 C^1 needs a 0-certificate and a
+# 1-certificate to conflict, which requires the stitched-together input to
+# be in the domain, and R_0 = O(CG) travels through the same machinery.
+# Both fail loudly on promise problems -- [[GluedTrees]] has C = Theta(1)
+# and R_0 = 2^{Omega(n)} -- so every cell in this block is recorded at
+# `setting: total`.  The separations still reach the partial matrix, since
+# lower bounds inherit total -> partial.
 # ---------------------------------------------------------------------
 
 - from: CGpub
@@ -458,14 +471,267 @@ relations:
   see_also: [CG, CGpub, CA]
 
 - from: CG
-  to: R0
+  to: CGpub
   setting: partial
-  status: gap
-  headline: 'The private-coin certificate game is below zero-error randomized complexity, and above $\mathrm{CG}^{\mathrm{pub}} = \Theta(\mathrm{CA})$.'
+  status: fails
+  headline: 'On promise problems the private-coin game is unboundedly harder than the public-coin one.'
   upper:
-    - stmt: '\mathrm{CG}(f) = O\big(\mathrm{R}_0(f)\big)'
+    - stmt: '\mathrm{CG}(f) \text{ is known to be unbounded in terms of } \mathrm{CG}^{\mathrm{pub}}(f).'
+      form: {kind: none}
+      conf: high
+  lower:
+    - stmt: '\mathrm{CG}(\mathrm{DJ}_N) = \Theta(N) \text{ while } \mathrm{CG}^{\mathrm{pub}}(\mathrm{DJ}_N) = \Theta(1)'
+      form: {kind: unbounded}
+      witness: DeutschJozsa
+      putative: true
+      note: |
+        Deutsch--Jozsa is the cleanest witness.  **Public coin:** both players output
+        one shared uniformly random index; a constant input and a balanced input differ
+        on $N/2$ of the $N$ positions, so this wins with probability $1/2$ and
+        $\mathrm{CG}^{\mathrm{pub}} \le 2$.  **Private coin:** pin Alice at $x = 0^N$,
+        where she has a single output distribution $p$ over $[N]$.  Let $S$ be the
+        $N/2$ indices on which $p$ is smallest, so $\max_{i \in S} p_i \le 2/N$, and let
+        Bob hold the balanced $y = \mathbf{1}_S$.  Whatever distribution Bob plays, the
+        win probability $\sum_{i \in S} p_i q_i$ is at most $\max_{i \in S} p_i \le 2/N$.
+        Hence $\mathrm{CG} \ge N/2$, and the matching strategy (both players uniform)
+        gives $\mathrm{CG} \le 2N$.
+      conf: high
+  notes: |
+    Shared randomness is exactly what lets the two players agree on *where to look*,
+    and on a promise problem there is nothing else forcing them to agree: the
+    certificate-conflict argument that pins $\mathrm{CG}$ near $\mathrm{CG}^{\mathrm{pub}}$
+    for total $f$ needs the stitched-together input to be in the domain.  For total $f$
+    the question is open -- no total family is known on which $\mathrm{CG}$ exceeds
+    $\mathrm{CG}^{\mathrm{pub}}$ by more than a square, and $\oplus$ realises that square.
+  see_also: [CG, CGpub, CGstar, CGns, CA, DeutschJozsa]
+
+- from: CGpub
+  to: CA
+  setting: partial
+  status: settled
+  headline: 'The public-coin certificate game *is* the classical adversary bound, up to a constant.'
+  upper:
+    - stmt: '\mathrm{CG}^{\mathrm{pub}}(f) = \Theta\big(\mathrm{CA}(f)\big)'
       form: {exp: 1, kind: const}
       refs: [CGLMSG23]
-      note: 'Both players privately run the same zero-error algorithm on their own input and output the first index at which their transcripts could differ. Together with $\mathrm{CG} \ge \mathrm{CG}^{\mathrm{pub}} = \Theta(\mathrm{CA})$ this pins $\mathrm{CG}$ for every function whose classical adversary bound already matches $\mathrm{R}_0$.'
+      note: 'This identification is the point of [CGLMSG23] -- it is what the subtitle *and Consequences for the Classical Adversary Bound* refers to. The public-coin game''s optimum is an LP, and its dual is exactly the weight scheme that Aaronson''s classical adversary method optimises over: a shared random string lets the two players sample from a common distribution over $(x,y)$ pairs, which is what a weight scheme is. The argument is LP duality over whatever the domain happens to be, so unlike the private-coin sandwich it survives a promise.'
       conf: high
-  see_also: [CG, R0, CGpub, EC]
+  lower:
+    - stmt: '\mathrm{CG}^{\mathrm{pub}}(\vee_n) = \Theta(n) = \Theta(\mathrm{CA}(\vee_n))'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      refs: [CGLMSG23]
+      note: 'The two measures agree everywhere, so any family witnesses the exponent; [[OR]] is the cheapest to check, with $\mathrm{fbs} = n$ pinning both.'
+      conf: high
+  see_also: [CGpub, CA, CG, CGstar, CGns, fbs]
+
+- from: CA
+  to: CGpub
+  setting: partial
+  status: settled
+  headline: 'The other direction of the same identity.'
+  upper:
+    - stmt: '\mathrm{CA}(f) = \Theta\big(\mathrm{CG}^{\mathrm{pub}}(f)\big)'
+      form: {exp: 1, kind: const}
+      refs: [CGLMSG23]
+      note: 'See the $\mathrm{CG}^{\mathrm{pub}} \to \mathrm{CA}$ cell. Recording both directions makes the equality visible in the matrix rather than only in the closure.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{CA}(\vee_n) = \Theta(n) = \Theta(\mathrm{CG}^{\mathrm{pub}}(\vee_n))'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      refs: [CGLMSG23]
+      conf: high
+  see_also: [CA, CGpub, fbs, RC]
+
+- from: CA
+  to: fbs
+  setting: total
+  status: settled
+  headline: 'For total functions the classical adversary bound collapses to fractional block sensitivity.'
+  upper:
+    - stmt: '\mathrm{CA}(f) = \Theta\big(\mathrm{fbs}(f)\big)'
+      form: {exp: 1, kind: const}
+      refs: [ABIKPS17, Aaronson08]
+      note: 'All of the classical adversary variants -- weighted, unweighted, minimax -- coincide with $\mathrm{fbs}$ up to constants on total functions [ABIKPS17]. Combined with $\mathrm{fbs} = \Theta(\mathrm{RC})$ [Aaronson08] this is why $\mathrm{CA}$ never beats $\sqrt{\mathrm{R}}$-type bounds: it is a purely combinatorial quantity in disguise. The **total** hypothesis is not decorative -- the same paper shows the variants come apart on partial functions.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{CA}(\vee_n) = \Theta(n) = \Theta(\mathrm{fbs}(\vee_n))'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      refs: [ABIKPS17]
+      conf: high
+  see_also: [CA, fbs, RC, CGpub, cbs]
+
+- from: fbs
+  to: CA
+  setting: total
+  status: settled
+  headline: 'The other direction of the collapse.'
+  upper:
+    - stmt: '\mathrm{fbs}(f) = \Theta\big(\mathrm{CA}(f)\big)'
+      form: {exp: 1, kind: const}
+      refs: [ABIKPS17, Aaronson08]
+      note: 'See the $\mathrm{CA} \to \mathrm{fbs}$ cell. Chaining this with $\mathrm{CG}^{\mathrm{pub}} = \Theta(\mathrm{CA})$ gives the working rule used throughout the function entries: for total $f$, $\mathrm{CG}^{\mathrm{pub}}(f) = \Theta(\mathrm{fbs}(f))$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{fbs}(\vee_n) = n = \Theta(\mathrm{CA}(\vee_n))'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      refs: [ABIKPS17]
+      conf: high
+  see_also: [fbs, CA, CGpub, RC]
+
+- from: R0
+  to: CG
+  setting: total
+  status: settled
+  headline: 'Zero-error randomized complexity is *below* the private-coin certificate game, not above it.'
+  upper:
+    - stmt: '\mathrm{R}_0(f) = O\big(\mathrm{CG}(f)\big)'
+      form: {exp: 1, kind: const}
+      refs: [CGLMSG23, GJKKLSSV17]
+      note: 'The direction here is worth pausing on, because the obvious guess is backwards. The private-coin game is *harder* than $\mathrm{R}_0$: it is the one variant of the four that escapes the collapse to $\mathrm{CA}$, and it is not below $\mathrm{D}$ -- $\mathrm{CG}$ can exceed the number of variables. The public-coin argument that does give $\mathrm{CG}^{\mathrm{pub}} = O(\mathrm{R})$ -- both players run one algorithm on a *shared* random string and guess the step at which their transcripts diverge -- has no private-coin analogue, since with independent coins the two executions no longer track each other. The stated bound is implicit in the expectational-certificate machinery of [GJKKLSSV17] and is recorded as such in [CGLMSG23, Thm 5.10].'
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}_0(\vee_n) = n = \Theta(\mathrm{CG}(\vee_n))'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      refs: [CGLMSG23]
+      note: 'OR is the tight case: $\mathrm{C}^0\mathrm{C}^1 = n\cdot 1 = n$ caps the game from above and $\mathrm{R}_0 = n$ meets it from below. Parity does *not* work here -- there $\mathrm{CG} = \Theta(n^2)$ while $\mathrm{R}_0 = n$, so parity is instead the extreme *separation* for this cell.'
+      conf: high
+  see_also: [CG, R0, CGpub, EC, CA]
+
+- from: CG
+  to: EC
+  setting: total
+  status: settled
+  headline: 'The private-coin certificate game is at most the square of expectational certificate complexity, and the square is needed.'
+  upper:
+    - stmt: '\mathrm{CG}(f) = O\big(\mathrm{EC}(f)^2\big)'
+      form: {exp: 2, kind: const}
+      refs: [CGLMSG23, GJKKLSSV17]
+      note: 'The [GJKKLSSV17] argument for $\mathrm{R}_0 = O(\mathrm{EC}^2)$ extends verbatim to the game [CGLMSG23, Sec. 7.1]. The crude version of the same idea is the one-line bound $\mathrm{CG}(f) \le \mathrm{C}^0(f)\,\mathrm{C}^1(f)$: each player outputs a uniformly random index of a minimal certificate for their own input, and since a $0$-certificate and a $1$-certificate must conflict somewhere, they collide on a differing coordinate with probability at least $1/(\mathrm{C}^0\mathrm{C}^1)$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{CG}(\oplus_n) = \Theta(n^2) = \Theta(\mathrm{EC}(\oplus_n)^2)'
+      form: {exp: 2, kind: exact}
+      witness: PARITY
+      note: 'Parity has $\mathrm{EC} = n$ and $\mathrm{C}^0 = \mathrm{C}^1 = n$, and both the $\mathrm{C}^0\mathrm{C}^1$ and the $\mathrm{EC}^2$ bounds are tight on it [CGLMSG23]: $\mathrm{CG}(\oplus_n) = \Theta(n^2)$. This is the cleanest demonstration that $\mathrm{CG}$ is not below $\mathrm{D}$ -- the game costs quadratically more than the arity.'
+      conf: high
+  see_also: [CG, EC, C0, C1, CGpub, PARITY]
+
+- from: CG
+  to: Adv
+  setting: total
+  status: open
+  headline: 'The private-coin game is at least the *square* of the positive adversary bound -- the reason it can exceed $n$.'
+  lower:
+    - stmt: '\mathrm{CG}(f) = \Omega\big(\mathrm{Adv}(f)^2\big)'
+      form: {exp: 2, kind: const}
+      refs: [CGLMSG23]
+      note: 'Theorem 5.10 of [CGLMSG23]: $\mathrm{CG}(f) \ge \mathrm{MM}(f)^2$, where $\mathrm{MM}$ is the minimax formulation of the positive adversary bound, itself sitting between $\lambda(f)$ and $\mathrm{Q}(f)$. Specialising to the Hamming-distance-$1$ game recovers the exact identity $\mathrm{CG}_{[1]}(f) = \lambda(f)^2$ [CGLMSG23, Thm 8.9]. This is what lets $\mathrm{CG}$ climb above the arity: $\mathrm{Adv}(\oplus_n) = n$ forces $\mathrm{CG}(\oplus_n) = \Omega(n^2)$.'
+      conf: high
+  notes: |
+    No upper bound on $\mathrm{CG}$ in terms of $\mathrm{Adv}$ is known, and none should be
+    expected in general: $\mathrm{CG}$ is also above $\mathrm{R}_0$, while $\mathrm{Adv}$
+    is below $\mathrm{Q}$. Any total function with a large $\mathrm{R}_0$-vs-$\mathrm{Q}$
+    gap therefore pushes the two apart -- $\mathrm{OR}_n$ already gives
+    $\mathrm{CG} = \Theta(n)$ against $\mathrm{Adv} = \Theta(\sqrt n)$, which is exactly
+    the tight case of the bound above rather than a separation. A genuine separation would
+    need $\mathrm{CG} \gg \mathrm{Adv}^2$.
+  see_also: [CG, Adv, lambda, Q, R0, PARITY]
+
+- from: CG
+  to: C
+  setting: total
+  status: settled
+  headline: 'At most $\mathrm{C}^0\mathrm{C}^1$, hence at most $\mathrm{C}^2$ -- and parity meets it.'
+  upper:
+    - stmt: '\mathrm{CG}(f) \le \mathrm{C}^0(f)\,\mathrm{C}^1(f) \le \mathrm{C}(f)^2'
+      form: {exp: 2, kind: exact}
+      refs: [CGLMSG23]
+      note: 'Each player outputs a uniformly random index of a minimal certificate for their own input; a $0$-certificate and a $1$-certificate must conflict on some coordinate, so they agree on a differing index with probability at least $1/(\mathrm{C}^0\mathrm{C}^1)$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{CG}(\oplus_n) = \Theta(n^2) = \Theta(\mathrm{C}(\oplus_n)^2)'
+      form: {exp: 2, kind: exact}
+      witness: PARITY
+      refs: [CGLMSG23]
+      note: 'Tight for parity, and also for [[OR]] in the asymmetric form $\mathrm{C}^0\mathrm{C}^1 = n\cdot 1$.'
+      conf: high
+  see_also: [CG, C, C0, C1, EC, PARITY]
+
+- from: CG
+  to: D
+  setting: total
+  status: settled
+  headline: 'Quadratic, and genuinely quadratic -- $\mathrm{CG}$ is one of the few measures here that can *exceed* the number of queries.'
+  upper:
+    - stmt: '\mathrm{CG}(f) \le \mathrm{C}^0(f)\,\mathrm{C}^1(f) \le \mathrm{D}(f)^2'
+      form: {exp: 2, kind: exact}
+      refs: [CGLMSG23]
+      note: 'Immediate from the certificate bound, since $\mathrm{C}^0,\mathrm{C}^1 \le \mathrm{C} \le \mathrm{D}$. It is worth stating explicitly because the naive guess $\mathrm{CG} \le \mathrm{D}$ is *false*: the value of a certificate game is a product of two players'' guessing probabilities, not a query count, and nothing forces it below the arity.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{CG}(\oplus_n) = \Theta(n^2) = \Theta(\mathrm{D}(\oplus_n)^2)'
+      form: {exp: 2, kind: exact}
+      witness: PARITY
+      refs: [CGLMSG23]
+      note: 'Parity has $\mathrm{C}^0 = \mathrm{C}^1 = n$ and $\mathrm{Adv}(\oplus_n) = \Theta(n)$, so both ends of the sandwich $\mathrm{Adv}^2 \le \mathrm{CG} \le \mathrm{C}^0\mathrm{C}^1$ land on $n^2$, while $\mathrm{D}(\oplus_n) = n$. The exponent $2$ is therefore attained, not merely permitted.'
+      conf: high
+  notes: |
+    This is the cell that most often gets recorded backwards. Certificate game
+    complexity is a *lower*-bound method for randomized query complexity --
+    $\mathrm{R}_0(f) = O(\mathrm{CG}(f))$ -- and it lives above $\mathrm{D}$ as
+    often as below it. See [[CG]] for the full sandwich.
+  see_also: [CG, D, C, C0, C1, R0, PARITY]
+
+- from: D
+  to: CG
+  setting: total
+  status: gap
+  headline: 'At most quadratic, via $\mathrm{D} = O(\mathrm{R}_0^2)$ and $\mathrm{R}_0 = O(\mathrm{CG})$.'
+  upper:
+    - stmt: '\mathrm{D}(f) = O\big(\mathrm{CG}(f)^2\big)'
+      form: {exp: 2, kind: const}
+      refs: [CGLMSG23, Nisan91]
+      putative: true
+      note: 'Composition of two recorded facts. A zero-error algorithm must, on every run, query a full certificate, so $\mathrm{R}_0 \ge \mathrm{C}$; and $\mathrm{R}_0 \ge \mathrm{R} \ge \mathrm{bs}$. Nisan''s $\mathrm{D} \le \mathrm{C}\cdot\mathrm{bs}$ [Nisan91] then gives $\mathrm{D} = O(\mathrm{R}_0^2)$, and $\mathrm{R}_0 = O(\mathrm{CG})$ [CGLMSG23] finishes it.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{D}(\vee_n) = n = \Theta(\mathrm{CG}(\vee_n))'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      refs: [CGLMSG23]
+      note: 'Baseline only. $\mathrm{CG}(\vee_n) \le \mathrm{C}^0\mathrm{C}^1 = n \cdot 1$, and $\mathrm{R}_0(\vee_n) = n$ forces the match. Whether the exponent can be pushed towards $2$ is open: it would need a family on which $\mathrm{CG}$ stays near $\sqrt{\mathrm{D}}$, and since $\mathrm{CG} \ge \mathrm{R}_0$ any such family also separates $\mathrm{D}$ from $\mathrm{R}_0$ at the same power. The pointer functions of [ABBLSS17] do that at power $2$ for $\mathrm{R}_0$, but their $\mathrm{C}^0\mathrm{C}^1$ is not known to be small enough to keep $\mathrm{CG}$ down.'
+      conf: high
+  see_also: [D, CG, R0, C, bs, OR]
+
+- from: CG
+  to: R0
+  setting: total
+  status: settled
+  headline: 'The return leg: $\mathrm{CG} = O(\mathrm{R}_0^2)$, and parity makes it tight.'
+  upper:
+    - stmt: '\mathrm{CG}(f) \le \mathrm{C}^0(f)\,\mathrm{C}^1(f) \le \mathrm{R}_0(f)^2'
+      form: {exp: 2, kind: exact}
+      refs: [CGLMSG23]
+      putative: true
+      note: 'A zero-error algorithm must, on every branch it can take, query a set that determines the answer, so the queried set is a certificate and $\mathrm{R}_0(f) \ge \mathrm{C}(f) \ge \max\{\mathrm{C}^0(f), \mathrm{C}^1(f)\}$. Feeding that into the certificate-product bound of [CGLMSG23] gives the square. This pins $\mathrm{CG}$ between $\mathrm{R}_0$ and $\mathrm{R}_0^2$; the recorded $\mathrm{R}_0 = O(\mathrm{CG})$ is the other side.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{CG}(\oplus_n) = \Theta(n^2) = \Theta(\mathrm{R}_0(\oplus_n)^2)'
+      form: {exp: 2, kind: exact}
+      witness: PARITY
+      refs: [CGLMSG23]
+      note: 'Parity saturates the upper bound: $\mathrm{R}_0(\oplus_n) = n$ and both ends of the [CGLMSG23] sandwich sit at $n^2$. Contrast [[OR]], where $\mathrm{CG} = \Theta(\mathrm{R}_0)$ because the certificate product is the very lopsided $n \cdot 1$.'
+      conf: high
+  notes: |
+    Together with the $\mathrm{R}_0 \to \mathrm{CG}$ cell this says
+    $\mathrm{R}_0 \le \mathrm{CG} \le \mathrm{R}_0^2$, with both ends attained --
+    $\mathrm{OR}$ at the bottom, $\oplus$ at the top. Certificate game complexity
+    is thus a lower-bound method for $\mathrm{R}_0$ that is never more than
+    quadratically wasteful, which is what makes the $\mathrm{CG} \ge \mathrm{Adv}^2$
+    direction interesting rather than vacuous.
+  see_also: [CG, R0, C, C0, C1, PARITY, OR]

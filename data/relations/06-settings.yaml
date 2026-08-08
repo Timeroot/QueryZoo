@@ -240,3 +240,238 @@ relations:
       note: 'Holds for relations, and even when the decision tree is randomized -- one of the few bounds explicitly stated for the relational setting in the classical literature.'
       conf: high
   see_also: [D_size, Q, settings]
+
+# =====================================================================
+# TRANSFER: total-function separations against bs and R are relational
+# separations against cbs and psD.
+#
+# A total Boolean $f$ is the single-valued relation $S_f = \{(x, f(x))\}$, and on
+# such a relation both of the genuinely relational measures collapse -- this is
+# exactly what the `degenerate` markers on their measure pages say:
+#
+#     cbs(S_f) = bs(f)        (every input is critical, s = f is forced)
+#     psD(S_f) = Theta(R(f))  (there is only one correct answer to be canonical about)
+#
+# So every separation the zoo already has against bs or R in the total setting is
+# also a separation against cbs or psD in the relational setting. The engine does
+# not make this move on its own -- lower bounds inherit total -> partial but not
+# total -> relation -- so the transfers are written out here. Each cites the
+# recorded values of its witness; none of them is new mathematics.
+# =====================================================================
+
+- from: cbs
+  to: PDT
+  setting: relation
+  status: fails
+  lower:
+    - stmt: '\mathrm{cbs}(\oplus_n) = \mathrm{bs}(\oplus_n) = n, \quad \mathrm{D}^{\oplus}(\oplus_n) = 1'
+      form: {kind: unbounded}
+      witness: PARITY
+      note: 'One parity query settles $\oplus_n$, while flipping any single bit changes it. Critical block sensitivity is unbounded in terms of parity decision tree depth.'
+      conf: high
+  see_also: [cbs, PDT, bs, PARITY, settings]
+
+- from: psD
+  to: PDT
+  setting: relation
+  status: fails
+  lower:
+    - stmt: '\mathrm{psD}(\oplus_n) = \Theta(\mathrm{R}(\oplus_n)) = \Theta(n), \quad \mathrm{D}^{\oplus}(\oplus_n) = 1'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [psD, PDT, R, PARITY, settings]
+
+# ------------------------------------------------------------ vs cbs
+- from: PDT
+  to: cbs
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{D}^{\oplus}(\mathrm{RMAJ}_3^{\,d}) = \tfrac{3^d+1}{2} = \Omega\big(\mathrm{cbs}^{\log_2 3}\big)'
+      form: {exp: 1.585, kind: const}
+      witness: RMAJ3
+      note: 'Recursive majority has $\mathrm{bs} = 2^d$ and needs the full $\Theta(3^d)$ even with parity queries, and $\log_2 3 = 1.5849\ldots$'
+      conf: medium
+  see_also: [PDT, cbs, bs, RMAJ3, settings]
+
+- from: cjdeg
+  to: cbs
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{cjdeg}(\mathrm{NAND}_N) = \widetilde\Theta(N^{0.753\ldots}) = \widetilde\Omega\big(\mathrm{cbs}^{3/2}\big)'
+      form: {exp: 1.5, kind: tilde}
+      witness: NANDtree
+      note: 'The balanced NAND-tree has $\mathrm{bs} = \Theta(\sqrt N)$, so the conjunction degree sits three halves above it.'
+      conf: medium
+  see_also: [cjdeg, cbs, bs, NANDtree, settings]
+
+- from: Np
+  to: cbs
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{N}_p(\oplus_n) = \Theta(n\log n) = \Theta(\mathrm{cbs}\,\log \mathrm{cbs})'
+      form: {exp: 1, log: 1, kind: theta}
+      witness: PARITY
+      note: 'The one transfer here that is not a bare linear separation: noisy query complexity pays a logarithmic overhead over block sensitivity, and the collapse carries the log factor across unchanged.'
+      conf: high
+  see_also: [Np, cbs, bs, PARITY, settings]
+
+- from: C1
+  to: cbs
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{C}^{1}(\wedge_n) = \mathrm{cbs}(\wedge_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: AND
+      conf: high
+  see_also: [C1, cbs, bs, AND, settings]
+
+- from: CA
+  to: cbs
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{CA}(\vee_n) = \Theta(n) = \Theta(\mathrm{cbs}(\vee_n))'
+      form: {exp: 1, kind: theta}
+      witness: OR
+      conf: high
+  see_also: [CA, cbs, bs, OR, settings]
+
+- from: cbs
+  to: CA
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{cbs}(f) = O(\mathrm{CA}(f))'
+      form: {exp: 1, kind: const}
+      refs: [ABK21lifting]
+      note: 'The classical adversary dominates critical block sensitivity, for partial functions and search problems alike. This is what makes [[CA]] the stronger of the two as a lifting target: [ABK21lifting] lift $\mathrm{CAdv}$ to randomized communication complexity with a *constant*-size gadget, and the resulting lower bound is strictly stronger than the one lifting $\mathrm{cbs}$ gives. The converse fails to be tight -- see the $\mathrm{CA}$ vs $\mathrm{cbs}$ cell above, where $\vee_n$ shows the two can also coincide.'
+      conf: high
+  see_also: [cbs, CA, bs, settings]
+
+- from: Adv
+  to: cbs
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{Adv}(\oplus_n) = \Theta(n) = \Theta(\mathrm{cbs}(\oplus_n))'
+      form: {exp: 1, kind: theta}
+      witness: PARITY
+      conf: high
+  see_also: [Adv, cbs, bs, PARITY, settings]
+
+- from: prt
+  to: cbs
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{prt}(\vee_n) = \Theta(n) = \Theta(\mathrm{cbs}(\vee_n))'
+      form: {exp: 1, kind: theta}
+      witness: OR
+      conf: high
+  see_also: [prt, cbs, bs, OR, settings]
+
+- from: rprt
+  to: cbs
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{rprt}(\vee_n) = \Theta(n) = \Theta(\mathrm{cbs}(\vee_n))'
+      form: {exp: 1, kind: theta}
+      witness: OR
+      conf: high
+  see_also: [rprt, cbs, bs, OR, settings]
+
+# ------------------------------------------------------------ vs psD
+- from: PDT
+  to: psD
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{D}^{\oplus}(\mathrm{RMAJ}_3^{\,d}) = \tfrac{3^d+1}{2} = \Omega\big(\mathrm{psD}^{1.127}\big)'
+      form: {exp: 1.127, kind: const}
+      witness: RMAJ3
+      note: 'Using $\mathrm{R}(\mathrm{RMAJ}_3^{\,d}) = O(1.007 \cdot 2.64944^{\,d})$ and $\log 3 / \log 2.64944 = 1.1275\ldots$'
+      conf: medium
+  see_also: [PDT, psD, R, RMAJ3, settings]
+
+- from: Np
+  to: psD
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{N}_p(\oplus_n) = \Theta(n\log n) = \Theta(\mathrm{psD}\,\log \mathrm{psD})'
+      form: {exp: 1, log: 1, kind: theta}
+      witness: PARITY
+      conf: high
+  see_also: [Np, psD, R, PARITY, settings]
+
+- from: C1
+  to: psD
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{C}^{1}(\wedge_n) = n = \Theta(\mathrm{psD}(\wedge_n))'
+      form: {exp: 1, kind: theta}
+      witness: AND
+      conf: high
+  see_also: [C1, psD, R, AND, settings]
+
+- from: CA
+  to: psD
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{CA}(\vee_n) = \Theta(n) = \Theta(\mathrm{psD}(\vee_n))'
+      form: {exp: 1, kind: theta}
+      witness: OR
+      conf: high
+  see_also: [CA, psD, R, OR, settings]
+
+- from: Adv
+  to: psD
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{Adv}(\oplus_n) = \Theta(n) = \Theta(\mathrm{psD}(\oplus_n))'
+      form: {exp: 1, kind: theta}
+      witness: PARITY
+      conf: high
+  see_also: [Adv, psD, R, PARITY, settings]
+
+- from: cjdeg
+  to: psD
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{cjdeg}(\oplus_n) = n = \Theta(\mathrm{psD}(\oplus_n))'
+      form: {exp: 1, kind: theta}
+      witness: PARITY
+      conf: high
+  see_also: [cjdeg, psD, R, PARITY, settings]
+
+- from: prt
+  to: psD
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{prt}(\vee_n) = \Theta(n) = \Theta(\mathrm{psD}(\vee_n))'
+      form: {exp: 1, kind: theta}
+      witness: OR
+      conf: high
+  see_also: [prt, psD, R, OR, settings]
+
+- from: rprt
+  to: psD
+  setting: relation
+  status: gap
+  lower:
+    - stmt: '\mathrm{rprt}(\vee_n) = \Theta(n) = \Theta(\mathrm{psD}(\vee_n))'
+      form: {exp: 1, kind: theta}
+      witness: OR
+      conf: high
+  see_also: [rprt, psD, R, OR, settings]

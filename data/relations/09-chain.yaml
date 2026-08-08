@@ -302,22 +302,42 @@ relations:
 - from: adeg
   to: deg
   setting: partial
+  status: fails
+  upper:
+    - stmt: 'No bound: $\widetilde{\deg}(f)$ is not bounded by any function of $\deg(f)$ for partial $f$.'
+      form: {kind: none}
+      conf: high
+  lower:
+    - stmt: '\deg(\mathrm{SEARCH}^{\le 1}_n) = 1 \text{ while } \widetilde{\deg}(\mathrm{SEARCH}^{\le 1}_n) = \Theta(\sqrt n)'
+      form: {kind: unbounded}
+      witness: UniqueSearch
+      refs: [BBCMdW01]
+      conf: high
+  notes: |
+    The usual one-line argument -- "a representing polynomial is in particular an approximating
+    one" -- **breaks on a promise**, and the failure is not cosmetic. For partial $f$, [[deg]] asks
+    only that $p$ agree with $f$ on $\mathrm{Dom}(f)$ and lets $p$ be arbitrary elsewhere, whereas
+    [[adeg]] additionally demands $|p(x)| \le 1+\varepsilon$ at *every* $x \in \{0,1\}^n$ -- the
+    condition that makes $\widetilde{\deg}$ a quantum lower bound in the first place. On
+    [[UniqueSearch]] ($|x| \le 1$; is $|x| = 1$?) the polynomial $\sum_i x_i$ represents $f$ exactly
+    on the domain, so $\deg = 1$, but it runs up to $n$ off the promise; a *bounded* approximation
+    needs degree $\Theta(\sqrt n)$, matching $\mathrm{Q}$.
+  see_also: [adeg, deg, rdeg, UniqueSearch]
+
+- from: adeg
+  to: deg
+  setting: total
   status: settled
   upper:
     - stmt: '\widetilde{\deg}(f) \le \deg(f)'
       form: {exp: 1, kind: exact}
       refs: [NS94, BdW02]
       note: |
-        The representing polynomial is in particular an approximating one. Both degrees are
-        defined by constraints at the points of $\mathrm{Dom}(f)$ only, and the exact constraint
-        implies the approximate one pointwise, so the inequality is setting-agnostic.
+        For total $f$ the unique multilinear representation takes values in $\{0,1\}$ on the whole
+        cube, so it is automatically bounded and is in particular a legal approximating polynomial.
+        Recorded here and not in the partial setting on purpose: see the partial record, where the
+        boundedness demanded off the domain makes the inequality fail outright.
       conf: high
-  see_also: [adeg, deg, rdeg]
-
-- from: adeg
-  to: deg
-  setting: total
-  status: settled
   lower:
     - stmt: '\widetilde{\deg}(\mathrm{PARITY}_n) = \deg(\mathrm{PARITY}_n) = n'
       form: {exp: 1, kind: exact}
@@ -335,9 +355,11 @@ relations:
       form: {exp: 1, kind: exact}
       refs: [IJKKKSWW23, MahadevdeWolf15]
       note: |
-        A polynomial is a rational function with denominator 1 -- a containment of feasible sets
-        for the very same pointwise constraints, which are imposed at the points of
-        $\mathrm{Dom}(f)$ whatever the setting.
+        A polynomial is a rational function with denominator $1$, so every feasible solution for
+        $\widetilde{\deg}$ is one for $\mathrm{rdeg}_\varepsilon$: a containment of feasible sets.
+        Unlike [[adeg]] versus [[deg]], the containment survives a promise -- $\mathrm{rdeg}_\varepsilon$
+        imposes *fewer* constraints (nothing at all off $\mathrm{Dom}(f)$), so dropping
+        $\widetilde{\deg}$'s off-domain boundedness only helps.
       conf: high
   notes: |
     Careful: this is the *approximate* rational degree. The exact rational degree

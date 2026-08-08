@@ -196,6 +196,85 @@ relations:
       conf: high
   see_also: [Adv, Advpm, MAdv, ElementDistinctness]
 
+# ------------------------------------------- Adv vs C (the barrier, as a bound)
+- from: Adv
+  to: C
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{Adv}(f) \le \sqrt{\mathrm{C}^{0}(f)\,\mathrm{C}^{1}(f)} \le \mathrm{C}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [SpalekSzegedy06, Zhang05]
+      note: 'The **certificate complexity barrier**, recorded here in the coarse two-measure form the matrix can use; the sharp statement involves $\mathrm{C}^{0}$ and $\mathrm{C}^{1}$ separately and is written out under [[Advpm]] vs [[Adv]] above. The second inequality is just $\sqrt{ab}\le\max(a,b)$. This is the precise sense in which the positive adversary cannot see past certificates -- and the reason $\mathrm{Adv}^{\pm}$ exists. **Boolean output only.** The barrier is a statement about $0/1$-valued $f$, where "$\mathrm{C}^{0}$" and "$\mathrm{C}^{1}$" mean something; it does not survive a large output alphabet. [[OrderedSearch]] is the sharpest illustration: two queries $\{x_k = 0,\; x_{k+1} = 1\}$ pin down the answer, so the decision version has $\mathrm{C} = 2$, yet the $(n+1)$-valued *reconstruction* version has $\mathrm{Adv} \ge \tfrac{1}{\pi}\ln n$ [ChildsLee08]. That is why the $\mathrm{C}$ row is left blank on that page rather than filled in with the constant.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{Adv}(\oplus_n) = \mathrm{C}(\oplus_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      note: 'Every input of $\oplus_n$ is fully sensitive, so $\mathrm{C}=n$, and the basic adversary on the Hamming-distance-one relation already gives $n$. So the barrier is attained and the cell closes.'
+      conf: high
+  notes: |
+    Recorded under **partial** because nothing in the barrier's proof uses
+    totality -- and the promise setting is exactly where it hurts, since a
+    property-testing promise can force both certificate complexities to $O(1)$
+    while $\mathrm{Q}$ is polynomially large. The total-function row inherits it.
+  see_also: [Adv, C, Advpm, Collision, Simon, OrderedSearch]
+
+# --------------------------------------- Adv vs adeg (the polynomial ceiling)
+- from: Adv
+  to: adeg
+  setting: partial
+  status: gap
+  upper:
+    - stmt: '\mathrm{Adv}(f) = O\big(\widetilde{\deg}(f)^2\big)'
+      form: {exp: 2, kind: const}
+      refs: [ABK21lifting]
+      note: 'The positive-weight adversary can never beat the polynomial method by more than a square, even on promise problems. This is the cleanest way to see why the Ambainis-Belovs separation *had* to use negative weights: [[AmbainisBelovsFn]] has $\deg = 9$, hence $\widetilde{\deg} \le 9$, hence $\mathrm{Adv} = O(1)$, against $\mathrm{Q} = \widetilde\Omega(n^{1/3})$. Compare the certificate barrier under [[Adv]] vs [[C]]: that one bites on property-testing promises, this one bites on low-degree ones.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{Adv}(\oplus_n) = \widetilde{\deg}(\oplus_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      note: 'The linear end. Whether the exponent $2$ in the upper bound is ever approached is not settled here -- $\mathrm{Adv} \le \mathrm{Q}$ and $\widetilde{\deg} \le \mathrm{Q}$ both hold, so any witness must have $\widetilde{\deg}$ strictly below $\mathrm{Q}$ while the positive adversary stays high, which is the opposite of the usual situation.'
+      conf: high
+  see_also: [Adv, adeg, Advpm, AmbainisBelovsFn, C]
+
+# --------------------------------------- bs vs Adv (Ambainis' basic bound)
+- from: bs
+  to: Adv
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{bs}(f) \le \mathrm{Adv}(f)^2'
+      form: {exp: 2, kind: exact}
+      refs: [Ambainis02]
+      note: |
+        Ambainis'' basic bound applied to a single maximally block-sensitive input.
+        Take $x$ attaining $\mathrm{bs}(f)=b$ with disjoint sensitive blocks
+        $B_1,\dots,B_b$, and let $R$ relate $x$ to the $b$ inputs $x^{B_j}$.
+        Then $m_x = b$, $m_y = 1$, and because the blocks are **disjoint** each
+        index $i$ lies in at most one of them, so $\ell_x=\ell_y=1$. The bound
+        $\sqrt{m_x m_y/(\ell_x \ell_y)}$ is $\sqrt b$. Nothing here needs $f$
+        total: each $x^{B_j}$ is a domain point by the definition of a sensitive
+        block.
+      conf: high
+  lower:
+    - stmt: '\mathrm{bs}(\vee_n) = n = \mathrm{Adv}(\vee_n)^2'
+      form: {exp: 2, kind: exact}
+      witness: OR
+      note: '$\mathrm{Adv}(\vee_n)=\sqrt n$, which the barrier above also caps at $\sqrt{\mathrm{C}^0\mathrm{C}^1}=\sqrt n$. The exponent $2$ is optimal and the cell closes.'
+      conf: high
+  notes: |
+    The two-sided refinement $\mathrm{Adv}(f) = \Omega\big(\sqrt{\mathrm{bs}^{0}(f)\,
+    \mathrm{bs}^{1}(f)}\big)$ comes out of the same relation with $X$ and $Y$
+    both taken to be large, and is what pins $\mathrm{Adv}$ on functions like
+    [[ADDR]]; it is not a two-measure statement, so it lives in the notes rather
+    than in the matrix. Composed with $\mathrm{s}\le\mathrm{bs}$ this record also
+    supplies $\mathrm{s}\le\mathrm{Adv}^2$, and with
+    $\mathrm{Adv}\le\mathrm{Adv}^{\pm}=\Theta(\mathrm{Q})$ it recovers the
+    classic $\mathrm{Q}=\Omega(\sqrt{\mathrm{bs}})$.
+  see_also: [bs, Adv, Q, Ambainis02, OR, ADDR]
+
 - from: MAdv
   to: Q
   setting: partial

@@ -321,7 +321,8 @@ measures:
     - {measure: fbs, form: {exp: 1, kind: theta}, statement: '$\mathrm{CA}(f) = \Theta(\mathrm{fbs}(f))$ for *total* $f$', refs: [ABIKPS17]}
   facts:
     - '$\mathrm{CA}(f) = O(\mathrm{R}(f))$ for every (partial) Boolean $f$.'
-    - '$\mathrm{CA}(f) \le \mathrm{EC}(f) \le \mathrm{C}(f)$ and $\mathrm{CA}(f) \le \mathrm{RS}(f)$.'
+    - '$\mathrm{CA}(f) \le \mathrm{EC}(f)$ always, and $\mathrm{CA}(f) \le \mathrm{RS}(f)$.'
+    - '$\mathrm{EC}(f) \le \mathrm{C}(f)$ **for total $f$ only**. The proof hands each input the indicator of a minimal certificate as its weight scheme, and checks the constraint on a pair $x,y$ with $f(x) \ne f(y)$ by observing that their certificates must conflict. On a promise problem two certificates can fail to conflict, because the string stitched together from both may simply be outside the domain -- the same step that breaks the [[CG]] sandwich. On a partial function, prove an $\mathrm{EC}$ upper bound by exhibiting a weighting directly.'
     - 'There are partial functions with $\mathrm{R}(f)$ exponentially larger than $\mathrm{CA}(f)$ [CGLMSG23].'
   refs: [Aaronson06, LaplanteMagniez08, ABIKPS17, CGLMSG23]
   see_also: [fbs, CG, CGpub, EC, R, Adv]
@@ -340,11 +341,13 @@ measures:
     private randomness.
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
   facts:
-    - '$\mathrm{CG}^{\mathrm{ns}} \le \mathrm{CG}^{*} \le \mathrm{CG}^{\mathrm{pub}} \le \mathrm{CG}$.'
-    - '$\mathrm{R}_0(f) = O(\mathrm{CG}(f))$ ... $\mathrm{CG}(f) = O(\mathrm{EC}(f)^2)$ [CGLMSG23].'
-    - 'The *single-bit* private-coin variant (inputs at Hamming distance 1) equals $\lambda(f)^2$.'
-  refs: [CGLMSG23]
-  see_also: [CGpub, CGstar, CGns, CA, lambda]
+    - '$\mathrm{CG}^{\mathrm{ns}} \le \mathrm{CG}^{*} \le \mathrm{CG}^{\mathrm{pub}} \le \mathrm{CG}$. Private coin is the *one* variant of the four that escapes the collapse to the classical adversary bound [CGLMSG23].'
+    - 'The sandwich: $\max\{\mathrm{Adv}(f)^2,\ \mathrm{R}_0(f),\ \mathrm{CA}(f)\} \le \mathrm{CG}(f) \le \min\{\mathrm{C}^0(f)\,\mathrm{C}^1(f),\ O(\mathrm{EC}(f)^2)\}$ [CGLMSG23, Thm 5.10]. **For total $f$.** The definition itself is stated for possibly-partial $f$, but the sandwich is not: the certificate-product bound needs a $0$-certificate and a $1$-certificate to conflict, and on a promise problem the input stitched together from two non-conflicting certificates may simply be outside the domain. It fails badly there -- [[GluedTrees]] has $\mathrm{C} = \Theta(1)$ and $\mathrm{R}_0 = 2^{\Omega(n)}$, so no bound of the form $\mathrm{R}_0 \le \mathrm{CG} \le \mathrm{C}^0\mathrm{C}^1$ can survive.'
+    - 'The upper bound $\mathrm{CG}(f) \le \mathrm{C}^0(f)\,\mathrm{C}^1(f)$ is one line: each player outputs a uniformly random index of a minimal certificate for their own input, and a $0$-certificate and a $1$-certificate must conflict somewhere. It is tight for $\mathrm{OR}$ and for $\oplus$.'
+    - '$\mathrm{CG}$ is **not** bounded by $\mathrm{D}$: it can exceed the arity of the function. $\mathrm{CG}(\oplus_n) = \Theta(n^2)$, because $\mathrm{C}^0\mathrm{C}^1 = n^2$ above and $\mathrm{Adv}(\oplus_n)^2 = n^2$ below.'
+    - 'The *single-bit* private-coin variant (inputs at Hamming distance $1$) equals $\lambda(f)^2$ [CGLMSG23, Thm 8.9]; the single-bit public-coin variant is $\Theta(\mathrm{s}(f))$ [CGLMSG23, Thm 8.4]. Since restricting the adversary to distance-$1$ pairs can only help the players, these are lower bounds on the unrestricted games.'
+  refs: [CGLMSG23, GJKKLSSV17]
+  see_also: [CGpub, CGstar, CGns, CA, lambda, EC, R0, Adv]
   confidence: medium
 
 - id: CGpub

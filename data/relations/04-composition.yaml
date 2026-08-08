@@ -37,7 +37,7 @@ relations:
       conf: high
     - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{R}(f)\,\bar\chi(g)\big) = \Omega\big(\mathrm{R}(f)\,\mathrm{RS}(g)\big) = \Omega\big(\mathrm{R}(f)\,\chi(g)\big)'
       refs: [GLSS19, BenDavidKothari18, Sanyal18, AGJKLMSS17]
-      note: 'The historical chain of inner measures, each subsuming the previous: $\chi \lesssim \mathrm{RS} \lesssim \bar\chi \lesssim \mathrm{LR}$.'
+      note: 'The historical sequence of inner measures: $\mathrm{RS}$ [BenDavidKothari18], then $\chi$ [Sanyal18], then $\bar\chi$ [GLSS19], then $\mathrm{LR}$ [BBGM22]. Each *composition theorem* subsumes the previous one, but that is not the same as a pointwise chain: what is actually recorded is $\chi \le \bar\chi$ and $\bar\chi = \Omega(\mathrm{RS})$ and $\bar\chi \le \mathrm{LR} \le \mathrm{R}$. The zoo has **no** pairwise comparison between $\chi$ and $\mathrm{RS}$ in either direction -- do not read one off this list.'
       conf: high
     - stmt: '\mathrm{R}(f\circ g^n) = \tilde\Omega\big(\mathrm{R}(f)\,\mathrm{D}^{\mathrm{prod}}(g)\big)'
       refs: [Sanyal24]

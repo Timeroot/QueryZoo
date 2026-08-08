@@ -1,0 +1,1753 @@
+# =====================================================================
+# THE NORMALIZED QUANTITIES: NS, Stab and MaxInf against everything else.
+#
+# These three are not query-complexity measures at all -- they are
+# probabilities and correlations. For every $f$, every $n$ and every setting
+# of their own parameter, $\mathrm{NS}_\delta \in [0,\tfrac12]$,
+# $\mathrm{Stab}_\rho \in [-1,1]$ and $\mathrm{MaxInf} \in [0,1]$. So a growing
+# measure is never $O$ of any power of them, and the honest entry in each of
+# these cells is an unbounded separation rather than an exponent.
+#
+# The engine cannot see this on its own, twice over: `exp` must be positive, so
+# there is no way to write "this quantity is $O(1)$", and an `unbounded` verdict
+# does not chain through a polynomial lower bound in the closure. So every cell
+# is written out.
+#
+# The witness in each record is chosen to meet the zoo's own standard for an
+# unbounded verdict (see the comment in `growth.compare`): the small side must
+# settle on a *positive* constant. A family on which the normalized quantity
+# tends to zero is not good enough, because it may encode $n$ and then some
+# decreasing function of it bounds the large side after all. That rules out
+# $\oplus_n$ for $\mathrm{Stab}_\rho$ (it is $\rho^n$) and $\vee_n$ for both
+# $\mathrm{NS}_\delta$ and $\mathrm{MaxInf}$ (both $2^{-\Theta(n)}$). The
+# families that do qualify, and are used below:
+#
+#   NS_delta      PARITY  -> 1/2          MAJ -> 1/2 - arcsin(1-2d)/pi
+#                 IP      -> 1/2
+#   Stab_rho      MAJ     -> (2/pi)arcsin(rho)     OR, AND, MP, SINK -> 1
+#                 (anything with vanishing variance has Stab -> 1)
+#   MaxInf        PARITY  = 1 exactly
+#
+# The reverse direction -- NS, Stab or MaxInf as the *large* side -- is not
+# blank by oversight but impossible: a quantity bounded by 1 is never
+# Omega(X^k) for a growing X, and it is never unbounded in terms of anything
+# either, since the constant function bounds it. The six records at the end of
+# this file are what is actually true among the three of them.
+#
+# Schema documented in 01-classical-core.yaml.
+# =====================================================================
+
+relations:
+
+- from: D
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{D}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [D, NS, PARITY]
+
+- from: D
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{D}(\mathrm{MAJ}_n) = n \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [D, Stab, MAJ]
+
+- from: D_size
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{DTsize}(\oplus_n) = 2^n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [D_size, NS, PARITY]
+
+- from: D_size
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{DTsize}(\vee_n) = n+1 \to \infty, \qquad \mathrm{Stab}_{\rho}(\vee_n) \to 1'
+      form: {kind: unbounded}
+      witness: OR
+      conf: high
+  see_also: [D_size, Stab, OR]
+
+- from: PDT
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{D}^{\oplus}(\mathrm{IP}_n) = \ge n/2 + 1 \to \infty, \qquad \mathrm{NS}_{\delta}(\mathrm{IP}_n) = \tfrac12\big(1-(1-\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: IP
+      conf: high
+  see_also: [PDT, NS, IP]
+
+- from: PDT
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{D}^{\oplus}(\vee_n) = n \to \infty, \qquad \mathrm{Stab}_{\rho}(\vee_n) \to 1'
+      form: {kind: unbounded}
+      witness: OR
+      conf: high
+  see_also: [PDT, Stab, OR]
+
+- from: s
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{s}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [s, NS, PARITY]
+
+- from: s
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{s}(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [s, Stab, MAJ]
+
+- from: s0
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{s}^0(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [s0, NS, PARITY]
+
+- from: s0
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{s}^0(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [s0, Stab, MAJ]
+
+- from: s1
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{s}^1(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [s1, NS, PARITY]
+
+- from: s1
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{s}^1(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [s1, Stab, MAJ]
+
+- from: bs
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{bs}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [bs, NS, PARITY]
+
+- from: bs
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{bs}(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [bs, Stab, MAJ]
+
+- from: fbs
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{fbs}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [fbs, NS, PARITY]
+
+- from: fbs
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{fbs}(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [fbs, Stab, MAJ]
+
+- from: C
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{C}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [C, NS, PARITY]
+
+- from: C
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{C}(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [C, Stab, MAJ]
+
+- from: C0
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{C}^0(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [C0, NS, PARITY]
+
+- from: C0
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{C}^0(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [C0, Stab, MAJ]
+
+- from: C1
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{C}^1(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [C1, NS, PARITY]
+
+- from: C1
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{C}^1(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [C1, Stab, MAJ]
+
+- from: Cmin
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{C}_{\min}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [Cmin, NS, PARITY]
+
+- from: Cmin
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{C}_{\min}(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [Cmin, Stab, MAJ]
+
+- from: UC
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{UC}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [UC, NS, PARITY]
+
+- from: UC
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{UC}(\vee_n) = n \to \infty, \qquad \mathrm{Stab}_{\rho}(\vee_n) \to 1'
+      form: {kind: unbounded}
+      witness: OR
+      conf: high
+  see_also: [UC, Stab, OR]
+
+- from: UCmin
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{UC}_{\min}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [UCmin, NS, PARITY]
+
+- from: UCmin
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{UC}_{\min}(\mathrm{SINK}_m) = \Theta(m) = \Theta(\sqrt N) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{SINK}_m) \to 1'
+      form: {kind: unbounded}
+      witness: SINK
+      conf: high
+  see_also: [UCmin, Stab, SINK]
+
+- from: SP
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{SP}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [SP, NS, PARITY]
+
+- from: SP
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{SP}(\vee_n) = n \to \infty, \qquad \mathrm{Stab}_{\rho}(\vee_n) \to 1'
+      form: {kind: unbounded}
+      witness: OR
+      conf: high
+  see_also: [SP, Stab, OR]
+
+- from: RC
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{RC}(\oplus_n) = \lceil n/2\rceil \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [RC, NS, PARITY]
+
+- from: RC
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{RC}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [RC, Stab, MAJ]
+
+- from: EC
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{EC}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [EC, NS, PARITY]
+
+- from: EC
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{EC}(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [EC, Stab, MAJ]
+
+- from: D_prod
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{D}^{\mathrm{prod}}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [D_prod, NS, PARITY]
+
+- from: D_prod
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{D}^{\mathrm{prod}}(\vee_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\vee_n) \to 1'
+      form: {kind: unbounded}
+      witness: OR
+      conf: high
+  see_also: [D_prod, Stab, OR]
+
+- from: Dmu
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{D}^{\mu}_{\varepsilon}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [Dmu, NS, PARITY]
+
+- from: Dmu
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{D}^{\mu}_{\varepsilon}(\wedge_n) = n \ \text{under}\ \mu_{1-1/n} \to \infty, \qquad \mathrm{Stab}_{\rho}(\wedge_n) \to 1'
+      form: {kind: unbounded}
+      witness: AND
+      conf: high
+  see_also: [Dmu, Stab, AND]
+
+- from: FC
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{FC}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [FC, NS, PARITY]
+
+- from: FC
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{FC}(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [FC, Stab, MAJ]
+
+- from: bs0
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{bs}^0(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [bs0, NS, PARITY]
+
+- from: bs0
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{bs}^0(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [bs0, Stab, MAJ]
+
+- from: bs1
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{bs}^1(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [bs1, NS, PARITY]
+
+- from: bs1
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{bs}^1(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [bs1, Stab, MAJ]
+
+- from: rank
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{rank}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [rank, NS, PARITY]
+
+- from: rank
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{rank}(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [rank, Stab, MAJ]
+
+- from: Dna
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{D}^{\mathrm{na}}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [Dna, NS, PARITY]
+
+- from: Dna
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{D}^{\mathrm{na}}(\mathrm{MAJ}_n) = n \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [Dna, Stab, MAJ]
+
+- from: R
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{R}_{\varepsilon}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [R, NS, PARITY]
+
+- from: R
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{R}_{\varepsilon}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [R, Stab, MAJ]
+
+- from: Rbar
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\bar{\mathrm{R}}_{\varepsilon}(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [Rbar, NS, PARITY]
+
+- from: Rbar
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\bar{\mathrm{R}}_{\varepsilon}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [Rbar, Stab, MAJ]
+
+- from: R0
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{R}_{0}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [R0, NS, PARITY]
+
+- from: R0
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{R}_{0}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [R0, Stab, MAJ]
+
+- from: R1
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{R}^{1}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [R1, NS, PARITY]
+
+- from: R1
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{R}^{1}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [R1, Stab, MAJ]
+
+- from: RS
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{RS}(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [RS, NS, PARITY]
+
+- from: RS
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{RS}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [RS, Stab, MAJ]
+
+- from: chi
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\chi(g)(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [chi, NS, PARITY]
+
+- from: chi
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\chi(g)(\vee_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\vee_n) \to 1'
+      form: {kind: unbounded}
+      witness: OR
+      conf: high
+  see_also: [chi, Stab, OR]
+
+- from: chibar
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\bar{\chi}(g)(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [chibar, NS, PARITY]
+
+- from: chibar
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\bar{\chi}(g)(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [chibar, Stab, MAJ]
+
+- from: LR
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{LR}(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [LR, NS, PARITY]
+
+- from: LR
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{LR}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [LR, Stab, MAJ]
+
+- from: noisyR
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{noisyR}(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [noisyR, NS, PARITY]
+
+- from: noisyR
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{noisyR}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [noisyR, Stab, MAJ]
+
+- from: Rstar
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{R}^{*}(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [Rstar, NS, PARITY]
+
+- from: Rstar
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{R}^{*}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [Rstar, Stab, MAJ]
+
+- from: Np
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{N}_{p}(\oplus_n) = \Theta(n\log n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [Np, NS, PARITY]
+
+- from: Np
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{N}_{p}(\vee_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\vee_n) \to 1'
+      form: {kind: unbounded}
+      witness: OR
+      conf: high
+  see_also: [Np, Stab, OR]
+
+- from: CA
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{CA}(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [CA, NS, PARITY]
+
+- from: CA
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{CA}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [CA, Stab, MAJ]
+
+- from: CG
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{CG}(\oplus_n) = \Theta(n^2) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [CG, NS, PARITY]
+
+- from: CG
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{CG}(\mathrm{MAJ}_n) = \Theta(n^2) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [CG, Stab, MAJ]
+
+- from: CGpub
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{CG}^{\mathrm{pub}}(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [CGpub, NS, PARITY]
+
+- from: CGpub
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{CG}^{\mathrm{pub}}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [CGpub, Stab, MAJ]
+
+- from: CGstar
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{CG}^{*}(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [CGstar, NS, PARITY]
+
+- from: CGstar
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{CG}^{*}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [CGstar, Stab, MAJ]
+
+- from: CGns
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{CG}^{\mathrm{ns}}(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [CGns, NS, PARITY]
+
+- from: CGns
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{CG}^{\mathrm{ns}}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [CGns, Stab, MAJ]
+
+- from: Rna
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{R}^{\mathrm{na}}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [Rna, NS, PARITY]
+
+- from: Rna
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{R}^{\mathrm{na}}(\mathrm{MAJ}_n) = n - O(1) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [Rna, Stab, MAJ]
+
+- from: Q
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{Q}_{\varepsilon}(\oplus_n) = \lceil n/2 \rceil \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [Q, NS, PARITY]
+
+- from: Q
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{Q}_{\varepsilon}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [Q, Stab, MAJ]
+
+- from: QE
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{Q}_{\mathrm{E}}(\oplus_n) = \lceil n/2 \rceil \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [QE, NS, PARITY]
+
+- from: QE
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{Q}_{\mathrm{E}}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [QE, Stab, MAJ]
+
+- from: Q0
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{Q}_{0}(\oplus_n) = \lceil n/2 \rceil \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [Q0, NS, PARITY]
+
+- from: Q0
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{Q}_{0}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [Q0, Stab, MAJ]
+
+- from: PostQ
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{PostQ}_{\varepsilon}(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [PostQ, NS, PARITY]
+
+- from: PostQ
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{PostQ}_{\varepsilon}(\mathrm{MAJ}_n) = \Theta(\log n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [PostQ, Stab, MAJ]
+
+- from: QC
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{QC}(\oplus_n) = \Theta(\sqrt n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [QC, NS, PARITY]
+
+- from: QC
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{QC}(\mathrm{MAJ}_n) = \Theta(\sqrt n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [QC, Stab, MAJ]
+
+- from: NQ
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{NQ}(\oplus_n) = \lceil n/2 \rceil \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [NQ, NS, PARITY]
+
+- from: NQ
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{NQ}(\wedge_n) = \lceil n/2 \rceil \to \infty, \qquad \mathrm{Stab}_{\rho}(\wedge_n) \to 1'
+      form: {kind: unbounded}
+      witness: AND
+      conf: high
+  see_also: [NQ, Stab, AND]
+
+- from: robustQ
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{Q}^{\mathrm{rob}}(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [robustQ, NS, PARITY]
+
+- from: robustQ
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{Q}^{\mathrm{rob}}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [robustQ, Stab, MAJ]
+
+- from: Adv
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{Adv}(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [Adv, NS, PARITY]
+
+- from: Adv
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{Adv}(\vee_n) = \Theta(\sqrt{n}) \to \infty, \qquad \mathrm{Stab}_{\rho}(\vee_n) \to 1'
+      form: {kind: unbounded}
+      witness: OR
+      conf: high
+  see_also: [Adv, Stab, OR]
+
+- from: Advpm
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{Adv}^{\pm}(\oplus_n) = \Theta(\lceil n/2 \rceil) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [Advpm, NS, PARITY]
+
+- from: Advpm
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{Adv}^{\pm}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [Advpm, Stab, MAJ]
+
+- from: gamma2
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\gamma_2^{\alpha}(\oplus_n) = \Theta(\lceil n/2 \rceil) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [gamma2, NS, PARITY]
+
+- from: gamma2
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\gamma_2^{\alpha}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [gamma2, Stab, MAJ]
+
+- from: MAdv
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{MAdv}(\oplus_n) = n/2 \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [MAdv, NS, PARITY]
+
+- from: MAdv
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{MAdv}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [MAdv, Stab, MAJ]
+
+- from: lambda
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\lambda(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [lambda, NS, PARITY]
+
+- from: lambda
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\lambda(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [lambda, Stab, MAJ]
+
+- from: deg
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\deg(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [deg, NS, PARITY]
+
+- from: deg
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\deg(\mathrm{MAJ}_n) = n \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [deg, Stab, MAJ]
+
+- from: adeg
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\widetilde{\deg}_{\varepsilon}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [adeg, NS, PARITY]
+
+- from: adeg
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\widetilde{\deg}_{\varepsilon}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [adeg, Stab, MAJ]
+
+- from: sdeg
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{sdeg}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [sdeg, NS, PARITY]
+
+- from: sdeg
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{sdeg}(\mathrm{MP}_m) = \Theta(m) = \Theta(N^{1/3}) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MP}_m) \to 1'
+      form: {kind: unbounded}
+      witness: MinskyPapert
+      conf: high
+  see_also: [sdeg, Stab, MinskyPapert]
+
+- from: rdeg
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{rdeg}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [rdeg, NS, PARITY]
+
+- from: rdeg
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{rdeg}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [rdeg, Stab, MAJ]
+
+- from: ardeg
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{rdeg}_{\varepsilon}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [ardeg, NS, PARITY]
+
+- from: ardeg
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{rdeg}_{\varepsilon}(\mathrm{MAJ}_n) = \Theta(\log n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [ardeg, Stab, MAJ]
+
+- from: ndeg
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{ndeg}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [ndeg, NS, PARITY]
+
+- from: ndeg
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{ndeg}(\mathrm{MAJ}_n) = \le (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [ndeg, Stab, MAJ]
+
+- from: deg2
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\deg_2(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{NS}_{\delta}(\mathrm{MAJ}_n) \to \tfrac12 - \tfrac1\pi\arcsin(1-2\delta) > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [deg2, NS, MAJ]
+
+- from: deg2
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\deg_2(\mathrm{MAJ}_n) = (n+1)/2 \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [deg2, Stab, MAJ]
+
+- from: degp
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\deg_p(\oplus_n) = n \ (p\ \text{odd}) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [degp, NS, PARITY]
+
+- from: degp
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\deg_p(\vee_n) = n \to \infty, \qquad \mathrm{Stab}_{\rho}(\vee_n) \to 1'
+      form: {kind: unbounded}
+      witness: OR
+      conf: high
+  see_also: [degp, Stab, OR]
+
+- from: degp
+  to: MaxInf
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\deg_p(\oplus_n) = n \ (p\ \text{odd}) \to \infty, \qquad \mathrm{MaxInf}(\oplus_n) = 1'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [degp, MaxInf, PARITY]
+
+- from: cjdeg
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{cjdeg}_{\varepsilon}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [cjdeg, NS, PARITY]
+
+- from: cjdeg
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{cjdeg}_{\varepsilon}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [cjdeg, Stab, MAJ]
+
+- from: odeg
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\widetilde{\deg}_{+}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [odeg, NS, PARITY]
+
+- from: odeg
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\widetilde{\deg}_{+}(\mathrm{MAJ}_n) = \Theta(\sqrt n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [odeg, Stab, MAJ]
+
+- from: Inf
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{I}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [Inf, NS, PARITY]
+
+- from: Inf
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{I}(\mathrm{MAJ}_n) = \Theta(\sqrt{n}) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [Inf, Stab, MAJ]
+
+- from: Inf1
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{I}^{1}(\oplus_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [Inf1, NS, PARITY]
+
+- from: Inf1
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{I}^{1}(\mathrm{MAJ}_n) = \Theta(\sqrt n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [Inf1, Stab, MAJ]
+
+- from: L1
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\hat{L}_1(\mathrm{IP}_n) = 2^{n/2} \to \infty, \qquad \mathrm{NS}_{\delta}(\mathrm{IP}_n) = \tfrac12\big(1-(1-\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: IP
+      conf: high
+  see_also: [L1, NS, IP]
+
+- from: L1
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\hat{L}_1(\mathrm{MP}_m) = \Theta(2^m) = 2^{\Theta(N^{1/3})} \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MP}_m) \to 1'
+      form: {kind: unbounded}
+      witness: MinskyPapert
+      conf: high
+  see_also: [L1, Stab, MinskyPapert]
+
+- from: spar
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{spar}(\mathrm{MAJ}_n) = 2^{n-1} \to \infty, \qquad \mathrm{NS}_{\delta}(\mathrm{MAJ}_n) \to \tfrac12 - \tfrac1\pi\arcsin(1-2\delta) > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [spar, NS, MAJ]
+
+- from: spar
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{spar}(\mathrm{MAJ}_n) = 2^{n-1} \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [spar, Stab, MAJ]
+
+- from: Fdim
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\dim_{\mathbb{F}_2}(\mathrm{MAJ}_n) = n \to \infty, \qquad \mathrm{NS}_{\delta}(\mathrm{MAJ}_n) \to \tfrac12 - \tfrac1\pi\arcsin(1-2\delta) > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [Fdim, NS, MAJ]
+
+- from: Fdim
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\dim_{\mathbb{F}_2}(\mathrm{MAJ}_n) = n \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [Fdim, Stab, MAJ]
+
+- from: prt
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{prt}_{\varepsilon}(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [prt, NS, PARITY]
+
+- from: prt
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\mathrm{prt}_{\varepsilon}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [prt, Stab, MAJ]
+
+- from: rprt
+  to: NS
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\overline{\mathrm{prt}}_{\varepsilon}(\oplus_n) = \Theta(n) \to \infty, \qquad \mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12'
+      form: {kind: unbounded}
+      witness: PARITY
+      conf: high
+  see_also: [rprt, NS, PARITY]
+
+- from: rprt
+  to: Stab
+  setting: total
+  status: fails
+  lower:
+    - stmt: '\overline{\mathrm{prt}}_{\varepsilon}(\mathrm{MAJ}_n) = \Theta(n) \to \infty, \qquad \mathrm{Stab}_{\rho}(\mathrm{MAJ}_n) \to \tfrac{2}{\pi}\arcsin\rho > 0'
+      form: {kind: unbounded}
+      witness: MAJ
+      conf: high
+  see_also: [rprt, Stab, MAJ]
+
+# ---------------------------------------------------------------------
+# The three of them against each other. None of these is an *unbounded*
+# separation -- each side is at most 1, so the constant function bounds it --
+# but neither is any of them a polynomial bound, because the small side can go
+# to zero while the large side stays put. `none` is the right verdict: no
+# bound of the form $a = O(b^k)$ exists, for any $k > 0$.
+# ---------------------------------------------------------------------
+
+- from: NS
+  to: Stab
+  setting: total
+  status: fails
+  upper:
+    - stmt: '\mathrm{NS}_{\delta}(f) \text{ admits no bound of the form } O(\mathrm{Stab}_{\rho}(f)^k).'
+      form: {kind: none}
+      refs: [ODonnell14]
+      note: |
+        Not because the two are unrelated -- they are the *same quantity*,
+        reparameterised:
+        $$\mathrm{NS}_{\delta}(f) = \tfrac12\big(1 - \mathrm{Stab}_{1-2\delta}(f)\big),
+          \qquad \mathrm{Stab}_{\rho}(f) = 1 - 2\,\mathrm{NS}_{(1-\rho)/2}(f),$$
+        an exact identity for every Boolean $f$, immediate from
+        $\mathrm{Stab}_\rho = \sum_S \rho^{|S|}\hat f(S)^2$ and
+        $\mathrm{NS}_\delta = \tfrac12\sum_S(1-(1-2\delta)^{|S|})\hat f(S)^2$.
+        The relationship is *affine*, and the matrix records multiplicative
+        ones, so it registers as no bound at all: $\oplus_n$ has
+        $\mathrm{Stab}_\rho = \rho^{\,n} \to 0$ while $\mathrm{NS}_\delta \to \tfrac12$.
+        Read the identity, not the cell.
+      conf: high
+  lower:
+    - stmt: '\mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12, \qquad \mathrm{Stab}_{\rho}(\oplus_n) = \rho^{\,n} \to 0'
+      form: {kind: unbounded}
+      witness: PARITY
+      note: 'The ratio blows up not because the numerator grows -- it cannot, $\mathrm{NS}_\delta \le \tfrac12$ always -- but because the denominator collapses. That is the whole content of the cell.'
+      conf: high
+  see_also: [NS, Stab, PARITY]
+
+- from: Stab
+  to: NS
+  setting: total
+  status: fails
+  upper:
+    - stmt: '\mathrm{Stab}_{\rho}(f) \text{ admits no bound of the form } O(\mathrm{NS}_{\delta}(f)^k).'
+      form: {kind: none}
+      refs: [ODonnell14]
+      note: |
+        The same affine identity as in the other direction,
+        $\mathrm{Stab}_{\rho} = 1 - 2\,\mathrm{NS}_{(1-\rho)/2}$, and the same
+        reason it is invisible to a multiplicative matrix. Witness $\vee_n$:
+        $\mathrm{Stab}_\rho(\vee_n) \to 1$ while
+        $\mathrm{NS}_\delta(\vee_n) = 2^{1-n}(1-(1-\delta)^n) \to 0$.
+      conf: high
+  lower:
+    - stmt: '\mathrm{Stab}_{\rho}(\vee_n) \to 1, \qquad \mathrm{NS}_{\delta}(\vee_n) = 2^{1-n}\big(1-(1-\delta)^n\big) \to 0'
+      form: {kind: unbounded}
+      witness: OR
+      note: 'OR is asymptotically constant, so it is perfectly noise *stable* and has vanishing noise *sensitivity* at the same time. The ratio $\mathrm{Stab}/\mathrm{NS}^k$ diverges for every $k$.'
+      conf: high
+  see_also: [Stab, NS, OR]
+
+- from: NS
+  to: MaxInf
+  setting: total
+  status: fails
+  upper:
+    - stmt: '\mathrm{NS}_{\delta}(f) \text{ admits no bound of the form } O(\mathrm{MaxInf}(f)^k).'
+      form: {kind: none}
+      refs: [KKL88, ODonnell14]
+      witness: TRIBES
+      note: |
+        This is the Kahn--Kalai--Linial regime and the one genuinely interesting
+        cell of the three: $\mathrm{TRIBES}_n$ has
+        $\mathrm{MaxInf} = \Theta(\log n / n) \to 0$ -- as small as a monotone
+        balanced function can have it -- and is nonetheless *maximally* noise
+        sensitive, $\mathrm{NS}_\delta \to \tfrac12$ for every fixed $\delta$.
+        So vanishing maximal influence does not buy any noise stability at all.
+        The reverse direction does hold, and tightly: see [[MaxInf]] vs [[NS]].
+      conf: high
+  lower:
+    - stmt: '\mathrm{NS}_{\delta}(\mathrm{TRIBES}_n) \to \tfrac12, \qquad \mathrm{MaxInf}(\mathrm{TRIBES}_n) = \Theta(\log n / n) \to 0'
+      form: {kind: unbounded}
+      witness: TRIBES
+      refs: [KKL88, ODonnell14]
+      note: 'The Kahn--Kalai--Linial extremal case: the smallest maximal influence a balanced monotone function can have, together with maximal noise sensitivity.'
+      conf: high
+  see_also: [NS, MaxInf, Inf, TRIBES]
+
+- from: Stab
+  to: MaxInf
+  setting: total
+  status: fails
+  upper:
+    - stmt: '\mathrm{Stab}_{\rho}(f) \text{ admits no bound of the form } O(\mathrm{MaxInf}(f)^k).'
+      form: {kind: none}
+      witness: OR
+      note: |
+        $\vee_n$ is asymptotically constant, so its variance vanishes and
+        $\mathrm{Stab}_\rho(\vee_n) \to 1$, while every coordinate has influence
+        only $2^{1-n}$. A function can be perfectly noise stable with no
+        influential coordinate whatsoever -- it just has to be nearly constant.
+      conf: high
+  lower:
+    - stmt: '\mathrm{Stab}_{\rho}(\vee_n) \to 1, \qquad \mathrm{MaxInf}(\vee_n) = 2^{1-n} \to 0'
+      form: {kind: unbounded}
+      witness: OR
+      note: 'Perfect noise stability with no influential coordinate at all -- being nearly constant is enough.'
+      conf: high
+  see_also: [Stab, MaxInf, OR]
+
+- from: MaxInf
+  to: Stab
+  setting: total
+  status: fails
+  upper:
+    - stmt: '\mathrm{MaxInf}(f) \le \dfrac{1 - \mathrm{Stab}_{\rho}(f)}{1-\rho}, \text{ but no bound } O(\mathrm{Stab}_{\rho}(f)^k).'
+      form: {kind: none}
+      refs: [ODonnell14]
+      witness: PARITY
+      note: |
+        Substituting $\delta = (1-\rho)/2$ into the $\mathrm{MaxInf} \le
+        \mathrm{NS}_\delta/\delta$ bound proved at [[MaxInf]] vs [[NS]] gives
+        $\mathrm{MaxInf}(f) \le (1 - \mathrm{Stab}_\rho(f))/(1-\rho)$, which is
+        the real content of this cell. It is a bound in $1 - \mathrm{Stab}$, not
+        in $\mathrm{Stab}$, and no bound in $\mathrm{Stab}$ itself is possible:
+        $\oplus_n$ has $\mathrm{MaxInf} = 1$ with
+        $\mathrm{Stab}_\rho = \rho^{\,n} \to 0$.
+      conf: high
+  lower:
+    - stmt: '\mathrm{MaxInf}(\oplus_n) = 1, \qquad \mathrm{Stab}_{\rho}(\oplus_n) = \rho^{\,n} \to 0'
+      form: {kind: unbounded}
+      witness: PARITY
+      note: 'Maximal influence pinned at its ceiling while noise stability decays geometrically. The genuine bound in this cell is the one in $1 - \mathrm{Stab}$ given above.'
+      conf: high
+  see_also: [MaxInf, Stab, NS, PARITY]
+
+- from: MaxInf
+  to: NS
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{MaxInf}(f) \le \mathrm{NS}_\delta(f)/\delta \quad (0 \le \delta \le \tfrac12)'
+      form: {exp: 1, kind: const}
+      refs: [ODonnell14]
+      note: |
+        The one cell among the normalized quantities that is a genuine bound,
+        because noise sensitivity dominates maximal influence rather than being
+        incomparable to it. Writing
+        $\mathrm{NS}_\delta = \tfrac12\sum_S \big(1-(1-2\delta)^{|S|}\big)\hat f(S)^2$
+        and keeping only the sets through a fixed coordinate $i$, every such $S$
+        has $|S| \ge 1$ and hence $1-(1-2\delta)^{|S|} \ge 2\delta$, so
+        $\mathrm{NS}_\delta(f) \ge \delta \sum_{S \ni i} \hat f(S)^2 = \delta\,\mathrm{Inf}_i(f)$.
+        Maximise over $i$. The factor $1/\delta$ is exactly right: the dictator
+        has $\mathrm{MaxInf} = 1$ and $\mathrm{NS}_\delta = \delta$.
+      conf: high
+  lower:
+    - stmt: '\mathrm{MaxInf}(\oplus_n) = 1, \qquad \mathrm{NS}_\delta(\oplus_n) \to \tfrac12'
+      form: {exp: 1, kind: theta}
+      witness: PARITY
+      note: 'At fixed $\delta$ the two are within a constant factor on $\oplus_n$, so the exponent is $1$ and the cell closes.'
+      conf: high
+  see_also: [MaxInf, NS, Inf, PARITY]

@@ -19,7 +19,7 @@ measures:
   params: []
   settings:
     total:   {defined: yes}
-    partial: {defined: yes, note: '**Warning:** for partial $f$ the representing polynomial is not unique, so $\deg(f)$ is defined as the *minimum* degree of a polynomial agreeing with $f$ on the domain (unbounded elsewhere). Most total-function relations involving $\deg$ break in this setting.'}
+    partial: {defined: yes, note: '**Warning:** for partial $f$ the representing polynomial is not unique, so $\deg(f)$ is defined as the *minimum* degree of a polynomial agreeing with $f$ on the domain (unbounded elsewhere). Most total-function relations involving $\deg$ break in this setting -- including $\widetilde{\deg} \le \deg$, which **fails**: on [[UniqueSearch]] $\deg = 1$ while $\widetilde{\deg} = \Theta(\sqrt n)$, and on [[OrderedSearch]] $\deg = 1$ while $\widetilde{\deg}$ grows. [[adeg]] insists on boundedness at *every* point of the cube; $\deg$, [[ndeg]], [[rdeg]], [[degp]] and [[odeg]] constrain only $\mathrm{Dom}(f)$.'}
     relation: {defined: no}
   facts:
     - '$\deg(f)\le \mathrm{D}(f)$; $\mathrm{D}(f) = O(\deg(f)^3)$ [Midrijanis04].'
@@ -59,7 +59,7 @@ measures:
           subject with applications to $\mathsf{PP}$ and to communication complexity.
   settings:
     total:   {defined: yes}
-    partial: {defined: yes, note: 'The boundedness condition off the promise is essential; without it the measure collapses. Standard in the quantum literature.'}
+    partial: {defined: yes, note: 'The boundedness condition off the promise is essential; without it the measure collapses. Standard in the quantum literature. It is also what breaks $\widetilde{\deg} \le \deg$ on a promise: the other degree measures constrain $\mathrm{Dom}(f)$ only, so an exact representation may be wildly unbounded off it. See [[UniqueSearch]].'}
     relation: {defined: partial, note: 'One can ask for a polynomial per output symbol; not standard.'}
   facts:
     - '$\widetilde{\deg}(f) \le 2\,\mathrm{Q}(f)$: the polynomial method [BBCMdW01].'

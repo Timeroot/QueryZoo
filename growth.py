@@ -336,10 +336,15 @@ class _Parser:
 
     def atom(self) -> G:
         tok = self.take()
+        # Unary sign binds *looser* than `^`, as in ordinary mathematical
+        # notation: `2^{-n^2}` is 2^(-(n^2)), not 2^((-n)^2). Recursing into
+        # factor() rather than atom() is what gets the decaying exponentials
+        # (`\Theta(n^2 2^{-n})` for the total influence of an unbalanced
+        # function) on the correct side of 1.
         if tok == "-":
-            return mul(G(s=-1), self.atom())
+            return mul(G(s=-1), self.factor())
         if tok == "+":
-            return self.atom()
+            return self.factor()
         if tok in _OPEN:
             val = self.expr()
             self.expect(_CLOSE)
@@ -590,6 +595,9 @@ def _selftest():
     # the +1 in the exponent is below the resolution of the algebra, so the
     # constant factor 2 is dropped -- harmless, and never changes a verdict
     assert str(val("n\\,2^{1-n}").lo) == "2^(-1 n^1) n^1"
+    # unary minus binds looser than `^`: 2^{-n^2} decays, it is not 2^{n^2}
+    assert str(val(r"\Theta(n^3 2^{-n^2})").lo) == "2^(-1 n^2) n^3"
+    assert str(val(r"2^{-\Theta(\sqrt n)}").lo) == "2^(-1 n^0.5)"
     assert str(val(r"\binom m2 = n", m).lo) == "0.5 n^2"   # m = the variable
     assert str(val(r"\big(\tfrac{1+\sqrt{33}}{4}\big)^{d} = N^{0.753\ldots}",
                    d).lo).startswith("2^(0.753")
@@ -623,6 +631,9 @@ def _selftest():
 
     assert cmp2("n", "1") == ("unbounded",)                     # UC vs C_min
     assert cmp2("n", r"3 - 2^{2-n}") == ("unbounded",)          # vs L_1(OR)
+    # a decaying Inf is *not* an unbounded separation, for the same reason
+    # MaxInf is not: log(1/x) is a function, and it bounds n here
+    assert cmp2("n", r"\Theta(n^3 2^{-n^2})") is None
     # MaxInf(OR) -> 0, and g(x) = log(1/x) does bound n on this family, so
     # there is nothing to claim -- see the note in compare()
     assert cmp2("n", r"n\,2^{1-n}") is None

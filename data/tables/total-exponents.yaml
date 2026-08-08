@@ -139,7 +139,8 @@ cells:
     C:      {a: 1,   b: 1, tight: true, w: PARITY}
     bs:     {a: 1.5, b: 2, tight: false, refs: [GSS16]}
     s:      {a: 2,   b: 4, tight: false, refs: [Rubinstein95]}
-    lambda: {a: 2,   b: 4, tight: false, w: AND}
+    lambda: {a: 2.127, b: 4, tight: false, w: MeiburgTournament, refs: [Meiburg26], updated: true,
+             update_note: 'Source table has $2, 4$ (witness $\wedge$). Updated for the same reason as the $\mathrm{bs}$ row: $\mathrm{RC} = \Theta(\mathrm{fbs}) \ge \mathrm{bs}$, so the $\mathrm{bs} \ge \lambda^{2.127}$ of [Meiburg26] carries over verbatim. Leaving this cell at $2$ while the $\mathrm{bs}$ cell reads $2.127$ would make the table internally inconsistent.'}
     QE:     {a: 1.15, b: 2, tight: false, refs: [Ambainis13]}
     deg:    {a: 1.63, b: 2, tight: false, refs: [NisanWigderson95], note: '$1.63 = \log 6/\log 3 = 1.6309\ldots$, from iterating Kushilevitz'' $6$-variable function ($\mathrm{D}=6$, $\deg=3$), reported in [NisanWigderson95].'}
     Q:      {a: 2,   b: 2, tight: true,  w: AND}
@@ -236,7 +237,13 @@ cells:
     QE:     {a: 1, b: 1, tight: true,  w: PARITY}
     deg:    {a: 2, b: 3, tight: false, refs: [ABK16], note: 'How lossy is the polynomial method? $\mathrm{Q}\le O(\deg^3)$ vs a quadratic separation.'}
     adeg:   {a: 4, b: 4, tight: true,  refs: [ABK16], note: 'Settled: $\mathrm{Q} \le O(\widetilde{\deg}^4)$ [BBCMdW01] and cheat sheets match.'}
-    rdeg:   {a: 1.5, b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+    rdeg:   {a: 2, b: '?', tight: false, w: cheatsheet, refs: [ABK16, IJKKKSWW23],
+             new_in_source: true, updated: true,
+             update_note: 'Source table has $1.5$ (witness $\wedge_n\circ\overline{\mathrm{EH}}_n$, Proposition 29
+               of [IJKKKSWW23]). Updated to $2$: that paper''s own $\mathrm{rdeg}\le\mathrm{C}$ composes with the
+               cheat-sheet function of [ABK16], which has $\mathrm{Q}=\widetilde\Theta(n)$ and
+               $\mathrm{C}=\widetilde O(\sqrt n)$ -- the very pair the $\mathrm{Q}$ vs $\mathrm{C}$ cell of this
+               table already records -- giving $\mathrm{Q}=\widetilde\Omega(\mathrm{C}^2)=\widetilde\Omega(\mathrm{rdeg}^2)$.'}
 
   # ---------------------------------------------------------------- adeg
   adeg:
@@ -251,4 +258,10 @@ cells:
     QE:     {a: 1, b: 1, tight: true,  w: PARITY}
     deg:    {a: 1, b: 1, tight: true,  w: PARITY}
     Q:      {a: 1, b: 1, tight: true,  w: PARITY}
-    rdeg:   {a: 1.5, b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+    rdeg:   {a: 2, b: '?', tight: false, refs: [BunThaler17, IJKKKSWW23],
+             new_in_source: true, updated: true,
+             update_note: 'Source table has $1.5$ (witness $\wedge_n\circ\overline{\mathrm{EH}}_n$, Proposition 29
+               of [IJKKKSWW23]). Updated to $2$ by the same one-line composition as the $\mathrm{Q}$ vs
+               $\mathrm{rdeg}$ cell: $\mathrm{rdeg}\le\mathrm{C}$ [IJKKKSWW23] turns the settled quadratic
+               $\widetilde{\deg}$ vs $\mathrm{C}$ separation of [BunThaler17] into
+               $\widetilde{\deg}=\widetilde\Omega(\mathrm{rdeg}^2)$.'}

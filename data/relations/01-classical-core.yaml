@@ -403,3 +403,195 @@ relations:
     $\deg(f) \ge \log n - O(\log\log n)$ [NS94, BdW02, Thm 5], tight for
     [[ADDR]].
   see_also: [s, bs, C, D, PARITY, ADDR]
+
+# ---------------------------------------------------- subcube partitions
+# SP had no relation records at all: the pair matrix showed D, R and Q as
+# only linearly above it, with no upper bound on file, when in fact two of
+# the three cells are settled.
+
+- from: SP
+  to: D
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{SP}(f) \le \mathrm{D}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [KRS15]
+      note: |
+        The leaves of a depth-$\mathrm{D}$ decision tree partition $\mathrm{Dom}(f)$
+        into subcubes of codimension at most $\mathrm{D}$, each monochromatic. So the
+        subcube-partition model is at least as strong as the decision-tree model, and
+        the interesting question is by how much -- see the reverse pair.
+      conf: high
+  see_also: [SP, D, C, UC]
+
+- from: SP
+  to: D
+  setting: total
+  status: settled
+  lower:
+    - stmt: '\mathrm{SP}(\vee_n) = \mathrm{D}(\vee_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: OR
+      note: |
+        $\vee_n$ has the greedy partition ``first one at position $i$'' plus the
+        all-zeros point, whose deepest cell has codimension $n$; and no partition can
+        do better, because the all-zeros input sits in a monochromatic subcube only if
+        every coordinate is fixed.
+      conf: high
+  see_also: [SP, D, OR]
+
+- from: C
+  to: SP
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{C}(f) \le \mathrm{SP}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [KRS15]
+      note: |
+        The cell of the partition containing $x$ is monochromatic, so the coordinates
+        it fixes -- at most $\mathrm{SP}(f)$ of them -- certify $f(x)$: any $y \in
+        \mathrm{Dom}(f)$ agreeing with $x$ there lies in the same cell. Nothing in the
+        argument uses totality.
+      conf: high
+  see_also: [C, SP, UC, D]
+
+- from: C
+  to: SP
+  setting: total
+  status: settled
+  lower:
+    - stmt: '\mathrm{C}(\oplus_n) = \mathrm{SP}(\oplus_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      conf: high
+  see_also: [C, SP, PARITY]
+
+- from: SP
+  to: UC
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{SP}(f) \le \mathrm{UC}(f)'
+      form: {exp: 1, kind: exact}
+      note: |
+        An unambiguous $1$-certificate family and an unambiguous $0$-certificate family
+        are each a partition of their own side, so together they partition
+        $\mathrm{Dom}(f)$ into subcubes of codimension at most $\mathrm{UC}(f)$.
+        See the reverse cell: this is in fact an equality, not just a bound.
+      conf: high
+  see_also: [SP, UC, UCmin, C]
+
+- from: UC
+  to: SP
+  setting: partial
+  status: settled
+  headline: 'Unambiguous certificate complexity and subcube partition complexity are the *same* measure.'
+  upper:
+    - stmt: '\mathrm{UC}(f) \le \mathrm{SP}(f)'
+      form: {exp: 1, kind: exact}
+      note: |
+        Take an optimal partition of $\mathrm{Dom}(f)$ into monochromatic subcubes of
+        codimension at most $\mathrm{SP}(f)$ and split it by colour.  Every subcube is
+        monochromatic, so each one *is* a certificate; the $1$-subcubes cover
+        $f^{-1}(1)$ disjointly and the $0$-subcubes cover $f^{-1}(0)$ disjointly, which
+        is exactly unambiguity on each side.  Hence
+        $\mathrm{UC}^0, \mathrm{UC}^1 \le \mathrm{SP}$ and so $\mathrm{UC} \le \mathrm{SP}$.
+        Nothing here asks the two colour classes to be individually minimal, which is
+        why the argument goes through and $\mathrm{UC}(f) = \mathrm{SP}(f)$ for every
+        $f$, total or partial.  The zoo keeps the two ids separate because the
+        literature does -- $\mathrm{SP}$ is the object that lifts to the partition
+        number in communication complexity, $\mathrm{UC}$ the one that appears in
+        low-sensitivity constructions -- but no function can separate them.
+      conf: high
+  lower:
+    - stmt: '\mathrm{UC}(\oplus_n) = \mathrm{SP}(\oplus_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      conf: high
+  notes: |
+    The consequence worth remembering is that $\mathrm{D}$ vs $\mathrm{SP}$ and
+    $\mathrm{D}$ vs $\mathrm{UC}$ are literally the same open problem, and the
+    one-sided $\mathrm{UC}_{\min}$ -- which is *not* an equality with anything
+    partition-flavoured -- is where the interesting behaviour lives.
+  see_also: [UC, SP, UCmin, C, D]
+
+- from: SP
+  to: UC
+  setting: total
+  status: settled
+  lower:
+    - stmt: '\mathrm{SP}(\oplus_n) = \mathrm{UC}(\oplus_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      conf: high
+  see_also: [SP, UC, PARITY]
+
+- from: D
+  to: SP
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{D}(f) \le \mathrm{C}^{0}(f)\,\mathrm{C}^{1}(f) \le \mathrm{SP}(f)^2'
+      form: {exp: 2, kind: const}
+      refs: [BdW02, AKK16]
+      note: |
+        The classical $\mathrm{D} \le \mathrm{C}^{0}\mathrm{C}^{1}$ [BdW02, Thm 9]
+        composed with $\mathrm{C} \le \mathrm{SP}$ above.
+      conf: high
+  lower:
+    - stmt: '\mathrm{D}(f_n) = \widetilde\Omega(\mathrm{SP}(f_n)^2)'
+      form: {exp: 2, kind: tilde}
+      refs: [AKK16]
+      note: |
+        [AKK16] build a total $f$ with a nearly quadratic gap, by alternating function
+        composition with the cheat-sheet construction of [ABK16]. This is essentially
+        optimal given the $\mathrm{D} = O(\mathrm{SP}^2)$ above, and it improves the
+        power-$1.5$ query separation underlying [GPW18]. Lifted, it is the nearly
+        quadratic separation between deterministic communication complexity and the
+        log of the partition number.
+      conf: high
+  see_also: [D, SP, R, Q, C]
+
+- from: R
+  to: SP
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{R}(f) \le \mathrm{D}(f) = O(\mathrm{SP}(f)^2)'
+      form: {exp: 2, kind: const}
+      refs: [BdW02, AKK16]
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}(f_n) = \widetilde\Omega(\mathrm{SP}(f_n)^2)'
+      form: {exp: 2, kind: tilde}
+      refs: [AKK16]
+      note: |
+        The [AKK16] separation is already against *randomized* query complexity, so the
+        randomized cell is settled at the same exponent as the deterministic one. The
+        first separation of $\mathrm{R}$ from the subcube-partition model -- answering
+        Friedgut, Kahn and Wigderson -- is [KRS15].
+      conf: high
+  see_also: [R, SP, D, AKK16]
+
+- from: Q
+  to: SP
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{Q}(f) \le \mathrm{D}(f) = O(\mathrm{SP}(f)^2)'
+      form: {exp: 2, kind: const}
+      refs: [BdW02, AKK16]
+      conf: high
+  lower:
+    - stmt: '\mathrm{Q}(f_n) = \widetilde\Omega(\mathrm{SP}(f_n)^{3/2})'
+      form: {exp: 1.5, kind: tilde}
+      refs: [AKK16]
+      note: |
+        The first superlinear separation between quantum query complexity and subcube
+        partition complexity. [AKK16] also get a clean *quadratic* separation against
+        the **one-sided** subcube partition number, which the zoo does not carry as a
+        measure of its own; two-sidedness is what costs the missing half-power here.
+      conf: high
+  see_also: [Q, SP, D, R]

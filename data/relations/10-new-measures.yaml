@@ -283,25 +283,54 @@ relations:
 - from: D
   to: cbs
   setting: relation
-  status: gap
-  upper: []
+  status: fails
+  upper:
+    - stmt: '\mathrm{D} \text{ is known to be unbounded in terms of } \mathrm{cbs}'
+      form: {kind: none}
+      refs: [GoosPitassi14, LNNW95]
+      note: 'No bound of any form. Critical block sensitivity lower-bounds the *randomized* cost, and for search problems $\mathrm{R}$ and $\mathrm{D}$ are already unboundedly far apart, so $\mathrm{cbs}$ cannot see $\mathrm{D}$ at all.'
+      conf: high
   lower:
     - stmt: '\mathrm{cbs}(S) \le \mathrm{D}(S)'
       form: {exp: 1, kind: exact, dir: reverse}
       refs: [GoosPitassi14]
       note: 'A depth-$d$ deterministic algorithm computes *some* solution function $s$, and any function computed by a depth-$d$ tree has $\mathrm{bs}(s,x)\le d$ at every $x$. So the min over solution functions is at most $\mathrm{D}(S)$.'
       conf: high
-    - stmt: '\mathrm{D}(\mathrm{SearchCNF}) = \Omega(n) = \Omega(\mathrm{cbs}(\mathrm{SearchCNF}))'
+    - stmt: '\mathrm{D}(\mathrm{SearchCNF}) = \Theta(n) \to \infty, \qquad \mathrm{cbs}(\mathrm{SearchCNF}) = \Theta(1)'
+      form: {kind: unbounded}
       witness: SearchCNF
-      refs: [GoosPitassi14]
-      note: 'For the false-clause search problem of a random unsatisfiable $k$-CNF the two coincide up to constants.'
-      conf: medium
+      refs: [GoosPitassi14, LNNW95]
+      note: 'The false-clause search problem of a random $\Delta$-dense unsatisfiable $k$-CNF. Sampling $O(1)$ clauses finds a falsified one, so $\mathrm{R} = \Theta(1)$ and hence $\mathrm{cbs} = \Theta(1)$; but naming a specific falsified clause deterministically is a tree-like resolution refutation, so $\mathrm{D} = \Theta(n)$. Contrast [[TseitinExpander]], where a single vertex constraint may be the only violated one, sampling fails, and $\mathrm{cbs} = \Theta(n)$ matches $\mathrm{D}$.'
+      conf: high
   notes: |
     The point of $\mathrm{cbs}$ is not the query bound but the *lifted* one:
     $\mathrm{R}^{cc}(S\circ g^n) = \Omega(\mathrm{cbs}(S))$ for a constant-size gadget
-    $g$ [GoosPitassi14]. Whether $\mathrm{D}(S) = \mathrm{poly}(\mathrm{cbs}(S))$ for
-    total search problems is the relational analogue of $\mathrm{D}$ vs $\mathrm{bs}$.
-  see_also: [cbs, D, bs, SearchCNF, psD]
+    $g$ [GoosPitassi14]. That lifting target is randomized, which is exactly why
+    $\mathrm{cbs}$ tracks $\mathrm{R}$ and not $\mathrm{D}$: see [[cbs]] vs [[R]].
+    The open question in this neighbourhood is whether
+    $\mathrm{R}(S) = \mathrm{poly}(\mathrm{cbs}(S))$ for total search problems, the
+    relational analogue of $\mathrm{R}$ vs $\mathrm{bs}$.
+  see_also: [cbs, D, bs, SearchCNF, TseitinExpander, psD]
+
+# cbs sits under R, not under D -- the fact that makes the cell above `fails`
+- from: cbs
+  to: R
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{cbs}(S) = O(\mathrm{R}(S))'
+      form: {exp: 1, kind: const}
+      refs: [ABK21lifting, GoosPitassi14]
+      putative: true
+      note: 'Let $s$ be the plurality output of a bounded-error algorithm $A$ of cost $T$, let $x$ be critical, and let $B_1,\dots,B_b$ be disjoint blocks with $s(x^{B_i}) \ne s(x)$. If $A$ never queries inside $B_i$ it behaves identically on $x$ and $x^{B_i}$, so it cannot output both answers with high probability; each block must therefore be entered with constant probability, giving $b = O(T)$. Taking the min over solution functions, $\mathrm{cbs} = O(\mathrm{R})$. The same conclusion follows from $\mathrm{cbs} = O(\mathrm{CA})$ [ABK21lifting] together with $\mathrm{CA} \le \mathrm{R}$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{cbs}(\vee_n) = n = \Theta(\mathrm{R}(\vee_n))'
+      form: {exp: 1, kind: theta}
+      witness: OR
+      note: 'Tight already on a total function read as a search problem.'
+      conf: high
+  see_also: [cbs, R, CA, bs, SearchCNF, settings]
 
 # ============================================================ rank
 
@@ -367,7 +396,45 @@ relations:
         least $2^r$ leaves. Pure tree combinatorics: the labels at the leaves never enter, so the
         bound holds for partial functions and relations too.
       conf: high
-  see_also: [rank, D_size, D]
+  lower:
+    - stmt: '\mathrm{rank}(\oplus_n) = n = \log_2 \mathrm{DTsize}(\oplus_n)'
+      form: {kind: log}
+      witness: PARITY
+      note: 'The minimal tree for $\oplus_n$ is the full binary tree of depth $n$, whose rank is $n$ and whose size is $2^n$. So the inequality above is an equality and the cell closes.'
+      conf: high
+  see_also: [rank, D_size, D, PARITY]
+
+- from: Cmin
+  to: D_size
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{C}_{\min}(f) \le \log_2 \mathrm{DTsize}(f)'
+      form: {kind: log}
+      note: |
+        A tree with $L$ leaves has some leaf at depth $\le \log_2 L$. The path to a
+        leaf fixes the input on those coordinates and already determines the output,
+        so it *is* a certificate for every input reaching it -- and $\mathrm{C}_{\min}$
+        only asks for one input with a short certificate. Note this needs the $\min$:
+        the deepest leaf says nothing, which is exactly why $\mathrm{C}$ itself is
+        **not** bounded by $\log \mathrm{DTsize}$.
+      conf: high
+      putative: true
+  lower:
+    - stmt: '\mathrm{C}_{\min}(\oplus_n) = n = \log_2 \mathrm{DTsize}(\oplus_n)'
+      form: {kind: log}
+      witness: PARITY
+      note: 'Every input of $\oplus_n$ needs all $n$ bits, and its minimal tree is the full binary tree on $2^n$ leaves. Equality, so nothing can be shaved.'
+      conf: high
+  notes: |
+    This is the $\mathrm{C}_{\min}$ shadow of $\mathrm{rank}\le\log_2\mathrm{DTsize}$
+    above, and can also be obtained by composing that record with
+    $\mathrm{C}_{\min}\le\mathrm{rank}$ -- but the closure does not chain a
+    polynomial bound through a logarithmic one, so it is recorded directly.
+    Recorded under **partial** since nothing in the argument uses totality; the
+    total row inherits it. It does not extend to relations, where
+    $\mathrm{C}_{\min}$ is not defined.
+  see_also: [Cmin, D_size, rank, UCmin, PARITY]
 
 # ====================================================== non-adaptivity
 
@@ -669,3 +736,126 @@ relations:
       note: 'Read the other way: $\mathrm{CG}^{*}$ can be quadratically *larger* than $\mathrm{Q}$, so despite the shared entanglement it is a lower bound on randomized, not quantum, query complexity. This is the sharpest way to see that the certificate-game hierarchy is a classical object.'
       conf: high
   see_also: [CGstar, Q, OR, CGpub]
+
+# ------------------------------------------- log-shaped separations vs DTsize
+# DTsize is exponentially large, so no *polynomial* separation against it can
+# exist and the value layer -- which only ever reads off exponents -- leaves
+# every one of these cells blank.  The honest statement is the logarithmic one,
+# and PARITY is the universal witness: its minimal tree is the full binary tree
+# of depth n, so log_2 DTsize = n, which every measure below meets exactly.
+# The upper halves live with the more general settings above where they are
+# known; these records supply the missing separations.
+
+- from: UCmin
+  to: D_size
+  setting: total
+  status: gap
+  lower:
+    - stmt: '\mathrm{UC}_{\min}(\oplus_n) = n = \log_2 \mathrm{DTsize}(\oplus_n)'
+      form: {kind: log}
+      witness: PARITY
+      note: 'Every input of $\oplus_n$ has exactly one certificate, the whole assignment, so the unambiguous family is forced and $\mathrm{UC}_{\min} = n$.'
+      conf: high
+  see_also: [UCmin, UC, D_size, Cmin, PARITY]
+
+- from: Cmin
+  to: D_size
+  setting: total
+  status: settled
+  lower:
+    - stmt: '\mathrm{C}_{\min}(\oplus_n) = n = \log_2 \mathrm{DTsize}(\oplus_n)'
+      form: {kind: log}
+      witness: PARITY
+      note: |
+        The partial-setting record above proves $\mathrm{C}_{\min} \le \log_2 \mathrm{DTsize}$;
+        $\oplus_n$ meets it, so the cell is closed rather than merely bounded. Recorded
+        separately at `total` because a separation does not inherit downwards.
+      conf: high
+  see_also: [Cmin, C, D_size, PARITY]
+
+- from: rank
+  to: D_size
+  setting: total
+  status: settled
+  lower:
+    - stmt: '\mathrm{rank}(\oplus_n) = n = \log_2 \mathrm{DTsize}(\oplus_n)'
+      form: {kind: log}
+      witness: PARITY
+      refs: [EhrenfeuchtHaussler89]
+      note: 'The total-setting copy of the separation in the relational record above; $\mathrm{rank} \le \log_2 \mathrm{DTsize}$ is proved there.'
+      conf: high
+  see_also: [rank, D_size, D, PARITY]
+
+- from: sdeg
+  to: D_size
+  setting: total
+  status: gap
+  lower:
+    - stmt: '\mathrm{sdeg}(\oplus_n) = n = \log_2 \mathrm{DTsize}(\oplus_n)'
+      form: {kind: log}
+      witness: PARITY
+      note: 'The unique sign representation of $\oplus_n$ is $\pm\prod_i(1-2x_i)$, of full degree $n$.'
+      conf: high
+  see_also: [sdeg, adeg, D_size, PARITY]
+
+- from: ardeg
+  to: D_size
+  setting: total
+  status: gap
+  lower:
+    - stmt: '\mathrm{ardeg}(\oplus_n) = n = \log_2 \mathrm{DTsize}(\oplus_n)'
+      form: {kind: log}
+      witness: PARITY
+      note: 'Rational approximation does not help against parity: $\mathrm{ardeg}(\oplus_n) = n$, the value the zoo records for the family.'
+      conf: high
+  see_also: [ardeg, rdeg, PostQ, D_size, PARITY]
+
+- from: PostQ
+  to: D_size
+  setting: total
+  status: gap
+  lower:
+    - stmt: '\mathrm{PostQ}(\oplus_n) = \Theta(n) = \Theta(\log_2 \mathrm{DTsize}(\oplus_n))'
+      form: {kind: log}
+      witness: PARITY
+      note: 'Via $\mathrm{PostQ} = \Theta(\mathrm{ardeg})$ and the entry above: postselection buys nothing on parity.'
+      conf: high
+  see_also: [PostQ, ardeg, D_size, PARITY]
+
+- from: cjdeg
+  to: D_size
+  setting: total
+  status: gap
+  lower:
+    - stmt: '\mathrm{cjdeg}(\oplus_n) = n = \log_2 \mathrm{DTsize}(\oplus_n)'
+      form: {kind: log}
+      witness: PARITY
+      conf: high
+  see_also: [cjdeg, deg, D_size, PARITY]
+
+- from: Inf1
+  to: D_size
+  setting: total
+  status: gap
+  lower:
+    - stmt: '\mathrm{I}_1(\oplus_n) = n = \log_2 \mathrm{DTsize}(\oplus_n)'
+      form: {kind: log}
+      witness: PARITY
+      note: 'Every coordinate is pivotal on every input of $\oplus_n$, so the total influence is exactly $n$; compare the $\mathrm{I} \le \log_2 \mathrm{DTsize}$ record in `05-fourier.yaml`.'
+      conf: high
+  see_also: [Inf1, Inf, D_size, PARITY]
+
+- from: Dmu
+  to: D_size
+  setting: total
+  status: gap
+  lower:
+    - stmt: '\mathrm{D}^{\mu}(\oplus_n) = n = \log_2 \mathrm{DTsize}(\oplus_n) \ \text{ under uniform } \mu'
+      form: {kind: log}
+      witness: PARITY
+      note: |
+        The last of the $\mathrm{DTsize}$ cells. Under the uniform distribution every
+        deterministic tree for $\oplus_n$ errs with probability $\ge 1/2$ unless it reads
+        all $n$ bits, and the minimal tree has $2^n$ leaves, so the two sides agree exactly.
+      conf: high
+  see_also: [Dmu, D_size, D, PARITY]

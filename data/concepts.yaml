@@ -391,6 +391,16 @@ concepts:
     public-coin game is $\Theta(\mathrm{s}(f))$, and the single-bit private-coin
     game is $\lambda(f)^2$.
 
+    The private-coin game is the odd one out and worth a warning, because it
+    breaks the habit every other row of the zoo trains you into. Three of the
+    four variants collapse to $\mathrm{CA}$; $\mathrm{CG}$ does not. It sits
+    *above* $\mathrm{R}_0$, not below it, and the $\lambda^2$ identity above
+    generalises to $\mathrm{CG}(f)=\Omega(\mathrm{Adv}(f)^2)$ -- which means
+    $\mathrm{CG}$ is **not** bounded by $\mathrm{D}$ and can exceed the number
+    of variables outright. Parity is the clean example:
+    $\mathrm{CG}(\oplus_n)=\Theta(n^2)$, squeezed between $\mathrm{Adv}^2=n^2$
+    below and $\mathrm{C}^0\mathrm{C}^1=n^2$ above.
+
     ### Spectral sensitivity -- [[lambda]]
     $\lambda(f)$, the spectral norm of the sensitivity graph, is the simplest
     quantity below $\mathrm{Adv}$: $\lambda\le\mathrm{Adv}\le\mathrm{Adv}^{\pm}=\Theta(\mathrm{Q})$,

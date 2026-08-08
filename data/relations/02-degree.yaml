@@ -32,6 +32,31 @@ relations:
     [Nisan91].
   see_also: [s, lambda, deg, Huang19, sensitivity-conjecture]
 
+# ---------------------------------------------- deg vs lambda (Huang, sharp)
+- from: deg
+  to: lambda
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\deg(f) \le \lambda(f)^2'
+      form: {exp: 2, kind: exact}
+      refs: [ABKRT21, Huang19]
+      note: 'Huang''s theorem in its sharpest form. What the Cauchy-interlacing argument actually produces is a bound on the *spectral* sensitivity, and $\lambda(f)\le\mathrm{s}(f)$ is a separate, easy step; recording the strong form here rather than only under [[s]] lets the closure route every consequence of Huang through $\lambda$.'
+      conf: high
+  lower:
+    - stmt: '\deg(\wedge_n) = n = \lambda(\wedge_n)^2'
+      form: {exp: 2, kind: exact}
+      witness: AND
+      note: 'The sensitivity graph of $\wedge_n$ is the star $K_{1,n}$ centred at $1^n$, so $\lambda=\sqrt n$, against $\deg = n$. The exponent $2$ is therefore optimal and this cell is closed.'
+      conf: high
+  notes: |
+    Everything Huang's theorem implies factors through this one inequality:
+    $\deg \le \lambda^2$ composed with $\lambda \le \mathrm{s} \le \mathrm{bs}
+    \le \mathrm{C}$ recovers $\deg\le\mathrm{s}^2$ and the resolution of the
+    sensitivity conjecture. Note the analogous statement for [[rdeg]] is
+    **false** -- see the `lambda` vs `rdeg` record below.
+  see_also: [lambda, deg, s, Huang19, ABKRT21, sensitivity-conjecture]
+
 # --------------------------------------------------- bs vs deg
 - from: bs
   to: deg

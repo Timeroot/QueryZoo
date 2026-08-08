@@ -869,7 +869,7 @@ AmbainisBelovs23:
   year: 2023
   arxiv: "2301.09218"
   doi: "10.4230/LIPIcs.CCC.2023.24"
-  note: "Partial function with Q(f) exponentially larger than deg-tilde(f). Killed the hope that deg-tilde characterises Q even for promise problems."
+  note: "Partial function with Q(f) exponentially larger than the EXACT degree deg(f): threshold satisfiability over Z_q has deg = 9 (a cubic count composed with a fixed cubic univariate) while Q = Omega(n^{1/3}). The deg-tilde statement is the immediate corollary, since deg-tilde <= deg. Killed the hope that either degree measure characterises Q for promise problems."
 
 deWolf00:
   authors: [de Wolf, R.]
@@ -931,6 +931,15 @@ BenDavidKundu24search:
   year: 2024
   arxiv: "2410.16245"
   note: "Query-complexity analogue of TFNP. Exponential Q vs deg-tilde and deg-tilde vs Adv separations for total search problems; translations relation <-> partial function; reproves [AmbainisBelovs23]."
+
+ABK21lifting:
+  authors: [Anshu, A., Ben-David, S., Kundu, S.]
+  title: "On query-to-communication lifting for adversary bounds"
+  venue: "CCC 2021"
+  year: 2021
+  arxiv: "2012.03415"
+  doi: "10.4230/LIPIcs.CCC.2021.30"
+  note: "Two query-side corollaries the zoo uses directly: Adv(f) = O(deg-tilde(f)^2), so the positive-weight adversary can never beat the polynomial method by more than a square; and CAdv(f) = Omega(cbs(f)), so the classical adversary dominates critical block sensitivity. Both hold for partial f. The lifting theorem itself takes CAdv to randomized communication complexity with a constant-size gadget."
 
 CDM23:
   authors: [Chattopadhyay, A., Dahiya, Y., Mahajan, M.]
@@ -1749,6 +1758,14 @@ Leonardos13:
   venue: "ICALP 2013, LNCS 7965, 696-708"
   year: 2013
   note: "(1-2delta) * 2.55^h, between Jayram-Kumar-Sivakumar and Magniez et al."
+
+Urquhart87:
+  authors: ["Urquhart, A."]
+  title: "Hard examples for resolution"
+  venue: "Journal of the ACM 34(1):209-219"
+  year: 1987
+  doi: "10.1145/7531.8928"
+  note: "The Tseitin contradictions on bounded-degree expanders: the first exponential resolution size lower bound for a natural family, hence 2^{Omega(n)} decision-tree size for the corresponding false-vertex search problem."
 
 HuynhNordstrom12:
   authors: ["Huynh, T.", "Nordstrom, J."]
