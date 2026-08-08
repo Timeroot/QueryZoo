@@ -1114,6 +1114,29 @@ EhrenfeuchtHaussler89:
   doi: "10.1016/0890-5401(89)90001-1"
   note: "Introduces the rank of a decision tree and shows rank-r trees are learnable in n^O(r) time; source of the leaf-count bound sum_{i<=r} C(d,i)."
 
+DurrHoyer96:
+  authors: ["Dürr, C.", "Høyer, P."]
+  title: "A quantum algorithm for finding the minimum"
+  year: 1996
+  arxiv: "quant-ph/9607014"
+  note: "O(sqrt n) quantum queries to find the index of the minimum (equivalently maximum) of an n-element list, by repeated Grover search with a shrinking threshold."
+
+LNNW95:
+  authors: ["Lovász, L.", "Naor, M.", "Newman, I.", "Wigderson, A."]
+  title: "Search problems in the decision tree model"
+  venue: "SIAM Journal on Discrete Mathematics 8(1):119-132"
+  year: 1995
+  doi: "10.1137/S0895480192233867"
+  note: "Foundational treatment of relations in the decision tree model; includes the identification of deterministic decision-tree depth for the false-clause search problem with tree-like resolution depth."
+
+BenSassonWigderson01:
+  authors: ["Ben-Sasson, E.", "Wigderson, A."]
+  title: "Short proofs are narrow -- resolution made simple"
+  venue: "Journal of the ACM 48(2):149-169"
+  year: 2001
+  doi: "10.1145/375827.375835"
+  note: "Size-width tradeoff for resolution; yields 2^{Omega(n)} tree-like resolution size lower bounds for random k-CNFs, hence decision-tree size lower bounds for their false-clause search problems."
+
 GoosPitassi14:
   authors: ["Goos, M.", "Pitassi, T."]
   title: "Communication lower bounds via critical block sensitivity"

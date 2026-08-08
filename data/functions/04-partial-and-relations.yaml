@@ -89,8 +89,15 @@ functions:
     - {measure: R, value: '\Theta(2^{n/2})', refs: [Simon97]}
     - {measure: Rbar, value: '\Theta(2^{n/2})', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]), and $\mathrm{R}_{\varepsilon}(f) = \Theta(2^{n/2})$ here.'}
     - {measure: Adv, value: 'O(1)', refs: [HoyerSpalek05], note: 'Both certificate complexities are $O(1)$ under the promise -- exhibiting one colliding pair $x \ne y$ with $f(x)=f(y)$ settles the question -- so the positive adversary gives $O(1)$ against $\mathrm{Q} = \Theta(n)$. The largest known gap between $\mathrm{Adv}$ and $\mathrm{Q}$.'}
+    - {measure: D, value: '\Theta(2^{n/2})', putative: true, note: 'Both directions are about *difference sets*. Upper: query $A\cup B$ where $A = \{(u,0^{n/2})\}$ and $B = \{(0^{n/2},v)\}$, which is $2^{n/2+1}-1$ points whose pairwise differences $(u,0)\oplus(0,v)=(u,v)$ exhaust $\mathbb{F}_2^n$; a two-to-one $g$ with shift $s$ must therefore repeat a value inside $A\cup B$, and an injective one never does. Lower: an adversary answering with fresh distinct values survives as long as some shift is unexcluded, and $q$ queries exclude only the $\binom q2$ shifts realised as differences, so $q = \Omega(2^{n/2})$. Note this matches $\mathrm{R}$: the birthday paradox buys randomness nothing here, because covering all $2^n$ differences deterministically is just as cheap.'}
+    - {measure: Dna, value: '\Theta(2^{n/2})', putative: true, note: 'The $A\cup B$ query set above is fixed in advance, so the deterministic upper bound is already non-adaptive; and $\mathrm{D}^{\mathrm{na}} \ge \mathrm{D}$.'}
+    - {measure: Rna, value: '\Theta(2^{n/2})', putative: true, note: 'Sampling $O(2^{n/2})$ uniformly random points is non-adaptive, and $\mathrm{R}^{\mathrm{na}} \ge \mathrm{R} = \Theta(2^{n/2})$.'}
+    - {measure: R0, value: '\Theta(2^{n/2})', note: 'Sandwiched: $\mathrm{R}_{\varepsilon} \le \mathrm{R}_0 \le \mathrm{D}$, both ends $\Theta(2^{n/2})$.'}
+    - {measure: C, value: '\Theta(2^{n/2})', putative: true, note: 'A certificate for an *injective* $g$ must exclude every shift $s\ne 0$, i.e. exhibit for each $s$ a queried pair $x, x\oplus s$ with different values; a set of $q$ positions realises at most $\binom q2$ differences, so $q \ge 2^{n/2}$, and the $A\cup B$ set above attains it. A two-to-one $g$ certifies in two queries, so $\mathrm{C}^0$ and $\mathrm{C}^1$ are wildly asymmetric here.'}
+    - {measure: Cmin, value: '2', putative: true, note: 'On a two-to-one input, one colliding pair.'}
   witnesses:
     - {of: [R, Q], setting: partial, statement: 'Exponential: $\mathrm{R} = 2^{\Omega(\mathrm{Q})}$. The relational (find-$s$) version gives the same separation for relations.', refs: [Simon97]}
+    - {of: [C, Cmin], setting: partial, statement: 'Unbounded: $\mathrm{C}_{\min}=2$ while $\mathrm{C}=\Theta(2^{n/2})$ -- the two-to-one side certifies in one pair, the injective side needs a difference-covering set.'}
   refs: [Simon97, BernsteinVazirani97]
   see_also: [DeutschJozsa, BV, YamakawaZhandry]
 
@@ -108,8 +115,34 @@ functions:
     - {measure: QE, value: '1', refs: [DeutschJozsa92]}
     - {measure: D,  value: 'N/2+1'}
     - {measure: R,  value: 'O(1)', note: 'Two random samples suffice with bounded error -- so this is an *exact*-quantum-vs-deterministic separation only.'}
+    - {measure: Q,  value: '1', note: '$\mathrm{Q} \le \mathrm{Q}_E = 1$, and one query is needed.'}
+    - {measure: Q0, value: '1', note: 'Same: $\mathrm{Q} \le \mathrm{Q}_0 \le \mathrm{Q}_E = 1$.'}
+    - {measure: s,  value: '0', putative: true, note: 'For $N \ge 4$ *no* single flip stays inside the promise: a constant input becomes weight $1$ or $N-1$, a balanced one weight $N/2 \pm 1$. So $\mathrm{s}^0 = \mathrm{s}^1 = 0$ while $\mathrm{D} = N/2+1$. The extreme illustration of why sensitivity says nothing about partial functions.'}
+    - {measure: bs, value: '2', putative: true, note: 'At $0^N$ the sensitive blocks are exactly the $\binom{N}{N/2}$ half-sized sets, and two disjoint halves fit; at a balanced $x$ they are exactly $\mathrm{supp}(x)$ and its complement, again two disjoint blocks. Three disjoint blocks of size $N/2$ do not fit in $N$ coordinates, so $\mathrm{bs}^0=\mathrm{bs}^1=2$.'}
+    - {measure: fbs, value: '2', putative: true, note: 'The fractional relaxation buys nothing: every sensitive block has size exactly $N/2$, so a feasible weighting has $\tfrac N2\sum_B w_B = \sum_i \mathrm{load}(i) \le N$.'}
+    - {measure: C0, value: 'N/2+1', putative: true, note: 'Fixing $|S|$ coordinates to $0$ still admits a balanced input whenever $|S| \le N/2$, so a $0$-certificate needs $N/2+1$ zeros -- and that many suffice.'}
+    - {measure: C1, value: '2', putative: true, note: 'Every other domain point consistent with "one $0$ here, one $1$ there" is balanced, hence also a $1$-input. Nothing needs to be pinned down beyond killing the two constants.'}
+    - {measure: C, value: 'N/2+1', putative: true, note: 'From $\mathrm{C}^0$. With $\mathrm{fbs}=2$ this is a much cleaner unbounded $\mathrm{C}$-vs-$\mathrm{fbs}$ witness than any total function can give.'}
+    - {measure: Cmin, value: '2', putative: true, note: 'Attained on the balanced inputs.'}
+    - {measure: deg, value: '2', putative: true, note: 'On the promise $f$ is the symmetric function $t \mapsto [t = N/2]$ of $t=|x|$ restricted to $t \in \{0, N/2, N\}$, and $(1 - (1-2t/N)^2)$ interpolates it. Degree $1$ is impossible since $p(0)=p(N)=0$ forces $p \equiv 0$. So $\mathrm{deg} = 2 = 2\,\mathrm{Q}_E$: Deutsch-Jozsa makes $\mathrm{deg} \le 2\mathrm{Q}_E$ tight.'}
+    - {measure: adeg, value: '2', putative: true, note: 'Symmetrise: a degree-$1$ univariate with $|q(0)|,|q(N)| \le 1/3$ has $q(N/2) = \tfrac12(q(0)+q(N))$, which cannot reach $2/3$. So approximation does not help either.'}
+    - {measure: Dna, value: 'N/2+1', putative: true, note: 'Adaptivity is worthless here: any fixed $N/2+1$ positions contain a $0$ and a $1$ of every balanced input (which has exactly $N/2$ of each), so reading them decides. And $\mathrm{D}^{\mathrm{na}} \ge \mathrm{D}$.'}
+    - {measure: R0, value: 'N/2+1', putative: true, note: 'Zero error means every run ends on a certificate, and on a constant input that is $N/2+1$ queries; $\mathrm{R}_0 \le \mathrm{D}$ gives the match. So the $\mathrm{R}=O(1)$ upper bound is *entirely* a bounded-error phenomenon -- a clean $\mathrm{R}_0$ vs $\mathrm{R}$ separation of unbounded ratio for a partial function.'}
+    - {measure: Rna, value: '\Theta(1)', putative: true, note: 'Read $10$ fixed positions and answer "balanced" iff they are not all equal; a balanced input fools this with probability $2^{-9}$.'}
+    - {measure: Rbar, value: '\Theta(1)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]).'}
+    - {measure: Advpm, value: '1', note: 'Sandwiched: $\mathrm{Q} \le \mathrm{Adv}^{\pm} \le \mathrm{Q}_E$, with both ends $1$.'}
+    - {measure: MAdv, value: '1', note: 'Sandwiched: $\mathrm{Adv}^{\pm} \le \mathrm{MAdv} \le \mathrm{Q}_E$, with both ends $1$.'}
+    - {measure: Dmu, value: '\Theta(1)', note: 'Sandwiched between $\mathrm{Q}$ and $\mathrm{R} = O(1)$.'}
+    - {measure: RC, value: '\Theta(1)', note: 'Sandwiched: $\mathrm{RC} \le \mathrm{R} = O(1)$, and every measure here is at least $1$.'}
+    - {measure: FC, value: '\Theta(1)', note: 'Equal to $\mathrm{fbs} = 2$ by LP duality; also $\le \mathrm{R} = O(1)$.'}
+    - {measure: cjdeg, value: '\Theta(1)', note: 'Sandwiched between $\widetilde{\deg} = 2$ and $\mathrm{R} = O(1)$.'}
+    - {measure: prt, value: '\Theta(1)', note: 'Sandwiched: $\mathrm{prt}_\varepsilon \le \mathrm{R} = O(1)$, and at least $1$.'}
+    - {measure: rprt, value: '\Theta(1)', note: 'Sandwiched: $\overline{\mathrm{prt}}_\varepsilon \le \mathrm{R} = O(1)$, and at least $1$.'}
   witnesses:
     - {of: [D, QE], setting: partial, statement: 'Unbounded: $\mathrm{D}=N/2+1$ vs $\mathrm{Q}_E=1$.', refs: [DeutschJozsa92]}
+    - {of: [D, s], setting: partial, statement: 'Unbounded: $\mathrm{s}=0$ (no promise-preserving flip exists) with $\mathrm{D}=N/2+1$.'}
+    - {of: [C, fbs], setting: partial, statement: 'Unbounded: $\mathrm{fbs}=2$ against $\mathrm{C}=N/2+1$. The total-function bound $\mathrm{C} = O(\mathrm{fbs}^2)$ fails as badly as possible off the promise.'}
+    - {of: [R0, R], setting: partial, statement: 'Unbounded: $\mathrm{R}=O(1)$ but $\mathrm{R}_0 = N/2+1$, since zero error forces a full $0$-certificate on the constant inputs.'}
   refs: [DeutschJozsa92]
   see_also: [BV, EH, Simon]
 
@@ -125,9 +158,20 @@ functions:
   values:
     - {measure: QE, value: '1', refs: [BernsteinVazirani97]}
     - {measure: D,  value: 'n'}
-    - {measure: R,  value: '\Omega(n)'}
+    - {measure: R,  value: '\Theta(n)', note: 'Recovering $s$ needs $n$ bits of information from one-bit answers, so $\mathrm{R} = \Omega(n)$ even with bounded error; and $\mathrm{R} \le \mathrm{D} = n$.'}
+    - {measure: Q,  value: '1', note: '$\mathrm{Q} \le \mathrm{Q}_E = 1$.'}
+    - {measure: Q0, value: '1', note: '$\mathrm{Q} \le \mathrm{Q}_0 \le \mathrm{Q}_E = 1$.'}
+    - {measure: C,  value: 'n', putative: true, note: 'A set of queried positions $i_1,\dots,i_k$ reveals $\langle s, i_j\rangle$, and pins $s$ down exactly when the $i_j$ span $\mathbb{F}_2^n$ -- so every certificate has $\ge n$ queries, and $e_1,\dots,e_n$ is one. Since this holds at *every* input, $\mathrm{C}_{\min} = \mathrm{C} = n$: BV is certificate-uniform.'}
+    - {measure: Cmin, value: 'n', putative: true, note: 'See $\mathrm{C}$: the spanning requirement is input-independent.'}
+    - {measure: R0, value: 'n', putative: true, note: 'Zero error forces a spanning query set on every run, and $\mathrm{R}_0 \le \mathrm{D} = n$.'}
+    - {measure: Rbar, value: '\Theta(n)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]).'}
+    - {measure: Dna, value: 'n', putative: true, note: 'The spanning set $e_1,\dots,e_n$ is fixed in advance, and $\mathrm{D}^{\mathrm{na}} \ge \mathrm{D}$.'}
+    - {measure: Rna, value: '\Theta(n)', putative: true, note: 'Same non-adaptive algorithm; and $\mathrm{R}^{\mathrm{na}} \ge \mathrm{R}$.'}
+    - {measure: Advpm, value: '1', note: 'Sandwiched: $\mathrm{Q} \le \mathrm{Adv}^{\pm} \le \mathrm{Q}_E$, with both ends $1$.'}
+    - {measure: MAdv, value: '1', note: 'Sandwiched: $\mathrm{Adv}^{\pm} \le \mathrm{MAdv} \le \mathrm{Q}_E$, with both ends $1$.'}
   witnesses:
     - {of: [R, QE], setting: relation, statement: 'The "find $s$" version is a relation: $\mathrm{Q}_E=1$ vs $\mathrm{R}=\Omega(n)$.', refs: [BernsteinVazirani97]}
+    - {of: [C, QE], setting: partial, statement: 'Unbounded: $\mathrm{C} = \mathrm{C}_{\min} = n$ against $\mathrm{Q}_E = 1$ -- one exact quantum query beats every certificate at every input.'}
   refs: [BernsteinVazirani97]
   see_also: [DeutschJozsa, Simon, PARITY]
 
@@ -151,8 +195,16 @@ functions:
     - {measure: Advpm, value: '\Theta(\sqrt n)', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(\sqrt n)$ here.'}
     - {measure: MAdv, value: '\Theta(\sqrt n)', refs: [Spalek08], note: '$\mathrm{Adv}^{\pm}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$ and $\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q}_\varepsilon)$, so the multiplicative adversary is $\Theta(\mathrm{Q})$ on every function; here $\mathrm{Q} = \Theta(\sqrt n)$.'}
     - {measure: R0, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: QE, value: 'n', putative: true, note: 'An exact algorithm for $\mathrm{SEARCH}$ decides $\mathrm{OR}$ exactly at no extra cost -- output $[\,i \ne \bot\,]$ -- so $\mathrm{Q}_E(\mathrm{SEARCH}) \ge \mathrm{Q}_E(\mathrm{OR}_n) = n$, and $\mathrm{Q}_E \le \mathrm{D} = n$. So the quadratic Grover speedup is *entirely* a bounded-error effect, even though a search algorithm can always verify its own output: verification makes the error one-sided, not zero.'}
+    - {measure: Q0, value: 'n', putative: true, note: 'Same reduction: a zero-error search algorithm decides $\mathrm{OR}$ with zero error, and $\mathrm{Q}_0(\mathrm{OR}_n) = n$. Note the contrast with $\mathrm{R}_0 = \Theta(\mathrm{R})$ for relations -- the *randomized* zero-error cost collapses to the bounded-error one but the quantum one does not, because the obstruction is the all-zero input, where no witness exists to verify.'}
+    - {measure: Rbar, value: '\Theta(n)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]).'}
+    - {measure: Dna, value: 'n', note: 'Sandwiched between $\mathrm{D} = n$ and the trivial $n$.'}
+    - {measure: Rna, value: '\Theta(n)', note: 'Sandwiched between $\mathrm{R} = \Theta(n)$ and $\mathrm{D}^{\mathrm{na}} = n$.'}
+    - {measure: psD, value: '\Theta(n)', note: 'Sandwiched between $\mathrm{R} = \Theta(n)$ and $\mathrm{D} = n$. Unlike [[ApproxHW]] and [[promiseFind1]], search is already hard enough that pseudo-determinism costs nothing extra.'}
+    - {measure: D_size, value: 'n+1', putative: true, note: 'Query $x_1, x_2, \dots$ and stop at the first $1$: $n+1$ leaves. And the all-zero input forces a root-to-leaf path of length $n$, whose $n$ branchings already create $n+1$ leaves.'}
   witnesses:
     - {of: [R, Q], setting: relation, statement: '$\mathrm{R}=\Theta(\mathrm{Q}^2)$ for a relation, same as the decision version.', refs: [Grover96, BBBV97]}
+    - {of: [QE, Q], setting: relation, statement: 'Quadratic: $\mathrm{Q}_E = n$ against $\mathrm{Q}=\Theta(\sqrt n)$, matching the best possible gap for relations that admit witness verification.'}
   refs: [Grover96, BBBV97]
   see_also: [OR, ApproxHW, promiseFind1]
 
@@ -173,9 +225,19 @@ functions:
     - {measure: R,  value: 'O(1)'}
     - {measure: R0, value: 'O(1)', note: 'Zero error too: the algorithm *verifies* its own output, which is exactly why $\mathrm{R}_0=\Theta(\mathrm{R})$ for relations.'}
     - {measure: D,  value: 'n/2+1'}
-    - {measure: psD, value: '\Omega(n)', conf: medium, note: 'Reproducibility is what costs: cf. ApproxHW.'}
+    - {measure: psD, value: '\Theta(n)', conf: medium, note: 'Reproducibility is what costs: cf. ApproxHW. The $\Omega(n)$ side is the content; the $O(n)$ side is $\mathrm{psD} \le \mathrm{D}$.'}
+    - {measure: Q,  value: '\Theta(1)', note: 'A dense search problem: one uniform sample already works, so quantum has nothing to speed up. $\mathrm{Q} \le \mathrm{R} = O(1)$.'}
+    - {measure: Rbar, value: '\Theta(1)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]).'}
+    - {measure: Rna, value: '\Theta(1)', putative: true, note: 'Sampling is already non-adaptive: read $10$ uniformly random positions and output any that is $1$.'}
+    - {measure: Dna, value: 'n/2+1', putative: true, note: 'A fixed set of $n/2+1$ positions must contain a $1$ (a promise input has at most $n/2$ zeros), and a fixed set of $n/2$ positions can be entirely zero. So adaptivity is worth nothing on the deterministic side either -- all the power is in the coins.'}
+    - {measure: C,  value: '1', putative: true, note: 'One queried $1$ certifies its own index as a valid output, at every input. So $\mathrm{C} = 1$ against $\mathrm{D} = n/2+1$: for relations, certificate complexity does not bound deterministic complexity at all, because knowing that a short certificate *exists* does not tell you where to look.'}
+    - {measure: C1, value: '1', putative: true, note: 'Same certificate.'}
+    - {measure: Advpm, value: '\Theta(1)', note: 'Sandwiched between $\mathrm{Q} = \Theta(1)$ and $\mathrm{R} = O(1)$.'}
+    - {measure: Dmu, value: '\Theta(1)', note: 'Sandwiched between $\mathrm{Q}$ and $\mathrm{R} = O(1)$.'}
   witnesses:
     - {of: [D, R],  setting: relation, statement: 'Unbounded: no function of $\mathrm{R}$ bounds $\mathrm{D}$ for *partial* relations.', refs: [GIPS21]}
+    - {of: [D, C],  setting: relation, statement: 'Unbounded: $\mathrm{C}=1$ but $\mathrm{D}=n/2+1$. The total-function bound $\mathrm{D} \le \mathrm{C}^2$ has no relational analogue.'}
+    - {of: [psD, Q], setting: relation, statement: 'Unbounded: $\mathrm{Q} = \Theta(1)$ against $\mathrm{psD} = \Theta(n)$.'}
   refs: [GIPS21, CDM23]
   see_also: [ApproxHW, GroverSearch, psD]
 
@@ -193,11 +255,20 @@ functions:
     *pseudo-deterministic* algorithm must commit to one canonical $w$ for each
     $x$, and near the boundaries that forces $\Omega(n)$ queries.
   values:
-    - {measure: R,   value: 'O(1)'}
-    - {measure: psD, value: '\Omega(n)', refs: [CDM23, GIPS21]}
-    - {measure: D,   value: '\Omega(n)'}
+    - {measure: R,   value: '\Theta(1)', note: 'At constant $\varepsilon$; the honest dependence is $\Theta(1/\varepsilon^2)$ samples for an $\varepsilon n$-accurate estimate.'}
+    - {measure: psD, value: '\Theta(n)', refs: [CDM23, GIPS21], note: 'The $\Omega(n)$ side is the theorem; $\mathrm{psD} \le \mathrm{D} = O(n)$ closes it.'}
+    - {measure: D,   value: '\Theta(n)', note: 'Reading all $n$ bits is enough, and $\mathrm{D} \ge \mathrm{psD} = \Omega(n)$.'}
+    - {measure: R0,  value: '\Theta(n)', putative: true, note: 'After $q$ queries the unseen coordinates leave $|x|$ uncertain within a window of width $n-q$, so a *never-wrong* algorithm cannot stop before $q \ge (1-2\varepsilon)n$. This is the sharper statement: it is not just canonicity that costs, plain certainty already does.'}
+    - {measure: Q,   value: '\Theta(1)', note: 'At most $\mathrm{R}$, and at least a constant.'}
+    - {measure: Rbar, value: '\Theta(1)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]).'}
+    - {measure: Rna, value: '\Theta(1)', putative: true, note: 'Uniform sampling is non-adaptive.'}
+    - {measure: Dna, value: '\Theta(n)', note: 'Between $\mathrm{D}=\Theta(n)$ and the trivial $n$.'}
+    - {measure: Advpm, value: '\Theta(1)', note: 'Sandwiched between $\mathrm{Q} = \Theta(1)$ and $\mathrm{R} = \Theta(1)$.'}
+    - {measure: Dmu, value: '\Theta(1)', note: 'Sandwiched: $\mathrm{D}_\mu \le \mathrm{R} = \Theta(1)$ for every $\mu$.'}
   witnesses:
     - {of: [psD, R], setting: relation, statement: 'Exponential separation between pseudo-deterministic and randomized query complexity of a *total* search problem; also an $\exp(\Omega(n))$ separation in decision-tree **size**.', refs: [CDM23, GIPS21]}
+    - {of: [R0, R], setting: relation, statement: 'Unbounded: $\mathrm{R}=\Theta(1)$ but $\mathrm{R}_0=\Theta(n)$, for a *total* search problem. Relations with verifiable witnesses have $\mathrm{R}_0=\Theta(\mathrm{R})$; approximate counting has no witness to verify, so the collapse fails.'}
+    - {of: [Dna, Rna], setting: relation, statement: 'Unbounded: $\mathrm{R}^{\mathrm{na}} = \Theta(1)$ against $\mathrm{D}^{\mathrm{na}} = \Theta(n)$ -- the whole gap for this problem is randomness, not adaptivity.'}
   refs: [CDM23, GIPS21, GGR13]
   see_also: [psD, SearchCNF, promiseFind1]
 
@@ -215,11 +286,17 @@ functions:
     Total by unsatisfiability. This is the query-complexity home of TFNP$^{dt}$
     and of resolution lower bounds.
   values:
-    - {measure: R,   value: 'O(1) \text{ for random } k\text{-CNFs (sample a clause)}', conf: medium}
+    - {measure: R,   value: '\Theta(1) \text{ for random } k\text{-CNFs (sample a clause)}', conf: medium}
     - {measure: psD, value: '\Omega(n^{1/3})', refs: [CDM23], note: '$\Omega(\sqrt n)$ in the related setting of [GIPS21]; also $\exp(\widetilde\Omega(n^{1/4}))$ in pseudo-deterministic decision-tree *size*.'}
+    - {measure: D, value: '\Theta(n)', refs: [LNNW95, BenSassonWigderson01], conf: medium, note: 'For a random $\Delta$-dense unsatisfiable $k$-CNF. $\mathrm{D}(\mathrm{Search}(\varphi))$ *is* the minimum depth of a tree-like resolution refutation of $\varphi$ [LNNW95] -- a decision tree solving the search problem, read leaf-to-root, is exactly such a refutation. Random $k$-CNFs require resolution width $\Omega(n)$, hence depth $\Omega(n)$; and $n$ queries trivially suffice. So the $\mathrm{R} = O(1)$ upper bound above is an unbounded $\mathrm{D}$-vs-$\mathrm{R}$ separation, for a *total* relation.'}
+    - {measure: D_size, value: '2^{\Theta(n)}', refs: [BenSassonWigderson01], conf: medium, note: 'Decision-tree size for the search problem equals tree-like resolution size, and the size-width tradeoff of [BenSassonWigderson01] with the $\Omega(n)$ width bound gives $2^{\Omega(n)}$ for random $k$-CNFs; $2^n$ is the trivial ceiling. Compare $\mathrm{R}=O(1)$: no bounded-error algorithm needs to know anything about $\varphi$ beyond one clause.'}
+    - {measure: Dna, value: 'n', note: 'Every variable is relevant, so a non-adaptive algorithm reads the whole assignment.'}
+    - {measure: Rna, value: '\Theta(1)', putative: true, note: 'Sampling a clause of $\varphi$ at random and reading its $k$ variables is non-adaptive; for a random $\Delta$-dense $\varphi$ a constant fraction of clauses is falsified by any fixed assignment, so $O(1)$ tries suffice.', conf: medium}
     - {measure: cbs, value: '\Omega(n)', refs: [GoosPitassi14, HuynhNordstrom12], note: 'For the false-clause search problem of a random $\Delta$-dense unsatisfiable $k$-CNF, and for the Tseitin contradiction on a bounded-degree expander. This is the whole point of the measure: ordinary $\mathrm{R}$ is $O(1)$ here (sample a clause and check it), and even block sensitivity of a *fixed* solution function can be small, but every solution function is block-sensitive at some critical input. Lifting $\mathrm{cbs}$ with a constant-size gadget is what yields the tight monotone-circuit-depth and Cutting-Planes lower bounds.'}
-  refs: [GIPS21, CDM23]
-  see_also: [psD, ApproxHW]
+  witnesses:
+    - {of: [D, R], setting: relation, statement: 'Unbounded, for a *total* relation: $\mathrm{R}=O(1)$ but $\mathrm{D}=\Theta(n)$. Unlike [[promiseFind1]] no promise is needed -- the hardness is that a deterministic algorithm must name a *specific* falsified clause, which is a resolution refutation in disguise.', refs: [LNNW95]}
+  refs: [GIPS21, CDM23, LNNW95, BenSassonWigderson01]
+  see_also: [psD, ApproxHW, D_size]
 
 - id: GapMaj
   name: Gap-Majority
@@ -242,11 +319,19 @@ functions:
     - {measure: chibar, value: 'O\!\big(\min(\sqrt n, 1/\delta)\big)', refs: [GLSS19], conf: medium, note: 'At most $\mathrm{LR}$. Since $\bar\chi$ is the quantity that appears in the composition theorem $\mathrm{R}(f \circ g^n) = \Omega(\mathrm{R}(f)\bar\chi(g))$, gapped majority as an *inner* function loses a square root -- which is precisely why $\mathrm{R}$ does not compose.'}
     - {measure: C,      value: '\Theta(n)', note: 'Exactly $n/2 - \delta n + 1$ on both sides, for every $\delta$. A $1$-certificate must fix that many ones: fix fewer and setting all free coordinates to $0$ leaves a completion that is still inside the promise and is a $0$-input. Symmetrically for $\mathrm{C}^0$. Note this is *not* $\Theta(\mathrm{D})$ by accident -- here $\mathrm{C}$, $\mathrm{C}^0$, $\mathrm{C}^1$ and $\mathrm{D}$ all coincide up to the additive $1$.'}
     - {measure: bs,     value: '\Theta(\min(n, 1/\delta))', note: 'Every sensitive block at a promise input must move at least $2\delta n$ coordinates, so disjoint blocks number at most $1/(2\delta)$; and at an input of weight exactly $n/2+\delta n$ that many disjoint blocks of $2\delta n$ ones each do flip the answer.'}
+    - {measure: s,      value: '0', putative: true, note: 'Whenever $2\delta n > 1$. A single flip moves $|x|$ by one, and the value only changes on crossing $n/2$, which the promise puts $2\delta n$ away; so the flipped input is either outside the promise or has the same value. Sensitivity is therefore *identically zero* while $\mathrm{bs} = \Theta(\min(n,1/\delta))$ and $\mathrm{D} = \Theta(n)$: the promise-function counterexample to every bound with $\mathrm{s}$ on the small side.'}
+    - {measure: Cmin,   value: '\Theta(n)', note: 'Every certificate on either side has $n/2-\delta n+1$ coordinates, so the min over inputs equals the max: $\mathrm{C}_{\min} = \mathrm{C} = \mathrm{D}$ up to $\pm 1$.'}
+    - {measure: R0,     value: '\Theta(n)', putative: true, note: 'A zero-error run must end on a certificate, so $\mathrm{R}_0 \ge \mathrm{C} = \Theta(n)$; and $\mathrm{R}_0 \le \mathrm{D}$. At constant $\delta$ this is an unbounded $\mathrm{R}_0$-vs-$\mathrm{R}$ gap.'}
+    - {measure: Dna,    value: '\Theta(n)', note: 'Between $\mathrm{D} = \Theta(n)$ and the trivial $n$; the adversary count for $\mathrm{D}$ never used adaptivity anyway.'}
+    - {measure: Rna,    value: '\Theta(\min(n, 1/\delta^2))', note: 'Sampling is non-adaptive, and $\mathrm{R}^{\mathrm{na}} \ge \mathrm{R}$.'}
+    - {measure: Rbar,   value: '\Theta(\min(n, 1/\delta^2))', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]).'}
     - {measure: fbs,    value: '\Theta(\min(n, 1/\delta))', note: 'Same counting, fractionally: $2\delta n\sum_B w_B \le \sum_i\sum_{B \ni i} w_B \le n$. So $\mathrm{fbs} = \Theta(\mathrm{bs}) = O(1)$ at constant $\delta$ while $\mathrm{C} = \Theta(n)$ -- the promise-function counterexample to $\mathrm{C} = O(\mathrm{fbs}^2)$ and to $\mathrm{C} = O(\mathrm{RC}^2)$.'}
   witnesses:
     - {of: [D, R], setting: partial, statement: 'At constant $\delta$, $\mathrm{D} = \Theta(n)$ while $\mathrm{R} = \Theta(1)$: the standard proof that $\mathrm{D}$ is unbounded in terms of $\mathrm{R}$ on partial functions.'}
     - {of: [R, Q], setting: partial, statement: 'Quadratic: $\mathrm{R} = \Theta(1/\delta^2)$ against $\mathrm{Q} = \Theta(1/\delta)$, the approximate-counting speed-up in its cleanest form.', refs: [NayakWu99]}
     - {of: [C, fbs], setting: partial, statement: 'At constant $\delta$, $\mathrm{C} = \Theta(n)$ while $\mathrm{fbs} = O(1)$: rounding a fractional certificate is a total-function argument.'}
+    - {of: [bs, s], setting: partial, statement: 'Unbounded: $\mathrm{s} = 0$ identically (the promise gap is wider than one flip) while $\mathrm{bs} = \Theta(\min(n,1/\delta))$. Every measure sitting above $\mathrm{s}$ is unbounded in terms of it on partial functions, and $\mathrm{GapMaj}$ says so in one line.'}
+    - {of: [R0, R], setting: partial, statement: 'At constant $\delta$, unbounded: $\mathrm{R} = \Theta(1)$ but $\mathrm{R}_0 = \Theta(n)$, because certainty forces a full certificate.'}
   refs: [BenDavidBlais20composition, BenDavidBlais20minimax, BBGM22]
   see_also: [noisyR, R, LR, chibar, ApproxIndex]
 
@@ -300,6 +385,14 @@ functions:
     - {measure: Rbar, value: '\Theta(\sqrt n)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]), and $\mathrm{R}_{\varepsilon}(f) = \Theta(\sqrt n)$ here.'}
     - {measure: MAdv, value: '\Theta(n^{1/3})', note: 'Sandwiched: $\mathrm{Adv}^{\pm}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with both ends $\Theta(n^{1/3})$ here.'}
     - {measure: Adv, value: 'O(1)', refs: [HoyerSpalek05, SpalekSzegedy06], note: 'The certificate complexity barrier at its sharpest: a collision pair certifies a $2$-to-$1$ input with $2$ queries, and the promise means $O(1)$ queries also certify $1$-to-$1$-ness against the promise, so $\mathrm{Adv} \le \sqrt{\mathrm{C}^0\mathrm{C}^1} = O(1)$ while $\mathrm{Q} = \Theta(n^{1/3})$. No positive-weight adversary matrix can prove anything here -- this promise problem is the reason the negative-weights version had to be invented.'}
+    - {measure: D, value: 'n/2+1', putative: true, note: 'Exactly. Upper: a two-to-one $g$ takes only $n/2$ values, so any $n/2+1$ queries repeat one; a one-to-one $g$ never does. Lower: an adversary answering with fresh values keeps both promises alive for $n/2$ queries, since $k \le n/2$ distinct answers can always be extended to a two-to-one function (put the $k$ queried points in $k$ different pairs).'}
+    - {measure: Dna, value: 'n/2+1', putative: true, note: 'The same $n/2+1$ positions, fixed in advance.'}
+    - {measure: R0, value: 'n/2+1', putative: true, note: 'Zero error means finishing on a certificate, and certifying one-to-one-ness takes $n/2+1$ distinct answers (see $\mathrm{C}$). So $\mathrm{R}_0 = \Theta(\mathrm{R}^2)$ here: the birthday paradox is a bounded-error phenomenon and nothing else.'}
+    - {measure: Rna, value: '\Theta(\sqrt n)', putative: true, note: 'Sampling $c\sqrt n$ positions is non-adaptive and finds a collision with constant probability; and $\mathrm{R}^{\mathrm{na}} \ge \mathrm{R} = \Theta(\sqrt n)$. Adaptivity is worth nothing here.'}
+    - {measure: C, value: 'n/2+1', putative: true, note: '$\mathrm{C}^0 = n/2+1$ by the extension argument above; $\mathrm{C}^1 = 2$, a colliding pair.'}
+    - {measure: Cmin, value: '2', putative: true, note: 'A colliding pair, on the two-to-one side.'}
+  witnesses:
+    - {of: [R0, R], setting: partial, statement: 'Quadratic: $\mathrm{R}_0 = n/2+1$ against $\mathrm{R} = \Theta(\sqrt n)$.'}
   refs: [BHT98, AaronsonShi04, Kutin05, Ambainis05smallrange, Ambainis07]
   see_also: [ElementDistinctness, KDistinctness, Simon]
 
@@ -323,6 +416,10 @@ functions:
     - {measure: R0, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
     - {measure: R1, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
     - {measure: Adv, value: 'O(\sqrt n)', refs: [SpalekSzegedy06, Zhang05, HoyerSpalek05], note: 'A colliding pair is a $2$-query certificate, but distinctness itself needs all $n$ values: $\mathrm{C}^1 = 2$ and $\mathrm{C}^0 = n$. The barrier caps the *product*, so $\mathrm{Adv} \le \sqrt{2n} = O(\sqrt n)$ -- short of $\mathrm{Q} = \Theta(n^{2/3})$, but not the $O(1)$ that a one-sided reading of the barrier would suggest. See [[Collision]] for the case where the collapse really is total.'}
+    - {measure: C, value: 'n', putative: true, note: 'Certifying *distinctness* requires reading every symbol -- leave one out and it could duplicate another -- so one side of the function has $\mathrm{C} = n$, while a repeated pair certifies the other side in $2$ queries.'}
+    - {measure: Cmin, value: '2', putative: true, note: 'A repeated pair.'}
+    - {measure: Dna, value: 'n', note: 'Every symbol is relevant, so a non-adaptive algorithm reads all of them -- which here costs nothing, since $\mathrm{D}=n$ anyway.'}
+    - {measure: Rna, value: '\Theta(n)', note: 'Sandwiched between $\mathrm{R} = \Theta(n)$ and $\mathrm{D}^{\mathrm{na}} = n$.'}
   notes: 'A reminder that the "total function" theory in this zoo is for *Boolean* inputs; large alphabets change the picture (here $\mathrm{R}=\Theta(\mathrm{Q}^{3/2})$, which is fine, but the polynomial-relation proofs are alphabet-sensitive).'
   refs: [Ambainis07, AaronsonShi04, Ambainis05smallrange, SherstovThaler23]
   see_also: [Collision, KDistinctness, Q]

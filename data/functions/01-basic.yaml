@@ -197,6 +197,8 @@ functions:
     - {measure: ardeg, value: '1', refs: [MahadevdeWolf15], note: 'Dual to [[OR]]: $1 - r(\bar x)$ for the same degree-$1$ rational $r$.'}
     - {measure: PostQ, value: '\Theta(1)', refs: [MahadevdeWolf15], note: 'Dual to [[OR]].'}
     - {measure: degp, value: 'n \text{ for every prime } p', note: '$\mathrm{AND} = \prod_i x_i$ over every field.'}
+    - {measure: deg2, value: 'n', note: 'The $p=2$ case of the line above: $\mathrm{AND} = x_1\cdots x_n$ over $\mathbb{F}_2$.'}
+    - {measure: PDT, value: 'n', putative: true, note: 'Parity queries are unaffected by complementing the input (a parity of a set shifts by a constant), so $\mathrm{D}^{\oplus}(\mathrm{AND}_n) = \mathrm{D}^{\oplus}(\mathrm{OR}_n) = n$.'}
     - {measure: rprt, value: '\Theta(n)', conf: medium, note: 'Sandwiched: $\mathrm{s}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $n$ here. The lower end is the zoo''s own observation that the [JainKlauck10] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional.'}
     - {measure: Dmu, value: '\min\{n,\ \lceil \log(1/\varepsilon)/\log(1/p)\rceil\} \text{ under } \mu_p', note: 'The cleanest illustration of why $\mathrm{D}^{\mu}$ is a *family* of measures rather than one number. Let $\mu_p$ make each bit $1$ independently with probability $p$. Querying bits until one comes up $0$ and answering $1$ if the first $m$ are all $1$ errs with probability $p^{m}(1-p^{n-m})$, so $m = \lceil \log(1/\varepsilon)/\log(1/p)\rceil$ queries suffice; conversely, the leaf reached by the all-ones input has some depth $m_0 \le m$ and carries $\mathrm{AND}^{-1}(0)$-mass $p^{m_0} - p^{n}$ against $\mathrm{AND}^{-1}(1)$-mass $p^{n}$, so the error is at least $\min\{p^{m}-p^{n},\,p^{n}\}$. At $p = 1/2$ this is $\Theta(\log(1/\varepsilon))$; at $p = 1 - 1/n$ it is $n$. Averaging over the parameter is exactly what the zoo cannot do, which is why $\mathrm{D}^{\mu}$ is left out of the ladder ordering on the matrix page.'}
     - {measure: D_prod, value: 'n', note: 'Take $p = 1-1/n$ in the previous line: $\log(1/p) = \Theta(1/n)$, so the bound saturates at $n$. Product distributions are already worst-case-hard for AND.'}
@@ -371,6 +373,7 @@ functions:
     - {measure: ardeg, value: '\Theta(\log n)', refs: [Newman64, MahadevdeWolf15], note: 'Newman''s degree-$O(\log(1/\varepsilon))$ rational approximation to $|x|$, rescaled to the slices $k = 0,\dots,n$, approximates the sign of $k - n/2$ with degree $O(\log n)$; the matching $\Omega(\log n)$ is in [MahadevdeWolf15]. Compare $\widetilde{\deg}(\mathrm{MAJ}) = \Theta(n)$: **rational** approximation is exponentially cheaper than polynomial approximation here, which is exactly what makes majority the canonical postselection example.'}
     - {measure: PostQ, value: '\Theta(\log n)', refs: [MahadevdeWolf15, Aaronson05postbqp], note: 'Aaronson gave the first postselected majority algorithm; Mahadev-de Wolf made it optimal and observed that reading the algorithm backwards reproves Newman''s theorem.'}
     - {measure: robustQ, value: '\Theta(n)', refs: [BNRdW05], note: 'Sandwiched between $\mathrm{Q} = \Theta(n)$ and the universal $O(n)$ upper bound.'}
+    - {measure: deg2, value: '(n+1)/2 \text{ for } n = 2^m - 1', putative: true, note: 'The $p=2$ case of the $\deg_p$ line below. The restriction to $n = 2^m-1$ is only for tidiness: running the same Lucas computation for every $n$ gives $\deg_2(\mathrm{MAJ}_n) = 2^{\lfloor \log_2 n\rfloor}$, so $\deg_2$ is always a power of two: it equals $n$ exactly when $n$ is one, and bottoms out at $(n+1)/2$ at $n = 2^m-1$, which is the case recorded here. Either way $\deg_2 = \Theta(n)$ while $\deg = n$ -- unlike [[IP]], majority gets essentially no discount from characteristic $2$.'}
     - {measure: degp, value: '(n+1)/2 \text{ for } p = 2,\ n = 2^m - 1', note: 'The $\mathbb{F}_2$ multilinear expansion of the threshold $\mathrm{Th}_k^n$ is $\sum_{|S| \ge k} \binom{|S|-1}{k-1}\prod_{i \in S} x_i$. By Lucas'' theorem $\binom{s-1}{k-1}$ is odd iff the binary digits of $k-1$ are a submask of those of $s-1$; with $n = 2^m-1$ and $k = 2^{m-1}$ the only $s-1 \le n-1$ containing the mask $0\underbrace{1\cdots1}_{m-1}$ is $2^{m-1}-1$ itself, so the degree is exactly $2^{m-1} = (n+1)/2$. For $n = 3$ this is the familiar $\mathrm{MAJ}_3 = xy + yz + zx$.'}
     - {measure: rprt, value: '\Theta(n)', conf: medium, note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\widetilde{\deg}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here. The lower end is the zoo''s own observation that the [JainKlauck10] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional.'}
   refs: [Paturi92, BBCMdW01, IJKKKSWW23]
@@ -529,10 +532,30 @@ functions:
     - {measure: Rbar, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
     - {measure: R0, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
     - {measure: R1, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
+    - {measure: C, value: '\lfloor n/2 \rfloor + 1', putative: true, note: 'A certificate need not pin the highest $1$ -- it only has to force the answer. If the highest $1$ of $x$ is at position $i$, it is enough to fix $x_i = 1$ and to zero out the *opposite-parity* positions above $i$: $1 + |\{j > i : j \not\equiv i\}|$ coordinates, maximised at $i = 1$ giving $\lfloor n/2\rfloor + 1$. That also matches $\mathrm{bs} = \lfloor n/2\rfloor+1 \le \mathrm{C}$, so the bound is tight. (Verified exhaustively for $n \le 10$.)'}
+    - {measure: C0, value: '\lceil n/2 \rceil', putative: true, note: 'Attained at $0^n$, where zeroing the $\lceil n/2\rceil$ odd positions already forces the answer $0$ -- and at any $0$-input whose highest $1$ sits at position $2$.'}
+    - {measure: C1, value: '\lfloor n/2 \rfloor + 1', putative: true, note: 'Attained at $e_1$: fix $x_1 = 1$ and zero the $\lfloor n/2\rfloor$ even positions above it.'}
+    - {measure: Cmin, value: '1', putative: true, note: 'At $x = e_n$, reading $x_n = 1$ already decides (the answer is the parity of $n$). Certificate complexity varies by a factor of $\Theta(n)$ across inputs.'}
+    - {measure: bs, value: '\lfloor n/2 \rfloor + 1', putative: true, note: 'Equal to $\mathrm{s}$, so blocks buy nothing. A sensitive block at $x$ either contains the current highest $1$ (at most one such block can be disjoint from the others) or has its own maximum above it, of parity opposite to $i$ -- and distinct disjoint blocks need distinct maxima. That caps the count at $1+\lceil (n-i)/2\rceil$, the same bound as for $\mathrm{s}$, and $x=e_1$ attains it.'}
+    - {measure: fbs, value: '\lfloor n/2 \rfloor + 1', putative: true, note: 'The same argument survives the fractional relaxation: charge each block to its maximum index, and the load constraint at that coordinate caps the total weight per admissible maximum at $1$.'}
+    - {measure: deg, value: 'n', putative: true, note: 'Writing $\mathrm{OMB} = \sum_{i \text{ odd}} x_i\prod_{j>i}(1-x_j)$, the monomial $x_1x_2\cdots x_n$ can only come from the $i=1$ term, with coefficient $(-1)^{n-1} \ne 0$. So $\deg = n$ against $\mathrm{sdeg} = 1$ -- the maximum possible separation between exact and sign degree.'}
+    - {measure: deg2, value: 'n', putative: true, note: 'The same expansion over $\mathbb{F}_2$, with the same top monomial and coefficient $1$.'}
+    - {measure: Q, value: '\Theta(\sqrt n)', putative: true, note: 'Upper: quantum maximum-finding [DurrHoyer96] locates the highest $1$ in $O(\sqrt n)$ queries; its parity is the answer. Lower: setting all even-indexed bits to $0$ restricts $\mathrm{OMB}$ to $\mathrm{OR}$ on the odd ones, so $\mathrm{Q} \ge \mathrm{Q}(\mathrm{OR}_{\lceil n/2\rceil}) = \Omega(\sqrt n)$.'}
+    - {measure: adeg, value: '\Theta(\sqrt n)', note: 'Squeezed: $\mathrm{bs} = O(\widetilde{\deg}^2)$ gives $\widetilde{\deg} = \Omega(\sqrt n)$, and $\widetilde{\deg} \le 2\mathrm{Q} = O(\sqrt n)$.'}
+    - {measure: QE, value: '\Theta(n)', note: 'Squeezed between $\deg/2 = n/2$ and $\mathrm{D} = n$. So $\mathrm{OMB}$ has a full quadratic exact-vs-bounded-error quantum gap.'}
+    - {measure: Q0, value: '\Theta(n)', note: 'Same squeeze: $\deg \le 2\mathrm{Q}_0$ and $\mathrm{Q}_0 \le \mathrm{D}$.'}
+    - {measure: D_size, value: 'n+1', putative: true, note: 'Query $x_n, x_{n-1}, \dots$ and stop at the first $1$: a path with $n$ branchings, hence $n+1$ leaves. The all-zero input forces a root-to-leaf path of length $n$, so no smaller tree exists.'}
+    - {measure: s0, value: '\lceil n/2 \rceil', putative: true, note: 'Attained at $0^n$: flipping position $j$ makes $j$ the highest $1$, which flips the answer exactly for the $\lceil n/2\rceil$ odd $j$. (Verified exhaustively for $n \le 10$.)'}
+    - {measure: s1, value: '\lfloor n/2 \rfloor + 1', putative: true, note: 'Attained at $e_1$: the $\lfloor n/2 \rfloor$ even positions above, plus position $1$ itself. This is the value recorded as $\mathrm{s}$.'}
+    - {measure: bs0, value: '\lceil n/2 \rceil', putative: true, note: 'Equal to $\mathrm{s}^0$: blocks buy nothing on either side, by the maximum-index charging argument used for $\mathrm{bs}$. (Verified exhaustively for $n \le 10$.)'}
+    - {measure: bs1, value: '\lfloor n/2 \rfloor + 1', putative: true, note: 'Equal to $\mathrm{s}^1$, and to $\mathrm{bs}$.'}
   witnesses:
     - {of: [D, sdeg], setting: total, statement: 'Unbounded: $\mathrm{D}=n$, $\mathrm{sdeg}=1$. Sign degree is *not* polynomially related to any other measure in the zoo.', refs: [Beigel94]}
-  refs: [Beigel94, MinskyPapert69]
-  see_also: [sdeg, MAJ]
+    - {of: [deg, sdeg], setting: total, statement: 'Unbounded and maximal: $\deg = n$ against $\mathrm{sdeg} = 1$.'}
+    - {of: [C, Cmin], setting: total, statement: 'Unbounded: $\mathrm{C}=\lfloor n/2\rfloor+1$ at $e_1$ against $\mathrm{C}_{\min}=1$ at $e_n$.'}
+    - {of: [QE, Q], setting: total, statement: 'Quadratic: $\mathrm{Q}_E = \Theta(n)$ (forced by $\deg = n$) against $\mathrm{Q} = \Theta(\sqrt n)$ (quantum maximum finding).'}
+  refs: [Beigel94, MinskyPapert69, DurrHoyer96]
+  see_also: [sdeg, MAJ, deg, Q]
 
 - id: ADDR
   name: ADDRESS / multiplexer
@@ -577,8 +600,34 @@ functions:
     - {measure: QE, value: '\Theta(k+1)', note: 'Sandwiched: $\deg(f) \le \mathrm{Q}_{\mathrm{E}}(f) \le \mathrm{D}(f)$, with both ends $k+1$ here.'}
     - {measure: prt, value: '\Theta(k+1)', note: 'Sandwiched: $\mathrm{s}(f) \le \mathrm{prt}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $k+1$ here.'}
     - {measure: rprt, value: '\Theta(k+1)', conf: medium, note: 'Sandwiched: $\mathrm{s}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $k+1$ here. The lower end is the zoo''s own observation that the [JainKlauck10] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional.'}
+    - {measure: s0, value: 'k+1', putative: true, note: 'Take $y \equiv 0$ except $y_a = 0$ with all $2^k$ table entries chosen so that every address-neighbour of $a$ carries a $1$: then all $k$ address bits and $y_a$ itself are sensitive. Complementing the table swaps the two sides, so $\mathrm{s}^0 = \mathrm{s}^1$.'}
+    - {measure: s1, value: 'k+1', putative: true, note: 'By the complement symmetry $\mathrm{ADDR}_k(a,\bar y) = 1 - \mathrm{ADDR}_k(a,y)$, the two sides are equal; see $\mathrm{s}^0$.'}
+    - {measure: bs0, value: 'k+1', note: 'Squeezed between $\mathrm{s}^0 = k+1$ and $\mathrm{bs} = k+1$.'}
+    - {measure: bs1, value: 'k+1', note: 'Squeezed between $\mathrm{s}^1 = k+1$ and $\mathrm{bs} = k+1$.'}
+    - {measure: Cmin, value: 'k+1', putative: true, note: 'A certificate that fixes $j$ of the address bits leaves $2^{k-j}$ live addresses and must therefore pin all $2^{k-j}$ of the corresponding table entries, for a total of $j + 2^{k-j} \ge k+1$ coordinates, with equality only at $j=k$ (and $j=k-1$). So *every* input has $\mathrm{C}(x) = k+1$: $\mathrm{C} = \mathrm{C}_{\min} = k+1$ and $\mathrm{ADDR}$ is perfectly balanced in certificate size.'}
+    - {measure: UC, value: 'k+1', putative: true, note: 'The family $\{a \text{ fixed},\, y_a = b\}$ over all $2^k$ addresses is unambiguous -- each input matches exactly one member per output value -- and has width $k+1 = \mathrm{C}$.'}
+    - {measure: UCmin, value: 'k+1', note: 'Between $\mathrm{C}_{\min} = k+1$ and $\mathrm{UC} = k+1$.'}
+    - {measure: SP, value: 'k+1', putative: true, note: 'The natural tree (read the address, then the addressed entry) partitions the cube into codimension-$(k+1)$ monochromatic subcubes, and no monochromatic subcube can have codimension below $\mathrm{C}_{\min} = k+1$.'}
+    - {measure: EC, value: 'k+1', note: 'Between $\mathrm{fbs} = k+1$ and $\mathrm{C} = k+1$.'}
+    - {measure: rank, value: 'k+1', putative: true, note: 'Upper: $\mathrm{rank} \le \mathrm{D} = k+1$. Lower: in the Prover--Delayer game the Delayer defers on every query, so the game lasts at least $\mathrm{C}_{\min}$ rounds; in general $\mathrm{C}_{\min}(f) \le \mathrm{rank}(f)$, and here $\mathrm{C}_{\min} = k+1$. So $\mathrm{ADDR}$ has *full* rank: none of its depth is caterpillar.'}
+    - {measure: D_size, value: '2^{k+1}', putative: true, note: 'Each leaf-subcube is monochromatic, hence of codimension $\ge \mathrm{C}_{\min} = k+1$, hence of measure $\le 2^{-(k+1)}$; the leaves partition the cube, so there are at least $2^{k+1}$ of them. The natural tree achieves it: $2^k$ address paths, each ending in one table query.'}
+    - {measure: deg2, value: 'k+1', putative: true, note: 'Over $\mathbb{F}_2$, $\mathrm{ADDR}_k = \sum_a \big(\prod_{i:\,a_i=1} z_i \prod_{i:\,a_i=0} (1+z_i)\big)\, y_a$ with $z$ the address. Each summand has the top monomial $z_1\cdots z_k\, y_a$, and these carry distinct table variables, so nothing cancels: $\deg_2 = k+1$.'}
+    - {measure: sdeg, value: '\Theta(k)', putative: true, note: 'Restricting the table to $y_b = \mathrm{parity}(b)$ turns $\mathrm{ADDR}_k$ into $\mathrm{PARITY}_k$, and sign degree cannot increase under restriction, so $\mathrm{sdeg} \ge \mathrm{sdeg}(\mathrm{PARITY}_k) = k$; also $\mathrm{sdeg} \le \deg = k+1$.'}
+    - {measure: adeg, value: '\Theta(k)', note: 'Squeezed between $\mathrm{sdeg} = \Omega(k)$ and $\deg = k+1$.'}
+    - {measure: Q, value: '\Theta(k)', note: 'Squeezed between $\widetilde{\deg}/2 = \Omega(k)$ and $\mathrm{D} = k+1$. Quantum buys nothing on the multiplexer.'}
+    - {measure: Q0, value: '\Theta(k)', note: 'Between $\mathrm{Q} = \Omega(k)$ and $\mathrm{D} = k+1$.'}
+    - {measure: Adv, value: '\Theta(k)', note: 'Between $\sqrt{\mathrm{bs}^0\,\mathrm{bs}^1} = k+1$ and $\mathrm{Q} = O(k)$.'}
+    - {measure: Advpm, value: '\Theta(k)', note: '$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}(f))$ for every $f$ ([[Advpm]] vs [[Q]]), and $\mathrm{Q} = \Theta(k)$ here.'}
+    - {measure: MAdv, value: '\Theta(k)', note: 'Also $\Theta(\mathrm{Q})$ for every $f$, and $\mathrm{Q} = \Theta(k)$ here.'}
+    - {measure: Inf, value: '(k+2)/2', putative: true, note: 'Flipping an address bit moves the pointer to a uniformly unrelated table entry, flipping the output with probability $1/2$: total $k/2$. Flipping table entry $y_b$ matters exactly when $\mathrm{bin}(a) = b$, probability $2^{-k}$, and there are $2^k$ of them: total $1$. So $\mathrm{Inf} = k/2 + 1$.'}
+    - {measure: MaxInf, value: '1/2', putative: true, note: 'Attained by any address bit (for $k \ge 1$); each table bit has influence only $2^{-k}$.'}
+    - {measure: spar, value: '4^k', putative: true, note: 'In the $\pm 1$ basis each of the $2^k$ terms $\mathbb{1}[\mathrm{addr}=a]\,y_a$ expands into $2^k$ monomials of coefficient $\pm 2^{-k}$, and the $y_a$ factor keeps the supports of different $a$ disjoint. Consistent with the recorded $\mathrm{L}_1 = 4^k \cdot 2^{-k} = 2^k$.'}
+    - {measure: Fdim, value: 'k + 2^k', putative: true, note: 'The Fourier support contains every singleton $\{y_a\}$ and every subset of the address bits, so it spans all $n$ coordinates over $\mathbb{F}_2$.'}
+  witnesses:
+    - {of: [Dna, D], setting: total, statement: 'Exponential, on a total function: $\mathrm{D}^{\mathrm{na}} = k + 2^k$ while $\mathrm{D} = k+1$. Adaptivity is what lets you skip the table. Compare [[TreeNav]], where the same gap arises with no promise and no gadget.'}
+    - {of: [Rna, R], setting: total, statement: 'Exponential: $\mathrm{R}^{\mathrm{na}} = \Theta(2^k)$ against $\mathrm{R} = \Theta(k)$ -- randomness does not substitute for adaptivity here, since a non-adaptive sampler misses the addressed entry.'}
   refs: [GPW18, GJPW18]
-  see_also: [ANDOR, pointer]
+  see_also: [ANDOR, pointer, TreeNav]
 
 - id: TreeNav
   name: Binary tree navigation
@@ -604,6 +653,22 @@ functions:
     - {measure: Rbar, value: '\Theta(k)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(k)$ and $\mathrm{D}(f) = k$ here.'}
     - {measure: R0, value: '\Theta(k)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(k)$ and $\mathrm{D}(f) = k$ here.'}
     - {measure: R1, value: '\Theta(k)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(k)$ and $\mathrm{D}(f) = k$ here.'}
+    - {measure: C, value: 'k', putative: true, note: 'The walk itself is a certificate, and nothing shorter is: omit a node of the walk and the walk is free to leave. So $\mathrm{C} = \mathrm{C}^0 = \mathrm{C}^1 = \mathrm{C}_{\min} = \mathrm{D} = k$ -- navigation is completely certificate-uniform, and all the difficulty is in *finding* the $k$ relevant variables among $2^k-1$.'}
+    - {measure: Cmin, value: 'k', putative: true, note: 'Every input has the same certificate structure.'}
+    - {measure: C0, value: 'k', putative: true, note: 'As $\mathrm{C}$: complementing the bottom level swaps the two sides, so the certificate structure is the same for both. (Verified exhaustively for $k \le 3$.)'}
+    - {measure: C1, value: 'k', putative: true, note: 'As $\mathrm{C}^0$.'}
+    - {measure: s0, value: 'k', putative: true, note: 'As $\mathrm{s}$: the construction there can be run with either final value, so both sides reach $k$. (Verified exhaustively for $k \le 3$.)'}
+    - {measure: s1, value: 'k', putative: true, note: 'As $\mathrm{s}^0$.'}
+    - {measure: bs0, value: 'k', note: 'Squeezed between $\mathrm{s}^0 = k$ and $\mathrm{C}^0 = k$.'}
+    - {measure: bs1, value: 'k', note: 'Squeezed between $\mathrm{s}^1 = k$ and $\mathrm{C}^1 = k$.'}
+    - {measure: s, value: 'k', putative: true, note: 'At the right input all $k$ walk variables are sensitive: flipping the bottom one flips the output, and flipping the one at level $j$ diverts the walk into the sibling subtree -- arrange each sibling subtree to deliver the opposite bit. Nothing off the walk is sensitive.'}
+    - {measure: bs, value: 'k', note: 'Squeezed between $\mathrm{s}=k$ and $\mathrm{C}=k$.'}
+    - {measure: fbs, value: 'k', note: 'Squeezed between $\mathrm{bs}=k$ and $\mathrm{C}=k$.'}
+    - {measure: deg, value: 'k', putative: true, note: 'Expand recursively: $\mathrm{Nav}_k = (1-x_0)\mathrm{Nav}_{k-1}(L) + x_0\mathrm{Nav}_{k-1}(R)$. The two subtrees have disjoint variable sets, so the top monomial of the right branch times $x_0$ has degree $k$ and cannot be cancelled by anything in the left branch.'}
+    - {measure: deg2, value: 'k', putative: true, note: 'The same recursion over $\mathbb{F}_2$: $\mathrm{Nav}_k = L + x_0(L+R)$.'}
+    - {measure: QE, value: '\Theta(k)', note: 'Squeezed between $\deg/2$ and $\mathrm{D}$, both $\Theta(k)$.'}
+    - {measure: Inf, value: '(k+1)/2', putative: true, note: 'On a uniform input the level-$j$ walk variable is pivotal exactly when the sibling subtree would deliver the opposite bit, which happens with probability $1/2$; the bottom variable is always pivotal. So $\mathrm{I} = 1 + (k-1)/2$ while the function has $2^k-1$ variables -- influence logarithmic in the input length, and a clean instance of $\mathrm{I} \le \mathrm{D}$ being tight up to a factor of $2$.'}
+    - {measure: D_size, value: '2^k', putative: true, note: 'Exactly. The walk tree is complete of depth $k$, giving $2^k$ leaves. For the lower bound: the walk is the unique minimal certificate, so every leaf''s read-set contains one complete walk together with its final bit, and the $2^{k-1}$ walks times the $2$ values of the final bit need $2^k$ distinct leaves.'}
   witnesses:
     - {of: [Dna, D], setting: total, statement: '$\mathrm{D}^{\mathrm{na}} = 2^{\mathrm{D}}-1$: exactly tight against the general bound, where $\mathrm{ADDR}_k$ is loose by a factor of two.'}
     - {of: [Rna, R], setting: total, statement: '$\mathrm{R}^{\mathrm{na}} = 2^{\Theta(\mathrm{R})}$, against the general bound $\mathrm{R}^{\mathrm{na}} \le 2^{\mathrm{R}}-1$.'}
@@ -662,5 +727,10 @@ functions:
     - {measure: R1, value: '\Theta(n)', note: 'Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.'}
     - {measure: QE, value: '\Theta(n)', note: 'Sandwiched: $\deg(f) \le \mathrm{Q}_{\mathrm{E}}(f) \le \mathrm{D}(f)$, with both ends $n$ here.'}
     - {measure: MAdv, value: '\Theta(\sqrt n)', note: 'Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with both ends $\Theta(\sqrt n)$ here.'}
+    - {measure: deg2,   value: 'n', putative: true, note: 'Over $\mathbb{F}_2$, $\bigvee_j y_j = 1 + \prod_j(1+y_j)$ contributes the monomial $\prod_j y_j$ with coefficient $1$, and each $y_j$ is the product of its tribe''s variables. So the full monomial $x_1\cdots x_n$ survives, exactly as over $\mathbb{R}$.'}
+    - {measure: Q0,     value: '\Theta(n)', note: 'Between $\deg/2 = n/2$ and $\mathrm{D} = n$. A full quadratic above $\mathrm{Q} = \Theta(\sqrt n)$.'}
+  witnesses:
+    - {of: [s0, s1], setting: total, statement: 'Unbounded, and on a monotone read-once DNF: $\mathrm{s}^0 = \Theta(n/\log n)$ against $\mathrm{s}^1 = \Theta(\log n)$, a ratio of $n/\log^2 n$. The same asymmetry runs through $\mathrm{bs}^0$ vs $\mathrm{bs}^1$ and $\mathrm{C}^0$ vs $\mathrm{C}^1$; it is the reason TRIBES is the KKL extremal example.'}
+    - {of: [C, Cmin], setting: total, statement: 'Unbounded: $\mathrm{C} = \Theta(n/\log n)$ at a $0$-input (every tribe must be shown to fail) against $\mathrm{C}_{\min} = \Theta(\log n)$ at a $1$-input (exhibit one satisfied tribe).'}
   refs: [KKL88, ODonnell14, BOL85]
   see_also: [Inf, MaxInf, OR, AND]
