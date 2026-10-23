@@ -7,6 +7,49 @@
 
 measures:
 
+- id: Var
+  name: Variance
+  symbol: '\mathrm{Var}(f)'
+  aliases: ['4p(1-p)', 'balance', 'Var(f)']
+  category: fourier
+  order: 5
+  short: 'How far f is from constant. Not a complexity measure -- the unit the other Fourier quantities are divided by.'
+  dimensionless: 'a number in [0,1], and not a cost of anything: it measures how balanced $f$ is, not how hard it is'
+  definition: |
+    For $f:\{0,1\}^n\to\{-1,1\}$ with $p = \Pr[f=1]$,
+    $$\mathrm{Var}(f) \;=\; \mathbb{E}[f^2]-\mathbb{E}[f]^2 \;=\; \sum_{S\ne\emptyset}\hat f(S)^2 \;=\; 4p(1-p).$$
+    It is $1$ for a balanced function, $2^{2-n}(1-2^{-n})$ for $\mathrm{OR}_n$, and $0$ for a
+    constant. Two identities let you read it off other entries in the zoo:
+    $$\mathrm{Var}(f) = 2\,\mathrm{NS}_{1/2}(f) = 1 - \mathrm{Stab}_0(f),$$
+    since at $\delta = 1/2$ the noisy copy is independent and $\mathrm{Stab}_0 = \hat f(\emptyset)^2$.
+  settings:
+    total:   {defined: yes}
+    partial: {defined: partial, note: 'Needs a distribution on the domain; the uniform measure on the promise is the usual choice, but no standard convention exists.'}
+    relation: {defined: no}
+  normalization: |
+    Variance is not a query complexity measure and cannot be made into one. It is a
+    number in $[0,1]$ that says how far $f$ is from constant, it does not grow with
+    $n$, and two functions with wildly different complexity ($\oplus_n$ and a
+    dictator) have exactly the same variance. It is in the zoo because it is the
+    **unit** every other Fourier quantity has to be measured against.
+
+    The reason is bias. $\mathrm{OR}_n$ is $1$ on all but one input, so *every*
+    Fourier quantity attached to it is exponentially small -- influences,
+    noise sensitivity, spectral weight -- and none of that smallness has anything to
+    do with $\mathrm{OR}_n$ needing $n$ queries. Dividing by $\mathrm{Var}$ cancels
+    the bias exactly: $\mathrm{Var}(\mathrm{OR}_n) = \Theta(2^{-n})$ sits in the
+    numerator and the $2^{-n}$ disappears. That is what turns
+    $\mathrm{MaxInf}$ into [[osss]] and $\mathrm{NS}_\delta$ into [[nsr]], both of
+    which are honest query counts. See [[normalization]].
+  facts:
+    - '$\mathrm{MaxInf}(f)\le \mathrm{Var}(f)\le \mathrm{I}(f)$: the first because $\mathrm{Inf}_i = \sum_{S\ni i}\hat f(S)^2$ is part of the sum defining $\mathrm{Var}$, the second because $|S|\ge 1$ off the empty set.'
+    - 'Every non-constant $f$ has $\mathrm{Var}(f)\ge 2^{2-n}(1-2^{-n})$, attained by $\mathrm{OR}_n$ and $\mathrm{AND}_n$.'
+    - '$\mathrm{Var}$ is *not* monotone under restriction and does not compose: $\mathrm{Var}(f\circ g)$ depends on the bias of $g$, which is exactly why biased gadgets destroy Fourier lower bounds.'
+  refs: [ODonnell14]
+  related: [MaxInf, NS, Stab, nsr, osss]
+  see_also: [osss, nsr, MaxInf, NS, Stab, normalization]
+  confidence: high
+
 - id: Inf
   name: Total influence (L2 influence)
   symbol: '\mathrm{I}(f)'
@@ -33,6 +76,7 @@ measures:
     - '**KKL:** some $\mathrm{Inf}_i(f)\ge\Omega(\mathrm{Var}(f)\log n/n)$.'
     - 'In the noisy model $\mathrm{N}_p$, high total influence forces $\Omega(n\log n)$ queries.'
   refs: [ODonnell14, OSSS05, KKL88, BOL85, Gu25noisy]
+  related: [s, Inf1, MaxInf, NS, lambda]
   see_also: [s, Inf1, MaxInf, NS, lambda]
   confidence: high
 
@@ -59,6 +103,7 @@ measures:
     - 'A quantum algorithm making $T$ queries has acceptance probability $p$ with $\deg(p)\le 2T$, so these bounds transfer directly to query complexity.'
     - 'Related open problem (Aaronson-Ambainis): every bounded degree-$d$ $p$ with $\mathrm{Var}(p)\ge\varepsilon$ has a variable with influence $\ge \mathrm{poly}(\varepsilon/d)$. Would imply $\mathrm{R}(f)=\mathrm{poly}(\mathrm{Q}(f))$ for all *total* $f$ ... and more.'
   refs: [BackursBavarian14, FHKL16, AaronsonAmbainis14]
+  related: [Inf, MaxInf, adeg, Q]
   see_also: [Inf, MaxInf, adeg, Q]
   confidence: high
 
@@ -69,13 +114,71 @@ measures:
   category: fourier
   order: 16
   short: 'The largest single-coordinate influence.'
+  dimensionless: 'a probability in [0,1]: it never grows with n, so no measure counting queries can be bounded by a power of it, and it can never be polynomially larger than one'
   definition: '$\max_{i}\mathrm{Inf}_i(f)$. The quantity in the Aaronson-Ambainis conjecture and in OSSS-type inequalities.'
   settings: {total: {defined: yes}, partial: {defined: partial}, relation: {defined: no}}
+  normalization: |
+    Taken at face value, $\mathrm{MaxInf}$ is a poor query complexity measure -- it
+    is not a measure of complexity at all. It is a probability, so it lives in
+    $[0,1]$ no matter how large $n$ is. Nothing that counts queries can be bounded
+    by a power of it, and it cannot be polynomially bounded by anything that grows,
+    so every cell it would occupy in the matrix is empty for a reason that has
+    nothing to do with what is known. Worse, it moves the wrong way: harder
+    functions tend to have *smaller* max influence, and it collapses under bias,
+    since $\mathrm{MaxInf}(\mathrm{OR}_n) = 2^{1-n}$ says nothing about
+    $\mathrm{OR}_n$ being evasive.
+
+    What the literature actually uses is the ratio
+    $$\mathrm{osss}(f) \;=\; \frac{\mathrm{Var}(f)}{\mathrm{MaxInf}(f)},$$
+    the quantity the **OSSS inequality** bounds by the average depth of a decision
+    tree. Dividing by [[Var]] cancels the bias, and the ratio is a genuine query
+    count: it is at least $1$, at most $O(n/\log n)$ by KKL, and at most
+    $\mathrm{D}(f)$. That is the entry that appears in the matrix -- see [[osss]] --
+    and this page is where its numerator and denominator live. The general recipe is
+    described in [[normalization]].
   facts:
-    - '$\mathrm{D}(f)\ge \mathrm{Var}(f)/\mathrm{MaxInf}(f)$ (OSSS).'
+    - '$\mathrm{D}(f)\ge \mathrm{Var}(f)/\mathrm{MaxInf}(f)$ (OSSS). Recorded as the measure [[osss]].'
+    - '$\mathrm{MaxInf}(f)\le\mathrm{Var}(f)$ always, so the ratio above is never below $1$; equality for $\oplus_n$ and for a dictator.'
+    - '**KKL:** $\mathrm{MaxInf}(f)\ge\Omega(\mathrm{Var}(f)\log n/n)$, so the ratio never exceeds $O(n/\log n)$; [[TRIBES]] attains it.'
     - 'For a bounded degree-$d$ function, $\mathrm{MaxInf} \ge \mathrm{Var}/(\text{something in } d)$ is the Aaronson-Ambainis conjecture -- open.'
-  refs: [OSSS05, AaronsonAmbainis14]
-  see_also: [Inf, Inf1, D]
+  refs: [OSSS05, AaronsonAmbainis14, KKL88]
+  related: [Inf, Var, osss, Inf1, D]
+  see_also: [osss, Var, Inf, Inf1, D, normalization]
+  confidence: high
+
+- id: osss
+  name: OSSS number
+  symbol: '\mathrm{osss}(f)'
+  symbol_alt: '\mathrm{Var}(f)/\mathrm{MaxInf}(f)'
+  aliases: ['Var/MaxInf', 'normalized maximum influence', 'OSSS bound']
+  category: fourier
+  order: 17
+  short: 'Var(f)/MaxInf(f): the query lower bound the OSSS inequality reads off the influences.'
+  definition: |
+    $$\mathrm{osss}(f) \;=\; \frac{\mathrm{Var}(f)}{\mathrm{MaxInf}(f)}
+      \;=\; \frac{\mathrm{Var}(f)}{\max_i \mathrm{Inf}_i(f)} .$$
+    This is [[MaxInf]] put on the query scale by dividing out the bias (see
+    [[normalization]]). The **OSSS inequality** [OSSS05] states that for every
+    decision tree $T$ computing $f$,
+    $$\mathrm{Var}(f)\;\le\;\sum_i \delta_i(T)\,\mathrm{Inf}_i(f),$$
+    where $\delta_i(T) = \Pr_x[T \text{ reads } x_i]$. Bounding each
+    $\mathrm{Inf}_i$ by $\mathrm{MaxInf}$ and summing gives
+    $\mathrm{osss}(f) \le \sum_i\delta_i(T) = \mathbb{E}[\#\text{queries}]$, so
+    $\mathrm{osss}$ is a lower bound on the *average* depth of a tree for $f$, not
+    merely on $\mathrm{D}(f)$.
+  settings:
+    total:   {defined: yes}
+    partial: {defined: partial, note: 'Both numerator and denominator need a distribution on the domain; the uniform measure on the promise is the usual choice, but no standard convention exists.'}
+    relation: {defined: no}
+  facts:
+    - '$1\le\mathrm{osss}(f)$, since $\mathrm{MaxInf}\le\mathrm{Var}$ (a single coordinate cannot carry more than all of the variance). Equality for $\oplus_n$ and for a dictator.'
+    - '$\mathrm{osss}(f) = O(n/\log n)$ by **KKL**, and [[TRIBES]] attains it: no measure of this shape can ever be within a $\log$ of $n$.'
+    - '$\mathrm{osss}(f)\le \bar{\mathrm{R}}_0(f) = \mathrm{R}_0(f)\le\mathrm{D}(f)$: OSSS applies to each tree in the support of a Las Vegas algorithm, and averaging preserves the inequality.'
+    - 'It is a *weak* lower bound and honest about it: $\mathrm{osss}(\oplus_n) = 1$, $\mathrm{osss}(\mathrm{OR}_n) = \Theta(1)$, $\mathrm{osss}(\mathrm{MAJ}_n) = \Theta(\sqrt n)$, all against $\mathrm{D} = n$. It is tight for [[SCORPION]] and for [[TRIBES]] up to the $\log$.'
+    - 'The famous corollary of OSSS is for **monotone transitive** $f$: there $\mathrm{Inf}_i = \hat f(\{i\})$ is the same for every $i$, so $\mathrm{MaxInf} = \mathrm{I}(f)/n \le \Delta(f)/n$ and $\mathrm{Var}\le\Delta(f)^2/n$, giving $\Delta(f) = \Omega(\sqrt{n\,\mathrm{Var}})$ -- a lower bound on average depth from symmetry alone.'
+  refs: [OSSS05, KKL88, ODonnell14]
+  related: [MaxInf, Var, nsr, Inf, R0]
+  see_also: [MaxInf, Var, nsr, Inf, D, R0, normalization]
   confidence: high
 
 - id: NS
@@ -84,6 +187,7 @@ measures:
   category: fourier
   order: 20
   short: 'Probability that f changes when each bit is flipped independently with probability delta.'
+  dimensionless: 'a probability in [0,1]: it never grows with n, so no measure counting queries can be bounded by a power of it, and it can never be polynomially larger than one'
   definition: |
     $$\mathrm{NS}_\delta(f) = \Pr_{x,\,y\sim N_\delta(x)}[f(x)\ne f(y)]
       = \tfrac12\Big(1-\sum_S (1-2\delta)^{|S|}\hat f(S)^2\Big).$$
@@ -91,11 +195,38 @@ measures:
     with $\rho = 1-2\delta$.
   params: [{name: delta, symbol: '\delta', default: 'variable', description: 'per-coordinate flip probability'}]
   settings: {total: {defined: yes}, partial: {defined: partial}, relation: {defined: no}}
+  normalization: |
+    $\mathrm{NS}_\delta$ is not a query complexity measure, and asking how it
+    compares to $\mathrm{D}$ or $\mathrm{R}$ is a category error. It is a
+    probability, bounded by $1/2$ however hard $f$ is, and it depends on a free
+    parameter $\delta$ that has nothing to do with the size of the input. A row of
+    the matrix for it would be empty for reasons of units, not of ignorance.
+
+    The interesting content is in *where the transition happens*, and that is a
+    number on the query scale. Two normalizations recover it:
+
+    * **Small $\delta$.** As $\delta\to 0$, $\mathrm{NS}_\delta(f)/\delta \to
+      \mathrm{I}(f)$, the total influence -- so the derivative at the origin is
+      already in the zoo as [[Inf]], and satisfies $\mathrm{I}(f)\le\mathrm{D}(f)$.
+    * **The critical noise rate.** Let $\delta^{*}(f)$ be the smallest $\delta$ at
+      which $\mathrm{NS}_\delta(f)$ reaches a fixed fraction of its maximum. Then
+      $1/\delta^{*}$ is a query count: it is $\Theta(1)$ for a noise-sensitive
+      function like $\mathrm{MAJ}$ and $\Theta(n)$ for a noise-*stable* one like a
+      dictator or $\oplus_n$. That is the measure [[nsr]], and it is what appears
+      in the matrix in place of this page.
+
+    Note the two point in different directions -- $\mathrm{I}$ is large exactly when
+    $f$ is fragile, $\mathrm{nsr}$ is large exactly when $f$ is robust -- which is
+    why one dimensionless family yields two honest measures rather than one. See
+    [[normalization]].
   facts:
     - '$\mathrm{NS}_\delta(f)\le \delta\,\mathrm{I}(f)$.'
+    - '$\mathrm{NS}_\delta(f)\ge \delta\,\mathrm{Var}(f)$ for $\delta\le 1/2$: flipping one pivotal coordinate already suffices.'
+    - '$\mathrm{NS}_{1/2}(f) = \mathrm{Var}(f)/2$, the maximum, and $\mathrm{NS}_\delta$ is non-decreasing in $\delta$ on $[0,1/2]$.'
     - '$\mathrm{NS}_{1/\mathrm{D}(f)}(f) = O(1)$-type bounds: shallow decision trees are noise-stable, which is the basis of many quantum-vs-classical separations via Fourier growth.'
   refs: [ODonnell14, Tal20]
-  see_also: [Inf, Stab, Np]
+  related: [nsr, Stab, Var, Inf, Np]
+  see_also: [nsr, Var, Inf, Stab, Np, normalization]
   confidence: high
 
 - id: Stab
@@ -104,12 +235,69 @@ measures:
   category: fourier
   order: 21
   short: 'Correlation of f(x) and f(y) for rho-correlated x,y.'
+  dimensionless: 'a correlation in [-1,1]: it never grows with n, so no measure counting queries can be bounded by a power of it, and it can never be polynomially larger than one'
   definition: '$\mathrm{Stab}_\rho(f)=\mathbb{E}[f(x)f(y)]=\sum_S\rho^{|S|}\hat f(S)^2$ for $\rho$-correlated $x,y$.'
   params: [{name: rho, symbol: '\rho', default: 'variable'}]
   settings: {total: {defined: yes}, partial: {defined: partial}, relation: {defined: no}}
+  normalization: |
+    Stability and sensitivity are the same information written twice:
+    $\mathrm{Stab}_{1-2\delta}(f) = 1-2\,\mathrm{NS}_\delta(f)$, and in particular
+    $\mathrm{Stab}_0(f) = 1-\mathrm{Var}(f)$. So everything said on the
+    [[NS]] page applies here: this is a correlation, not a cost, and it is
+    normalized onto the query scale in the same two ways -- the derivative at
+    $\rho=1$, which is $\mathrm{I}(f)$ (see [[Inf]]), and the correlation *length*
+    $1/\delta^{*}$, which is the measure [[nsr]] that appears in the matrix.
+    See [[normalization]].
+  facts:
+    - '$\mathrm{Stab}_\rho(f) = 1-2\,\mathrm{NS}_{(1-\rho)/2}(f)$; in particular $\mathrm{Stab}_0(f) = 1-\mathrm{Var}(f) = \hat f(\emptyset)^2$.'
+    - '$\tfrac{d}{d\rho}\mathrm{Stab}_\rho(f)\big|_{\rho=1} = \mathrm{I}(f)$.'
   refs: [ODonnell14]
-  see_also: [NS, Inf]
+  related: [nsr, NS, Var, Inf]
+  see_also: [nsr, NS, Var, Inf, normalization]
   confidence: high
+
+- id: nsr
+  name: Noise robustness
+  symbol: '\mathrm{nsr}(f)'
+  symbol_alt: '1/\delta^{*}(f)'
+  aliases: ['1/delta*', 'critical noise rate (inverse)', 'noise length']
+  category: fourier
+  order: 22
+  short: 'One over the noise rate at which f starts to break: the query-scale reading of NS_delta.'
+  definition: |
+    Let
+    $$\delta^{*}(f) \;=\; \min\{\delta : \mathrm{NS}_\delta(f)\ \ge\ \mathrm{Var}(f)/4\},
+      \qquad \mathrm{nsr}(f) \;=\; 1/\delta^{*}(f).$$
+    In words: flip each bit independently with probability $\delta$ and increase
+    $\delta$ until $f$ has lost half the agreement it can possibly lose
+    ($\mathrm{NS}_{1/2} = \mathrm{Var}/2$ is the maximum, so $\mathrm{Var}/4$ is the
+    halfway point). $\mathrm{nsr}(f)$ is then roughly *how many coordinates of noise
+    the function tolerates*: $\oplus_n$ only breaks once $\delta\sim 1/n$, giving
+    $\mathrm{nsr} = \Theta(n)$, while $\mathrm{MAJ}_n$ is already half broken at
+    constant $\delta$, giving $\mathrm{nsr} = \Theta(1)$.
+
+    The $\mathrm{Var}/4$ threshold is this zoo's convention, not a standard one.
+    Any fixed fraction of the maximum gives the same measure up to a constant
+    factor: $\mathrm{NS}_\delta$ is non-decreasing in $\delta$, and noise at rate
+    $k\delta$ is dominated by $k$ independent rounds at rate $\delta$, so
+    $\mathrm{NS}_{k\delta}\le k\,\mathrm{NS}_\delta$ for integer $k$ and the
+    threshold cannot move by more than a constant. Constants are therefore not
+    meaningful here and every value is recorded up to $\Theta(\cdot)$. See
+    [[normalization]] for why the dimensionless [[NS]] is presented this way.
+  settings:
+    total:   {defined: yes}
+    partial: {defined: partial, note: 'Noising a promise input usually leaves the promise, so $\mathrm{NS}_\delta$ itself needs a convention (reject, or extend $f$) before $\delta^{*}$ means anything.'}
+    relation: {defined: no}
+  facts:
+    - '$\mathrm{nsr}(f)\ge 4$ always, since $\mathrm{NS}_\delta\ge\delta\,\mathrm{Var}$ forces $\delta^{*}\le 1/4$. Constants aside: $\mathrm{nsr}\ge 1$.'
+    - '$\mathrm{nsr}(f)\le 4\,\mathrm{I}(f)/\mathrm{Var}(f)$, from $\mathrm{NS}_\delta\le\delta\,\mathrm{I}$.'
+    - '$\mathrm{nsr}(f) = O(\mathrm{s}(f))$, hence $O(\mathrm{D}(f))$: for a balanced-or-lighter $f$ the edge count gives $\mathrm{I}(f)\le \mathrm{s}(f)\,\mathrm{Var}(f)$, and combining with the line above kills the $\mathrm{Var}$.'
+    - 'Incomparable to [[osss]], the other normalization of a dimensionless Fourier quantity: $\oplus_n$ has $\mathrm{osss} = 1$ but $\mathrm{nsr} = \Theta(n)$, and $\mathrm{MAJ}_n$ has $\mathrm{osss} = \Theta(\sqrt n)$ but $\mathrm{nsr} = \Theta(1)$.'
+    - 'Large $\mathrm{nsr}$ means *robust*, so it behaves oppositely to [[Inf]] on the same data: the two are the $\delta\to 0$ and $\delta\to\delta^{*}$ readings of the same curve.'
+  refs: [ODonnell14, KKL88, Tal20]
+  related: [NS, Stab, Var, osss, Inf, s]
+  see_also: [NS, Stab, Var, osss, Inf, s, normalization]
+  confidence: medium
 
 - id: L1
   name: Spectral norm
@@ -131,6 +319,7 @@ measures:
     - 'Relations of the shape $\deg_2(f)\le \log_2(\mathrm{spar}(f)+1)$ connect $\hat L_1$, $\mathrm{spar}$ and degree. Note it is the $\mathbb{F}_2$-degree: the *real* degree is not bounded by sparsity at all, since $\chi_{[n]}$ has $\deg = n$ and $\mathrm{spar} = 1$.'
     - 'For approximate versions, $\widetilde{\deg}(f)$ and $\hat L_{1,\varepsilon}(f)$ are the query analogues of approximate rank / approximate $\gamma_2$ in communication complexity.'
   refs: [TsangWongXieZhang13, ODonnell14]
+  related: [spar, Fdim, PDT, deg, D_size]
   see_also: [spar, Fdim, PDT, deg]
   confidence: medium
 
@@ -148,6 +337,7 @@ measures:
     - '$\deg_2(f)\le\log_2(\mathrm{spar}(f)+1)$. The real degree is **not** bounded by sparsity: $\oplus_n$ has $\deg = n$ and $\mathrm{spar} = 1$.'
     - '$\mathrm{spar}(f)\le 4^{\mathrm{D}^{\oplus}(f)}$.'
   refs: [TsangWongXieZhang13, Sanyal19, GopalanEtAl16]
+  related: [L1, PDT, Fdim, deg, deg2]
   see_also: [L1, PDT, Fdim, deg]
   confidence: medium
 
@@ -160,5 +350,6 @@ measures:
   definition: 'The dimension of the linear span over $\mathbb{F}_2$ of $\{S : \hat f(S)\ne 0\}$, viewing sets as vectors. $\mathrm{D}^{\oplus}(f)\le\dim_{\mathbb{F}_2}(f)$ and this is the natural "number of relevant parities".'
   settings: {total: {defined: yes}, partial: {defined: no}, relation: {defined: no}}
   refs: [GopalanEtAl16]
+  related: [spar, L1, PDT, deg]
   see_also: [spar, PDT, L1]
   confidence: medium

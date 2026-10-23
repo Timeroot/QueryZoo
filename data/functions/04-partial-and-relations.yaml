@@ -326,6 +326,7 @@ functions:
     - {measure: RS, value: '\Theta(1)', note: 'At most $\bar\chi = \Theta(1)$; finding a $\ast$ in a sabotaged input is as easy as the problem itself here.'}
     - {measure: Rstar, value: '\Theta(1)', note: 'Sandwiched: $\Omega(\mathrm{Q}) \le \mathrm{R}^{*} \le \mathrm{R} = O(1)$.'}
     - {measure: noisyR, value: '\Theta(1)', note: 'At most $\mathrm{R} = O(1)$, and at least $1$.'}
+    - {measure: noisyRna, value: '\Theta(1)', refs: [BenDavidBlais20composition], note: 'Squeezed: $\mathrm{noisyR} = \Theta(1) \le \mathrm{noisyR}^{\mathrm{na}} \le \mathrm{R}^{\mathrm{na}} = \Theta(1)$. Also what Theorem 8 of [BenDavidBlais20composition] predicts -- $\mathrm{noisyR}^{\mathrm{na}} = \Theta(\mathrm{R}^{\mathrm{na}})$ holds for partial functions.'}
     - {measure: D_prod, value: '\Theta(1)', note: 'At most $\mathrm{D}^\mu = \Theta(1)$ for every $\mu$, and at least one query.'}
     - {measure: rdeg, value: '1', putative: true, note: 'Rational degree collapses below exact degree. By the characterisation $\mathrm{rdeg} = \max\{\mathrm{ndeg}(f), \mathrm{ndeg}(\bar f)\}$: $\mathrm{ndeg}(f) = 1$ (see below), and $\mathrm{ndeg}(\bar f) = 1$ too, since $p(x) = |x| - N/2$ vanishes on exactly the balanced inputs. So $\mathrm{rdeg} = 1 < \deg = \widetilde{\deg} = \mathrm{sdeg} = 2$.'}
     - {measure: ardeg, value: '1', note: 'At most $\mathrm{rdeg} = 1$, and at least $1$.'}
@@ -462,6 +463,208 @@ functions:
     - {of: [adeg, rdeg], setting: partial, statement: 'Unbounded: $\mathrm{rdeg} = \mathrm{rdeg}_{1/3} = 1$ against $\widetilde{\deg} = \Theta(\sqrt n)$.', refs: [IJKKKSWW23]}
     - {of: [D, UCmin], setting: partial, statement: 'Unbounded: $\mathrm{UC}_{\min} = \mathrm{C}_{\min} = 1$ against $\mathrm{D} = n$, so the total-function bound $\mathrm{D} \le \mathrm{UC}_{\min}^2$ [BHT17] does not survive a promise.'}
 
+# The same search problem with the promise thickened by one, which costs nothing
+# quantumly but empties the sensitivity graph. It is the witness that separates the
+# positive adversary from lambda and from s on promise problems: every other lambda = 0
+# function in the zoo happens to be quantumly easy, so Adv stays O(1) on it.
+- id: Search02
+  name: Two-or-none search
+  symbol: '\mathrm{SEARCH}^{0/2}_n'
+  group: quantum
+  order: 44.6
+  kind: partial
+  arity: $n$ bits
+  definition: 'Promise: $|x| \in \{0, 2\}$. Decide whether $|x| = 2$.'
+  formal: '$\mathrm{Dom}(f) = \{0^n\} \cup \{e_i + e_j : i < j\}$, with $f(0^n) = 0$ and $f(e_i+e_j) = 1$.'
+  short: '[[UniqueSearch]] with the promise moved from $|x|\le 1$ to $|x|\in\{0,2\}$. No two domain points are now adjacent, so $\mathrm{s} = \lambda = 0$, while $\mathrm{Q} = \mathrm{Adv} = \Theta(\sqrt n)$ is untouched.'
+  refs: [Grover96, Ambainis02, NayakWu99]
+  see_also: [UniqueSearch, GroverSearch, OR, Forrelation, GapMajConst]
+  values:
+    - {measure: D, value: 'n-1', putative: true, note: 'Adversary: answer $0$. After $n-2$ queries the two unread coordinates may both be $1$ or both be $0$, and both completions are on the promise. Conversely $n-1$ queries suffice: a $1$ anywhere settles the answer immediately, and if the first $n-1$ are all $0$ then the last coordinate cannot be $1$ alone, since $|x| = 1$ is off the promise.'}
+    - {measure: R, value: '\Theta(n)', putative: true, note: 'Against $0^n$ versus a uniformly random pair, $q$ queries miss both planted ones with probability $\binom{n-q}{2}/\binom n2 \ge (1 - q/n)^2$, so $q = \Omega(n)$; and $\mathrm{R} \le \mathrm{D} = n-1$.'}
+    - {measure: R0, value: '\Theta(n)', note: 'Squeezed: $\mathrm{R} \le \mathrm{R}_0 \le \mathrm{D}$, and both ends are $\Theta(n)$.'}
+    - {measure: Q, value: '\Theta(\sqrt n)', refs: [Grover96, Ambainis02], note: 'Upper: amplitude amplification with a known count of $2$ marked items, $O(\sqrt{n/2})$ queries. Lower: the adversary bound below.'}
+    - {measure: Adv, value: '\Theta(\sqrt n)', putative: true, refs: [Ambainis02], note: 'Take $X = \{0^n\}$, $Y = \{e_i + e_j\}$ and relate everything to everything. Then $m = \binom n2$, $m^{\prime} = 1$, $\ell = n-1$ (from $0^n$, the pairs differing at a fixed $i$ are those containing $i$) and $\ell^{\prime} = 1$, so Ambainis'' bound gives $\Omega\big(\sqrt{mm^{\prime}/\ell\ell^{\prime}}\big) = \Omega(\sqrt n)$. The ceiling is $\mathrm{Adv} \le \mathrm{Adv}^{\pm} = \Theta(\mathrm{Q}) = O(\sqrt n)$.'}
+    - {measure: Advpm, value: '\Theta(\sqrt n)', note: '$\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q})$.'}
+    - {measure: gamma2, value: '\Theta(\sqrt n)', note: '$\gamma_2 = \Theta(\mathrm{Q}) = \Theta(\sqrt n)$.'}
+    - {measure: s0, value: '0', putative: true, note: 'The neighbours of $0^n$ all have $|x| = 1$ and are off the promise.'}
+    - {measure: s1, value: '0', putative: true, note: 'The neighbours of a weight-$2$ point have weight $1$ or $3$.'}
+    - {measure: s, value: '0', putative: true, note: 'Any two domain points differ in at least two coordinates, so the sensitivity graph is edgeless. This is the entire point of the function: it is [[UniqueSearch]] with the distance-$1$ pairs deleted from the domain, and deleting them costs nothing quantumly.'}
+    - {measure: lambda, value: '0', putative: true, note: 'The spectral norm of the empty graph.'}
+    - {measure: D_prod, value: '0', putative: true, note: 'The support of a product distribution is a subcube, and a subcube of dimension $k \ge 1$ inside the domain would contain points of $k+1$ consecutive Hamming weights, of which at most one lies in $\{0,2\}$. So every product $\mu$ is a point mass and $\mathrm{D}^\mu = 0$, against $\mathrm{R} = \Theta(n)$. See [[Forrelation]] for the general shape of this collapse.'}
+    - {measure: bs0, value: '\lfloor n/2 \rfloor', putative: true, note: 'A block flipped at $0^n$ must land on the promise, so it is a pair, and $\lfloor n/2\rfloor$ disjoint pairs are available. Note $\mathrm{bs}^0 = \Theta(n)$ against $\mathrm{s}^0 = 0$: blocks survive the thickening, single bits do not.'}
+    - {measure: bs1, value: '1', putative: true, note: 'From $e_i + e_j$ the only block whose flip both stays on the promise and changes the value is $\{i,j\}$ itself; flipping one of the two, or a pair of zeros, leaves the domain, and flipping $\{i,k\}$ gives another $1$-input.'}
+    - {measure: bs, value: '\lfloor n/2 \rfloor', putative: true, note: 'The maximum of $\mathrm{bs}^0 = \lfloor n/2\rfloor$ and $\mathrm{bs}^1 = 1$.'}
+    - {measure: fbs, value: 'n/2', putative: true, note: 'Exactly $n/2$ at $0^n$: giving every one of the $\binom n2$ pairs weight $1/(n-1)$ loads each coordinate to exactly $1$ and totals $n/2$, and no assignment beats it, since summing the load over coordinates counts each pair twice, giving $2\sum_B w_B \le n$.'}
+    - {measure: C0, value: 'n-1', putative: true, note: 'A partial assignment of $n-2$ zeros leaves two free coordinates that may both be $1$, a $1$-input; $n-1$ zeros force the last coordinate to $0$.'}
+    - {measure: C1, value: '1', putative: true, note: 'The single literal $x_i = 1$ is consistent with $n-1$ different $1$-inputs, but it already forces the *value*: weight $1$ is off the promise, so any domain point with $x_i = 1$ has weight $2$.'}
+    - {measure: C, value: 'n-1', putative: true, note: 'The maximum of $\mathrm{C}^0 = n-1$ and $\mathrm{C}^1 = 1$.'}
+    - {measure: Cmin, value: '1', putative: true, note: 'A single literal $x_i = 1$ already forces $f = 1$, because weight $1$ is off the promise.'}
+    - {measure: RC, value: '\Theta(n)', putative: true, note: 'Squeezed between $\mathrm{fbs} = n/2$ and $\mathrm{C} = n-1$.'}
+    - {measure: deg, value: '1', putative: true, note: '$p(x) = \tfrac12\sum_i x_i$ is $0$ at $0^n$ and $1$ at every weight-$2$ point, so it agrees with $f$ on the whole domain. Off the promise it runs up to $n/2$, which the partial-function definition of $\deg$ permits.'}
+    - {measure: adeg, value: '\Theta(\sqrt n)', putative: true, refs: [NayakWu99, Paturi92], note: 'Upper: $\widetilde{\deg} \le 2\mathrm{Q} = O(\sqrt n)$. Lower: symmetrise to a univariate $q$ of the same degree with $q(0) \le 1/3$, $q(2) \ge 2/3$ and $|q(k)| \le 4/3$ at every integer $k \in [0,n]$ -- the off-promise boundedness is what makes $\widetilde{\deg}$ differ from $\deg$ here. Ehlich--Zeller upgrades that to boundedness on $[0,n]$, and Markov''s inequality $\max|q^{\prime}| \le 2d^2\max|q|/n$ against a jump of $1/3$ across an interval of length $2$ gives $d = \Omega(\sqrt n)$.'}
+    - {measure: sdeg, value: '1', putative: true, note: '$1 - \sum_i x_i$ is $+1$ on the $0$-input and $-1$ on every $1$-input.'}
+    - {measure: ndeg, value: '1', note: '$\sum_i x_i$ is nonzero exactly on the $1$-inputs of the domain.'}
+    - {measure: rdeg, value: '1', note: 'Both halves are degree $1$: $\sum_i x_i$ vanishes exactly on the $0$-input, and $2 - \sum_i x_i$ exactly on the $1$-inputs.'}
+    - {measure: ardeg, value: '1', note: '$\mathrm{rdeg}_{1/3} \le \mathrm{rdeg} = 1$.'}
+    - {measure: NQ, value: '1', refs: [deWolf03], note: '$\mathrm{NQ} = \lceil \mathrm{ndeg}/2 \rceil$.'}
+    - {measure: rank, value: '1', putative: true, note: '"Query $x_1$; if $1$ output $1$, else query $x_2$; ..." is a caterpillar, so its rank is $1$ -- and it is correct precisely because one observed $1$ already forces $|x| = 2$.'}
+  witnesses:
+    - {of: [Adv, lambda], setting: partial, statement: 'Unbounded: $\lambda = 0$ while $\mathrm{Adv} = \Theta(\sqrt n)$. Since $\lambda$ is *exactly* zero, no bound $\mathrm{Adv} \le g(\lambda)$ of any shape survives -- it would read $\mathrm{Adv} \le g(0)$. On total functions $\lambda \le \mathrm{Adv} \le O(\lambda^4)$ by Huang''s theorem; the upper half is promise-only false, and this is the witness.'}
+    - {of: [Adv, s], setting: partial, statement: 'Unbounded: $\mathrm{s} = 0$ while $\mathrm{Adv} = \Theta(\sqrt n)$. The positive adversary needs a pair of differing inputs, not a pair of *adjacent* ones, and thickening the promise by one destroys the second without touching the first.'}
+    - {of: [bs, s], setting: partial, statement: 'Unbounded, and about as cleanly as possible: $\mathrm{s} = 0$ exactly while $\mathrm{bs} = \lfloor n/2\rfloor$, since every sensitive block at $0^n$ is a pair.'}
+
+# [[UniqueSearch]] has C = n only because its 0-side is a single input with no short
+# certificate. Give the 0-side its own marks and that defect disappears while the Grover
+# hardness survives, which is what makes this the zoo's cheapest C-versus-everything
+# witness: one query certifies any input, and finding the query still costs sqrt(n).
+- id: MarkedBit
+  name: Marked bit
+  symbol: '\mathrm{MARK}_n'
+  group: quantum
+  order: 44.7
+  kind: partial
+  arity: '$2n$ bits (an $n$-cell array over $\{0,1,2\}$, binary-encoded)'
+  definition: |
+    The input is an array $x \in \{0,1,2\}^n$; call a cell *blank* when it holds $2$ and
+    *marked* otherwise. Promise: at least one cell is marked, and all marked cells hold
+    the same bit $v$. Output $v$.
+
+    The promise is [[UniqueSearch]]'s, made symmetric. There the $0$-input is the single
+    all-blank string, which nothing short certifies; here both answers are carried by
+    marks, so *every* input has a one-query certificate -- and the number of marks is
+    left free, which is the whole difficulty.
+  formal: '$\mathrm{Dom}(f) = \{x : x^{-1}(\{0,1\}) \ne \emptyset$ and $|x(\mathrm{Dom})\cap\{0,1\}| = 1\}$, with $f(x) = 1$ iff some cell holds $1$. Writing $y_b = \mathbb{1}[x_b = 1]$ and $z_b = \mathbb{1}[x_b = 0]$ for the two encoding bits of cell $b$, the domain is $\{(y,z) : y \wedge z = 0,\ (y,z) \ne (0,0),\ y = 0 \text{ or } z = 0\}$ and $f = \mathrm{OR}(y)$.'
+  short: 'The certificate barrier at full strength: $\mathrm{C} = \mathrm{C}^0 = \mathrm{C}^1 = 1$, yet $\widetilde{\deg} = \mathrm{Q} = \Theta(\sqrt n)$ and $\mathrm{R} = \mathrm{D} = \Theta(n)$. Recognising the answer is one query; finding it is Grover.'
+  refs: [Grover96, BBBV97, NS94, Aaronson08]
+  see_also: [UniqueSearch, Search02, ApproxIndex, OrderedSearch, Collision, C, adeg]
+  values:
+    - {measure: D, value: 'n', putative: true, note: 'Exactly. Upper: query $y_1,\dots,y_n$, the "is this cell marked $1$" bits. If any is $1$ the answer is $1$; if all are $0$ there are no $1$-marks, and the promise guarantees a mark, so the answer is $0$. Lower: answer $0$ to everything. If some cell has both encoding bits unqueried, the two single-mark inputs there are both still consistent and disagree; so every cell must be touched.'}
+    - {measure: R, value: '\Theta(n)', putative: true, note: 'Plant one mark at a uniformly random cell with a uniformly random colour. All-zero answers are what the algorithm sees unless it queries a bit of the marked cell, and each cell contributes only the bit it did not query: after $t$ queries the posterior still gives weight $\Omega((n-t)/n)$ to the other colour, so $t = \Omega(n)$. Upper: $\mathrm{R} \le \mathrm{D} = n$.'}
+    - {measure: R0, value: '\Theta(n)', note: 'Squeezed: $\mathrm{R} \le \mathrm{R}_0 \le \mathrm{D}$, and both ends are $\Theta(n)$.'}
+    - {measure: Rbar, value: '\Theta(n)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]).'}
+    - {measure: Dmu, value: '\Theta(n)', note: 'By Yao, $\max_\mu \mathrm{D}^\mu_\varepsilon = \mathrm{R}_\varepsilon$; the planted-mark distribution above is the maximiser.'}
+    - {measure: Dna, value: 'n', putative: true, note: 'Adaptivity buys nothing: the $y_b$ algorithm is already non-adaptive, and the lower bound above needs one query per cell whatever the order.'}
+    - {measure: Rna, value: '\Theta(n)', note: 'Between $\mathrm{R} = \Theta(n)$ and $\mathrm{D}^{\mathrm{na}} = n$.'}
+    - {measure: R1, value: '\Theta(n)', note: 'Between $\mathrm{R}$ and $\mathrm{R}_0$, which agree.'}
+    - {measure: Q, value: '\Theta(\sqrt n)', putative: true, refs: [Grover96, BBHT98], note: 'Upper: search the $2n$ encoding bits for a $1$ with the unknown-number-of-solutions version of Grover [BBHT98]; there are $m \ge 1$ of them, it finds one in $O(\sqrt{2n/m}) = O(\sqrt n)$ queries, and *which* bit it finds is the answer -- a $y$-bit means $1$, a $z$-bit means $0$. Lower: $\mathrm{Q} \ge \widetilde{\deg}/2 = \Omega(\sqrt n)$.'}
+    - {measure: adeg, value: '\Theta(\sqrt n)', putative: true, refs: [NS94, BBCMdW01], note: 'The value the function exists for. Upper: $\widetilde{\deg} \le 2\mathrm{Q}$. Lower, by reduction to $\mathrm{OR}$ rather than by symmetrising: let $p$ be $\varepsilon$-approximating and $[0,1]$-valued on the whole cube, and set $P(u) = p(y=u, z=0)$ and $W(u) = p(y=0, z=u)$, both of degree $\le \deg p$. For $u \ne 0^n$ the input $(u,0)$ is a domain $1$-input and $(0,u)$ a domain $0$-input, so $P(u) \ge 1-\varepsilon$ and $W(u) \le \varepsilon$; and $P(0^n) = W(0^n) = p(0,0)$, the all-blank string, whatever that unconstrained value is. So $\Psi = P - W$ has $\Psi(0^n) = 0$, $\Psi(u) \ge 1-2\varepsilon$ off the origin, and $|\Psi| \le 1$ everywhere. So $\Psi$ is a $[-1,1]$-bounded polynomial on the cube separating $0^n$ from the rest by a constant gap ($0$ versus $\ge 1/3$ at $\varepsilon = 1/3$), which is exactly what the Nisan--Szegedy argument rules out below degree $\Omega(\sqrt n)$: symmetrise $\Psi$, and Ehlich--Zeller plus Markov give $\deg p \ge \deg \Psi = \Omega(\sqrt n)$ [NS94]. The cancellation at the origin is the point -- neither $P$ nor $W$ alone is pinned there, but their difference is.'}
+    - {measure: deg, value: 'n', putative: true, note: 'Exactly, and the contrast with [[UniqueSearch]] ($\deg = 1$) and [[ApproxIndex]] ($\deg = 2$) is the whole design. Upper: $1 - \prod_b (1-y_b)$. Lower: symmetrise an exact $p$ over the $n$ cells to $q(j_1,j_0)$, of no higher degree, and put $r(t) = q(t,0) - q(0,t)$; then $r(t) = 1$ for every integer $t \in [1,n]$ while $r(0) = 0$, so $r - 1$ has $n$ roots and is not identically zero. Counting the marks cannot work here because their number is not fixed.'}
+    - {measure: sdeg, value: '1', putative: true, note: '$\sum_b y_b - \sum_b z_b$ is positive exactly on the $1$-inputs of the domain, since one of the two sums is always $0$ and the other is at least $1$. Against $\widetilde{\deg} = \Theta(\sqrt n)$: sign-representation is free, bounded approximation is not.'}
+    - {measure: ndeg, value: '1', note: '$\sum_b y_b$ is nonzero exactly on the $1$-inputs of the domain. And $\mathrm{ndeg} \ge 1$.'}
+    - {measure: rdeg, value: '1', note: '$\mathrm{rdeg} = \max\{\mathrm{ndeg}(f), \mathrm{ndeg}(\bar f)\}$, and $\sum_b z_b$ does for $\bar f$ what $\sum_b y_b$ does for $f$.'}
+    - {measure: ardeg, value: '1', refs: [IJKKKSWW23], note: '$\mathrm{rdeg}_{1/3} \le \mathrm{rdeg} = 1$.'}
+    - {measure: NQ, value: '1', refs: [deWolf03], note: '$\mathrm{NQ} = \lceil \mathrm{ndeg}/2 \rceil$.'}
+    - {measure: PostQ, value: '\Theta(1)', refs: [MahadevdeWolf15], note: '$\mathrm{PostQ}_\varepsilon = \Theta(\mathrm{rdeg}_\varepsilon) = \Theta(1)$: guess a cell, read it, postselect on it being marked.'}
+    - {measure: C, value: '1', putative: true, note: 'One query, at every input and on both sides. Any marked cell certifies: by the promise no domain input has marks of both colours, so seeing a single $1$-mark rules out every $0$-input and vice versa. This is the sharpest form of the promise-problem lesson -- $\mathrm{D} \le \mathrm{C}^0\mathrm{C}^1$ would read $n \le 1$.'}
+    - {measure: C0, value: '1', putative: true, note: 'See $\mathrm{C}$: a single $0$-mark.'}
+    - {measure: C1, value: '1', putative: true, note: 'See $\mathrm{C}$: a single $1$-mark.'}
+    - {measure: Cmin, value: '1', putative: true, note: 'Equal to $\mathrm{C}$: the same one-query certificate works everywhere.'}
+    - {measure: s, value: '0', putative: true, note: 'No single flip stays on the promise while changing the answer. Adding a mark of the same colour or removing one of several leaves the value alone; removing the last mark, or adding a mark of the other colour, or setting a cell''s two encoding bits to $11$, all leave the domain. So $\mathrm{s}^0 = \mathrm{s}^1 = 0$ and the sensitivity graph has no edges at all.'}
+    - {measure: s0, value: '0', putative: true, note: 'See $\mathrm{s}$.'}
+    - {measure: s1, value: '0', putative: true, note: 'See $\mathrm{s}$.'}
+    - {measure: lambda, value: '0', putative: true, note: 'The sensitivity graph is empty (see $\mathrm{s}$), so every bound of the form $M \le g(\lambda)$ fails here at once -- it would read $M \le g(0)$.'}
+    - {measure: bs, value: '1', putative: true, note: 'An answer-flipping block must clear *every* current mark and plant one of the other colour, so all sensitive blocks contain the encoding bit of some fixed existing mark and no two are disjoint. There is at least one, so $\mathrm{bs} = 1$.'}
+    - {measure: bs0, value: '1', putative: true, note: 'See $\mathrm{bs}$.'}
+    - {measure: bs1, value: '1', putative: true, note: 'See $\mathrm{bs}$.'}
+    - {measure: fbs, value: '1', putative: true, note: 'The load constraint at a single existing mark already caps $\sum_B w_B$ at $1$, since every sensitive block contains it.'}
+    - {measure: FC, value: '1', note: 'Equal to $\mathrm{fbs}$ by LP duality.'}
+    - {measure: RC, value: '\Theta(1)', note: '$\mathrm{RC} = \Theta(\mathrm{fbs}) = \Theta(1)$, and also $\mathrm{RC} \le \mathrm{C} = 1$.'}
+    - {measure: QC, value: '\Theta(1)', refs: [Aaronson08], note: '$\mathrm{QC} = \Theta(\sqrt{\mathrm{FC}}) = \Theta(1)$ [Aaronson08]. Constant quantum certificate complexity against $\mathrm{Q} = \Theta(\sqrt n)$ -- the same phenomenon Aaronson exhibits on [[Collision]], here at quadratic strength and with a two-line proof.'}
+    - {measure: Adv, value: '\Theta(1)', refs: [SpalekSzegedy06, Zhang05], note: 'The certificate barrier $\mathrm{Adv} \le \sqrt{\mathrm{C}^0\mathrm{C}^1} = 1$, which holds for partial $f$ too. So the positive-weight adversary proves nothing about a function whose $\mathrm{Q}$ is $\Theta(\sqrt n)$ -- and the barrier is not the usual property-testing shape here, since a $1$-input and a $0$-input can be a Hamming distance $2$ apart.'}
+    - {measure: Advpm, value: '\Theta(\sqrt n)', note: '$\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q})$. The gap to $\mathrm{Adv} = \Theta(1)$ is as wide as the function is hard.'}
+    - {measure: gamma2, value: '\Theta(\sqrt n)', note: '$\gamma_2^{\alpha} = \Theta(\mathrm{Q})$.'}
+    - {measure: MAdv, value: '\Theta(\sqrt n)', note: 'Sandwiched between $\mathrm{Adv}^{\pm} = \Theta(\sqrt n)$ and $\mathrm{Q} = \Theta(\sqrt n)$.'}
+    - {measure: Q0, value: '\Omega(\sqrt n),\ O(n)', note: 'Between $\mathrm{Q}$ and $\mathrm{R}_0$. Zero error cannot be cheap -- a zero-error algorithm must actually exhibit a mark -- but no bound better than the sandwich is recorded.'}
+    - {measure: QE, value: '\Omega(\sqrt n),\ O(n)', note: 'Between $\mathrm{Q}_0$ and $\mathrm{D}$.'}
+    - {measure: D_prod, value: '0', putative: true, note: 'Every subcube inside the promise is monochromatic, so no product distribution is hard at all. If a subcube held a $1$-input and a $0$-input then some $y_b$ and some $z_c$ would both be free in it, and the subcube would also contain the point with $y_b = z_c = 1$ -- marks of both colours if $b \ne c$, the invalid encoding $11$ if $b = c$, and off the domain either way. Against $\mathrm{R} = \Theta(n)$; see [[Forrelation]].'}
+    - {measure: cbs, value: '1', refs: [GoosPitassi14], note: 'Degenerate on a Boolean function: $\mathrm{cbs} = \mathrm{bs} = 1$.'}
+    - {measure: psD, value: '\Theta(n)', refs: [CDM23], note: 'Degenerate for Boolean functions: there is a single correct output, so the canonical answer is forced and $\mathrm{psD}(f) = \Theta(\mathrm{R}(f)) = \Theta(n)$.'}
+    - {measure: rank, value: '1', putative: true, note: '"Query $y_1$; if $1$ output $1$, else query $y_2$; ..." is a caterpillar -- every internal node has a leaf child -- so its rank is $1$, against $\mathrm{D} = n$.'}
+  witnesses:
+    - {of: [adeg, C], setting: partial, statement: 'Unbounded, and polynomially so: $\mathrm{C} = \mathrm{C}^0 = \mathrm{C}^1 = \mathrm{C}_{\min} = 1$ against $\widetilde{\deg} = \Theta(\sqrt n)$. [[OrderedSearch]] separates the same pair with published bounds but only at $\log$ scale; this pushes it to a square root, which is the most a partial function can manage against $\mathrm{C} = 1$ in the sense that $\widetilde{\deg} \le 2\mathrm{Q} \le 2\mathrm{D} \le 2n$.'}
+    - {of: [adeg, sdeg], setting: partial, statement: 'Unbounded: $\mathrm{sdeg} = 1$ against $\widetilde{\deg} = \Theta(\sqrt n)$. The two differ only in demanding a *bounded* approximation rather than a correct sign, and on a promise that is worth everything.'}
+    - {of: [Q, QC], setting: partial, statement: 'Unbounded: $\mathrm{QC} = \mathrm{RC} = \Theta(1)$ against $\mathrm{Q} = \Theta(\sqrt n)$, so constant quantum certificate complexity does not make a promise problem easy.', refs: [Aaronson08]}
+
+# [[MarkedBit]] with the marks made *dense*. One mark is enough to make finding one hard;
+# half the cells marked makes finding one trivial -- and zero-error trivial, because a mark
+# is a certificate for whichever answer it carries. Everything randomized collapses to
+# $\Theta(1)$; exact degree does not notice, because the polynomial still has to reconcile
+# the two all-blank limits it is never asked about. That is the deg-versus-R_0 witness.
+- id: DenseMarkedBit
+  name: Dense marked bit
+  symbol: '\mathrm{DMARK}_n'
+  group: quantum
+  order: 44.8
+  kind: partial
+  arity: '$2n$ bits (an $n$-cell array over $\{0,1,2\}$, binary-encoded)'
+  definition: |
+    The input is an array $x \in \{0,1,2\}^n$; call a cell *blank* when it holds $2$ and
+    *marked* otherwise. Promise: **at least $n/2$ cells are marked**, and all marked cells
+    hold the same bit $v$. Output $v$.
+
+    Exactly [[MarkedBit]]'s promise with "at least one mark" strengthened to "at least half
+    the cells marked". That one change collapses every randomized and bounded-error measure
+    to a constant -- sample a cell, it is marked with probability $\ge 1/2$, and a mark is a
+    certificate -- while leaving the *exact* measures at $\Theta(n)$.
+  formal: 'Writing $y_b = \mathbb{1}[x_b = 1]$ and $z_b = \mathbb{1}[x_b = 0]$, the promise makes one of $y, z$ identically zero, so $\mathrm{Dom}(f) = \{(y, 0^n) : |y| \ge n/2\} \cup \{(0^n, z) : |z| \ge n/2\}$, with $f = 1$ on the first part and $0$ on the second. Note $(0^n, 0^n)$ -- the all-blank array -- is *not* in the domain, and that single missing point is the whole story below.'
+  short: 'Zero-error randomized cost $O(1)$ against $\deg = \mathrm{Q}_E = \Theta(n)$: the cheapest witness that exact degree is not bounded by any function of $\mathrm{R}_0$ off the promise.'
+  refs: [MinskyPapert69, BBCMdW01, NS94, Aaronson08]
+  see_also: [MarkedBit, UniqueSearch, DeutschJozsa, Find1Parity, GapMaj, deg, R0, QE]
+  values:
+    - {measure: R0, value: '\Theta(1)', putative: true, note: 'At most $4$. Pick a uniformly random cell $b$ and query $y_b$; if it is $1$, output $1$ -- correct with certainty, since by the promise no domain input carries marks of both colours. Otherwise query $z_b$; if it is $1$, output $0$. Otherwise the cell is blank: discard it and repeat with a fresh random cell. At least half the cells are marked, so each round succeeds with probability $\ge 1/2$ and costs $\le 2$ queries; the expected total is $\le 4$. The algorithm never answers without holding a mark, so it is zero-error, and [[R0]] is the *expected*-cost measure, which is what makes this legal -- the worst-case count is $\Omega(n)$, since an unlucky run can sample every blank cell first.'}
+    - {measure: deg, value: 'n/2+1', putative: true, refs: [MinskyPapert69], note: 'Exactly. **Upper:** $\deg \le \mathrm{D} = n/2+1$. **Lower:** let $p$ be exact on $\mathrm{Dom}$ and symmetrise over the $n$ cells. Each cell takes one of three values, so Minsky--Papert symmetrisation [MinskyPapert69] gives a polynomial $P(a,c)$ of no higher total degree in the two counts $a = |y|$ and $c = |z|$. The domain says $P(a,0) = 1$ for every integer $a \in [n/2,\, n]$ and $P(0,c) = 0$ for every integer $c \in [n/2,\, n]$ -- that is $n/2+1$ points each. Suppose $\deg p \le n/2$. Then $u(a) := P(a,0)$ is a univariate of degree $\le n/2$ agreeing with the constant $1$ at $n/2+1$ points, so $u \equiv 1$; symmetrically $w(c) := P(0,c) \equiv 0$. But $u(0) = P(0,0) = w(0)$, so $1 = 0$. Hence $\deg p \ge n/2+1$. The contradiction lives at the all-blank array, the one point the promise omits: an exact polynomial has to commit to a value there and cannot commit to two.'}
+    - {measure: D, value: 'n/2+1', putative: true, note: 'Exactly. **Upper:** query $y_1, \dots, y_{n/2+1}$, stopping at the first $1$ (answer $1$). If all are $0$ then a $1$-input would need $n/2$ marks among the remaining $n/2-1$ cells, so the answer is $0$. **Lower:** answer $0$ to everything. After $q_y$ of the $y$-bits and $q_z$ of the $z$-bits have come back $0$, a $1$-input is still consistent whenever $n - q_y \ge n/2$, and a $0$-input whenever $n - q_z \ge n/2$; so the algorithm cannot stop until $q_y > n/2$ or $q_z > n/2$.'}
+    - {measure: Dna, value: 'n/2+1', putative: true, note: 'The $\mathrm{D}$ upper bound is already non-adaptive -- a fixed set of $n/2+1$ $y$-bits determines the answer -- and $\mathrm{D}^{\mathrm{na}} \ge \mathrm{D}$.'}
+    - {measure: QE, value: '\Theta(n)', note: 'Squeezed by the two entries above: $\mathrm{Q}_E \ge \deg/2 = \Omega(n)$ [BBCMdW01], and $\mathrm{Q}_E \le \mathrm{D} = n/2+1$. Against $\mathrm{Q}_0 = \Theta(1)$: demanding certainty costs a factor of $n$ here, even though *aborting sometimes* is free.'}
+    - {measure: R, value: '\Theta(1)', note: 'At most $\mathrm{R}_0 = \Theta(1)$, and at least $1$.'}
+    - {measure: Rbar, value: '\Theta(1)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]).'}
+    - {measure: R1, value: '\Theta(1)', note: 'Between $\mathrm{R}$ and $\mathrm{R}_0$, which agree.'}
+    - {measure: Rna, value: '\Theta(1)', putative: true, note: 'Query both bits of $10$ uniformly random cells and answer from any mark found. All ten miss with probability $\le 2^{-10}$, and the queries are chosen before any answer is seen.'}
+    - {measure: Dmu, value: '\Theta(1)', note: 'By Yao, $\max_\mu \mathrm{D}^\mu_\varepsilon = \mathrm{R}_\varepsilon = \Theta(1)$.'}
+    - {measure: Q, value: '\Theta(1)', note: 'At most $\mathrm{R} = \Theta(1)$, and at least $1$.'}
+    - {measure: Q0, value: '\Theta(1)', note: '$\mathrm{Q}_0 \le 2\,\mathrm{R}_0 = \Theta(1)$ ([[Q0]]). The contrast with $\mathrm{Q}_E = \Theta(n)$ is the sharpest form of the Las Vegas / exact distinction: both are "never wrong", but only one may say "don''t know".'}
+    - {measure: adeg, value: '\Theta(1)', note: '$\widetilde{\deg} \le 2\mathrm{Q} = \Theta(1)$. Against $\deg = n/2+1$: bounded approximation is free here, exactness is not.'}
+    - {measure: sdeg, value: '1', putative: true, note: '$\sum_b y_b - \sum_b z_b$ is positive exactly on the $1$-inputs of the domain, since one of the two sums is always $0$ and the other is at least $n/2$.'}
+    - {measure: ndeg, value: '1', note: '$\sum_b y_b$ is nonzero exactly on the $1$-inputs of the domain, and $\mathrm{ndeg} \ge 1$.'}
+    - {measure: rdeg, value: '1', note: '$\mathrm{rdeg} = \max\{\mathrm{ndeg}(f), \mathrm{ndeg}(\bar f)\}$, and $\sum_b z_b$ does for $\bar f$ what $\sum_b y_b$ does for $f$.'}
+    - {measure: ardeg, value: '1', refs: [IJKKKSWW23], note: '$\mathrm{rdeg}_{1/3} \le \mathrm{rdeg} = 1$.'}
+    - {measure: NQ, value: '1', refs: [deWolf03], note: '$\mathrm{NQ} = \lceil \mathrm{ndeg}/2 \rceil$.'}
+    - {measure: PostQ, value: '\Theta(1)', refs: [MahadevdeWolf15], note: '$\mathrm{PostQ}_\varepsilon = \Theta(\mathrm{rdeg}_\varepsilon) = \Theta(1)$.'}
+    - {measure: C, value: '1', putative: true, note: 'One query, on both sides: a single marked bit rules out every input of the other value, because the promise forbids marks of both colours. As on [[MarkedBit]], $\mathrm{D} \le \mathrm{C}^0\mathrm{C}^1$ would read $n/2+1 \le 1$.'}
+    - {measure: C0, value: '1', putative: true, note: 'See $\mathrm{C}$: a single $0$-mark, i.e. some $z_b = 1$.'}
+    - {measure: C1, value: '1', putative: true, note: 'See $\mathrm{C}$: a single $1$-mark, i.e. some $y_b = 1$.'}
+    - {measure: Cmin, value: '1', note: 'Every input has a $1$-query certificate.'}
+    - {measure: s, value: '0', putative: true, note: 'No promise-preserving single flip changes the answer. From a $1$-input, setting some $y_b$ to $1$ keeps the answer $1$; clearing a $y_b$ either keeps it $1$ or drops below $n/2$ marks and leaves the promise; and setting any $z_b$ to $1$ creates marks of both colours, also off the promise.'}
+    - {measure: s0, value: '0', note: 'See $\mathrm{s}$.'}
+    - {measure: s1, value: '0', note: 'See $\mathrm{s}$.'}
+    - {measure: lambda, value: '0', note: 'The sensitivity graph has no edges at all (see $\mathrm{s} = 0$), so its adjacency matrix is zero.'}
+    - {measure: bs, value: '1', putative: true, note: 'At any $x$ every sensitive block must clear *all* of $x$''s marks and plant $n/2$ of the other colour, so all sensitive blocks at $x$ share the coordinates of $x$''s marks and no two are disjoint.'}
+    - {measure: bs0, value: '1', note: 'See $\mathrm{bs}$.'}
+    - {measure: bs1, value: '1', note: 'See $\mathrm{bs}$.'}
+    - {measure: fbs, value: '1', putative: true, note: 'The load constraint at any one of $x$''s marked coordinates already caps $\sum_B w_B$ at $1$, since every sensitive block contains it.'}
+    - {measure: FC, value: '1', note: 'Equal to $\mathrm{fbs}$ by LP duality.'}
+    - {measure: RC, value: '\Theta(1)', note: '$\mathrm{RC} = \Theta(\mathrm{fbs}) = \Theta(1)$, and also $\mathrm{RC} \le \mathrm{C} = 1$.'}
+    - {measure: QC, value: '\Theta(1)', refs: [Aaronson08], note: '$\mathrm{QC} = \Theta(\sqrt{\mathrm{FC}}) = \Theta(1)$ [Aaronson08]; also $\mathrm{QC} \le \mathrm{Q} = \Theta(1)$.'}
+    - {measure: cbs, value: '1', refs: [GoosPitassi14], note: 'Degenerate on a Boolean function: $\mathrm{cbs} = \mathrm{bs} = 1$.'}
+    - {measure: Adv, value: '\Theta(1)', refs: [SpalekSzegedy06], note: 'The certificate barrier $\mathrm{Adv} \le \sqrt{\mathrm{C}^0\mathrm{C}^1} = 1$, and $\mathrm{Adv} \ge 1$.'}
+    - {measure: Advpm, value: '\Theta(1)', note: '$\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q}) = \Theta(1)$.'}
+    - {measure: gamma2, value: '\Theta(1)', note: '$\gamma_2^{\alpha} = \Theta(\mathrm{Q}) = \Theta(1)$.'}
+    - {measure: CA, value: '\Theta(1)', note: 'A lower bound on $\mathrm{R} = \Theta(1)$, and at least $1$.'}
+    - {measure: psD, value: '\Theta(1)', refs: [CDM23], note: 'Degenerate for Boolean functions: $\mathrm{psD}(f) = \Theta(\mathrm{R}(f)) = \Theta(1)$.'}
+    - {measure: rank, value: '1', putative: true, note: '"Query $y_1$; if $1$ output $1$, else query $y_2$; ..." is a caterpillar -- every internal node has a leaf child -- so its rank is $1$, against $\mathrm{D} = n/2+1$.'}
+    - {measure: D_size, value: '\Theta(n)', putative: true, note: 'Upper: the caterpillar above has $O(n)$ leaves. Lower: a tree with $L$ leaves has depth $\le L-1$, and the depth is at least $\mathrm{D} = n/2+1$.'}
+    - {measure: D_prod, value: '0', putative: true, note: 'Every subcube inside the promise is monochromatic, by the argument on [[MarkedBit]]: a subcube holding both a $1$-input and a $0$-input has some $y_b$ and some $z_c$ free, hence also contains the point setting both to $1$ -- marks of two colours, or the invalid encoding $11$, and off the domain either way.'}
+    - {measure: Rstar, value: '\Theta(1)', note: 'Sandwiched: $\Omega(\mathrm{Q}) \le \mathrm{R}^{*} \le \mathrm{R} = \Theta(1)$.'}
+    - {measure: noisyR, value: '\Theta(1)', note: 'At most $O(\mathrm{R}\log \mathrm{R}) = O(1)$, and at least $\mathrm{R} = \Theta(1)$.'}
+    - {measure: prt, value: '\Theta(1)', note: 'Sandwiched: $\mathrm{prt}_\varepsilon \le \mathrm{R} = \Theta(1)$, and at least $1$.'}
+    - {measure: rprt, value: '\Theta(1)', note: 'Sandwiched: $\overline{\mathrm{prt}}_\varepsilon \le \mathrm{prt}_\varepsilon = \Theta(1)$, and at least $1$.'}
+  witnesses:
+    - {of: [deg, R0], setting: partial, statement: 'Unbounded: $\mathrm{R}_0 = \Theta(1)$ against $\deg = n/2+1$. Zero-error randomized cost puts no bound at all on exact degree off the promise -- the algorithm gets to stop as soon as it holds a certificate, while the polynomial must still assign a single value to the all-blank array that both branches of the promise demand be different.'}
+    - {of: [QE, R0], setting: partial, statement: 'Unbounded: $\mathrm{R}_0 = \Theta(1)$ against $\mathrm{Q}_E \ge \deg/2 = \Omega(n)$.', refs: [BBCMdW01]}
+    - {of: [QE, Q0], setting: partial, statement: 'Unbounded: $\mathrm{Q}_0 = \Theta(1)$ against $\mathrm{Q}_E = \Theta(n)$. Both models are never wrong; the Las Vegas one may abort, and off the promise that permission is worth a factor of $n$.'}
+    - {of: [deg, adeg], setting: partial, statement: 'Unbounded: $\widetilde{\deg} = \Theta(1)$ against $\deg = n/2+1$, with the gap as wide as the arity allows.'}
+
 - id: GroverSearch
   name: Unstructured search (relation)
   symbol: '\mathrm{SEARCH}_n'
@@ -508,6 +711,7 @@ functions:
     - {measure: PDT, value: 'n', putative: true, note: 'Parity queries do not help. Along the branch where every answer is $0$, the queried sets $S_1,\dots,S_q$ are fixed; outputting $\bot$ is correct only if $0^n$ is the *unique* input consistent with those answers, i.e. only if $S_1,\dots,S_q$ span $\mathbb{F}_2^n$, forcing $q \ge n$. And $\mathrm{D}^{\oplus} \le \mathrm{D} = n$. Contrast $\mathrm{D}^{\oplus}(\mathrm{PARITY}) = 1$: what parity queries cannot do is *locate* a one.'}
     - {measure: R1, value: '\Theta(n)', note: 'For a search problem, one-sided error means the algorithm never emits an invalid output, so it must be certain: outputting $\bot$ requires seeing all $n$ zeros. Hence $\mathrm{R}^1 = \Theta(\mathrm{R}_0) = \Theta(n)$, and it is squeezed by $\mathrm{R} \le \mathrm{R}^1 \le \mathrm{R}_0$ with both ends $\Theta(n)$ anyway.'}
     - {measure: noisyR, value: '\Theta(n)', putative: true, refs: [CKMPSS23], note: 'Upper: $\mathrm{noisyR} \le \mathrm{R} = \Theta(n)$. Lower: $\mathrm{R}$ is linear in the arity, the regime where fractional queries cannot help. Directly: let $\Gamma_i$ be the total squared bias the algorithm spends on coordinate $i$, so the cost is $\sum_i \Gamma_i$. The transcript distributions on $0^n$ and on $e_i$ have KL divergence $O(\Gamma_i)$, so distinguishing $0^n$ from $e_i$ needs $\Gamma_i = \Omega(1)$; this must hold for every $i$, giving cost $\Omega(n)$.'}
+    - {measure: noisyRna, value: '\Theta(n)', note: 'Squeezed: $\mathrm{noisyR} = \Theta(n) \le \mathrm{noisyR}^{\mathrm{na}} \le \mathrm{R}^{\mathrm{na}} = \Theta(n)$. Theorem 8 of [BenDavidBlais20composition] is unavailable here -- it fails for relations, see [[AgreeString]] -- but nothing is lost by committing to the biases in advance at the top of the range.'}
     - {measure: PostQ, value: '\Theta(1)', putative: true, conf: medium, refs: [MahadevdeWolf15], note: 'Postselection trivialises search. Prepare $\sum_{i} \alpha_i |i\rangle + \varepsilon|\bot\rangle$ with $\alpha_i = n^{-1/2}$, query $x_i$ into a flag qubit (flag $= x_i$ on the $|i\rangle$ branches, flag $= 1$ on the $|\bot\rangle$ branch), and postselect on flag $= 1$. With $\varepsilon = 1/n$ the surviving state is a uniform superposition over $\{i : x_i = 1\}$ plus a $|\bot\rangle$ component of weight $\varepsilon^2/(\varepsilon^2 + |x|/n) \le 1/n$, so on any $x \ne 0^n$ the measurement returns a valid index, and on $x = 0^n$ only $|\bot\rangle$ survives. One query. Against $\mathrm{R} = \Theta(n)$ and $\mathrm{Q} = \Theta(\sqrt n)$ this is an unbounded gap.'}
   witnesses:
     - {of: [R, Q], setting: relation, statement: '$\mathrm{R}=\Theta(\mathrm{Q}^2)$ for a relation, same as the decision version.', refs: [Grover96, BBBV97]}
@@ -558,6 +762,7 @@ functions:
     - {measure: Cmin, value: '1', putative: true, note: 'Equal to $\mathrm{C}$: the same one-bit certificate works at every input, since the promise guarantees a $1$ exists.'}
     - {measure: D_prod, value: '\Theta(1)', note: 'At most $\mathrm{D}^\mu = \Theta(1)$ for every $\mu$, hence in particular for product ones; and at least one query.'}
     - {measure: noisyR, value: '\Theta(1)', note: 'At most $\mathrm{R} = O(1)$, and at least $1$: buying bias cannot help a problem that is already solved by one full-strength query.'}
+    - {measure: noisyRna, value: '\Theta(1)', note: 'Squeezed: $\mathrm{noisyR} = \Theta(1) \le \mathrm{noisyR}^{\mathrm{na}} \le \mathrm{R}^{\mathrm{na}} = \Theta(1)$. Against $\mathrm{psD} = \Theta(n)$ this is an unbounded gap: committing to a canonical answer is what is expensive, not adaptivity or query strength.'}
     - {measure: PDT, value: '\Theta(n)', putative: true, note: 'At least $n/2$, so parity queries are as useless as ordinary ones. Answer $0$ to every query; after $q$ queries the consistent inputs form the linear space $W^{\perp}$, $\dim = n-q$, where $W$ is the span of the queried sets. A leaf that outputs $i$ must have $x_i = 1$ throughout $W^{\perp} \cap \{|x| \ge n/2\}$, but $V = W^{\perp} \cap \{x_i = 0\}$ has dimension $\ge n-q-1$, and any subspace of dimension $d$ contains a vector of weight $\ge d$ (sum the reduced-echelon basis: it is $1$ on all $d$ pivots). For $q \le n/2 - 1$ that vector satisfies the promise and refutes the leaf. And $\mathrm{D}^{\oplus} \le \mathrm{D} = n/2+1$. Against $\mathrm{R} = O(1)$ this is the same unbounded gap as for $\mathrm{D}$.'}
     - {measure: R1, value: '\Theta(1)', note: 'Squeezed: $\mathrm{R} \le \mathrm{R}^1 \le \mathrm{R}_0 = O(1)$. The promise $|x| \ge n/2$ means a random probe both finds and certifies a $1$, so never emitting an invalid output costs nothing extra -- in sharp contrast to [[GroverSearch]].'}
     - {measure: PostQ, value: '\Theta(1)', note: 'At most $\mathrm{Q} = \Theta(1)$, and at least $1$: there is nothing for postselection to buy.'}
@@ -609,6 +814,7 @@ functions:
     - {measure: gamma2, value: '\Theta(1)', note: '$\gamma_2 = \Theta(\mathrm{Q}) = \Theta(1)$.'}
     - {measure: Cmin, value: '\Theta(n)', putative: true, note: 'Equal to $\mathrm{C}$: the counting argument there -- a partial assignment fixing $q$ coordinates leaves $|x|$ free in a window of width $n-q$ -- is input-independent, so every input needs $(1-2\varepsilon)n$ fixed coordinates. Certificate-uniform hardness is what drives the $\mathrm{R}_0$ and $\mathrm{DTsize}$ bounds above.'}
     - {measure: noisyR, value: '\Theta(1)', note: 'At most $\mathrm{R} = \Theta(1)$, and at least $1$.'}
+    - {measure: noisyRna, value: '\Theta(1)', note: 'Squeezed: $\mathrm{noisyR} = \Theta(1) \le \mathrm{noisyR}^{\mathrm{na}} \le \mathrm{R}^{\mathrm{na}} = \Theta(1)$. Against $\mathrm{C}^1 = \mathrm{rank} = \mathrm{psD} = \Theta(n)$ this is an unbounded gap in each case -- the cheapest relational witness the zoo has for those three against the non-adaptive noisy model.'}
     - {measure: Q0, value: '\Theta(n)', putative: true, note: 'Zero error forces a certificate on every branch, quantumly too: a zero-error algorithm''s final state is supported on outcomes valid for *every* input consistent with what it has learned, and by $\mathrm{C}_{\min} = (1-2\varepsilon)n$ nothing short of that many queries pins an answer down. And $\mathrm{Q}_0 \le \mathrm{R}_0 = \Theta(n)$. So quantum buys nothing at all once error is forbidden -- against $\mathrm{Q} = \Theta(1)$.', conf: medium}
     - {measure: C1, value: '\Theta(n)', note: 'Same count as $\mathrm{C}$ and $\mathrm{C}_{\min}$: certifying *any* valid answer needs $(1-2\varepsilon)n$ fixed coordinates, at every input.'}
     - {measure: QE, value: '\Theta(n)', note: 'Squeezed between $\mathrm{Q}_0 = \Theta(n)$ and $\mathrm{D} = \Theta(n)$.'}
@@ -622,6 +828,45 @@ functions:
     - {of: [D, cbs], setting: relation, statement: 'Unbounded in the strongest possible way: $\mathrm{cbs} = 0$, because a problem whose answers come in intervals has no input with a *unique* valid answer, while $\mathrm{D} = \Theta(n)$. Critical block sensitivity is the standard route to relational lower bounds and it is simply unavailable for approximate counting; the same holds at [[promiseFind1]]. Every measure is therefore unbounded in terms of $\mathrm{cbs}$ over relations, but no *asymptotic* separation can be read off a value of exactly zero.'}
   refs: [CDM23, GIPS21, GGR13]
   see_also: [psD, SearchCNF, promiseFind1]
+
+- id: AgreeString
+  name: Correlated-string search
+  symbol: '\mathrm{AGREE}_n'
+  group: relational
+  order: 47.5
+  kind: relation
+  arity: '$n$ bits in, $n$ bits out'
+  short: 'The GLSS19 relational counterexample to composition: $\mathrm{R}=\Theta(\sqrt n)$ but $\mathrm{noisyR}=\Theta(1)$, adaptively *and* non-adaptively.'
+  definition: |
+    Given $x \in \{0,1\}^n$, output **any** $y \in \{0,1\}^n$ with
+    $|x - y| \le n/2 - \sqrt n$, i.e. any string that agrees with $x$ on at least
+    $n/2 + \sqrt n$ coordinates. Total: $y = x$ always works.
+
+    Guessing at random gives agreement $n/2 \pm O(\sqrt n)$, so the task is to beat
+    a coin flip by exactly one standard deviation. That is cheap if you are allowed
+    to be a little bit right about every coordinate, and expensive if you have to be
+    exactly right about a few of them -- which is the whole point of the example.
+  formal: '$\{(x,y) : |x \oplus y| \le n/2 - \sqrt n\} \subseteq \{0,1\}^n \times \{0,1\}^n$.'
+  values:
+    - {measure: R, value: '\Theta(\sqrt n)', refs: [GLSS19], note: 'Query a uniformly random set $S$ of $c\sqrt n$ coordinates, copy $x$ on $S$ and flip fair coins elsewhere: the distance is $\mathrm{Bin}(n-|S|,1/2) \approx n/2 - c\sqrt n/2$ with deviation $O(\sqrt n)$, so a large enough constant $c$ works. The matching $\Omega(\sqrt n)$ is [GLSS19].'}
+    - {measure: Rna, value: '\Theta(\sqrt n)', putative: true, note: 'The algorithm above never looks at an answer before choosing the next query, so it is non-adaptive; and $\mathrm{R}^{\mathrm{na}} \ge \mathrm{R} = \Omega(\sqrt n)$.'}
+    - {measure: Rbar, value: '\Theta(\sqrt n)', note: '$\bar{\mathrm{R}}_\varepsilon = \Theta(\mathrm{R}_\varepsilon)$ at constant $\varepsilon$.'}
+    - {measure: noisyR, value: '\Theta(1)', refs: [BenDavidBlais20composition, GLSS19], note: 'Buy *every* coordinate at bias $c/\sqrt n$ and set $y$ to the answers: total cost $n \cdot c^2/n = c^2 = O(1)$, and the expected agreement is $n/2 + c\sqrt n/2$, one standard deviation past the promise for large enough $c$. The lower bound $\Omega(1)$ is Lemma 37 of [BenDavidBlais20composition], which applies because $x=0^n$ and $x=1^n$ have disjoint sets of allowed outputs.'}
+    - {measure: noisyRna, value: '\Theta(1)', refs: [BenDavidBlais20composition], note: 'That algorithm commits to all $n$ biases in advance, so the non-adaptive cost is $O(1)$ too; and $\mathrm{noisyR}^{\mathrm{na}} \ge \mathrm{noisyR} = \Omega(1)$. This is exactly the family that makes Theorem 8 false for relations.'}
+    - {measure: D, value: '\Theta(n)', putative: true, note: 'Sharply $\lceil n/2 + \sqrt n\rceil$. Upper: copy $x$ on the queried coordinates and put $0$ elsewhere. Lower: after $q$ queries the output $y$ is determined, and the adversary sets every unqueried $x_i := 1 - y_i$, forcing distance $n-q$; validity needs $n - q \le n/2 - \sqrt n$.'}
+    - {measure: Dna, value: '\Theta(n)', putative: true, note: 'The deterministic algorithm above is non-adaptive, and the adversary argument does not care about adaptivity.'}
+    - {measure: R0, value: '\Theta(n)', putative: true, note: 'The adversary argument applies to *every* tree in the support of a zero-error algorithm and to every leaf of it, so all leaves sit at depth $\ge n/2 + \sqrt n$ and even the expected cost is $\Omega(n)$. So $\mathrm{R}_0/\mathrm{R} = \Theta(\sqrt n)$ here: a second unbounded gap, for the same reason as at [[ApproxHW]] -- there is no witness to verify.'}
+    - {measure: C, value: '\Theta(n)', putative: true, note: 'A partial assignment fixing $q$ coordinates forces a valid answer only if some $y$ works for all $2^{n-q}$ completions, and the worst completion is at distance $n-q$ from $y$; so $q \ge n/2 + \sqrt n$, and that many suffice.'}
+    - {measure: Cmin, value: '\Theta(n)', putative: true, note: 'The count above is input-independent, so $\mathrm{C}_{\min} = \mathrm{C} = \Theta(n)$.'}
+    - {measure: cbs, value: '0', putative: true, note: 'No input has a unique valid answer -- there are $\binom{n}{\le n/2-\sqrt n}$ of them -- so there are no critical inputs and the maximum in the definition of [[cbs]] is empty. As at [[ApproxHW]], the standard route to relational lower bounds is unavailable and [GLSS19] had to argue directly.'}
+    - {measure: Np, value: '\Theta(\sqrt n)', putative: true, note: 'At constant noise rate $p$: read $c\sqrt n$ random coordinates once each and copy the (possibly corrupted) answers, guessing elsewhere. Expected agreement $n/2 + c(1/2-p)\sqrt n$, so $O(\sqrt n)$ noisy queries suffice, and $\mathrm{N}_p \ge \mathrm{R} = \Omega(\sqrt n)$. Note the contrast with $\mathrm{noisyR} = \Theta(1)$: the faulty-oracle model charges $1$ per query whatever the bias, and that single convention is the entire difference.'}
+    - {measure: Q, value: 'O(\sqrt n)', note: 'At most $\mathrm{R}$. No better quantum algorithm is recorded here, and no lower bound beyond $\Omega(1)$.'}
+  witnesses:
+    - {of: [R, noisyR], setting: relation, refs: [GLSS19, BenDavidBlais20composition], statement: 'Unbounded: $\mathrm{noisyR} = \Theta(1)$ against $\mathrm{R} = \Theta(\sqrt n)$. This is the **relational barrier** of [BenDavidBlais20composition]: any measure $M$ with $\mathrm{noisyR} = \Omega(M)$ must either be $O(1)$ on this family -- and hence a poor lower bound on $\mathrm{R}$ -- or must use the fact that $f$ is a function.'}
+    - {of: [Rna, noisyRna], setting: relation, refs: [BenDavidBlais20composition], statement: 'Unbounded: $\mathrm{noisyR}^{\mathrm{na}} = \Theta(1)$ against $\mathrm{R}^{\mathrm{na}} = \Theta(\sqrt n)$, so Theorem 8 ($\mathrm{R}^{\mathrm{na}} = \Theta(\mathrm{noisyR}^{\mathrm{na}})$ for partial Boolean functions) is **false for relations**. Its proof must therefore notice Boolean-ness somewhere, and it does: the step that fails is the passage from error probability to relative entropy.'}
+    - {of: [R0, R], setting: relation, statement: 'Unbounded: $\mathrm{R} = \Theta(\sqrt n)$ against $\mathrm{R}_0 = \Theta(n)$.'}
+  refs: [GLSS19, BenDavidBlais20composition]
+  see_also: [ApproxHW, GapMaj, ApproxIndex, noisyR, noisyRna, comp-R, promiseFind1]
 
 - id: SearchCNF
   name: SearchCNF
@@ -667,6 +912,7 @@ functions:
     - {measure: gamma2, value: '\Theta(1)', note: '$\gamma_2 = \Theta(\mathrm{Adv}^{\pm}) = \Theta(\mathrm{Q}) = \Theta(1)$.'}
     - {measure: R1, value: '\Theta(1)', note: 'Squeezed: $\mathrm{R} \le \mathrm{R}^1 \le \mathrm{R}_0 = \Theta(1)$. A falsified clause is self-certifying, so demanding a never-invalid output costs nothing.'}
     - {measure: noisyR, value: '\Theta(1)', note: 'At most $\mathrm{R} = \Theta(1)$, and at least $1$.'}
+    - {measure: noisyRna, value: '\Theta(1)', note: 'Squeezed: $\mathrm{noisyR} = \Theta(1) \le \mathrm{noisyR}^{\mathrm{na}} \le \mathrm{R}^{\mathrm{na}} = \Theta(1)$.'}
     - {measure: PostQ, value: '\Theta(1)', note: 'At most $\mathrm{Q} = \Theta(1)$, and at least $1$.'}
   witnesses:
     - {of: [D, R], setting: relation, statement: 'Unbounded, for a *total* relation: $\mathrm{R}=O(1)$ but $\mathrm{D}=\Theta(n)$. Unlike [[promiseFind1]] no promise is needed -- the hardness is that a deterministic algorithm must name a *specific* falsified clause, which is a resolution refutation in disguise.', refs: [LNNW95]}
@@ -699,6 +945,7 @@ functions:
     - {measure: R0,     value: '\Theta(n)', putative: true, note: 'A zero-error run must end on a certificate, so $\mathrm{R}_0 \ge \mathrm{C} = \Theta(n)$; and $\mathrm{R}_0 \le \mathrm{D}$. At constant $\delta$ this is an unbounded $\mathrm{R}_0$-vs-$\mathrm{R}$ gap.'}
     - {measure: Dna,    value: '\Theta(n)', note: 'Between $\mathrm{D} = \Theta(n)$ and the trivial $n$; the adversary count for $\mathrm{D}$ never used adaptivity anyway.'}
     - {measure: Rna,    value: '\Theta(\min(n, 1/\delta^2))', note: 'Sampling is non-adaptive, and $\mathrm{R}^{\mathrm{na}} \ge \mathrm{R}$.'}
+    - {measure: noisyRna, value: '\Theta(\min(n, 1/\delta^2))', refs: [BenDavidBlais20composition], note: 'Squeezed between $\mathrm{noisyR}$ and $\mathrm{R}^{\mathrm{na}}$, which coincide here; equivalently, Theorem 8 of [BenDavidBlais20composition] applied to a partial function. Every corner of the square -- adaptive or not, noisy or not -- costs $\Theta(\min(n,1/\delta^2))$, which is part of what makes $\mathrm{GapMaj}$ the right universal inner function.'}
     - {measure: Rbar,   value: '\Theta(\min(n, 1/\delta^2))', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]).'}
     - {measure: s0,     value: '0', putative: true, note: 'See $\mathrm{s}$: identically zero on both sides, whenever $2\delta n > 1$.'}
     - {measure: s1,     value: '0', putative: true, note: 'See $\mathrm{s}$: identically zero on both sides, whenever $2\delta n > 1$.'}
@@ -758,7 +1005,199 @@ functions:
     - {of: [bs, s], setting: partial, statement: 'Unbounded: $\mathrm{s} = 0$ identically (the promise gap is wider than one flip) while $\mathrm{bs} = \Theta(\min(n,1/\delta))$. Every measure sitting above $\mathrm{s}$ is unbounded in terms of it on partial functions, and $\mathrm{GapMaj}$ says so in one line.'}
     - {of: [R0, R], setting: partial, statement: 'At constant $\delta$, unbounded: $\mathrm{R} = \Theta(1)$ but $\mathrm{R}_0 = \Theta(n)$, because certainty forces a full certificate.'}
   refs: [BenDavidBlais20composition, BenDavidBlais20minimax, BBGM22]
-  see_also: [noisyR, R, LR, chibar, ApproxIndex]
+  see_also: [noisyR, R, LR, chibar, ApproxIndex, GapMajConst]
+
+# [[GapMaj]] above is a two-parameter family, and every value that depends on
+# $\delta$ is invisible to the derived layer: it needs one free variable per
+# family, so all forty of the \Theta(\min(n,1/\delta^k)) entries are dropped
+# and only the delta-free \Theta(n) ones survive. The whole point of the
+# function is what happens at constant \delta, so the constant-gap instance is
+# recorded here as a function in its own right. Nothing below is new
+# mathematics: it is GapMaj at \delta = 1/4, one value at a time.
+- id: GapMajConst
+  name: Gap-Majority at constant gap
+  symbol: '\mathrm{GapMaj}^{1/4}_{n}'
+  group: separating
+  order: 49.1
+  kind: partial
+  arity: '$n$ bits'
+  scale: {var: n}
+  short: 'The $\delta = 1/4$ instance of Gap-Majority: $\Theta(1)$ for every bounded-error measure, $\Theta(n)$ for every exact one.'
+  definition: |
+    Promise $\big||x| - n/2\big| \ge n/4$; output $1$ if $|x| \ge 3n/4$ and $0$ if
+    $|x| \le n/4$. This is [[GapMaj]] with the gap parameter frozen at
+    $\delta = 1/4$, and it is the instance that does the separating: every
+    $\Theta(\min(n,1/\delta))$ or $\Theta(\min(n,1/\delta^2))$ entry of the
+    general family collapses to $\Theta(1)$ here, while the $\delta$-free
+    entries stay at $\Theta(n)$.
+  formal: '$\mathrm{GapMaj}^{1/4}_n(x) = \mathbb{1}[|x| > n/2]$ restricted to $\{x : \big||x|-n/2\big| \ge n/4\}$.'
+  values:
+    # --- delta-free: the exact / certificate side, all Theta(n) ------------
+    - {measure: D,      value: '\Theta(n)', note: 'Exactly $n/2 + 1$ up to integrality, by the adversary count of [[GapMaj]] at $\delta = 1/4$: an adversary answering queries can keep both outputs alive for $(1-2\delta)n = n/2$ queries.'}
+    - {measure: C,      value: '\Theta(n)', note: 'Exactly $n/4 + 1$ on both sides: a $1$-certificate must exhibit that many ones, or setting every free coordinate to $0$ leaves a $0$-input of the promise.'}
+    - {measure: C0,     value: '\Theta(n)', note: 'See $\mathrm{C}$; attained on both sides.'}
+    - {measure: C1,     value: '\Theta(n)', note: 'See $\mathrm{C}$; attained on both sides.'}
+    - {measure: Cmin,   value: '\Theta(n)', note: 'Every certificate has the same length, so the min over inputs equals the max.'}
+    - {measure: Dna,    value: '\Theta(n)', note: 'Between $\mathrm{D}$ and $n$; the adversary count never used adaptivity.'}
+    - {measure: R0,     value: '\Theta(n)', putative: true, note: 'A zero-error run must end on a certificate, so $\mathrm{R}_0 \ge \mathrm{C} = \Theta(n)$; and $\mathrm{R}_0 \le \mathrm{D}$. Against $\mathrm{R} = \Theta(1)$ this is the unbounded $\mathrm{R}_0$-vs-$\mathrm{R}$ separation on partial functions.'}
+    - {measure: R1,     value: '\Theta(n)', note: 'Squeezed between $\mathrm{C}^1$ and $\mathrm{R}_0$.'}
+    - {measure: UC,     value: '\Theta(n)', putative: true, note: 'Between $\mathrm{C}$ and $\mathrm{D}$.'}
+    - {measure: UCmin,  value: '\Theta(n)', putative: true, note: 'Between $\mathrm{C}_{\min}$ and $\mathrm{UC}$.'}
+    - {measure: SP,     value: '\Theta(n)', putative: true, note: 'Between $\mathrm{C}$ and $\mathrm{D}$.'}
+    - {measure: rank,   value: '\Theta(n)', putative: true, note: 'Between $\mathrm{C}_{\min}$ and $\mathrm{D}$: with every certificate of full length there is no caterpillar structure to exploit.'}
+    - {measure: PDT,    value: '\Theta(n)', putative: true, note: 'Parity queries do not help: after $q < n/4$ of them the consistent affine space still contains inputs of both values. See [[GapMaj]].'}
+    - {measure: D_size, value: '2^{\Theta(n)}', putative: true, note: 'Every leaf subcube has codimension $\ge \mathrm{C}_{\min} = \Theta(n)$; and $\mathrm{DTsize} \le 2^{\mathrm{D}}$.'}
+    - {measure: deg,    value: '\Theta(n)', putative: true, note: 'Exact degree ignores the promise gap: symmetrising an exactly representing polynomial gives a univariate with $\Theta(n)$ forced roots. Against $\widetilde{\deg} = \Theta(1)$ this is the cleanest $\deg$-vs-$\widetilde{\deg}$ gap there is.'}
+    - {measure: QE,     value: '\Theta(n)', putative: true, note: 'Exactness costs as much as determinism: $\mathrm{Q}_E \ge \deg/2$ and $\mathrm{Q}_E \le \mathrm{D}$. Against $\mathrm{Q} = \Theta(1)$, unbounded.'}
+    - {measure: Q0,     value: '\Theta(n)', putative: true, note: 'The polynomial argument of [[GapMaj]]: a zero-error algorithm''s acceptance polynomial symmetrises to a non-negative univariate with $\Theta(n)$ roots. Against $\mathrm{Q} = \Theta(1)$, unbounded.'}
+    - {measure: ndeg,   value: '\Theta(n)', putative: true, note: 'Same symmetrisation applied to $p^2$; and $\mathrm{ndeg} \le \mathrm{C}^1$.'}
+    - {measure: NQ,     value: '\Theta(n)', note: '$\mathrm{NQ} = \lceil\mathrm{ndeg}/2\rceil$.'}
+    - {measure: rdeg,   value: '\Theta(n)', note: '$\mathrm{rdeg} = \max\{\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f)\}$, the two sides being symmetric. Against $\mathrm{rdeg}_\varepsilon = \Theta(1)$ and $\mathrm{Q} = \Theta(1)$: on *partial* functions rational degree is unbounded in terms of everything bounded-error, which is why [[open-rdeg]] is a total-function question.'}
+    - {measure: CG,     value: '\Theta(n)', putative: true, note: 'Private coins, and unlike $\mathrm{CG}^{\mathrm{pub}} = \Theta(1)$ it does not shrink with the gap: see the two-sided argument at [[GapMaj]].'}
+    # --- s and friends vanish outright ------------------------------------
+    - {measure: s,      value: '0', putative: true, note: 'A single flip moves $|x|$ by one and the promise puts the two sides $n/2$ apart, so no promise input has a sensitive coordinate at all.'}
+    - {measure: s0,     value: '0', putative: true, note: 'See $\mathrm{s}$.'}
+    - {measure: s1,     value: '0', putative: true, note: 'See $\mathrm{s}$.'}
+    - {measure: lambda, value: '0', putative: true, note: 'The sensitivity graph on the promise has no edges, so $\lambda = 0$ while $\deg = \Theta(n)$. Huang''s $\deg \le \lambda^2$ is a total-function theorem and this breaks it as badly as arithmetic allows.'}
+    - {measure: D_prod, value: '0', putative: true, note: 'The support of a product distribution is a subcube, whose realisable Hamming weights form an unbroken interval; an interval meeting both sides of the promise would have to contain the forbidden middle. So every product $\mu$ is one-sided.'}
+    # --- everything bounded-error collapses to a constant ------------------
+    - {measure: R,      value: '\Theta(1)', refs: [BenDavidBlais20composition], note: 'Sample $O(1)$ coordinates and take the empirical majority; $\Theta(1/\delta^2)$ at $\delta = 1/4$. Against $\mathrm{D} = \Theta(n)$ this is the standard proof that $\mathrm{D}$ is unbounded in terms of $\mathrm{R}$ on partial functions.'}
+    - {measure: bs,     value: '1', note: 'A sensitive block must move at least $2\delta n = n/2$ coordinates, and an input of weight $3n/4$ has room for exactly one such block.'}
+    - {measure: bs0,    value: '1', putative: true, note: 'Symmetric under complementation; see $\mathrm{bs}$.'}
+    - {measure: bs1,    value: '1', putative: true, note: 'See $\mathrm{bs}^0$.'}
+    - {measure: fbs,    value: '\Theta(1)', note: 'At most $1/(2\delta) = 2$ by the counting $2\delta n\sum_B w_B \le n$. So $\mathrm{fbs} = \Theta(1)$ against $\mathrm{C} = \Theta(n)$: the promise counterexample to $\mathrm{C} = O(\mathrm{fbs}^2)$.'}
+    - {measure: RC,     value: '\Theta(1)', note: '$\mathrm{RC} = \Theta(\mathrm{fbs})$.'}
+    - {measure: FC,     value: '\Theta(1)', note: 'Equal to $\mathrm{fbs}$ by LP duality.'}
+    - {measure: cbs,    value: '\Theta(1)', refs: [GoosPitassi14], note: 'Degenerate on a Boolean function: $\mathrm{cbs} = \mathrm{bs}$.'}
+    - {measure: Q,      value: '\Theta(1)', refs: [NayakWu99], note: 'Amplitude estimation to additive $\delta$; at constant $\delta$, $O(1)$ queries.'}
+    - {measure: adeg,   value: '\Theta(1)', refs: [NayakWu99], conf: medium, note: '$\widetilde{\deg} \le 2\mathrm{Q} = O(1)$, and the Nayak-Wu counting bound is a degree bound.'}
+    - {measure: noisyR, value: '\Theta(1)', putative: true, refs: [CKMPSS23], note: 'Equal to $\mathrm{R}$: buying bias buys nothing here. See [[GapMaj]].'}
+    - {measure: Rna,    value: '\Theta(1)', note: 'Sampling is non-adaptive.'}
+    - {measure: noisyRna, value: '\Theta(1)', refs: [BenDavidBlais20composition], note: 'Every corner of the adaptive/noisy square costs $\Theta(1)$ here.'}
+    - {measure: Rbar,   value: '\Theta(1)', note: '$\bar{\mathrm{R}}_\varepsilon = \Theta(\mathrm{R}_\varepsilon)$ for every $f$.'}
+    - {measure: Dmu,    value: '\Theta(1)', note: 'By Yao, $\max_\mu \mathrm{D}^\mu = \mathrm{R}$.'}
+    - {measure: Np,     value: '\Theta(1)', putative: true, note: 'Between $\mathrm{R}$ and $O(\mathrm{R})$: read each sampled coordinate $O(1)$ times and vote.'}
+    - {measure: psD,    value: '\Theta(1)', note: 'Degenerate on a partial Boolean function: $\mathrm{psD} = \Theta(\mathrm{R})$.'}
+    - {measure: LR,     value: '\Theta(1)', refs: [BBGM22], conf: medium, note: '$\Omega(\sqrt{\mathrm{R}}) \le \mathrm{LR} \le \mathrm{R}$, and both ends are constant.'}
+    - {measure: chibar, value: '\Theta(1)', refs: [GLSS19], conf: medium, note: 'Between $\Omega(\sqrt{\mathrm{R}})$ and $\mathrm{LR}$.'}
+    - {measure: QC,     value: '\Theta(1)', refs: [Aaronson08], note: '$\mathrm{QC} = \Theta(\sqrt{\mathrm{fbs}})$.'}
+    - {measure: Advpm,  value: '\Theta(1)', note: '$\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q})$.'}
+    - {measure: MAdv,   value: '\Theta(1)', note: 'Between $\mathrm{Adv}^{\pm}$ and $\mathrm{Q}$.'}
+    - {measure: gamma2, value: '\Theta(1)', note: '$\gamma_2 = \Theta(\mathrm{Q})$.'}
+    - {measure: CA,     value: '\Theta(1)', putative: true, refs: [CGLMSG23], note: 'Between $\mathrm{fbs}$ and $\mathrm{CG}^{\mathrm{pub}}$, both constant.'}
+    - {measure: CGpub,  value: '\Theta(1)', putative: true, refs: [CGLMSG23], note: 'Both players output the same uniformly random index; inputs of different value differ in $\ge n/2$ coordinates, so they win with probability $\ge 1/2$.'}
+    - {measure: CGstar, value: '\Theta(1)', refs: [CGLMSG23], note: 'All of $\mathrm{CG}^{\mathrm{ns}},\mathrm{CG}^{*},\mathrm{CG}^{\mathrm{pub}}$ collapse to $\Theta(\mathrm{CA})$.'}
+    - {measure: CGns,   value: '\Theta(1)', refs: [CGLMSG23], note: 'See $\mathrm{CG}^{*}$.'}
+    - {measure: robustQ, value: '\Theta(1)', note: 'Between $\mathrm{Q}$ and $O(\mathrm{Q}\log\mathrm{Q})$.'}
+    - {measure: sdeg,   value: '1', note: '$p(x) = \sum_i x_i - n/2$ has the right sign at every promise input. Against $\deg = \Theta(n)$: unbounded error trivialises gapped majority.'}
+    - {measure: odeg,   value: '1', note: 'At $\delta \ge 1/8$ a degree-$1$ one-sided approximation exists, so $\mathrm{odeg}$ meets $\mathrm{sdeg}$ at the bottom.'}
+    # --- upper bounds only -------------------------------------------------
+    - {measure: ardeg,  value: 'O(1)', note: '$\mathrm{rdeg}_\varepsilon \le \widetilde{\deg} = O(1)$. Contrast the exact $\mathrm{rdeg} = \Theta(n)$: on partial functions the two versions of rational degree are unboundedly far apart.'}
+    - {measure: PostQ,  value: 'O(1)', refs: [MahadevdeWolf15], note: '$\mathrm{PostQ}_\varepsilon = \Theta(\mathrm{rdeg}_\varepsilon) = O(1)$.'}
+    - {measure: Adv,    value: 'O(1)', note: '$\mathrm{Adv} \le \mathrm{Adv}^{\pm} = \Theta(\mathrm{Q})$.'}
+    - {measure: chi,    value: 'O(1)', note: '$\chi \le \bar\chi$. The total-function bound $\chi = \Omega(\mathrm{bs})$ is false here.'}
+    - {measure: RS,     value: 'O(1)', note: '$\mathrm{RS} = O(\bar\chi)$. Note $\mathrm{R} = O(\mathrm{RS}^2\log\mathrm{RS})$ is a total-function statement.'}
+    - {measure: Rstar,  value: 'O(1)', note: '$\mathrm{R}^{*} \le \mathrm{R}$.'}
+    - {measure: cjdeg,  value: 'O(1)', note: 'Between $\widetilde{\deg}$ and $\mathrm{R}$.'}
+    - {measure: prt,    value: 'O(1)', note: '$\mathrm{prt}_\varepsilon \le 2\mathrm{R}_\varepsilon$.'}
+    - {measure: rprt,   value: 'O(1)', note: '$\overline{\mathrm{prt}} \le \mathrm{prt}$.'}
+    - {measure: EC,     value: 'O(\sqrt n)', putative: true, note: 'Uniform weights $w^x_i = (n/2)^{-1/2}$: two inputs of different value differ in $\ge n/2$ coordinates, so their weighted product is $\ge 1$, at total cost $\sqrt{2n}$. From below $\mathrm{EC} = \Omega(1)$ only, so this cell is not pinned -- but $O(\sqrt n)$ against $\mathrm{C} = \Theta(n)$ already refutes $\mathrm{EC} \le \mathrm{C}$-style tightness and, with $\mathrm{R}_0 = \Theta(n)$, refutes $\mathrm{R}_0 = O(\mathrm{EC}^2)$ on promises.'}
+  witnesses:
+    - {of: [D, R],      setting: partial, statement: 'Unbounded: $\mathrm{D} = \Theta(n)$ against $\mathrm{R} = \Theta(1)$. The standard example, now readable by the derived layer.'}
+    - {of: [R0, R],     setting: partial, statement: 'Unbounded: certainty forces a full certificate, $\mathrm{R}_0 = \Theta(n)$, while $\mathrm{R} = \Theta(1)$.'}
+    - {of: [QE, Q],     setting: partial, statement: 'Unbounded: $\mathrm{Q}_E = \Theta(n)$ against $\mathrm{Q} = \Theta(1)$. Same for $\mathrm{Q}_0$.'}
+    - {of: [deg, adeg], setting: partial, statement: 'Unbounded: $\deg = \Theta(n)$ against $\widetilde{\deg} = \Theta(1)$, the promise gap being invisible to exact representation and free for approximate.'}
+    - {of: [rdeg, ardeg], setting: partial, statement: 'Unbounded: $\mathrm{rdeg} = \Theta(n)$ against $\mathrm{rdeg}_\varepsilon = O(1)$ -- and, since $\mathrm{rdeg} = \mathrm{PostQ}_{\mathrm{E}}$, exact and bounded-error post-selection are unboundedly far apart on promises.'}
+    - {of: [C, fbs],    setting: partial, statement: 'Unbounded: $\mathrm{C} = \Theta(n)$ against $\mathrm{fbs} = \Theta(1)$; rounding a fractional certificate is a total-function argument.'}
+    - {of: [bs, s],     setting: partial, statement: 'Unbounded: $\mathrm{s} = 0$ identically while $\mathrm{bs} = 1$. Every measure above $\mathrm{s}$ is unbounded in terms of it on partial functions.'}
+    - {of: [deg, lambda], setting: partial, statement: 'Unbounded: $\lambda = 0$ while $\deg = \Theta(n)$, since the sensitivity graph on the promise has no edges at all.'}
+  refs: [BenDavidBlais20composition, NayakWu99, CGLMSG23]
+  see_also: [GapMaj, R, D, R0, QE, Q0, adeg, fbs, ApproxIndex, settings]
+
+- id: Find1Parity
+  name: Parity-labelled FIND-1
+  symbol: '\mathrm{Find1}^{\mathrm{par}}_{n}'
+  group: separating
+  order: 49.25
+  kind: partial
+  arity: '$n$ bits, $4 \mid n$'
+  scale: {var: n}
+  short: 'The decision version of FIND-1: zero-error $O(1)$ against deterministic $n/4+1$.'
+  definition: |
+    Promise $|x| = n/4$, and $\mathrm{supp}(x)$ lies entirely inside the odd
+    coordinates or entirely inside the even ones. Output $1$ in the first case,
+    $0$ in the second. Splitting $[n]$ by parity is inessential -- any two fixed
+    halves do -- but it makes the promise short to state.
+
+    The design has two halves to it. *Every* input carries $n/4$ ones and each
+    one of them, wherever it is, names the answer on its own; so a single
+    successful probe both finds and certifies, and a Las Vegas algorithm is done
+    after four expected queries. A deterministic algorithm gets no such luck:
+    the adversary answers $0$ and it has to exhaust an entire half.
+    [[promiseFind1]] makes that trade for a *relation*; the parity label is what
+    turns it into a partial **function**, which is the setting where
+    $\mathrm{D}$ vs $\mathrm{R}_0$ was otherwise witnessed only by the
+    quadratic total-function [[pointer]] separation.
+
+    Restricted to the odd half the promise reads "all-zero, or exactly
+    balanced", which is [[DeutschJozsa]] -- hence $\mathrm{Q}_E = 1$ below. What
+    Deutsch-Jozsa lacks is a witness for its constant case, and that is exactly
+    what the even half supplies here: it is why $\mathrm{R}_0$ is $O(1)$ here
+    and $\Theta(n)$ there.
+  formal: '$\mathrm{Find1}^{\mathrm{par}}_n(x) = \mathbb{1}[\,\mathrm{supp}(x) \subseteq \mathrm{Odd}\,]$ restricted to $\{x : |x| = n/4,\ \mathrm{supp}(x) \subseteq \mathrm{Odd} \text{ or } \mathrm{supp}(x) \subseteq \mathrm{Even}\}$.'
+  values:
+    - {measure: D, value: 'n/4+1', putative: true, note: 'Exactly. Upper: query $n/4+1$ odd positions; a $1$ among them says $\mathrm{supp}(x) \subseteq \mathrm{Odd}$, and all-zero rules that case out, since $n/4$ ones would then have to fit into the $n/4-1$ odd positions left over. Lower: the adversary answers $0$ throughout. After $q_{\mathrm{odd}}$ odd and $q_{\mathrm{even}}$ even queries both completions survive as long as $n/2 - q_{\mathrm{odd}} \ge n/4$ and $n/2 - q_{\mathrm{even}} \ge n/4$, so the algorithm must spend $n/4+1$ queries inside one parity class before either answer is safe.'}
+    - {measure: R0, value: '\Theta(1)', putative: true, note: 'At most $4$. Query uniformly random unqueried positions until one returns $1$, then report the parity of its index -- which is certain, since a single $1$ pins the side of the promise. A random position is $1$ with probability $n/4 \,/\, n$, so sampling without replacement finds one after $(n+1)/(n/4+1) < 4$ expected queries, and the algorithm never errs. Note this is the *expected*-cost convention ([[R0]]); worst-case zero error would be $\mathrm{D}$ by definition, which is the whole content of the separation.'}
+    - {measure: R, value: '\Theta(1)', note: '$\mathrm{R} \le \mathrm{R}_0 = O(1)$, and at least one query.'}
+    - {measure: R1, value: '\Theta(1)', note: 'Squeezed: $\mathrm{R} \le \mathrm{R}^1 \le \mathrm{R}_0 = O(1)$. Since the algorithm only ever answers from a $1$ it has seen, one-sided error costs nothing -- as at [[promiseFind1]], and unlike [[GapMaj]], where $\mathrm{R}^1 = \Theta(n)$.'}
+    - {measure: Rbar, value: '\Theta(1)', note: '$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ ([[Rbar]] vs [[R]]).'}
+    - {measure: Rna, value: '\Theta(1)', putative: true, note: 'Sampling needs no adaptivity: read $10$ uniformly random positions and answer from any that is $1$. A position is $1$ with probability $1/4$, so this fails with probability $(3/4)^{10} < 0.06$.'}
+    - {measure: Dna, value: 'n/4+1', putative: true, note: 'The same count as $\mathrm{D}$, which never used adaptivity: a fixed set missing $n/4$ odd and $n/4$ even positions is consistent with both answers, and a fixed set of $n/4+1$ odd positions decides. So all the power here is in the coins, not in adaptivity.'}
+    - {measure: C, value: '1', putative: true, note: 'One queried $1$ certifies the answer at every input: if $x_i = 1$ with $i$ odd then no $0$-input of the promise agrees, since $0$-inputs vanish on all odd coordinates. So $\mathrm{C} = 1$ against $\mathrm{D} = n/4+1$ -- the certificate is as short as it can be and locating it is the entire problem.'}
+    - {measure: C0, value: '1', putative: true, note: 'See $\mathrm{C}$: a single even-indexed $1$.'}
+    - {measure: C1, value: '1', putative: true, note: 'See $\mathrm{C}$: a single odd-indexed $1$.'}
+    - {measure: Cmin, value: '1', putative: true, note: 'Equal to $\mathrm{C}$: every input has $n/4$ one-bit certificates, so the min over inputs and the max coincide.'}
+    - {measure: RC, value: '1', putative: true, note: 'The one-bit certificate is already a verifier that needs no coins: query the fixed position $i \in \mathrm{supp}(x)$, accept iff it returns $1$. Every $y$ of the opposite value has $y_i = 0$, so it is rejected with certainty.'}
+    - {measure: FC, value: '1', putative: true, note: 'Weight $1$ on a single $i \in \mathrm{supp}(x)$ is feasible -- every $y$ of the opposite value differs from $x$ at $i$ -- and $\mathrm{FC} \ge \mathrm{fbs} = 1$.'}
+    - {measure: fbs, value: '1', putative: true, note: 'Between $\mathrm{bs} = 1$ and $\mathrm{C} = 1$.'}
+    - {measure: bs, value: '1', putative: true, note: 'Exactly $1$. A sensitive block at $x$ must produce a domain input of the other value, and such an input is $0$ on all of $\mathrm{supp}(x)$; so every sensitive block contains $\mathrm{supp}(x)$ and no two of them are disjoint. One block exists -- swap $\mathrm{supp}(x)$ for any $n/4$ coordinates of the other parity -- so $\mathrm{bs} = 1$ while $\mathrm{D} = n/4+1$.'}
+    - {measure: bs0, value: '1', putative: true, note: 'See $\mathrm{bs}$; the two sides are symmetric.'}
+    - {measure: bs1, value: '1', putative: true, note: 'See $\mathrm{bs}$; the two sides are symmetric.'}
+    - {measure: s, value: '0', putative: true, note: 'Identically zero: a single flip changes $|x|$ to $n/4 \pm 1$ and leaves the promise, so the sensitivity graph on the domain has no edges at all. An exact-weight promise kills $\mathrm{s}$ the same way a gapped one does at [[GapMaj]].'}
+    - {measure: s0, value: '0', putative: true, note: 'See $\mathrm{s}$: no domain neighbours anywhere.'}
+    - {measure: s1, value: '0', putative: true, note: 'See $\mathrm{s}$: no domain neighbours anywhere.'}
+    - {measure: lambda, value: '0', putative: true, note: 'The sensitivity graph is empty (see $\mathrm{s}$), so its spectral norm is $0$.'}
+    - {measure: deg, value: '1', putative: true, note: 'The linear polynomial $p(x) = (4/n)\sum_{i \text{ odd}} x_i$ is $1$ on every $1$-input and $0$ on every $0$-input of the promise. Off the promise it runs up to $2$, which is allowed for $\deg$ but not for $\widetilde{\deg}$ -- see the settings note at [[deg]].'}
+    - {measure: adeg, value: '\Theta(1)', note: 'At most $2\mathrm{Q} = O(1)$, and at least $1$. Unlike $\deg$ this is not witnessed by the linear polynomial above, which is unbounded off the promise.'}
+    - {measure: sdeg, value: '1', putative: true, note: '$\sum_{i \text{ odd}} x_i - 1/2$ has the right sign at every promise input.'}
+    - {measure: ndeg, value: '1', putative: true, note: '$\sum_{i \text{ odd}} x_i$ is nonzero on the domain exactly at the $1$-inputs.'}
+    - {measure: rdeg, value: '1', putative: true, note: '$\max\{\mathrm{ndeg}(f), \mathrm{ndeg}(\bar f)\}$, and the complement is handled by $\sum_{i \text{ even}} x_i$.'}
+    - {measure: NQ, value: '1', note: '$\mathrm{NQ} = \lceil \mathrm{ndeg}/2 \rceil = 1$.'}
+    - {measure: Q, value: '\Theta(1)', note: '$\mathrm{Q} \le \mathrm{R} = O(1)$, and at least one query.'}
+    - {measure: Q0, value: '\Theta(1)', note: '$\mathrm{Q}_0 \le \mathrm{R}_0 = O(1)$; also $\mathrm{Q}_0 \le \mathrm{Q}_E = 1$.'}
+    - {measure: QE, value: '1', putative: true, note: 'One query, with certainty. Prepare $|\psi\rangle = (n/2)^{-1/2}\sum_{i \text{ odd}}|i\rangle$ and apply the phase oracle $|i\rangle \mapsto (-1)^{x_i}|i\rangle$. On a $0$-input every odd coordinate is $0$, so the state is unchanged; on a $1$-input exactly $n/4$ of the $n/2$ odd coordinates carry a $-1$, so the state is *orthogonal* to $|\psi\rangle$. The projective measurement $\{|\psi\rangle\langle\psi|,\, I - |\psi\rangle\langle\psi|\}$ then answers with probability $1$ either way. This is [[DeutschJozsa]] run on the odd half, and it is why the promise fixes $|x| = n/4$: half of the odd coordinates, so the $1$-case is exactly balanced. Contrast [[GapMaj]] and [[promiseFind1]], where exactness costs $\Theta(n)$.'}
+    - {measure: D_size, value: '\Theta(n)', putative: true, note: 'The caterpillar "query odd positions until the first $1$" has one leaf per stopping point, so $O(n)$; and a tree of depth $d$ has more than $d$ leaves, so $\Omega(n)$ by $\mathrm{D} = n/4+1$. As at [[promiseFind1]], the deterministic hardness is depth, not size.'}
+    - {measure: rank, value: '1', putative: true, note: 'That caterpillar has rank $1$ -- one child of every internal node is a leaf -- and rank $0$ means a constant answer.'}
+    - {measure: D_prod, value: '0', putative: true, note: 'The support of a product distribution on $\{0,1\}^n$ is a subcube, and the domain here contains no subcube of dimension $\ge 1$: flipping any single coordinate breaks $|x| = n/4$. So every product $\mu$ supported on the promise is a point mass, hence one-sided, and $\mathrm{D}^\mu = 0$ -- against $\mathrm{R} = \Theta(1)$ the measure is simply blind, as at [[GapMaj]] and [[Forrelation]].'}
+    - {measure: Dmu, value: '\Theta(1)', note: 'By Yao, $\max_\mu \mathrm{D}^\mu = \mathrm{R} = \Theta(1)$.'}
+    - {measure: Np, value: '\Theta(1)', putative: true, note: 'Read each of $O(1)$ sampled positions $O(1)$ times and majority-vote: $\mathrm{N}_p = O(\mathrm{R})$, and $\mathrm{N}_p \ge \mathrm{R}$ always.'}
+    - {measure: noisyR, value: '\Theta(1)', note: 'At most $\mathrm{R} = O(1)$, and at least $1$: there is nothing for cheap low-bias queries to buy.'}
+    - {measure: robustQ, value: '\Theta(1)', note: 'Between $\mathrm{Q} = \Theta(1)$ and $\mathrm{N}_p = \Theta(1)$.'}
+    - {measure: PostQ, value: '\Theta(1)', note: 'At most $\mathrm{Q} = \Theta(1)$, and at least $1$.'}
+    - {measure: Advpm, value: '\Theta(1)', note: '$\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q}) = \Theta(1)$.'}
+    - {measure: Adv, value: 'O(1)', note: '$\mathrm{Adv} \le \mathrm{Adv}^{\pm} = \Theta(1)$.'}
+    - {measure: MAdv, value: '\Theta(1)', note: 'Sandwiched between $\mathrm{Adv}^{\pm}$ and $\mathrm{Q}$.'}
+    - {measure: gamma2, value: '\Theta(1)', note: '$\gamma_2 = \Theta(\mathrm{Q}) = \Theta(1)$.'}
+    - {measure: CA, value: '\Theta(1)', note: 'A lower bound on $\mathrm{R} = O(1)$, and at least a constant for a non-trivial problem. The classical adversary is powerless here -- correctly, since $\mathrm{R} = O(1)$.'}
+    - {measure: QC, value: '\Theta(1)', note: 'At most $\mathrm{Q} = \Theta(1)$, and at least $1$.'}
+    - {measure: cjdeg, value: '\Theta(1)', note: 'Between $1$ and $\mathrm{R} = O(1)$.'}
+    - {measure: prt, value: 'O(1)', note: '$\mathrm{prt}_\varepsilon \le 2\mathrm{R}_\varepsilon = O(1)$.'}
+    - {measure: rprt, value: 'O(1)', note: '$\overline{\mathrm{prt}} \le \mathrm{prt} = O(1)$.'}
+  witnesses:
+    - {of: [D, R0], setting: partial, statement: 'Unbounded, and the point of the example: $\mathrm{R}_0 = O(1)$ while $\mathrm{D} = n/4+1$. Zero error is no obstacle when every input carries $n/4$ self-certifying witnesses; what defeats determinism is having to *find* one. [[promiseFind1]] says the same thing for relations, but a relation cannot witness the partial-function cell, which is why this one is needed.'}
+    - {of: [D, C], setting: partial, statement: 'Unbounded: $\mathrm{C} = 1$ against $\mathrm{D} = n/4+1$. The total-function bound $\mathrm{D} \le \mathrm{C}^0\,\mathrm{C}^1$ needs *both* sides to have short certificates and needs the search for them to be guided; here both sides do and it still fails.'}
+    - {of: [D, QE], setting: partial, statement: 'Unbounded: one exact quantum query against $n/4+1$ deterministic ones. [[DeutschJozsa]] makes the same point, but there $\mathrm{R}_0 = \Theta(n)$, so the collapse is quantum; here $\mathrm{R}_0 = O(1)$ too, and every measure that is not $\mathrm{D}$ itself is constant.'}
+  see_also: [promiseFind1, DeutschJozsa, GapMaj, D, R0, C, pointer]
 
 - id: ApproxIndex
   name: Approximate index
@@ -810,7 +1249,7 @@ functions:
     - {measure: Advpm, value: 'O(\sqrt{k\log k})', note: '$\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q})$, hence at most $O(\sqrt{k\log k})$.'}
     - {measure: gamma2, value: 'O(\sqrt{k\log k})', note: '$\gamma_2 = \Theta(\mathrm{Q})$.'}
     - {measure: MAdv, value: 'O(\sqrt{k\log k})', note: 'Sandwiched between $\mathrm{Adv}^{\pm}$ and $\mathrm{Q}$.'}
-    - {measure: adeg, value: 'O(\sqrt{k\log k})', note: '$\widetilde{\deg} \le 2\mathrm{Q} \le 2\mathrm{R} = O(\sqrt{k\log k})$.'}
+    - {measure: adeg, value: 'O(\sqrt{k\log k})', note: '$\widetilde{\deg} \le 2\mathrm{Q} \le 2\mathrm{R} = O(\sqrt{k\log k})$. From below, only $\Omega(1)$, and closing that is a real question rather than an oversight -- note that $\deg = 2$ below is *no* help, because approximate degree is the one polynomial measure that insists on boundedness off the promise. What a bounded polynomial can do here has a clean reading. Suppose $c_b(a)$, $b \in \{0,1\}^k$, are polynomials in the address of degree $\le d$ with $c_b \ge 0$ and $\sum_b c_b(a) \le 1$ on the whole cube, and $\sum_{b \in B(a,r)} c_b(a) \ge 2/3$ for every $a$ -- a *guessing scheme*, a distribution over cells of low degree in $a$ that lands in the ball. Then $p(a,x) = \sum_b c_b(a)\big(\mathbb{1}[x_b=1] - \mathbb{1}[x_b=0]\big)$ has degree $d+2$, satisfies $|p| \le 1$ everywhere because the $c_b$ are nonnegative and sum to at most $1$, and equals $(2v-1)\sum_{b \in B(a,r)} c_b(a)$ on the promise; so $\widetilde{\deg} \le d+2$. Two schemes are available and neither beats the algorithm: reading a prefix of $8\sqrt{k\log k}$ address bits and guessing the rest uniformly has degree $8\sqrt{k\log k}$, and biasing every bit by $\gamma = c\sqrt{\log k/k}$ -- the [[noisyR]] strategy -- gives $c_b(a) = \prod_i (\tfrac12 + \gamma(1-2b_i)(1-2a_i))$, degree $k$, which is worse. Whether some cleverer nonnegative scheme, or a polynomial not of this shape at all, does better is open.'}
     - {measure: Np, value: '\Theta(\sqrt{k\log k})', putative: true, note: 'At least $\mathrm{R}$; and reading each of the $O(\sqrt{k\log k})$ address bits $O(1)$ times and majority-voting still lands inside the ball, so $O(\mathrm{R})$. Note the sharp contrast with [[noisyR]] $= O(\log k)$: $\mathrm{N}_p$ charges a *fixed* constant noise rate per read, while the noisy-query model lets the algorithm buy an arbitrarily weak bias at cost $\gamma^2$, and weak bias is exactly what this problem needs.'}
     - {measure: prt, value: 'O(\sqrt{k\log k})', note: 'From $\mathrm{prt}_\varepsilon \le 2\mathrm{R}_\varepsilon$.'}
     - {measure: rprt, value: 'O(\sqrt{k\log k})', note: 'From $\overline{\mathrm{prt}}_\varepsilon \le \mathrm{prt}_\varepsilon$.'}
@@ -829,10 +1268,10 @@ functions:
     - {measure: EC, value: 'O(k) = O(\log n)', putative: true, note: 'Weight $1$ on each of the $k$ address bits and on the two bits of the cell $a$ pointed at by the input''s own address. Two inputs of different value with different addresses differ in some address bit, where both put weight $1$; with the *same* address they differ at cell $a$, which both weight. Cost $k + 2$. This does not go through $\mathrm{EC} \le \mathrm{C} = \Theta(1)$, which is a total-function statement -- its proof needs a $0$-certificate and a $1$-certificate to conflict, and here two non-conflicting certificates stitch together into a string outside the promise. Whether $\mathrm{EC}$ is really $\omega(1)$ here is open; from below only $\mathrm{EC} \ge \mathrm{fbs} = 1$.'}
     - {measure: R1, value: '\Theta(\sqrt{k\log k})', note: 'Squeezed between $\mathrm{R}$ and $\mathrm{R}_0$, which agree.'}
     - {measure: Q0, value: 'O(\sqrt{k\log k})', note: 'At most $\mathrm{R}_0$; at least $\mathrm{Q}$.'}
-    - {measure: QE, value: 'O(\sqrt{k\log k})', note: 'At most $\mathrm{D}$; from below $\mathrm{Q}_E \ge \deg/2$, but no lower bound on $\deg$ is recorded here.'}
-    - {measure: deg, value: 'O(\sqrt{k\log k})', note: 'At most $\mathrm{D}$. Exact degree can be much smaller than $\mathrm{D}$ for a promise problem -- the polynomial only has to be right on the domain -- so nothing forces equality.'}
-    - {measure: sdeg, value: 'O(\sqrt{k\log k})', note: '$\mathrm{sdeg} \le \widetilde{\deg}_{+} \le \widetilde{\deg}$.'}
-    - {measure: odeg, value: 'O(\sqrt{k\log k})', note: 'Between $\mathrm{sdeg}$ and $\widetilde{\deg}$.'}
+    - {measure: QE, value: 'O(\sqrt{k\log k})', note: 'At most $\mathrm{D}$. From below the polynomial method gives $\mathrm{Q}_E \ge \deg/2 = \Omega(1)$, i.e. nothing at all, since $\deg = \Theta(1)$ here.'}
+    - {measure: deg, value: '\Theta(1)', putative: true, note: 'At most $2$, and at least $1$ since $f$ is not constant. *Count* the marked cells instead of finding one: the ball $B(a,r)$ has $V = \sum_{j \le r}\binom kj$ cells whatever the address $a$ is, and on the promise every one of them holds $v$ and no other cell does, so $\tfrac1V\sum_b \mathbb{1}[x_b = 1]$ equals $v$ *exactly* on the whole domain. Each $\mathbb{1}[x_b=1]$ is a degree-$\le 2$ function of that cell''s two encoding bits, so $\deg \le 2$ -- and $\deg = 1$ under the encoding that spends one bit on $\mathbb{1}[x_b=1]$. The address is never looked at. Nothing survives this off the promise, where the sum runs up to $2^k \gg V$: it is unbounded, which is legal for $\deg$ (agree on $\mathrm{Dom}(f)$, unconstrained elsewhere) and is exactly what $\widetilde{\deg}$ forbids. So $\deg = \Theta(1)$ against $\mathrm{D} = \Theta(\sqrt{k\log k})$, and the unbounded polynomial method is worthless here; cf. [[UniqueSearch]], where the same collapse happens for the same reason.'}
+    - {measure: sdeg, value: '\Theta(1)', note: '$\mathrm{sdeg} \le \deg = \Theta(1)$: the exact polynomial above, shifted to $\tfrac2V\sum_b \mathbb{1}[x_b=1] - 1$, sign-represents $f$ on the domain.'}
+    - {measure: odeg, value: '\Theta(1)', note: 'Between $\mathrm{sdeg}$ and $\deg$, both $\Theta(1)$. Like $\deg$ and $\mathrm{sdeg}$, and unlike $\widetilde{\deg}$, one-sided approximate degree never asks the polynomial to stay bounded off the promise.'}
     - {measure: UC, value: 'O(\sqrt{k\log k})', note: 'Between $\mathrm{C} = \Theta(1)$ and $\mathrm{D}$. Unambiguity is not free here: the constant-size certificates overlap heavily, since many cells of the ball certify the same value.'}
     - {measure: UCmin, value: 'O(\sqrt{k\log k})', note: 'Between $\mathrm{C}_{\min} = \Theta(1)$ and $\mathrm{UC}$.'}
     - {measure: SP, value: 'O(\sqrt{k\log k})', note: 'Between $\mathrm{C}$ and $\mathrm{D}$: the leaves of the deterministic tree form a subcube partition of the promise.'}
@@ -850,8 +1289,9 @@ functions:
     - {of: [D, C], setting: partial, statement: 'Unbounded: $\mathrm{C} = \mathrm{C}_{\min} = \Theta(1)$ but $\mathrm{D} = \Theta(\sqrt{k\log k})$ -- recognising a good array cell is free, finding one is not.'}
     - {of: [R, noisyR], setting: partial, statement: 'An *exponential* gap: $\mathrm{R} = \Theta(\sqrt{k\log k})$ against $\mathrm{noisyR} = O(\log k)$, so $\mathrm{R} = 2^{\Omega(\mathrm{noisyR})}$ on this family.', refs: [BenDavidBlais20composition]}
     - {of: [R, R], setting: partial, statement: 'Composed with $\mathrm{GapMaj}_k$ it refutes the randomized composition conjecture: $\mathrm{R}(f)\,\mathrm{R}(g) = \tilde\Theta(k^{3/2})$ but $\mathrm{R}(f \circ g) = O(k \log k)$.', refs: [BenDavidBlais20composition]}
+    - {of: [D, deg], setting: partial, statement: 'Unbounded: $\deg = \Theta(1)$ -- count the marked cells, whose number $V$ is the same for every address -- against $\mathrm{D} = \Theta(\sqrt{k\log k})$. The counting polynomial is wildly unbounded off the promise, so it says nothing about $\widetilde{\deg}$, which remains open between $\Omega(1)$ and $O(\sqrt{k\log k})$.'}
   refs: [BenDavidBlais20composition, GLSS19]
-  see_also: [GapMaj, noisyR, R, composition, LR, ADDR]
+  see_also: [GapMaj, noisyR, R, composition, LR, ADDR, MarkedBit, UniqueSearch]
 
 - id: Collision
   name: Collision problem
@@ -914,7 +1354,7 @@ functions:
     - {measure: chi, value: 'O(\sqrt n)', note: '$\chi \le \bar\chi = O(\mathrm{LR}) \le \mathrm{R} = O(\sqrt n)$. The lower bound $\chi = \Omega(\mathrm{bs})$ [Li18] is total-only and would give only $\Omega(1)$ anyway.'}
     - {measure: chibar, value: '\Omega(n^{1/4})', note: '$\mathrm{R} = O(\bar\chi^2)$ holds for partial $g$, so $\bar\chi = \Omega(\sqrt{\mathrm{R}}) = \Omega(n^{1/4})$; and $\bar\chi = O(\mathrm{LR}) \le \mathrm{R} = O(\sqrt n)$.'}
     - {measure: LR, value: '\Omega(n^{1/4})', note: '$\mathrm{LR} = \Omega(\sqrt{\mathrm{R}})$ and $\mathrm{LR} \le \mathrm{R} = O(\sqrt n)$.'}
-    - {measure: RS, value: 'O(\sqrt n)', note: '$\mathrm{RS} = O(\bar\chi) = O(\mathrm{R})$; from below $\mathrm{RS} \ge \mathrm{CA} = \Omega(1)$.'}
+    - {measure: RS, value: '\Theta(1)', refs: [BenDavidKothari18], note: 'The reason sabotage complexity is a *total*-function measure. A one-to-one table and a two-to-one table can agree on at most one point of each of the $n/2$ pairs, so they differ in $\ge n/2$ of the $n$ cells (the same counting as $\mathrm{CG}^{\mathrm{pub}}$ above). Every sabotaged input therefore carries $\ge n/2$ stars, and one uniformly random query finds a star with probability $\ge 1/2$: $\mathrm{RS} \le 2$. From below $\mathrm{RS} \ge \mathrm{CA} = \Omega(1)$. [BenDavidKothari18, Sec. 1.4] state it exactly so -- "any sabotaged input to the collision problem has at least half the bits sabotaged making $\mathrm{RS}(f) = O(1)$, but $\mathrm{R}(f) = \Omega(\sqrt n)$" -- as the reason their quadratic upper bound $\mathrm{R} = O(\mathrm{RS}^2\log\mathrm{RS})$ has to assume totality.'}
     - {measure: Rstar, value: '\Omega(n^{1/3})', note: '$\mathrm{R}^{*} = \Omega(\mathrm{Q}) = \Omega(n^{1/3})$ since quantum query complexity composes perfectly, and $\mathrm{R}^{*} \le \mathrm{R} = O(\sqrt n)$. Whether iterated collision-finding costs $n^{1/3}$ or $n^{1/2}$ per level is open.'}
     - {measure: cjdeg, value: 'O(\sqrt n)', note: 'Between $\widetilde{\deg} = \Theta(n^{1/3})$ and $\mathrm{R} = \Theta(\sqrt n)$.'}
     - {measure: noisyR, value: 'O(\sqrt n)', note: '$\mathrm{noisyR} \le \mathrm{R}$. The implication "$\mathrm{R} = \Theta(\text{arity}) \Rightarrow \mathrm{noisyR} = \Theta(\mathrm{R})$" does not apply, since $\mathrm{R} = \Theta(\sqrt n)$ and the arity is $n$.'}
@@ -928,8 +1368,11 @@ functions:
     - {measure: rdeg, value: 'O(n)', note: 'At most $\mathrm{C} = n/2+1$; from below $\mathrm{rdeg} \ge \mathrm{ndeg} = 2$ and $\mathrm{rdeg} \ge \widetilde{\mathrm{rdeg}}$.'}
   witnesses:
     - {of: [R0, R], setting: partial, statement: 'Quadratic: $\mathrm{R}_0 = n/2+1$ against $\mathrm{R} = \Theta(\sqrt n)$.'}
-  refs: [BHT98, AaronsonShi04, Kutin05, Ambainis05smallrange, Ambainis07]
-  see_also: [ElementDistinctness, KDistinctness, Simon]
+    - {of: [R, RS], setting: partial, statement: 'Unbounded: $\mathrm{R} = \Theta(\sqrt n)$ against $\mathrm{RS} = \Theta(1)$. This is the separation that confines $\mathrm{R} = O(\mathrm{RS}^2\log\mathrm{RS})$ to total functions [BenDavidKothari18, Sec. 1.4].'}
+    - {of: [chibar, RS], setting: partial, statement: 'Unbounded: $\bar\chi = \Omega(\sqrt{\mathrm{R}}) = \Omega(n^{1/4})$ against $\mathrm{RS} = \Theta(1)$. Max-conflict complexity dominates sabotage complexity [GLSS19, Thm 7] and here it does so by an unbounded margin -- which is the point of introducing it.'}
+    - {of: [LR, RS], setting: partial, statement: 'Unbounded: $\mathrm{LR} = \Omega(\sqrt{\mathrm{R}}) = \Omega(n^{1/4})$ against $\mathrm{RS} = \Theta(1)$.'}
+  refs: [BHT98, AaronsonShi04, Kutin05, Ambainis05smallrange, Ambainis07, BenDavidKothari18, GLSS19]
+  see_also: [ElementDistinctness, KDistinctness, Simon, RS, chibar, LR]
 
 - id: ElementDistinctness
   name: Element distinctness

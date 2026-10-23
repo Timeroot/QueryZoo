@@ -303,10 +303,6 @@ relations:
   to: deg
   setting: partial
   status: fails
-  upper:
-    - stmt: 'No bound: $\widetilde{\deg}(f)$ is not bounded by any function of $\deg(f)$ for partial $f$.'
-      form: {kind: none}
-      conf: high
   lower:
     - stmt: '\deg(\mathrm{SEARCH}^{\le 1}_n) = 1 \text{ while } \widetilde{\deg}(\mathrm{SEARCH}^{\le 1}_n) = \Theta(\sqrt n)'
       form: {kind: unbounded}

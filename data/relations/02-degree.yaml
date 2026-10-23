@@ -212,10 +212,151 @@ relations:
   see_also: [R, adeg, pointer]
 
 # ------------------------------------------------------- rdeg
+#
+# Fortnow's question -- is every measure polynomially bounded by rational
+# degree? -- was answered in the affirmative in 2026 [KKWY26], thirty-two
+# years after Nisan and Szegedy wrote it down. The three records below are
+# the whole of the new column: everything else in it is closure through
+# D <= 16 rdeg^4. Before them the column read "a, ?" in every cell.
+- from: D
+  to: rdeg
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{D}(f) \le 4\,\deg_{\pm}(f)^2\,\mathrm{rdeg}(f)^2 \le 16\,\mathrm{rdeg}(f)^4'
+      form: {exp: 4, kind: exact}
+      refs: [KKWY26]
+      note: |
+        Theorem 4, and the resolution of Fortnow's question. The proof turns on
+        *minimum* block sensitivity $\min_x \mathrm{bs}_x(f)$ -- a quantity nobody
+        had found a use for -- via $\min_x \mathrm{bs}_x(f)\le 2\deg_{\pm}(f)^2$
+        (Lemma 2). That bounds the size of a hitting set for one of the two
+        nondeterministic representations $p$ of $f$ and $q$ of $\bar f$ whose
+        degrees define $\mathrm{rdeg} = \max(\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f))$;
+        querying that hitting set kills a maximal monomial, so after
+        $\mathrm{rdeg}$ rounds one of the two representations is exhausted and the
+        function is constant. The second inequality is $\deg_{\pm}\le 2\,\mathrm{rdeg}$.
+      conf: high
+    - stmt: '\mathrm{D}(f) = O\big(\mathrm{rdeg}(f)\deg_{\pm}(f)^2\log n\big) = O(\mathrm{rdeg}(f)^3\log n)'
+      form: {exp: 4, kind: const}
+      refs: [KKWY26]
+      note: |
+        Theorem 8, which is sharper in $\mathrm{rdeg}$ but pays a $\log n$ in the
+        *arity*, not in $\mathrm{rdeg}$ -- and that log cannot be absorbed, because
+        $\mathrm{rdeg}(f) = \Omega(\log n)$ (Theorem 9) is tight, on
+        [[ADDR]]. So as a pure exponent it still reads $4$, and the clean
+        $16\,\mathrm{rdeg}^4$ above is what the closure uses. Theorem 8 does give
+        $\mathrm{D} = \widetilde O(\mathrm{rdeg}^3)$ for every family of arity
+        $2^{\mathrm{polylog}(\mathrm{rdeg})}$ or less. The authors note it will be
+        hard to do much better: $\mathrm{D} = O(\deg^3)$ [Midrijanis04] is still the
+        best bound by ordinary degree.
+      conf: high
+  lower:
+    - stmt: '\mathrm{D}(f_n) = \Omega(\mathrm{rdeg}(f_n)^2)'
+      form: {exp: 2, kind: const}
+      witness: ANDEH
+      refs: [IJKKKSWW23]
+      note: 'On $\wedge_n\circ\overline{\mathrm{EH}}_n$: $\mathrm{rdeg}=\Theta(n)$ and $\mathrm{D}=\Theta(n^2)$, the full input length.'
+      conf: high
+  notes: |
+    The surviving question is the exponent, not the relation: somewhere in
+    $[2,4]$, exactly as for $\mathrm{D}$ vs $\deg$ -- see [[open-rdeg]].
+  see_also: [D, rdeg, ndeg, sdeg, ANDEH, open-rdeg]
+
+- from: deg
+  to: rdeg
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\deg(f) = O\big(\mathrm{rdeg}(f)\deg_{\pm}(f)^2\log \mathrm{rdeg}(f)\big) = \widetilde O(\mathrm{rdeg}(f)^3)'
+      form: {exp: 3, kind: tilde}
+      refs: [KKWY26]
+      note: |
+        Corollary 4, and the headline statement of [KKWY26]. Here the $\log n$ of
+        Theorem 8 *does* become a $\log\mathrm{rdeg}$: apply Theorem 8 not to $f$
+        but to $f$ restricted to a maximal monomial of its polynomial, which has
+        only $\deg(f)$ variables and no larger $\mathrm{rdeg}$ or $\deg_{\pm}$.
+        The same restriction trick works for $\mathrm{s}$ and fails for
+        $\mathrm{D}$, which is why $\mathrm{D}$ vs $\mathrm{rdeg}$ is stuck at $4$
+        -- it would need $\mathrm{D}$ to condense onto $\mathrm{poly}(\mathrm{D})$
+        variables.
+      conf: high
+  lower:
+    - stmt: '\deg(f_n) = \Omega(\mathrm{rdeg}(f_n)^2)'
+      form: {exp: 2, kind: const}
+      witness: ANDEH
+      refs: [IJKKKSWW23]
+      note: '$\mathrm{rdeg}=\Theta(n)$ against $\deg=\Theta(n^2)$.'
+      conf: high
+  notes: |
+    Fortnow's question in its original form, and the cell the 2026 proof was
+    aimed at: is $\mathrm{rdeg}(f) = \deg(f)^{\Omega(1)}$? Yes, with
+    $\mathrm{rdeg} = \widetilde\Omega(\deg^{1/3})$. The exponent is now known to
+    lie in $[2,3]$.
+  see_also: [deg, rdeg, sdeg, ANDEH, open-rdeg]
+
+- from: s
+  to: rdeg
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{s}(f) = O\big(\mathrm{rdeg}(f)\deg_{\pm}(f)^2\log \mathrm{rdeg}(f)\big) = \widetilde O(\mathrm{rdeg}(f)^3)'
+      form: {exp: 3, kind: tilde}
+      refs: [KKWY26]
+      note: 'Corollary 4 again, restricting to a maximum-sensitivity block instead of a maximal monomial. Sharper than the $\mathrm{s}\le\mathrm{D}\le16\,\mathrm{rdeg}^4$ that closure would give.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{s}(f_n) = \Omega(\mathrm{rdeg}(f_n)^2)'
+      form: {exp: 2, kind: const}
+      witness: ANDEH
+      refs: [IJKKKSWW23]
+      conf: high
+  see_also: [s, rdeg, ANDEH, open-rdeg]
+
+- from: sdeg
+  to: rdeg
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\deg_{\pm}(f) \le 2\,\mathrm{rdeg}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [KKWY26, IJKKKSWW23]
+      note: |
+        Fact 2. If $p/q = f$ on the domain then $(q-2p)q$ is a sign representation:
+        it equals $-q^2 < 0$ where $f = 1$ and $q^2 > 0$ where $f = 0$. The factor
+        $2$ is not removable -- $\deg_{\pm}(\oplus_n) = n$ while
+        $\mathrm{rdeg}(\oplus_n) = n/2$. Only the identity $p/q = f$ *on the domain*
+        is used, so the bound holds on promises as well, and is recorded here for
+        the partial setting so that the total one inherits it.
+      conf: high
+  lower:
+    - stmt: '\deg_{\pm}(\oplus_n) = n = 2\,\mathrm{rdeg}(\oplus_n)'
+      form: {exp: 1, kind: const}
+      witness: PARITY
+      refs: [KKWY26]
+      note: 'The factor of $2$ in the upper bound is attained, so the cell is settled at exponent $1$ and the constant is settled too.'
+      conf: high
+  notes: |
+    Nothing travels the other way: majority has a degree-$1$ sign representation,
+    while $\mathrm{D} = n$ together with
+    $\mathrm{D} = O(\mathrm{rdeg}\deg_{\pm}^2\log n)$ forces
+    $\mathrm{rdeg}(\mathrm{MAJ}_n) = \Omega(n/\log n)$ -- Remark 2 of [KKWY26],
+    where majority is what shows Theorem 8 tight up to the log.
+
+    Sign degree is the one measure the new bound treats as a *second* parameter
+    rather than a corollary: $\mathrm{D} \le 4\deg_{\pm}^2\mathrm{rdeg}^2$ and
+    $\deg = \widetilde O(\deg_{\pm}^2\mathrm{rdeg})$ are both stronger than their
+    pure-$\mathrm{rdeg}$ consequences, and $\deg_{\pm}$ is not polynomially
+    related to $\deg$ at all (majority again). See also Corollary 5 of [KKWY26],
+    which replaces $\mathrm{rdeg}$ by $\mathbb{F}_2$-degree in the same slot: two
+    measures that are each incomparable to $\deg$ multiply to bound it, the way
+    $\deg \le \mathrm{C}^0\mathrm{C}^1$ does.
+  see_also: [sdeg, rdeg, PARITY, MAJ, deg]
+
 - from: adeg
   to: rdeg
   setting: total
-  status: open
+  status: gap
   upper: []
   lower:
     - stmt: '\widetilde{\deg}(f_n) = \Omega(\mathrm{rdeg}(f_n)^{3/2})'
@@ -225,10 +366,10 @@ relations:
       note: 'Proposition 29: on $N=n^2$ input bits, $\wedge_n\circ\overline{\mathrm{EH}}_n$ has $\mathrm{rdeg}=\Theta(n)$ while $\widetilde{\deg}=\Theta(n^{3/2})$ (approximate-degree composition: $\Theta(\sqrt n)$ for the outer AND times $\Theta(n)$ for exact-half).'
       conf: medium
   notes: |
-    **No polynomial upper bound of $\widetilde{\deg}$ (or $\mathrm{D}$, $\mathrm{R}$,
-    $\mathrm{Q}$, $\deg$, ...) in terms of $\mathrm{rdeg}$ is known.** Fortnow
-    asked whether rational degree is polynomially related to the other
-    measures; the whole rdeg column of the matrix is "$a$, ?".
+    No bound is recorded here directly; the cell is filled by closure through
+    $\widetilde{\deg}\le\deg = \widetilde O(\mathrm{rdeg}^3)$ [KKWY26]. This is
+    the cell with the *best* known separation from $\mathrm{rdeg}$, so it is
+    also the one where the surviving exponent gap is narrowest from below.
     Known in the other direction: $\mathrm{rdeg}(f)\le\widetilde{\deg}(f)$ and
     $\mathrm{rdeg}(f)\le\deg(f)$; also $\mathrm{rdeg}(f) = \Theta(\widetilde{\deg}(f))$
     for symmetric $f$.

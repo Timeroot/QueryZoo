@@ -253,10 +253,10 @@ relations:
       refs: [BCWZ99, BBCMdW01]
       note: 'Zero-error quantum search gives **no** speedup at all -- one of the sharpest "bounded error is essential" facts in quantum query complexity -- and the exact-quantum value is the same $n$, so the definitional inequality is attained with nothing to spare.'
       conf: high
-    - stmt: '\exists \text{ monotone total } f:\ \mathrm{R}_0(f)/\mathrm{Q}_0(f) \text{ nearly quadratic}'
-      refs: [BCWZ99]
-      note: 'Near-optimal zero-error quantum-classical separations for monotone functions and monotone graph properties (bearing on the evasiveness conjecture).'
-      conf: medium
+  notes: |
+    The near-quadratic $\mathrm{R}_0$-vs-$\mathrm{Q}_0$ separation of [BCWZ99] is a
+    statement about that pair, not this one; it is filed under
+    $\mathrm{R}_0$ vs $\mathrm{Q}_0$.
   see_also: [Q0, QE, Q, R0, OR, BCWZ99]
 
 # ---------------------------------------------------------- noise parameter

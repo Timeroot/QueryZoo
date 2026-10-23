@@ -188,13 +188,43 @@ relations:
   to: Adv
   setting: total
   status: gap
-  lower:
-    - stmt: '\mathrm{Adv}(f) \le \sqrt{\mathrm{C}^{0}(f)\,\mathrm{C}^{1}(f)}\ \text{ while } \mathrm{Q}(f) \text{ can be much larger}'
-      refs: [SpalekSzegedy06, Zhang05]
-      note: 'The **certificate complexity barrier**. Element distinctness has a $2$-element $1$-certificate but $\mathrm{C}^{0} = n$, so the barrier gives $\mathrm{Adv}(\mathrm{ED}) = O(\sqrt n)$ — still short of $\mathrm{Q} = \Theta(n^{2/3})$, but not $O(1)$. The barrier bites hardest on *property-testing* promise problems, where **both** certificate complexities are $O(1)$: for [[Collision]] and [[Simon]] it gives $\mathrm{Adv} = O(1)$ against $\mathrm{Q} = \Theta(n^{1/3})$ and $\Theta(n)$ respectively. This is exactly why the negative-weights version was invented.'
-      witness: Collision
+  upper:
+    - stmt: '\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}(f)) \le \mathrm{D}(f) \le \mathrm{bs}(f)^3 \le \mathrm{Adv}(f)^6'
+      form: {exp: 6, kind: const}
+      refs: [Reichardt11, Nisan91, Ambainis02]
+      note: 'Only the two ends are about adversaries: $\mathrm{Adv}^{\pm}=\Theta(\mathrm{Q})$ at one, $\mathrm{bs}\le\mathrm{Adv}^2$ at the other, with the ordinary classical chain in between. So every improvement to [[open-D-vs-bs]] lands here doubled.'
       conf: high
-  see_also: [Adv, Advpm, MAdv, ElementDistinctness]
+  lower:
+    - stmt: '\mathrm{Adv}^{\pm}(f_n) = \widetilde\Omega\big(\mathrm{Adv}(f_n)^2\big)'
+      form: {exp: 2, kind: tilde}
+      refs: [ABK16, SpalekSzegedy06, Zhang05]
+      witness: cheatsheet
+      note: 'The **certificate complexity barrier**, $\mathrm{Adv} \le \sqrt{\mathrm{C}^{0}\mathrm{C}^{1}}$, applied to a function built to have cheap certificates and expensive quantum complexity: $\mathrm{Q} = \widetilde\Theta(n)$ against $\mathrm{C} = \widetilde O(\sqrt n)$, so $\mathrm{Adv} = \widetilde O(\sqrt n)$ however the true value falls out. Element distinctness is the older and weaker illustration: a $2$-element $1$-certificate but $\mathrm{C}^{0} = n$, so the barrier gives only $\mathrm{Adv} = O(\sqrt n)$ against $\mathrm{Q} = \Theta(n^{2/3})$.'
+      conf: high
+    - stmt: '\mathrm{Adv}^{\pm}(g^{\circ d}) \ge \mathrm{Adv}(g^{\circ d})^{1.098}'
+      form: {exp: 1.098, kind: exact}
+      refs: [HLS07]
+      note: 'Smaller than the barrier separation, but the only one proved *between the two bounds themselves* rather than through $\mathrm{Q}$. Take the monotone $g$ on six bits whose minterms and maxterms are the Hamming-weight-three inputs of a function of Kushilevitz''s, so $\mathrm{C}^{0}(g) = \mathrm{C}^{1}(g) = 3$; a numerically found negative-weight matrix gives $\mathrm{Adv}^{\pm}(g) \ge 2 + 3\sqrt5/5 \approx 3.341$; both bounds compose, and the barrier caps $\mathrm{Adv}(g^{\circ d})$ at $3^d$.'
+      conf: high
+  notes: |
+    Written out at [[open-Advpm-vs-Adv]]. The positive adversary is pinned
+    between $\sqrt{\mathrm{fbs}}$ and $\mathrm{fbs}$ on total functions
+    [Ambainis02, KulkarniTal16], so this cell is a proxy for $\mathrm{Q}$
+    versus $\mathrm{fbs}$.
+  see_also: [Adv, Advpm, MAdv, cheatsheet, ElementDistinctness, open-Advpm-vs-Adv]
+
+- from: Advpm
+  to: Adv
+  setting: partial
+  status: settled
+  lower:
+    - stmt: '\mathrm{Adv}(\mathrm{Col}) = O(1) \text{ while } \mathrm{Adv}^{\pm}(\mathrm{Col}) = \Theta(n^{1/3})'
+      form: {kind: unbounded}
+      refs: [SpalekSzegedy06, Zhang05, AaronsonShi04]
+      witness: Collision
+      note: 'The **property-testing barrier**: if every $0$-input is at relative Hamming distance $\ge\epsilon$ from every $1$-input then $\mathrm{Adv}(f) \le 1/\epsilon$, since both certificate complexities are $O(1)$ under such a promise. [[Collision]] has $\epsilon = 1/2$, so the positive adversary is stuck at a constant against $\mathrm{Q} = \Theta(n^{1/3})$; [[Simon]] is the same story against $\Theta(n)$. This is exactly why the negative-weights version was invented.'
+      conf: high
+  see_also: [Adv, Advpm, MAdv, Collision, Simon, open-Advpm-vs-Adv]
 
 # ------------------------------------------- Adv vs C (the barrier, as a bound)
 - from: Adv
@@ -313,6 +343,54 @@ relations:
       conf: medium
   see_also: [Advpm, MAdv]
 
+- from: gamma2
+  to: Advpm
+  setting: partial
+  status: settled
+  headline: 'The approximate $\gamma_2$ norm *is* the general adversary bound, rewritten as a factorisation norm.'
+  upper:
+    - stmt: '\gamma_2^{\alpha}(f) = O\big(\mathrm{Adv}^{\pm}(f)\big)'
+      form: {exp: 1, kind: const}
+      refs: [LMRSS11]
+      conf: high
+  lower:
+    - stmt: '\gamma_2^{\alpha}(f) = \Omega\big(\mathrm{Adv}^{\pm}(f)\big)'
+      form: {exp: 1, kind: const, dir: reverse}
+      refs: [LMRSS11]
+      conf: high
+  notes: |
+    The adversary SDP and the $\gamma_2$ minimisation are two readings of the same
+    optimisation: an adversary matrix $\Gamma$ with $\|\Gamma\|=1$ and small
+    $\|\Gamma\circ\Delta_i\|$ is exactly a small factorisation of the target through the
+    query matrices. Nothing in the translation asks $f$ to be total, so the identification
+    holds verbatim on a promise.
+  see_also: [gamma2, Advpm, Q]
+
+- from: gamma2
+  to: Q
+  setting: partial
+  status: settled
+  headline: 'Hence $\gamma_2^{\alpha} = \Theta(\mathrm{Q})$: it computes quantum query complexity, it does not merely bound it.'
+  upper:
+    - stmt: '\gamma_2^{\alpha}(f) = O\big(\mathrm{Q}_{\varepsilon}(f)\big)'
+      form: {exp: 1, kind: const}
+      refs: [LMRSS11, Reichardt11]
+      note: 'Via $\gamma_2^{\alpha} = \Theta(\mathrm{Adv}^{\pm})$ above and $\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q}_{\varepsilon})$.'
+      conf: high
+  lower:
+    - stmt: '\gamma_2^{\alpha}(f) = \Omega\big(\mathrm{Q}_{\varepsilon}(f)\big)'
+      form: {exp: 1, kind: const, dir: reverse}
+      refs: [LMRSS11, Reichardt11]
+      conf: high
+  notes: |
+    This is the record the function pages appeal to when they enter
+    $\gamma_2 = \Theta(\mathrm{Q})$ rather than computing a factorisation by hand. The
+    interesting reading is the contrast with the *positive* adversary [[Adv]]: on
+    [[Collision]] the positive bound is capped at $O(1)$ by the certificate-complexity
+    barrier while $\gamma_2 = \Theta(n^{1/3})$, so the difference between the two norms is
+    the whole of what sign changes buy.
+  see_also: [gamma2, Q, Advpm, Adv, Collision]
+
 - from: Adv
   to: lambda
   setting: partial
@@ -354,7 +432,16 @@ relations:
       refs: [Aaronson08]
       note: 'One of the few bounds that goes *from* quantum measures *to* a classical one; note the explicit $\log n$.'
       conf: high
-  see_also: [R0, Q0, Q, Aaronson08]
+  lower:
+    - stmt: '\exists \text{ monotone total } f:\ \mathrm{R}_0(f) = \widetilde\Omega\big(\mathrm{Q}_0(f)^2\big)'
+      form: {exp: 2, kind: tilde}
+      refs: [BCWZ99]
+      note: 'A nearly quadratic zero-error quantum speedup, for monotone functions and for monotone graph properties (bearing on the evasiveness conjecture). Quadratic is the most that can be hoped for on total $f$ if $\mathrm{Q}_0$ behaves like $\mathrm{Q}$; the other direction is bounded by the $\mathrm{Q}^2\mathrm{Q}_0\log n$ upper bound just above.'
+      conf: medium
+  notes: |
+    The other side of this pair is definitional: $\mathrm{Q}_0 \le 2\mathrm{R}_0$ by
+    Markov truncation, which holds for relations too -- see the definitional file.
+  see_also: [R0, Q0, Q, Aaronson08, BCWZ99]
 
 # ------------------------------------------------------- QE
 - from: D
@@ -389,7 +476,7 @@ relations:
     can exact quantum algorithms ever beat the degree lower bound by more than a
     constant? For **symmetric** $f$, $\mathrm{Q}_E(f)=\Theta(n)$ [BdW02, Thm 21],
     so no speedup at all.
-  see_also: [QE, D, deg, Ambainis13fn, open-QE-vs-deg]
+  see_also: [QE, D, deg, Ambainis13fn, open-QE-vs-deg, open-D-vs-QE]
 
 # ------------------------------------------------------- NQ / ndeg
 - from: NQ
@@ -433,7 +520,9 @@ relations:
   notes: |
     This is the reason rational degree is in the zoo at all: it is the natural
     "$\mathsf{PostBQP}$" analogue of $\widetilde{\deg}$. Its exact version
-    $\mathrm{rdeg}$ is the one Fortnow asked about.
+    $\mathrm{rdeg}$ -- equivalently $\mathrm{PostQ}_{\mathrm{E}}$, zero-error
+    post-selected quantum query complexity -- is the one Fortnow asked about,
+    answered in [KKWY26].
   see_also: [PostQ, ardeg, rdeg, sdeg]
 
 # ------------------------------------------------------- robust Q

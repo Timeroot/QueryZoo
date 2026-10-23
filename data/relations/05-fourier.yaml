@@ -184,6 +184,37 @@ relations:
   see_also: [NS, D, Stab, Tal20, kForrelation]
 
 - from: L1
+  to: D_size
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\hat L_1(f) \le \mathrm{DTsize}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [ODonnell14]
+      note: |
+        Write $f$ as a sum over the leaves of an optimal tree,
+        $f = \sum_{\ell} f(\ell)\,\mathbb{1}_{C_\ell}$, one term per leaf subcube.
+        A subcube indicator of codimension $d$ factors as
+        $\prod_{i \in S}\tfrac{1 \pm x_i}{2}$ over its $d$ fixed coordinates, so its
+        spectral norm is $1$; the triangle inequality adds them up. With
+        $|f(\ell)| = 1$ this is $\hat L_1(f) \le \#\{\text{leaves}\}$.
+      conf: high
+  lower:
+    - stmt: '\hat L_1(\mathrm{ADDR}_k) = 2^k = \tfrac12\,\mathrm{DTsize}(\mathrm{ADDR}_k)'
+      form: {exp: 1, kind: const}
+      witness: ADDR
+      note: 'Every certificate of $\mathrm{ADDR}_k$ has size $k+1$, so every leaf sits at depth $\ge k+1$ and the tree has $2^{k+1}$ of them; the spectral norm is $2^k$. A factor $2$ from the bound, and the only slack in it.'
+      conf: high
+  notes: |
+    The leaf argument proves *this*, and the familiar
+    $\hat L_1 \le 2^{\mathrm{D}}$ is its corollary via
+    $\mathrm{DTsize} \le 2^{\mathrm{D}}$ -- worth keeping the order straight,
+    because size is the quantity the proof actually counts and a wide shallow
+    tree makes the difference enormous: [[OMB]] has
+    $\hat L_1 = \Theta(n) = \Theta(\mathrm{DTsize})$ but $2^{\mathrm{D}} = 2^n$.
+  see_also: [L1, D_size, D, spar, ADDR, OMB]
+
+- from: L1
   to: D
   setting: total
   status: settled
@@ -191,15 +222,15 @@ relations:
     - stmt: '\hat L_1(f) \le 2^{\mathrm{D}(f)}'
       form: {kind: exp}
       refs: [ODonnell14]
-      note: 'Write $f$ as a sum over the $\le 2^{\mathrm{D}}$ leaves; each subcube indicator has spectral norm $1$.'
+      note: 'Write $f$ as a sum over the $\le \mathrm{DTsize}(f)$ leaves; each subcube indicator has spectral norm $1$. Since $\mathrm{DTsize} \le 2^{\mathrm{D}}$, this also gives $\hat L_1 \le 2^{\mathrm{D}}$ -- see the [[L1]] vs [[D_size]] record, which is the primitive form.'
       conf: high
   lower:
     - stmt: '\hat L_1(\mathrm{ADDR}_k) = 2^k = 2^{\mathrm{D}(\mathrm{ADDR}_k)-1}'
       form: {kind: exp}
       witness: ADDR
-      note: 'Write $\mathrm{ADDR}_k = \sum_a \mathbb{1}[\mathrm{addr} = a]\cdot y_a$. Each term has spectral norm $1$, and the $2^k$ terms have disjoint Fourier supports (they differ in which $y$-variable appears), so the norms add. With $\mathrm{D} = k+1$ this is a factor $2$ from the bound.'
+      note: 'Write $\mathrm{ADDR}_k = \sum_a \mathbb{1}[\mathrm{addr} = a]\cdot y_a$. Each term has spectral norm $1$, and the $2^k$ terms have disjoint Fourier supports (they differ in which $y$-variable appears), so the norms add. With $\mathrm{D} = k+1$ this is a factor $2$ from the bound -- the same factor $2$ as in the [[D_size]] record, since $\mathrm{DTsize}(\mathrm{ADDR}_k) = 2^{\mathrm{D}}$ exactly.'
       conf: high
-  see_also: [L1, D, PDT, spar, ADDR]
+  see_also: [L1, D, D_size, PDT, spar, ADDR]
 
 - from: PDT
   to: spar
@@ -230,10 +261,6 @@ relations:
   to: spar
   setting: total
   status: fails
-  upper:
-    - stmt: '\deg(f) \text{ is known to be unbounded in terms of } \mathrm{spar}(f).'
-      form: {kind: none}
-      conf: high
   lower:
     - stmt: '\deg(\oplus_n) = n,\quad \mathrm{spar}(\oplus_n) = 1'
       form: {kind: unbounded}
@@ -245,6 +272,59 @@ relations:
         an easy mistake, since for most familiar functions the two happen to agree.
       conf: high
   see_also: [deg, deg2, spar, Fdim]
+
+- from: deg2
+  to: PDT
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\deg_2(f) \le \mathrm{D}^{\oplus}(f) \le \mathrm{D}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BdW02]
+      note: |
+        Read a parity decision tree as an $\mathbb{F}_2$-polynomial: each leaf
+        contributes the product of its $d$ query answers, each of which is an
+        affine form $\bigoplus_{i\in S}x_i \oplus c$ of $\mathbb{F}_2$-degree one.
+        Ordinary queries are the singleton case, so the same argument bounds
+        $\deg_2$ by $\mathrm{D}$.
+      conf: high
+  lower:
+    - stmt: '\deg_2(\mathrm{AND}_n) = \mathrm{D}^{\oplus}(\mathrm{AND}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: AND
+      note: 'The $\mathbb{F}_2$-polynomial of $\mathrm{AND}_n$ is $x_1\cdots x_n$, and parity queries do not help on it.'
+      conf: high
+  notes: |
+    Recorded for the same reason as $\mathrm{C}^0 \le \mathrm{C}$: everything else
+    on file for $\deg_2$ is either a separation or a $\log$-shaped bound against
+    $\mathrm{spar}$, so without this line the $\deg_2$ row carries no exponent at
+    all. Which power of $\mathrm{D}^{\oplus}$ or $\mathrm{D}$ is *needed* is a
+    different and harder question -- see the measure's own todo -- but the trivial
+    direction is not in doubt.
+  see_also: [deg2, PDT, D, deg]
+
+- from: deg2
+  to: deg
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\deg_2(f) \le \deg(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BdW02]
+      note: |
+        The real multilinear representation of a Boolean function has integer
+        coefficients; reducing them mod $2$ gives *the* $\mathbb{F}_2$-multilinear
+        representation, which can only lose monomials.
+      conf: high
+  lower:
+    - stmt: '\deg_2(\mathrm{AND}_n) = \deg(\mathrm{AND}_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: AND
+      conf: high
+  notes: |
+    Tight above and unbounded below: $\deg_2(\oplus_n) = 1$ while $\deg(\oplus_n) = n$,
+    which is why the $\deg$-vs-$\deg_2$ cell is empty in the other direction.
+  see_also: [deg2, deg, PDT, spar]
 
 - from: deg2
   to: spar
@@ -289,3 +369,100 @@ relations:
         which is why the value string for [[PARITY]] has to split on $p$.
       conf: high
   see_also: [degp, spar, deg, PARITY]
+
+- from: osss
+  to: R0
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{osss}(f) \;=\; \frac{\mathrm{Var}(f)}{\mathrm{MaxInf}(f)} \;\le\; \bar{\mathrm{R}}_0(f) \;=\; \mathrm{R}_0(f)'
+      form: {exp: 1, kind: const}
+      refs: [OSSS05]
+      note: |
+        This is the **OSSS inequality** and the reason [[osss]] is in the zoo at all. For any
+        decision tree $T$ computing $f$, writing $\delta_i(T) = \Pr_x[T\text{ reads }x_i]$,
+        $$\mathrm{Var}(f)\ \le\ \sum_i \delta_i(T)\,\mathrm{Inf}_i(f)\ \le\ \mathrm{MaxInf}(f)\sum_i\delta_i(T)
+          = \mathrm{MaxInf}(f)\cdot\mathbb{E}_x[\#\text{queries of }T\text{ on }x].$$
+        So $\mathrm{osss}(f)$ is a lower bound on the *expected* number of queries, not merely
+        on the depth. A zero-error randomized algorithm is a distribution over such trees, and
+        averaging the inequality over that distribution leaves it intact, so the bound is
+        against $\bar{\mathrm{R}}_0 = \mathrm{R}_0$ and hence against $\mathrm{D}$ by closure.
+        The averaging step is not in [OSSS05], which states the deterministic case.
+      conf: high
+  lower:
+    - stmt: '\mathrm{osss}(\mathrm{SCORPION}_m) = \Theta(m) = \Theta(\mathrm{R}_0)'
+      form: {exp: 1, kind: const}
+      witness: SCORPION
+      note: |
+        $\mathrm{Var} = \Theta(m^3 2^{-3m})$ against $\mathrm{MaxInf} = 12(m-2)^2 2^{6-3m}$
+        gives $\mathrm{osss} = \Theta(m)$, and $\mathrm{R}_0(\mathrm{SCORPION}) = \Theta(m)$:
+        the bound is attained, constants aside. [[TRIBES]] attains it to within the
+        $\log$ that KKL forces on any function.
+      conf: high
+  see_also: [osss, MaxInf, Var, R0, D, normalization]
+
+- from: nsr
+  to: s
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{nsr}(f) \;\le\; 4\,\mathrm{s}(f)'
+      form: {exp: 1, kind: const}
+      putative: true
+      refs: [ODonnell14]
+      note: |
+        Two textbook steps. First $\mathrm{NS}_\delta(f)\le\delta\,\mathrm{I}(f)$ (a union
+        bound over which coordinate is pivotal), so the threshold
+        $\mathrm{NS}_{\delta}\ge\mathrm{Var}/4$ defining $\delta^{*}$ cannot be reached before
+        $\delta = \mathrm{Var}/(4\mathrm{I})$, giving
+        $\mathrm{nsr}\le 4\,\mathrm{I}(f)/\mathrm{Var}(f)$. Second, count sensitive edges: with
+        $p = \Pr[f=1]\le\tfrac12$ (else complement, which changes neither side),
+        $\mathrm{I}(f) = 2|\partial S|/2^n \le 2\,\mathrm{s}(f)\,p$ because every $x\in S=f^{-1}(1)$
+        has at most $\mathrm{s}(f)$ sensitive edges, while $\mathrm{Var}(f) = 4p(1-p)\ge 2p$.
+        Hence $\mathrm{I}\le\mathrm{s}\cdot\mathrm{Var}$ and the $\mathrm{Var}$ cancels.
+        By closure this also gives $\mathrm{nsr} = O(\mathrm{D})$; the constant $4$ is an
+        artefact of the $\mathrm{Var}/4$ threshold convention in [[nsr]].
+      conf: high
+  lower:
+    - stmt: '\mathrm{nsr}(\mathrm{SCORPION}_m) = \Theta(m) = \Theta(\mathrm{s})'
+      form: {exp: 1, kind: const}
+      witness: SCORPION
+      note: |
+        $\mathrm{NS}_\delta = (2+o(1))\,P\,(1-(1-\delta)^{3m-6})$ with
+        $P = m(m-1)(m-2)2^{6-3m}$ and $\mathrm{Var} = (4+o(1))P$, so the threshold
+        $\mathrm{Var}/4$ is crossed at $\delta^{*} = \Theta(1/m)$, against
+        $\mathrm{s} = 3m-6$. A sensitive-everywhere function is as noise-robust as its
+        sensitivity allows.
+      conf: high
+  see_also: [nsr, NS, Var, Inf, s, D, normalization]
+
+- from: osss
+  to: spar
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\mathrm{osss}(f) \;\le\; \mathrm{spar}(f)'
+      form: {exp: 1, kind: const}
+      putative: true
+      note: |
+        Pigeonhole on the spectrum. The non-empty Fourier coefficients of $f$ number at most
+        $\mathrm{spar}(f)$ and carry total weight $\mathrm{Var}(f)$, so some $S\ne\emptyset$ has
+        $\hat f(S)^2 \ge \mathrm{Var}(f)/\mathrm{spar}(f)$; any $i\in S$ then has
+        $\mathrm{Inf}_i(f) = \sum_{T\ni i}\hat f(T)^2 \ge \hat f(S)^2$, giving
+        $\mathrm{MaxInf}\ge\mathrm{Var}/\mathrm{spar}$. Very lossy: the best separation on record
+        is no separation at all, since every sparse function in the zoo also has
+        $\mathrm{osss} = O(1)$. A much stronger bound should follow from
+        $\mathrm{osss}\le\mathrm{D}$ together with the $\mathrm{D}$ versus $\mathrm{spar}$
+        literature, which the zoo does not yet record as a relation.
+      conf: high
+  lower:
+    - stmt: '\mathrm{osss}(\oplus_n) = 1 = \mathrm{spar}(\oplus_n)'
+      form: {kind: const}
+      witness: PARITY
+      note: |
+        A single character has sparsity $1$ and $\mathrm{osss} = 1$: the two agree, but neither
+        grows, so this witnesses no exponent. No function in the zoo has $\mathrm{osss}$ growing
+        while $\mathrm{spar}$ stays bounded -- indeed $\mathrm{spar}(f) = O(1)$ forces $f$ to be a
+        constant-size combination of characters, and $\mathrm{osss}$ is then bounded too.
+      conf: medium
+  see_also: [osss, spar, MaxInf, Var, D]

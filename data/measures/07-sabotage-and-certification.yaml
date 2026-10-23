@@ -1,0 +1,290 @@
+# Quantum sabotage variants and the new certification measures of [KLLPV26].
+# The certification transform itself, including collapses onto existing
+# measures, is described in the certification concept page.
+measures:
+
+- id: R1RP
+  name: One-sided randomized queries with certain rejection
+  symbol: '\mathrm{R}_{\mathrm{RP}}(f)'
+  aliases: ['R_1 in Ambainis–Iraids–Kokainis 2026', 'RP query complexity']
+  category: randomized
+  order: 26
+  short: 'Negative inputs always reject; positive inputs accept with probability at least 2/3.'
+  definition: |
+    The minimum worst-case query count of a randomized algorithm that always
+    rejects $0$-inputs and accepts each $1$-input with probability at least
+    $2/3$. This is $\mathrm{R}_1$ in [AIK26, Section 2.1].
+    The zoo's existing [[R1]] fixes the other error convention (certain
+    acceptance on positive inputs); keeping separate ids prevents attaching
+    the one-sided algorithm to the wrong function.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{R}\le\mathrm{R}_{\mathrm{RP}}=O(\mathrm{R}_0)$.'
+    - '[[AIKDNF]] has $\mathrm{C}=\Theta(n^2)$ and $\mathrm{R}_{\mathrm{RP}}=\Theta(n)$ [AIK26, Theorem 2.2].'
+  refs: [AIK26]
+  related: [R, R1, R0, C, C1]
+  see_also: [AIKDNF]
+  confidence: high
+
+- id: QSweak
+  name: Weak quantum sabotage complexity
+  symbol: '\mathrm{QS}_{\mathrm{weak}}(f)'
+  aliases: ['QS', 'quantum sabotage complexity', 'weak decision sabotage']
+  category: quantum
+  order: 45
+  short: 'Quantum queries to distinguish stars from daggers in a sabotaged input, without access to its completions.'
+  definition: |
+    For $f:D\subseteq\{0,1\}^n\to\{0,1\}$, choose $x\in f^{-1}(0)$ and
+    $y\in f^{-1}(1)$. The sabotaged string $z$ agrees with $x_i=y_i$ at common
+    coordinates and replaces every differing coordinate by the same symbol
+    $b\in\{\ast,\dagger\}$. A query returns $z_i$ only.
+    $\mathrm{QS}_{\mathrm{weak}}(f)$ is the bounded-error quantum query cost
+    of determining $b$, with error at most $1/3$.
+    The completions $x,y$ are hidden; this distinguishes it from [[QSstr]].
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - 'All four sabotage variants are $O(\sqrt n)$ by Grover search [CMP24].'
+    - '$\mathrm{QC}=O(\mathrm{QS}_{\mathrm{weak}})$, even for partial functions [KLLPV26, proof of Theorem 4].'
+    - 'On [[ADDR]], all four variants are $\Theta(n)$, while $\mathrm{fbs}=n+1$; the square-root fractional-block-sensitivity floor is not always tight [CMP24].'
+    - 'Its certification transform equals $\Theta(\mathrm{QC})$, as do those of the other three variants [KLLPV26, Theorem 4].'
+  refs: [CMP24, KLLPV26]
+  related: [QSstr, QSweakind, QSstrind, RS, QC, Q]
+  see_also: [quantum-sabotage, certification, ADDR, open-QS-vs-Q]
+  confidence: high
+
+- id: QSstr
+  name: Strong quantum sabotage complexity
+  symbol: '\mathrm{QS}_{\mathrm{str}}(f)'
+  aliases: ['strong decision sabotage']
+  category: quantum
+  order: 46
+  short: 'Quantum sabotage decision with query access to both opposite-output completions.'
+  definition: |
+    Use the same sabotaged input and decision task as [[QSweak]], but a query
+    to coordinate $i$ returns the triple $(x_i,y_i,z_i)$, where $f(x)=0$,
+    $f(y)=1$, and $z_i$ is their common bit or the sabotage symbol.
+    The algorithm must distinguish $\ast$ from $\dagger$ with error at most $1/3$.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{QS}_{\mathrm{str}}=O(\mathrm{Q})$ for partial as well as total functions [CMP24, Lemma 1.1].'
+    - '$\mathrm{QS}_{\mathrm{str}}=\Omega(\sqrt{\mathrm{fbs}})$ [CMP24, Theorem 1.4]; [KLLPV26] verify that the proof also covers partial functions.'
+    - 'Its certification transform is $\Theta(\mathrm{QC})$ [KLLPV26, Theorem 4].'
+  refs: [CMP24, KLLPV26]
+  related: [QSweak, QSstrind, QC, Q, fbs]
+  see_also: [quantum-sabotage, certification, ADDR, open-QS-vs-Q]
+  confidence: high
+
+- id: QSweakind
+  name: Weak quantum sabotage index complexity
+  symbol: '\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(f)'
+  category: quantum
+  order: 47
+  short: 'Find a sabotaged coordinate with quantum access to the sabotaged string alone.'
+  definition: |
+    In the weak oracle model of [[QSweak]], output a coordinate $i$ with
+    $z_i\in\{\ast,\dagger\}$, with probability at least $2/3$.
+    Reading that coordinate once more also reveals the sabotage symbol.
+    The classical versions of the decision and index tasks are equivalent
+    up to constants; equivalence remains open for quantum algorithms [CMP24].
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}=O(\mathrm{RS})$ and $O(\sqrt n)$ [CMP24].'
+    - 'Its certification transform is $\Theta(\mathrm{QC})$ [KLLPV26, Theorem 4].'
+  refs: [CMP24, KLLPV26]
+  related: [QSweak, QSstrind, RS, QC, Q]
+  see_also: [quantum-sabotage, certification, ADDR, open-QS-vs-Q]
+  confidence: high
+
+- id: QSstrind
+  name: Strong quantum sabotage index complexity
+  symbol: '\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f)'
+  category: quantum
+  order: 48
+  short: 'Find a sabotaged coordinate with quantum access to both completions and the sabotaged string.'
+  definition: |
+    In the strong oracle model of [[QSstr]], output an index $i$ with
+    $x_i\ne y_i$ (equivalently $z_i\in\{\ast,\dagger\}$), with probability
+    at least $2/3$.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}=O(\mathrm{Q}^{3/2})$, even for partial functions [CMP24, Theorem 1.2]. The proof actually uses quantum distinguishing complexity in place of $\mathrm{Q}$.'
+    - 'Whether the exponent can be reduced to $1$ is open [CMP24].'
+    - 'Its certification transform is $\Theta(\mathrm{QC})$ [KLLPV26, Theorem 4].'
+  refs: [CMP24, KLLPV26]
+  related: [QSstr, QSweakind, QSweak, Q, QC]
+  see_also: [quantum-sabotage, certification, ADDR, open-QS-vs-Q]
+  confidence: high
+
+- id: QEcert
+  name: Exact quantum certification complexity
+  symbol: '\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)'
+  category: quantum
+  order: 49
+  short: 'Worst-case exact quantum query cost of recognizing a known input against all opposite-output inputs.'
+  definition: |
+    For each publicly known $z\in D$, let $f_z^{\mathrm{cert}}$ have domain
+    $\{z\}\cup f^{-1}(1-f(z))$, accepting $z$ and rejecting the other inputs.
+    Then $\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)=
+    \max_z\mathrm{Q}_{\mathrm{E}}(f_z^{\mathrm{cert}})$.
+    It uses the [[certification]] transform, rather than the computation of $f$ itself.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  equivalent:
+    - {measure: Q0cert, setting: partial, form: {exp: 1, kind: theta}, statement: '$\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}=\Theta(\mathrm{Q}_0^{\mathrm{cert}})$ by exact amplitude amplification with a known reference input.', refs: [KLLPV26]}
+  facts:
+    - '$\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}=O(\mathrm{Q}_0)$ [KLLPV26, Theorem 5].'
+    - '$\mathrm{degcert}\le 2\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}$ [KLLPV26, Section 6.1].'
+    - 'On [[ANDNotExactOne]], this gives a lower bound of $\widetilde\Omega(m^{3/2})$ on $\mathrm{Q}_0$, while $\mathrm{Q}=O(m)$ and $\mathrm{rdeg}=m$.'
+  refs: [KLLPV26]
+  related: [Q0cert, Q0, QE, QC, degcert]
+  see_also: [certification, ANDNotExactOne]
+  confidence: high
+
+- id: Q0cert
+  name: Zero-error quantum certification complexity
+  symbol: '\mathrm{Q}_{0}^{\mathrm{cert}}(f)'
+  category: quantum
+  order: 50
+  short: 'Zero-error quantum cost of the certification task; equivalent to its exact quantum cost.'
+  definition: |
+    $\mathrm{Q}_0^{\mathrm{cert}}(f)=\max_{z\in D}\mathrm{Q}_0(f_z^{\mathrm{cert}})$,
+    with the known-input promise defined in [[certification]].
+    The algorithm never answers incorrectly and may report ignorance with
+    probability at most $1/2$.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{Q}_{0}^{\mathrm{cert}}\le\mathrm{Q}_0$ and $\mathrm{Q}_{0}^{\mathrm{cert}}=\Theta(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}})$ [KLLPV26, Theorem 5].'
+  refs: [KLLPV26]
+  related: [QEcert, Q0, QC, degcert]
+  see_also: [certification, ANDNotExactOne]
+  confidence: high
+
+- id: bdeg
+  name: Exact bounded polynomial degree
+  symbol: '\overline{\deg}(f)'
+  aliases: ['bounded-polynomial degree', 'Delta_0,0,1']
+  category: degree
+  order: 70
+  short: 'Exact degree with the polynomial also constrained to [0,1] on the entire Boolean cube.'
+  definition: |
+    The minimum degree of a multilinear real polynomial $p$ such that
+    $p(x)=f(x)$ on $D$ and $0\le p(x)\le1$ for **every** $x\in\{0,1\}^n$.
+    This is $\Delta_{0,0,1}$ of [KLLPV26, Definition 7]. It agrees with
+    [[deg]] on total functions, but the zoo's [[deg]] imposes no bound off a
+    partial function's promise. This separate id preserves that distinction.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  equivalent:
+    - {measure: deg, setting: total, form: {exp: 1, kind: exact}, statement: '$\overline{\deg}(f)=\deg(f)$ for total $f$.', refs: [KLLPV26]}
+  facts:
+    - '$\overline{\deg}\le2\mathrm{Q}_{\mathrm{E}}$ by the acceptance-probability polynomial.'
+    - 'Its certification transform is [[degcert]].'
+  refs: [KLLPV26, BBCMdW01]
+  related: [deg, degcert, osdeg, QE, adeg]
+  see_also: [certification]
+  confidence: high
+
+- id: lambdacert
+  name: Spectral sensitivity certification
+  symbol: '\lambda^{\mathrm{cert}}(f)'
+  category: combinatorial
+  order: 75
+  short: 'Spectral sensitivity of the hardest known-input certification promise; exactly the square root of sensitivity.'
+  definition: |
+    $\lambda^{\mathrm{cert}}(f)=\max_{z\in D}\lambda(f_z^{\mathrm{cert}})$.
+    The sensitivity graph of this promise is a star centred on $z$ with
+    $\mathrm{s}(f,z)$ leaves, so $\lambda^{\mathrm{cert}}(f)=\sqrt{\mathrm{s}(f)}$
+    exactly [KLLPV26, Theorem 42]. On a partial function it can be zero.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  equivalent:
+    - {measure: s, setting: partial, form: {exp: 0.5, kind: exact}, statement: '$\lambda^{\mathrm{cert}}(f)=\sqrt{\mathrm{s}(f)}$.', refs: [KLLPV26]}
+  facts:
+    - '$\lambda^{\mathrm{cert}}\le\lambda$ by restriction monotonicity.'
+  refs: [KLLPV26]
+  related: [s, lambda, QC, degcert]
+  see_also: [certification, sensitivity-conjecture]
+  confidence: high
+
+- id: degcert
+  name: Bounded degree certification complexity
+  symbol: '\overline{\deg}^{\mathrm{cert}}(f)'
+  aliases: ['degree certification', 'degcert']
+  category: degree
+  order: 71
+  short: 'Worst exact bounded degree of a known-input certification promise; a new lower bound on zero-error quantum queries.'
+  definition: |
+    $\overline{\deg}^{\mathrm{cert}}(f)=\max_{z\in D}
+    \overline{\deg}(f_z^{\mathrm{cert}})$, using [[bdeg]] and the
+    [[certification]] promise. Even for a total $f$, this promise is partial,
+    so boundedness on the **whole cube** is part of the definition.
+    This is the $\deg^{\mathrm{cert}}$ of [KLLPV26].
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\mathrm{rdeg}\le\overline{\deg}^{\mathrm{cert}}\le\mathrm{C}$ [KLLPV26, Remark 45 and Lemma 50].'
+    - '$\overline{\deg}^{\mathrm{cert}}=O(\mathrm{Q}_0^{\mathrm{cert}})$ and $O(\mathrm{osdeg})$ [KLLPV26, Theorems 5 and 9, Lemma 48].'
+    - '$\mathrm{bs}=O((\overline{\deg}^{\mathrm{cert}})^2)$ for partial functions, and $\mathrm{C}=O((\overline{\deg}^{\mathrm{cert}})^3)$ for total functions [KLLPV26, Theorem 12].'
+    - 'The certification transform of [[osdeg]] equals $\Theta(\overline{\deg}^{\mathrm{cert}})$ [KLLPV26, Theorem 9].'
+  refs: [KLLPV26]
+  related: [bdeg, osdeg, QEcert, Q0cert, rdeg, C, bs]
+  see_also: [certification, ANDNotExactOne, ANDOR]
+  confidence: high
+
+- id: osdeg0
+  name: Bounded polynomial degree with error on 0-inputs
+  symbol: '\overline{\mathrm{osdeg}}^{\,0}_{\varepsilon}(f)'
+  category: degree
+  order: 72
+  short: 'A polynomial bounded in [0,1], exact on 1-inputs and approximate on 0-inputs.'
+  definition: |
+    Minimize $\deg p$ subject to $p=1$ on $f^{-1}(1)$,
+    $0\le p\le\varepsilon$ on $f^{-1}(0)$, and $0\le p\le1$
+    on the whole Boolean cube. This is $\Delta_{\varepsilon,0,1}$ of
+    [KLLPV26, Definition 7]. The superscript names the side on which error
+    is allowed. Default $\varepsilon=1/3$.
+  params: [{name: eps, symbol: '\varepsilon', default: '1/3', range: '(0,1)'}]
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  refs: [KLLPV26]
+  related: [osdeg1, osdeg, bdeg, adeg, Q0]
+  see_also: [certification]
+  confidence: high
+
+- id: osdeg1
+  name: Bounded polynomial degree with error on 1-inputs
+  symbol: '\overline{\mathrm{osdeg}}^{\,1}_{\varepsilon}(f)'
+  category: degree
+  order: 73
+  short: 'A polynomial bounded in [0,1], exact on 0-inputs and approximate on 1-inputs.'
+  definition: |
+    Minimize $\deg p$ subject to $p=0$ on $f^{-1}(0)$,
+    $1-\varepsilon\le p\le1$ on $f^{-1}(1)$, and $0\le p\le1$
+    on the whole Boolean cube. This is $\Delta_{0,\varepsilon,1}$ of
+    [KLLPV26, Definition 7]. Default $\varepsilon=1/3$.
+  params: [{name: eps, symbol: '\varepsilon', default: '1/3', range: '(0,1)'}]
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  refs: [KLLPV26]
+  related: [osdeg0, osdeg, bdeg, adeg, Q0]
+  see_also: [certification]
+  confidence: high
+
+- id: osdeg
+  name: One-sided-error bounded polynomial degree
+  symbol: '\overline{\mathrm{osdeg}}_{\varepsilon}(f)'
+  aliases: ['osdeg', 'zero-error polynomial lower bound']
+  category: degree
+  order: 74
+  short: 'The maximum of the two bounded one-sided-error degrees; lower-bounds zero-error quantum queries.'
+  definition: |
+    $\overline{\mathrm{osdeg}}_\varepsilon(f)=
+    \max\{\overline{\mathrm{osdeg}}^0_\varepsilon(f),
+    \overline{\mathrm{osdeg}}^1_\varepsilon(f)\}$, using [[osdeg0]] and [[osdeg1]].
+    Both polynomials are bounded in $[0,1]$ on the whole Boolean cube, with
+    one side **exact**. This differs from [[odeg]], where the polynomial may
+    overshoot on positive inputs. Default $\varepsilon=1/3$.
+  params: [{name: eps, symbol: '\varepsilon', default: '1/3', range: '(0,1)'}]
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
+  facts:
+    - '$\widetilde{\deg}=O(\overline{\mathrm{osdeg}})$ and $\overline{\mathrm{osdeg}}\le\overline{\deg}$ [KLLPV26, Fact 46].'
+    - '$\mathrm{rdeg}\le\overline{\mathrm{osdeg}}$ and $\overline{\mathrm{osdeg}}=O(\mathrm{Q}_0)$ [KLLPV26, Corollary 51 and Theorem 8].'
+    - 'Its certification transform collapses to [[degcert]], while the transform of approximate degree collapses to [[QC]].'
+  refs: [KLLPV26]
+  related: [osdeg0, osdeg1, bdeg, degcert, adeg, rdeg, Q0, odeg]
+  see_also: [certification, ANDNotExactOne]
+  confidence: high

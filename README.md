@@ -1,5 +1,7 @@
 # The Query Complexity Zoo
 
+[Browse the zoo](https://ohaithe.re/QueryZoo/) · [GitHub repository](https://github.com/Timeroot/QueryZoo)
+
 A browsable, editable catalogue of query-complexity measures and everything known about how
 they relate — upper bounds with their log factors, matching separations with named witnesses,
 and the total / partial / relational distinctions kept strictly apart.
@@ -7,6 +9,7 @@ and the total / partial / relational distinctions kept strictly apart.
 All content is YAML under `data/`. `build.py` turns it into a static site.
 
 ```bash
+python3 -m pip install -r requirements.txt
 python3 build.py --strict        # validate every cross-reference, then build into ./site
 python3 build.py --serve 8000    # build and serve at http://localhost:8000/
 python3 -m http.server -d site 8000
@@ -16,25 +19,38 @@ Requirements: Python 3.8+, `PyYAML`, `Jinja2`, `mistune`. MathJax is loaded from
 if you need the site fully offline, drop `tex-chtml.js` into `static/` and point
 `templates/base.html` at it.
 
+## GitHub Pages
+
+The source lives on `master`; the built site is published on `gh-pages`. The generated
+`site/` directory stays out of the source branch. To update the published site after changing
+the catalogue, run `bash tools/publish-pages.sh`. This builds and checks the site, then commits
+and pushes the generated files to `gh-pages`.
+
+In **Settings → Pages**, select **Deploy from a branch**, then **gh-pages** and **/ (root)**.
+The project inherits the custom domain from Timeroot's user site and is served at
+**https://ohaithe.re/QueryZoo/**; leave this repository's custom-domain field empty.
+All internal links and JSON fetches are relative, so the same build also works in a local
+preview.
+
 ## What is in here
 
 | | count |
 |---|---|
-| measures | 75 |
-| ordered pairs with an entry | 261 |
-| relation records (bounds and separations) | 195 |
-| witness functions | 57 |
-| concept pages | 11 |
-| open problems | 14 |
-| references | 216 |
-| measure values recorded on function pages | 855 |
+| measures | 94 |
+| ordered pairs with an entry | 481 |
+| relation records (bounds and separations) | 557 |
+| witness functions | 75 |
+| concept pages | 15 |
+| open problems | 24 |
+| references | 248 |
+| measure values recorded on function pages | 3914 |
 
 The site generates one page per measure, function and concept, plus the exponent matrix, the
 relations index, the open-problem list, the bibliography, and this guide's on-site twin
 (`editing.html`).
 
-**Pairs are not pages.** There are 75×75 = 5625 ordered pairs of measures and the build has
-something to say about roughly 2460 of them, mostly by derivation. Writing that many files
+**Pairs are not pages.** There are 94×94 = 8836 ordered pairs of measures and the build has
+something to say about 8053 of them, mostly by derivation. Writing that many files
 would be silly, so `pair.html` renders any of them in the browser:
 
 ```
@@ -57,8 +73,8 @@ data/
   measures/*.yaml           one block per measure, under `measures:`
   functions/*.yaml          witness families, under `functions:`
   relations/*.yaml          the bounds, under `relations:`   <- the heart of the site
-  tables/*.yaml             the published 13x13 exponent matrix (the matrix page
-                            expands to all 75 measures using relation records)
+  tables/*.yaml             the 13x13 core exponent matrix (the matrix page
+                            expands to all 94 measures using relation records)
   concepts.yaml             prose pages
   open_problems.yaml        open problems
 build.py                    loader + validator + derivation engine + renderer
@@ -77,13 +93,13 @@ Files within a directory are concatenated in filename order, so a new
 
 Three layers, deliberately separate:
 
-1. **The exponent matrix** (`data/tables/total-exponents.yaml`) is a faithful reproduction of
-   Table 1 of [IJKKKSWW23], which itself updates [ABKRT21]. Cells record only exponents,
-   `a, b`, meaning *some total `g` has `M1(g) ≥ M2(g)^{a−o(1)}`* and *every total `f` has
-   `M1(f) ≤ M2(f)^{b+o(1)}`*. Deviations from the published table are marked
-   `updated: true` with an `update_note` saying why. The matrix page shows this 13×13 table by
-   default and can widen to *all* measures (`#recorded`, `#all` on the URL); outside the published
-   axis the exponents shown are computed from layers 2 and 3, not read off the table.
+1. **The exponent matrix** (`data/tables/total-exponents.yaml`) records one cell per ordered
+   pair of core measures, with citations. Cells record only exponents, `a, b`, meaning *some
+   total `g` has `M1(g) ≥ M2(g)^{a−o(1)}`* and *every total `f` has `M1(f) ≤ M2(f)^{b+o(1)}`*.
+   An exponent worked out here rather than quoted is marked `own: true` with an `own_note`
+   carrying the argument. The matrix page shows this 13×13 table by default and can widen to
+   *all* measures (`#recorded`, `#all` on the URL); outside the core axis the exponents shown are
+   computed from layers 2 and 3, not read off the table.
 
    It has a fourth scope, **Ladder** (`#ladder`): 27 of the measures in a hand-written rough
    order of size, biggest first, so the direction of the whole table is visible at a glance —
@@ -151,7 +167,7 @@ form: {exp: 2, log: 1, kind: const}    # = O(M2^2 log M2)
 | --- | --- |
 | `exp` | the exponent (default `1`) |
 | `log` | how many log factors (default `0`) |
-| `kind` | `exact` (no hidden constant) · `const` (`O`) · `theta` (tight both ways) · `tilde` (up to polylogs) · `exp` · `log` (either side) · `none` (no such bound exists, upper only) · `unbounded` (the other measure stays `O(1)`, lower only) |
+| `kind` | `exact` (no hidden constant) · `const` (`O`) · `theta` (tight both ways) · `tilde` (up to polylogs) · `exp` · `log` (either side) · `unbounded` (no bound at all: `M1` is not `O(M2^k)` for any `k`; lower side only) |
 | `dir` | `reverse`: this bullet really bounds `to` in terms of `from`, so file the edge under the reverse pair |
 | `inherit` | `false`: do **not** propagate to other settings — for bounds with side conditions |
 
@@ -174,7 +190,7 @@ losing to a recorded statement of the same strength, and none ever written back 
   bounded below by a function of itself; and a family with two free parameters is skipped unless
   a `scale:` block says which one is asymptotic;
 - **transitive closure** — `M1 ≤ M2^p log^a M2` and `M2 ≤ M3^q log^b M3` give
-  `M1 = O(M3^{pq} log^{bp+a} M3)`, up to four steps; `exact ∘ exact` stays exact, `tilde` is
+  `M1 = O(M3^{pq} log^{bp+a} M3)`, up to eight steps (where it saturates); `exact ∘ exact` stays exact, `tilde` is
   contagious, and a cycle of exponent `< 1` is reported as a data error;
 - **separations pushed forward** — a family with `M1 ≥ M2^p`, plus a universal `M3 = O(M2^r)`,
   separates `M1` from `M3` at exponent `p/r` on that same family;
@@ -185,12 +201,12 @@ losing to a recorded statement of the same strength, and none ever written back 
   about total functions.
 
 Every build prints how much of this there is, and checks every derived total-function exponent
-against the published table:
+against the exponent table:
 
 ```
 facts: 353 recorded, 5451 by setting inheritance, 5682 from function values, 124850 by closure (269/343 bullets carry a `form:`)
 values: 757 of 793 parsed on 38 families (8 families skipped, no single parameter); 5682 separations read off, 5177 of them the best on record
-bounds: 4602 total, 3826 partial, 568 relation (pair, setting) slots of 9316; 0 conflict(s) with the published table
+bounds: 4602 total, 3826 partial, 568 relation (pair, setting) slots of 9316; 0 conflict(s) with the exponent table
 ```
 
 The ~75 bullets with no `form:` are chains, parameterised statements and prose that do not reduce
@@ -206,10 +222,13 @@ to a single exponent; adding one where it belongs is a good contribution.
   general setting its *proof* supports — a model inclusion like `R ≤ D` is a fact about
   relations — and split the record if the same pair also carries a total-function separation,
   since separations inherit the other way.
-- **`?` is not the same as "no bound".** `none`/`unbounded` assert a proved impossibility and
-  render `⊘`/`∞`; only write `unbounded` when one measure can be held at `O(1)` while the other
-  grows. If the two are merely exponentially related that is `exp`, and the cell says `exp, exp`
-  rather than pretending there is nothing to say.
+- **`?` is not the same as "no bound".** `unbounded` asserts a proved impossibility and renders
+  `∞`; write it only when the ratio really is unbounded — usually one measure held at `O(1)`
+  while the other grows, though among the normalized quantities (`NS`, `Stab`, `MaxInf`) it is
+  the denominator collapsing instead. There is no second kind for "no bound *of this form*": a
+  bound that fails for every exponent is `unbounded`, and the `stmt` says in words what was
+  ruled out. If the two are merely exponentially related that is `exp`, and the cell says
+  `exp, exp` rather than pretending there is nothing to say.
 - **Let equality be derived.** An `exact` upper met by an `exact` separation at the same
   exponent renders "settled — with equality"; you never mark it by hand. Recording the
   attaining family (usually `PARITY` or `OR`) is what closes the cell.

@@ -98,7 +98,27 @@ concepts:
     If you demand **zero error** and **worst-case cost**, you get
     $\mathrm{D}(f)$ exactly: fix the coins of an always-correct depth-$T$
     algorithm and you have a deterministic depth-$T$ tree. So
-    $\mathrm{R}_0$ and $\mathrm{Q}_0$ are, by necessity, expected-cost measures.
+    $\mathrm{R}_0$ and $\mathrm{Q}_0$ cannot be worst-case-cost measures with a
+    forced answer.
+
+    There are two ways out, and they give the same measure up to a factor of two:
+    charge the **expected** number of queries, or keep worst-case cost and allow
+    the answer $\bot$ with probability $\le 1/2$. Markov truncation at twice the
+    expected cost converts the first into the second; repeating until an answer
+    appears converts the second into the first. The zoo takes $\mathrm{R}_0$ in
+    the expected-cost form and $\mathrm{Q}_0$ in the $\bot$ form, purely because
+    that is how each is usually written -- and applying the truncation to a
+    classical Las Vegas algorithm gives
+    $\mathrm{Q}_0(f)\le 2\,\mathrm{R}_0(f)$, for relations as much as for total
+    functions. A $\mathrm{Q}_0$ value above the function's own $\mathrm{R}_0$ is
+    therefore an error, not a convention clash.
+
+    One trap of its own: allowing $\bot$ weakens the polynomial method. A
+    $T$-query zero-error algorithm makes $p_1$ *vanish* on $f^{-1}(0)$ rather
+    than *equal* $f$, so it bounds
+    $\mathrm{rdeg} = \max\{\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f)\}$, not $\deg$:
+    the floor is $\mathrm{rdeg}/2$, and $\deg/2$ is a floor for
+    $\mathrm{Q}_{\mathrm{E}}$ only. On [[NANDtree]] the two differ by a square.
 
     ### The bounded-error case
     $\bar{\mathrm{R}}_\varepsilon(f) \le \mathrm{R}_\varepsilon(f)$ always, and
@@ -122,6 +142,82 @@ concepts:
     [[ardeg]]. See [[param-adeg-eps]].
   refs: [BlaisBrody19, GoosMaystre21, Vereshchagin98, BdW02]
   see_also: [R, Rbar, R0, Q0, sdeg, PostQ, minimax]
+
+- id: normalization
+  title: "Dimensionless quantities and how to normalize them"
+  order: 25
+  blurb: "MaxInf, NS and Stab are probabilities, not query counts. Why they cannot appear in the matrix, and what ratio to use instead."
+  body: |
+    Every measure in the exponent matrix answers the same question: *how many
+    queries?* Each one grows with $n$, and a cell of the matrix asserts something
+    of the form $\mathrm{M}_1 = O(\mathrm{M}_2^{\,b})$ -- a comparison that only
+    means anything if both sides are on the same scale.
+
+    Several natural Fourier quantities are not on that scale. [[MaxInf]] is a
+    probability. So is noise sensitivity [[NS]]. Noise stability [[Stab]] is a
+    correlation, and
+    [[Var]] is a variance of a $\pm 1$ random variable. All of them live in a
+    bounded interval no matter how large $n$ is. That has three consequences:
+
+    1. **No exponent exists.** A quantity that never exceeds $1$ cannot be
+       polynomially related to one that grows like $n$, in either direction, for
+       reasons of units alone. The cell is not "open"; it is meaningless.
+    2. **The sign is often backwards.** $\mathrm{MaxInf}$ and $\mathrm{NS}_\delta$
+       tend to be *smaller* for harder functions, so even a qualitative reading of
+       the row would mislead.
+    3. **Bias dominates.** $\mathrm{MaxInf}(\mathrm{OR}_n) = 2^{1-n}$ is tiny not
+       because $\mathrm{OR}_n$ is easy -- it is evasive -- but because
+       $\mathrm{OR}_n$ is nearly constant. Any statement about a lopsided function
+       is really a statement about its bias.
+
+    So the zoo keeps these quantities, with their own pages, definitions and
+    relations, but hides them from the matrix. What goes into the matrix instead
+    is a **normalized** version: a ratio of two dimensionless quantities, or an
+    inverse of a rate, chosen so that the result is a query count.
+
+    ### Divide by the variance
+
+    $\mathrm{Var}(f) = 4p(1-p)$, where $p = \Pr[f = 1]$, is the natural unit of
+    "how much there is to lose". Every Fourier quantity above is measured against
+    it, and dividing cancels the bias exactly. The zoo records one such ratio:
+    $$\mathrm{osss}(f) \;=\; \frac{\mathrm{Var}(f)}{\mathrm{MaxInf}(f)} .$$
+    This is a genuine query count -- it is between $1$ and $O(n/\log n)$, and the
+    **OSSS inequality** says it lower-bounds the *average* depth of a decision
+    tree for $f$, hence $\mathrm{R}_0(f)$ and $\mathrm{D}(f)$. See [[osss]].
+
+    ### Invert a rate
+
+    When a dimensionless quantity comes with a free parameter, the query-scale
+    content is *where the parameter has to be* for something to happen. For noise
+    sensitivity, the critical rate $\delta^{*}$ at which $\mathrm{NS}_\delta$
+    reaches a fixed fraction of its maximum gives
+    $$\mathrm{nsr}(f) \;=\; 1/\delta^{*}(f),$$
+    which is $\Theta(n)$ for $\oplus_n$ and $\Theta(1)$ for $\mathrm{MAJ}_n$.
+    See [[nsr]].
+
+    The other end of the same curve is also a query count: the slope of
+    $\mathrm{NS}_\delta$ at $\delta = 0$ is the total influence $\mathrm{I}(f)$,
+    which was already in the zoo as [[Inf]] and satisfies
+    $\mathrm{I}\le\mathrm{D}$. One dimensionless family thus yields two measures
+    that point in opposite directions -- $\mathrm{I}$ is large when $f$ is
+    fragile, $\mathrm{nsr}$ when it is robust.
+
+    ### What normalization does not fix
+
+    A normalized quantity inherits the weakness of its ingredients.
+    $\mathrm{osss}$ is a *weak* lower bound: it is $1$ for $\oplus_n$ and
+    $\Theta(1)$ for $\mathrm{OR}_n$, both of which have $\mathrm{D} = n$. Nor are
+    the two normalizations comparable to each other -- $\oplus_n$ has
+    $\mathrm{osss} = 1$ and $\mathrm{nsr} = \Theta(n)$, $\mathrm{MAJ}_n$ has
+    $\mathrm{osss} = \Theta(\sqrt n)$ and $\mathrm{nsr} = \Theta(1)$. Putting a
+    quantity on the query scale makes it comparable, not strong.
+
+    Finally, the constants in a normalization are a convention. Any fixed
+    fraction of the maximum defines $\delta^{*}$ up to a constant factor, so
+    $\mathrm{nsr}$ is only meaningful up to $\Theta(\cdot)$; values are recorded
+    that way.
+  refs: [OSSS05, KKL88, ODonnell14]
+  see_also: [osss, nsr, Var, MaxInf, NS, Stab, Inf, reading-the-tables]
 
 - id: minimax
   title: "Yao's minimax and its failures"
@@ -166,7 +262,7 @@ concepts:
 
     | measure | composes? | reference |
     |---|---|---|
-    | $\mathrm{D}$ | **exactly** | folklore |
+    | $\mathrm{D}$ | **exactly**, even for an outer relation | [Savicky02, Tal13, Montanaro14] |
     | $\deg$ | **exactly** | [Tal13] |
     | $\mathrm{Q}$ | up to constants, even for partial $f,g$ | [LMRSS11, Reichardt11] |
     | $\mathrm{Adv}^{\pm}$ | **exactly** (SDP) | [HLS07] |
@@ -199,8 +295,69 @@ concepts:
     All known separations in this chain use **partial** functions. For total
     functions no separation is known anywhere in it -- including between
     $\mathrm{RS}$ and $\mathrm{R}$, which is [[open-RS-vs-R]].
-  refs: [BenDavidKothari18, BenDavidBlais20composition, BBGM22, GLSS19, Sanyal18, Tal13, Sherstov12robust, CKMPSS23]
-  see_also: [comp-R, comp-adeg, comp-deg, comp-Q, comp-MAJ, RS, chi, chibar, LR, noisyR, Rstar]
+    The easiest case of composition is an identity outer function, i.e. simply solving many
+    copies -- see [[direct-sum]], where even that is delicate for $\mathrm{R}$.
+  refs: [BenDavidKothari18, BenDavidBlais20composition, BBGM22, GLSS19, Sanyal18, Tal13, Sherstov12robust, CKMPSS23, Savicky02, Montanaro14]
+  see_also: [comp-R, comp-adeg, comp-deg, comp-Q, comp-D, comp-MAJ, RS, chi, chibar, LR, noisyR, Rstar, direct-sum]
+
+- id: direct-sum
+  title: "Direct sum and direct product"
+  order: 45
+  blurb: "k independent copies of f: does it cost k times as much (direct sum), and does a smaller budget make you fail on almost all of them (direct product)?"
+  body: |
+    Write $f^{\otimes k}$ for the problem of solving $k$ independent instances of $f$ and
+    reporting all $k$ answers. Two questions, easily confused:
+
+    * **Direct sum**: is $\mathrm{M}(f^{\otimes k}) \approx k\,\mathrm{M}(f)$?
+    * **Direct product** (DPT): with a budget well below $k\,\mathrm{M}(f)$, does the
+      probability of getting *all* $k$ right decay like $2^{-\Omega(k)}$?
+
+    A direct product theorem is much stronger, and it is where the subtleties live. The
+    intermediate statements have names too: a **threshold DPT** bounds the chance of getting
+    $\eta k$ of them right, and an **XOR lemma** bounds the advantage in computing
+    $\bigoplus_i f(x^i)$.
+
+    ### Scoreboard
+
+    | measure | direct sum | direct product | reference |
+    |---|---|---|---|
+    | $\mathrm{D}$ | **exactly** $k\,\mathrm{D}(f)$, for relations | -- | [JainKlauckSantha10, Montanaro14] |
+    | $\mathrm{C}$ | additive, easy | -- | folklore |
+    | $\mathrm{R}$ | $\Theta(k\,\mathrm{R}(f))$ up to a $\log k$ that is sometimes needed | yes, at budget $\gamma^3\mathrm{R}(f)k/11$ | [JainKlauckSantha10, BlaisBrody19, Drucker12] |
+    | $\bar{\mathrm{R}}$ | **exactly** $\Theta(k\,\bar{\mathrm{R}}_{\varepsilon/k}(f))$ | -- | [BlaisBrody19] |
+    | $\mathrm{Q}$ | $\tilde\Theta(k\,\mathrm{Q}(f))$, Boolean only | yes, at budget $\Omega(\mathrm{Q}(f)k)$ | [ACGT09, Reichardt11, LeeRoland13] |
+
+    ### Shaltiel's examples
+    Everything here has to dodge one construction [Shaltiel04]. Take a distribution that is
+    hard with probability $1-\varepsilon$ and trivial with probability $\varepsilon$. One
+    instance is hard on average; but among $k$ instances the algorithm can go hunting for the
+    easy ones, and it finds about $\varepsilon k$ of them cheaply. So the success probability
+    does **not** collapse until the budget drops below $\Theta(\varepsilon T k)$ -- a factor
+    $\varepsilon$ below the naive $Tk$. [Drucker12] shows this is the *only* obstruction: his
+    bounds match it, and they are stated with exactly that $\alpha\varepsilon Tk$ budget.
+
+    The same examples are why direct sum theorems are stated distribution-free. Relative to a
+    fixed distribution the tight statements are false, and this is the shared root of three
+    things in this zoo: the $\delta^2$ loss in the randomized direct sum [[dirsum-R]], the
+    difficulty of the randomized composition conjecture [[comp-R]], and the invention of the
+    [[Corr]] and [[Sel]] measures, whose whole content is that maximising over the
+    distribution removes the loophole.
+
+    ### Why the $\log k$ is real
+    Solving $k$ copies by amplifying to error $1/3k$ each costs $O(k\,\mathrm{R}(f)\log k)$, and
+    [BlaisBrody19] exhibit a total $f$ where that is optimal. The clean statement is a strong
+    direct sum in the *expected-cost* measure,
+    $\bar{\mathrm{R}}_\varepsilon(f^{k}) = \Theta(k\,\bar{\mathrm{R}}_{\varepsilon/k}(f))$
+    [[param-R-directsum]], which makes visible that the direct sum question for $\mathrm{R}$ is
+    a question about $\varepsilon$-dependence in disguise. Compare [[comp-R]], where the same
+    $\log$ appears in the composition upper bound for the same reason.
+
+    ### Relation to composition
+    Direct sum is composition with the outer function being the identity, so it is the easiest
+    case -- and it is *still* not trivial for $\mathrm{R}$, and *still* open for $\mathrm{Q}$
+    without a log. That is a fair summary of how hard composition is.
+  refs: [JainKlauckSantha10, Drucker12, Shaltiel04, BlaisBrody19, Montanaro14, KSdW07, LeeRoland13, NRS94, ACGT09, BDGHMT20]
+  see_also: [dirsum-D, dirsum-R, dirprod-R, dirprod-Q, comp-D, comp-R, Corr, Sel, R, Rbar, D, Q, open-direct-sum, param-R-directsum, composition]
 
 - id: noisy-models
   title: "Two different noisy query models"
@@ -247,37 +404,110 @@ concepts:
     $\mathrm{R}(\mathrm{PARITY}_n)=\Theta(n)$ is full, and
     $\mathrm{R}(f)=\Theta(n)\Rightarrow\mathrm{noisyR}(f)=\Theta(\mathrm{R}(f))$
     [CKMPSS23]).
-  refs: [FRPU94, EvansPippenger98, ReischukSchmeltz91, BenDavidBlais20composition, BNRdW05, CKMPSS23, Gu25noisy, GLX26noisy]
-  see_also: [Np, noisyR, robustQ, R, GapMaj, PARITY, composition]
+
+    ### The information-theoretic engine, and what is open in it
+    Both halves of [[noisyRna]]'s Theorem 8 -- $\mathrm{noisyR}^{\mathrm{na}}(f)
+    =\Theta(\mathrm{R}^{\mathrm{na}}(f))$ for total and partial $f$, but not for
+    relations -- run on one inequality of [Samorodnitsky16], in the form isolated
+    by [PolyanskiyWu17]: a **noisy** copy of $X$ at bias $\rho$ tells you at
+    least as much about $f(X)$ as an **erasure** copy that survives with
+    probability $\rho^2$. Since erasures are honest queries, a noise budget
+    converts into a query budget.
+
+    That inequality is a by-product of the *most informative Boolean function*
+    conjecture of [CourtadeKumar14]: if $Y$ is $X$ sent through a binary
+    symmetric channel with crossover probability $\varepsilon$, then for every
+    Boolean $f$,
+    $$I\big(f(X);Y\big) \;\le\; 1 - H_2(\varepsilon),$$
+    with equality for a dictator (a subcube of codimension 1). It is **open**.
+    [Samorodnitsky16] proves it for high noise -- there is an absolute $\delta>0$
+    such that it holds whenever $(1-2\varepsilon)^2\le\delta$ -- via the
+    strengthening of Mrs. Gerber's lemma
+    $\mathrm{Ent}(T_\varepsilon f)\le \mathbb{E}_T\,\mathrm{Ent}(f\mid T)$ that
+    also yields the noise-beats-erasure comparison above.
+
+    The reason none of this survives for **relations** is the last step, not the
+    first: converting an entropy gap into a guessing advantage needs
+    Fano / [HellmanRaviv70], and with many acceptable outputs there is nothing
+    to guess. That is exactly where the exponential separation of Theorem 8
+    lives.
+  refs: [FRPU94, EvansPippenger98, ReischukSchmeltz91, BenDavidBlais20composition, BNRdW05, CKMPSS23, Gu25noisy, GLX26noisy, Samorodnitsky16, PolyanskiyWu17, CourtadeKumar14, HellmanRaviv70]
+  see_also: [Np, noisyR, noisyRna, robustQ, R, GapMaj, PARITY, composition]
 
 - id: sensitivity-conjecture
-  title: "The sensitivity conjecture (now Huang's theorem)"
+  title: The sensitivity conjecture (now Huang's theorem)
   order: 60
-  blurb: "s, bs, C, deg, D are all polynomially related for total functions. Resolved in 2019; the exact exponents are still open."
-  body: |
-    For decades it was open whether sensitivity $\mathrm{s}(f)$ -- the most
+  blurb: s, bs, C, deg, D are all polynomially related for total functions. Resolved in 2019; the exact
+    exponents are still open.
+  body: 'For decades it was open whether sensitivity $\mathrm{s}(f)$ -- the most
+
     local measure in the zoo -- is polynomially related to the rest.
+
     [Nisan91] and [NS94] showed everything else is polynomially related:
+
     $$\mathrm{s} \le \mathrm{bs} \le \mathrm{C} \le \mathrm{s}\cdot\mathrm{bs},\qquad
+
     \mathrm{bs}\le 2\deg^2,\qquad \mathrm{D}\le 2\deg^4 .$$
+
     The missing link was $\deg$ vs $\mathrm{s}$.
 
-    **Huang's theorem (2019):** $\deg(f) \le \mathrm{s}(f)^2$.
+
+    **Huang''s theorem (2019):** $\deg(f) \le \mathrm{s}(f)^2$.
+
 
     The proof is two pages: a signed adjacency matrix of the hypercube whose
+
     eigenvalues are $\pm\sqrt n$, plus Cauchy interlacing, gives that every
+
     induced subgraph of $Q_n$ on more than $2^{n-1}$ vertices has maximum
+
     degree $\ge\sqrt n$. [ABKRT21] later gave the spectral refinement
+
     $\deg(f)\le\lambda(f)^2$ with $\lambda\le\mathrm{s}$, which is where
+
     [[lambda]] comes from.
 
+
     ### What is still open
+
     The exponents. Currently
-    $$\mathrm{bs}(f) \le \mathrm{s}(f)^4 \quad\text{(from } \mathrm{bs}\le 2\deg^2 \le 2\mathrm{s}^4),$$
-    while the best separation is $\mathrm{bs}(f)\ge\tfrac23\mathrm{s}(f)^2-\tfrac13\mathrm{s}(f)$
-    [AmbainisSun11], improving [Rubinstein95]. See [[open-bs-vs-s]].
-  refs: [Huang19, Nisan91, NS94, ABKRT21, Rubinstein95, AmbainisSun11, HKP11]
-  see_also: [s, bs, C, deg, lambda, D, open-bs-vs-s, Rubinstein]
+
+    $$\mathrm{bs}(f) \le 2\deg(f)^2 \le 2\mathrm{s}(f)^4.$$
+
+    The quadratic strengthening was refuted by [OpenAISensitivity26]. The latest
+
+    public campaign theorem [Prove2MeSensitivity26] gives
+
+    $\mathrm{bs}\ge\mathrm{s}^{\alpha-\varepsilon}$ for every $\varepsilon>0$ and
+
+    arbitrarily large sensitivity, where
+
+    $\alpha=\log(14055^8)/\log(3738277295413674)=2.1308255793978239\ldots$.
+
+    The quartic universal upper bound remains. See [[open-bs-vs-s]].
+
+    '
+  refs:
+  - Huang19
+  - Nisan91
+  - NS94
+  - ABKRT21
+  - Rubinstein95
+  - AmbainisSun11
+  - HKP11
+  - OpenAISensitivity26
+  - Prove2MeSensitivity26
+  see_also:
+  - s
+  - bs
+  - C
+  - deg
+  - lambda
+  - D
+  - open-bs-vs-s
+  - Rubinstein
+  - OpenAINestedTournament
+  - Prove2MeTournament
 
 - id: monotone
   title: "Monotone functions"
@@ -428,12 +658,14 @@ concepts:
     exists at all.
 
     ### The exponent matrix
-    The big table reproduces (and updates) Table 1 of [IJKKKSWW23]: the cell in
-    row $\mathrm{M}_1$, column $\mathrm{M}_2$ records $a,b$ meaning
+    The big table records one exponent pair per ordered pair of measures: the
+    cell in row $\mathrm{M}_1$, column $\mathrm{M}_2$ records $a,b$ meaning
     $$\mathrm{M}_1(f) = \Omega\big(\mathrm{M}_2(f)^{a}\big)\ \text{ is witnessed, and }\
     \mathrm{M}_1(f) = O\big(\mathrm{M}_2(f)^{b}\big)\ \text{ is a theorem}.$$
     A shaded cell means $a<b$ (a gap). Exponents hide $n^{o(1)}$ factors; the
     per-pair pages carry the fine-grained statements with logs and constants.
+    Each cell cites its sources; a star marks one whose exponent was worked out
+    here, with the argument in the note.
 
     ### Confidence
     Entries carry `conf: high | medium | low`, reflecting how sure *the
@@ -442,3 +674,218 @@ concepts:
     in this database, not in the literature.
   refs: [IJKKKSWW23]
   see_also: [settings, cost-conventions]
+
+# Operational certification and quantum sabotage.
+- id: quantum-sabotage
+  title: 'Quantum sabotage: four variants'
+  order: 115
+  blurb: Separate the available oracle information from the requested output.
+  body: 'For a partial Boolean function $f:D\to\{0,1\}$, choose opposite-output inputs $x,y$.
+
+    A sabotaged input agrees with their common bits and replaces every differing bit by
+
+    the same symbol $\ast$ or $\dagger$. The quantum algorithm must either distinguish
+
+    the symbols or output a sabotaged coordinate [CMP24, Section 3].
+
+
+    | Oracle | Distinguish $\ast$ / $\dagger$ | Find a sabotaged index |
+
+    | --- | --- | --- |
+
+    | Only the sabotaged string $z$ | [[QSweak]] | [[QSweakind]] |
+
+    | Triples $(x_i,y_i,z_i)$ | [[QSstr]] | [[QSstrind]] |
+
+
+    These four distinctions disappear up to constant factors for randomized sabotage
+
+    [[RS]]. Quantumly, their equivalence is open. The proved inclusions are
+
+    $\mathrm{QS}_{\mathrm{str}}=O(\mathrm{QS}_{\mathrm{weak}})$,
+
+    $\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}=O(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}})$,
+
+    and decision costs at most index-finding plus one query in each oracle model.
+
+    All four are $O(\mathrm{RS})$ and $O(\sqrt n)$.
+
+
+    For partial as well as total functions,
+
+    $\mathrm{QS}_{\mathrm{str}}=O(\mathrm{Q})$ and
+
+    $\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}=O(\mathrm{Q}^{3/2})$
+
+    [CMP24, Lemma 1.1 and Theorem 1.2]. The general weak-model upper bound in terms
+
+    of $\mathrm{Q}$ is only stated here for total functions, via
+
+    $\mathrm{QS}_{\mathrm{weak}},\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}=O(\mathrm{R})=O(\mathrm{Q}^4)$.
+
+
+    The common lower bound is $\Omega(\sqrt{\mathrm{fbs}})=\Omega(\mathrm{QC})$.
+
+    [CMP24] state its theorem for total functions; [KLLPV26, proof of Theorem 4(v)]
+
+    explicitly verify that the proof also covers partial functions. Grover meets this
+
+    bound for AND, OR, PARITY and MAJORITY. It is not always tight: on [[ADDR]],
+
+    all four sabotage variants are $\Theta(n)$ and $\mathrm{fbs}=n+1$.
+
+    For total functions the paper gives the converse polynomial relation
+
+    $\mathrm{Q}=\widetilde O(\mathrm{QS}^6)$ for each variant.
+
+
+    Applying the [[certification]] transform collapses **all four** variants to
+
+    $\Theta(\mathrm{QC})$ [KLLPV26, Theorem 4]. This does not establish equivalence
+
+    of the original measures. See [[open-QS-vs-Q]].'
+  refs:
+  - CMP24
+  - KLLPV26
+  see_also:
+  - QSweak
+  - QSstr
+  - QSweakind
+  - QSstrind
+  - RS
+  - QC
+  - ADDR
+  - certification
+  - open-QS-vs-Q
+- id: certification
+  title: Operational certification complexity
+  order: 120
+  blurb: Recognize a publicly known input against all opposite-output inputs, then maximize over the known
+    input.
+  body: 'For $f:D\subseteq\{0,1\}^n\to\{0,1\}$ and a publicly known $z\in D$,
+
+    define $f_z^{\mathrm{cert}}$ on $\{z\}\cup f^{-1}(1-f(z))$, accepting $z$ and
+
+    rejecting the opposite-output inputs. For a complexity measure $M$, put
+
+    $$M^{\mathrm{cert}}(f)=\max_{z\in D}M(f_z^{\mathrm{cert}}).$$
+
+    The input $z$ is free information to the certifying algorithm; only the unknown
+
+    input is queried. [KLLPV26, Definitions 1–2] systematize this transform.
+
+
+    **Collapses onto existing measures.** Theorem 3 gives, for partial functions too,
+
+    $\mathrm{D}^{\mathrm{cert}}=\mathrm{R}_0^{\mathrm{cert}}=\mathrm{UC}^{\mathrm{cert}}=\mathrm{C}$
+
+    and $\mathrm{CG}^{\mathrm{cert}}=\Theta(\mathrm{C})$. Bounded-error randomized
+
+    queries, sabotage, expectational certificates, the partition bound and critical
+
+    fractional block sensitivity all certify at cost $\Theta(\mathrm{RC})=\Theta(\mathrm{fbs})$.
+
+    The local measures $\mathrm{C},\mathrm{RC},\mathrm{FC},\mathrm{fbs},\mathrm{bs},\mathrm{s}$
+
+    are unchanged by certification (Remark 39).
+
+
+    Theorems 4 and 6 give
+
+    $$\mathrm{Q}^{\mathrm{cert}}=\Theta(\mathrm{QC})=
+
+    \Theta(\mathrm{QD}^{\mathrm{cert}})=\Theta(\mathrm{MM}^{\mathrm{cert}})=
+
+    \Theta(\mathrm{QS}^{\mathrm{cert}})=\Theta(\widetilde{\deg}^{\mathrm{cert}})=
+
+    \Theta(\mathrm{bm\text{-}deg}^{\mathrm{cert}}).$$
+
+    Here QD is quantum distinguishing complexity, MM the positive-weight minimax quantum adversary
+
+    bound, and bm-deg the whole-cube bounded block-multilinear approximate degree.
+
+    The QS equality holds for each of the [[quantum-sabotage|four variants]].
+
+    These are identities **after certification**, not identities of the original measures.
+
+    Rational degree is unchanged: $\mathrm{rdeg}^{\mathrm{cert}}=\mathrm{rdeg}$ (Lemma 50).
+
+    Spectral sensitivity certifies to [[lambdacert]], exactly $\sqrt{\mathrm{s}}$ (Theorem 42).
+
+
+    **New lower bounds for zero-error quantum queries.** Exact and zero-error quantum
+
+    certification coincide up to constants:
+
+    $$\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}=\Theta(\mathrm{Q}_0^{\mathrm{cert}})=O(\mathrm{Q}_0).$$
+
+    Theorem 5 uses exact amplitude amplification: success probability on the fixed,
+
+    known reference input can be computed without queries.
+
+    The zoo records these as [[QEcert]] and [[Q0cert]].
+
+
+    The new [[osdeg]] is the maximum of two degrees of polynomials bounded in $[0,1]$
+
+    on the whole cube, each exact on one output class and accurate on the other.
+
+    It differs from the existing [[odeg]], which allows positive-side overshoot.
+
+    Theorem 8 proves $\overline{\mathrm{osdeg}}=O(\mathrm{Q}_0)$.
+
+    Its certification transform equals the bounded exact degree certification [[degcert]]
+
+    (Theorem 9). In particular,
+
+    $$\mathrm{rdeg}\le\overline{\deg}^{\mathrm{cert}}\le\mathrm{C},\qquad
+
+    \overline{\deg}^{\mathrm{cert}}=O(\overline{\mathrm{osdeg}}),\qquad
+
+    \overline{\deg}^{\mathrm{cert}}\le2\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}.$$
+
+
+    **Boundedness on a promise matters.** This paper''s exact degree requires
+
+    $0\le p\le1$ on the whole cube. It equals ordinary [[deg]] for total functions,
+
+    but has its own id [[bdeg]] for partial functions. A certification promise is
+
+    partial even when the original function is total, so [[degcert]] uses [[bdeg]].
+
+    Theorem 12 proves $\mathrm{bs}=O((\overline{\deg}^{\mathrm{cert}})^2)$ for partial
+
+    functions and $\mathrm{C}=O((\overline{\deg}^{\mathrm{cert}})^3)$ for total ones.
+
+    No application of the total-only upper bound to arbitrary partial functions is recorded.
+
+
+    On [[ANDNotExactOne]], Theorem 10 and Lemma 55 give
+
+    $\mathrm{rdeg}=m$, $\mathrm{Q}=\Theta(m)$,
+
+    $\overline{\deg}^{\mathrm{cert}}=\Omega(m^{3/2}/\log^2m)$, and
+
+    $\mathrm{Q}_0=O(m^{3/2})$. Thus the new certification lower bounds exceed both
+
+    rational degree and bounded-error quantum complexity on the same total family.
+
+    On [[ANDOR]], Proposition 52 gives degree $m^2$ against certified degree $m$.'
+  refs:
+  - KLLPV26
+  - CMP24
+  - Aaronson08
+  see_also:
+  - QEcert
+  - Q0cert
+  - QC
+  - degcert
+  - bdeg
+  - osdeg
+  - osdeg0
+  - osdeg1
+  - lambdacert
+  - rdeg
+  - ANDNotExactOne
+  - ANDOR
+  - quantum-sabotage

@@ -42,10 +42,32 @@ STATIC = ROOT / "static"
 # comment at the top of data/relations/01-classical-core.yaml.
 #   exact/const/theta/tilde are polynomial relations M1 <= M2^exp (log^log M2),
 #   differing only in how much slack the statement hides;
-#   exp/log/none/unbounded are the non-polynomial verdicts, which the
-#   transitive closure refuses to compose.
+#   exp/log/unbounded are the non-polynomial verdicts, which the transitive
+#   closure refuses to compose. `unbounded` is the strongest thing a pair can
+#   say -- no bound at all, M1 is not O(M2^k) for any k -- and like every other
+#   negative statement it lives on the `lower` side.
 _POLY_KINDS = ("exact", "theta", "const", "tilde")
-FORM_KINDS = set(_POLY_KINDS) | {"exp", "log", "none", "unbounded"}
+FORM_KINDS = set(_POLY_KINDS) | {"exp", "log", "unbounded"}
+
+# Strongest-first, per side: an unbounded separation beats an exponential one
+# beats a logarithmic one, while a *logarithmic* upper bound is the strong one.
+_NONPOLY_RANK = {"upper": {"log": 0, "exp": 1},
+                 "lower": {"unbounded": 0, "exp": 1, "log": 2}}
+
+
+def _nonpoly(verdicts, side):
+    """The non-polynomial statement a cell should lead with, on one side.
+
+    Every consumer -- the matrix token, the data-level verdict, the gap report
+    -- has to agree about this, or a cell says "no bound exists" in the grid
+    and quotes a polynomial separation underneath it. Strongest first, and
+    among equals the one somebody wrote down.
+    """
+    rank = _NONPOLY_RANK[side]
+    return min((v for v in verdicts or [] if v["side"] == side
+                and v["kind"] in rank),
+               key=lambda v: (rank[v["kind"]], v["origin"] != "recorded"),
+               default=None)
 
 # Settings, from most restricted class of problems to most general. A bound
 # that holds for the general class holds for the restricted one; a separation
@@ -157,6 +179,11 @@ class Zoo:
             m.setdefault("params", [])
             m.setdefault("refs", [])
             m.setdefault("see_also", [])
+            # The hand-picked neighbours shown by default on the measure page.
+            # `see_also` is general navigation and reaches functions, concepts
+            # and open problems; this is measures only, ordered by relevance,
+            # and it decides what a reader sees before unfolding the full list.
+            m.setdefault("related", [])
             m.setdefault("confidence", "medium")
             st = m.get("settings") or {}
             norm = {}
@@ -275,6 +302,13 @@ class Zoo:
             o.setdefault("see_also", [])
             o.setdefault("best_known", [])
             o.setdefault("setting", "total")
+            # `pairs:` names the matrix cells the problem is about, for
+            # problems whose id is not itself `open-M1-vs-M2`. Each entry is
+            # [M1, M2]; both directions of the cell are flagged.
+            o["pairs"] = [list(p) for p in (o.get("pairs") or [])]
+            for p in o["pairs"]:
+                if len(p) != 2 or any(m not in self.measure for m in p):
+                    self.err(f"{o['id']}: bad `pairs:` entry {p!r}")
 
     # ----------------------------------------------------------------- form
     def _form(self, fm, where, side):
@@ -292,10 +326,10 @@ class Zoo:
         if kind not in FORM_KINDS:
             self.err(f"{label}: unknown form kind '{kind}'")
             kind = "const"
-        if kind == "none" and side != "upper":
-            self.err(f"{label}: form kind 'none' belongs on an `upper` bullet")
         if kind == "unbounded" and side != "lower":
-            self.err(f"{label}: form kind 'unbounded' belongs on a `lower` bullet")
+            self.err(f"{label}: form kind 'unbounded' belongs on a `lower` bullet "
+                     f"-- \"no bound exists\" is a statement about what fails, "
+                     f"not an upper bound")
         try:
             exp = float(fm.get("exp", 1))
             log = float(fm.get("log", 0))
@@ -363,6 +397,18 @@ class Zoo:
     # --------------------------------------------------------------- attach
     def _attach(self):
         for m in self.measures:
+            seen = set()
+            for k in m["related"]:
+                if k == m["id"]:
+                    self.err(f"measure {m['id']}: `related` lists itself")
+                elif k not in self.measure:
+                    self.err(f"measure {m['id']}: `related` names '{k}', not a measure")
+                elif k in seen:
+                    self.err(f"measure {m['id']}: `related` repeats '{k}'")
+                seen.add(k)
+            if not m["related"]:
+                self.err(f"measure {m['id']}: no `related` list")
+        for m in self.measures:
             m["out"] = []
             m["inn"] = []
             m["pairs_out"] = []
@@ -401,9 +447,11 @@ class Zoo:
 
         # open problems referenced from measures
         for o in self.open_problems:
-            for sid in o["see_also"]:
+            for sid in o["see_also"] + [m for p in o["pairs"] for m in p]:
                 if sid in self.measure:
-                    self.measure[sid].setdefault("open_problems", []).append(o)
+                    ops = self.measure[sid].setdefault("open_problems", [])
+                    if o not in ops:
+                        ops.append(o)
 
     # ------------------------------------------------------------ derivation
     #
@@ -668,8 +716,19 @@ class Zoo:
 
     # -- 1. total <-> partial <-> relation
     def _defined(self, mid, setting):
+        # `degenerate` means the measure is perfectly well defined here and
+        # happens to coincide with another one (cbs = bs, psD = Theta(R) on
+        # Boolean-valued inputs). Treating it as undefined -- which is what
+        # this used to do -- left those rows and columns entirely blank,
+        # since neither inheritance nor value-derived separations could reach
+        # them. The collapse itself is recorded as an `equivalent:` block.
         m = self.measure.get(mid)
-        return bool(m) and m["settings"].get(setting, {}).get("defined") == "yes"
+        return bool(m) and m["settings"].get(setting, {}).get("defined") \
+            in ("yes", "degenerate")
+
+    def _degenerate(self, mid, setting):
+        m = self.measure.get(mid)
+        return bool(m) and m["settings"].get(setting, {}).get("defined") == "degenerate"
 
     def _inherit_settings(self):
         order = [s for s in SETTING_GENERALITY if s in self.settings]
@@ -678,11 +737,21 @@ class Zoo:
                 continue
             i = order.index(f["setting"])
             # positive statement (a bound holds) -> restrict; negative
-            # statement (a separation, or "no bound exists") -> generalise
-            positive = f["side"] == "upper" and f["kind"] != "none"
+            # statement (a separation, up to "no bound at all") -> generalise
+            positive = f["side"] == "upper"
             targets = order[:i] if positive else order[i + 1:]
             for t in targets:
                 if not (self._defined(f["a"], t) and self._defined(f["b"], t)):
+                    continue
+                if any(self._degenerate(m, f["setting"]) and not
+                       self._degenerate(m, t) for m in (f["a"], f["b"])):
+                    # A statement proved where a measure collapses is a
+                    # statement about what it collapsed *to*. psD = Theta(R) on
+                    # partial functions, so "D is unbounded in psD on partial
+                    # functions" is really a fact about R and says nothing
+                    # about pseudo-determinism for search problems -- where the
+                    # embedding of a partial function is not even total, and
+                    # D = O(psD^3) [CDM23] holds.
                     continue
                 g = dict(f, setting=t, origin="setting", from_setting=f["setting"],
                          chain=[f])
@@ -706,7 +775,11 @@ class Zoo:
             "chain": p["chain"] + q["chain"],
         }
 
-    def _close(self, setting, max_steps=4):
+    # 8 is where the closure saturates: raising the cap further changes no
+    # cell. It has to be this generous because the honest chains are long --
+    # chi = O(bs^3) is chi <= chibar <= LR <= R <= D <= bs^3, five steps, and
+    # anything below 5 silently reports that cell as "nothing known".
+    def _close(self, setting, max_steps=8):
         dist = {}
         for f in self.facts:
             if f["setting"] != setting or f["side"] != "upper" or not f["poly"]:
@@ -752,6 +825,47 @@ class Zoo:
             dist = self.closure[setting]
             seps = [f for f in self.facts
                     if f["setting"] == setting and f["side"] == "lower" and f["poly"]]
+            # (a) a separation for `a` is one for anything that upper-bounds it:
+            #     a = Omega(b^e) together with a = O(c^p) gives c = Omega(b^{e/p}).
+            #     Only the strongest lift per pair is kept, or the fact list would
+            #     grow by a factor of |measures| before the second half runs.
+            lifted = {}
+            for f in seps:
+                for c, p in (dist.get(f["a"]) or {}).items():
+                    if c == f["b"] or p["exp"] <= 0:
+                        continue
+                    g = {**f, "a": c,
+                         "exp": f["exp"] / p["exp"],
+                         "log": 0,
+                         "kind": "tilde" if (p["tilde"] or f["kind"] == "tilde") else "const",
+                         "origin": "closure",
+                         "chain": [f] + p["chain"],
+                         "via": p,
+                         "stmt": None}
+                    cur = lifted.get((c, f["b"]))
+                    if cur is None or (-g["exp"], len(g["chain"])) < (-cur["exp"], len(cur["chain"])):
+                        lifted[(c, f["b"])] = g
+            seps += list(lifted.values())
+            self.facts.extend(lifted.values())
+            # the same lift for the two verdicts that survive it unchanged:
+            # if `a` is unbounded (resp. exponential) in `b` and a = O(c^p),
+            # then so is c, since c is polynomially larger than a.
+            hard = {}
+            for f in self.facts:
+                if f["setting"] != setting or f["side"] != "lower" \
+                        or f["kind"] not in ("unbounded", "exp"):
+                    continue
+                for c, p in (dist.get(f["a"]) or {}).items():
+                    if c == f["b"] or p["exp"] <= 0:
+                        continue
+                    key = (c, f["b"], f["kind"])
+                    g = {**f, "a": c, "origin": "closure",
+                         "chain": [f] + p["chain"], "via": p, "stmt": None}
+                    cur = hard.get(key)
+                    if cur is None or len(g["chain"]) < len(cur["chain"]):
+                        hard[key] = g
+            self.facts.extend(hard.values())
+            # (b) a separation against `b` is one against anything `b` bounds.
             for f in seps:
                 b = f["b"]
                 for c, row in dist.items():
@@ -791,7 +905,7 @@ class Zoo:
         best = {}
         for f in self.facts:
             slot = best.setdefault((f["a"], f["b"]), {}).setdefault(f["setting"], {})
-            if f["kind"] in ("none", "unbounded", "exp", "log"):
+            if f["kind"] in ("unbounded", "exp", "log"):
                 slot.setdefault("verdicts", []).append(f)
             if not f["poly"]:
                 continue
@@ -823,10 +937,10 @@ class Zoo:
         for key, per_setting in best.items():
             for s, slot in per_setting.items():
                 # "no bound exists" and an actual bound cannot both be true.
-                # If the closure ever derives one against a recorded `none`,
-                # one of the two is wrong and we want to hear about it.
+                # If the closure ever derives one against a recorded
+                # `unbounded`, one of the two is wrong and we want to hear it.
                 bad = [v for v in slot.get("verdicts", [])
-                       if v["kind"] in ("none", "unbounded")]
+                       if v["kind"] == "unbounded"]
                 up, lo = slot.get("up"), slot.get("lo")
                 if bad and up:
                     self.err(f"{key[0]} vs {key[1]} ({s}): a bullet says no bound "
@@ -862,23 +976,30 @@ class Zoo:
 
     @staticmethod
     def _verdict(slot):
-        """How tight is what we know? Drives the matrix token."""
+        """How tight is what we know? Drives the matrix token.
+
+        Mirrors the branch chain in `_cell`, which decides the same thing for a
+        rendered cell; keep the two in step.
+        """
         up, lo = slot.get("up"), slot.get("lo")
         vs = slot.get("verdicts") or []
-        if any(v["kind"] == "none" for v in vs):
-            return "none"
-        if any(v["kind"] == "unbounded" for v in vs) and not up:
-            return "unbounded"
-        if any(v["kind"] == "exp" for v in vs) and not up:
-            return "exp"
-        if any(v["kind"] == "log" for v in vs) and not up:
-            return "log"
+        nonpoly_up = (_nonpoly(vs, "upper") or {}).get("kind")
+        nonpoly_lo = (_nonpoly(vs, "lower") or {}).get("kind")
+        if nonpoly_up == "log":
+            up = None  # a log upper bound beats every polynomial one
+        if not up:
+            if nonpoly_lo == "unbounded":
+                return "unbounded"
+            if nonpoly_up or nonpoly_lo:
+                return nonpoly_up or nonpoly_lo
         if up and lo:
             if abs(up["exp"] - lo["exp"]) < 1e-9:
                 return "settled"
             return "gap"
         if up:
-            return "upper"
+            # A log separation under a polynomial upper bound is still a
+            # separation; "upper" would claim nothing is known below the bound.
+            return "log" if nonpoly_lo == "log" else "upper"
         if lo:
             return "lower"
         return "bare"
@@ -1145,10 +1266,10 @@ def _pair_statuses(pair, settings):
     }
 
 
-# Glyph shown in a matrix cell that has no published exponent: what kind of
+# Glyph shown in a matrix cell that has no numeric exponent: what kind of
 # statement the zoo holds for that (pair, setting).
 _GLYPH = {
-    "fails": "⊘",   # no bound of this form can exist
+    "fails": "∞",   # no bound exists: the same claim as an `unbounded` verdict
     "upper": "≤",   # an upper bound is recorded
     "lower": "≫",   # only a separation is recorded
     "bare": "·",    # a record exists but carries neither
@@ -1218,7 +1339,7 @@ _CHIP_LO_NAME = {
     "const": "a family with M1 = Omega(M2^a)",
 }
 # What a cell shows in place of an exponent when the relationship is not
-# polynomial. `unbounded`/`none` keep their glyph; `exp`/`log` name themselves,
+# polynomial. `unbounded` keeps its glyph; `exp`/`log` name themselves,
 # so a cell can read `exp, exp`: an exponential separation against an
 # exponential upper bound is just as settled as `2, 2`.
 _NONPOLY_LABEL = {"exp": "exp", "log": "log", "unbounded": "\u221e"}
@@ -1227,16 +1348,14 @@ VERDICT_WORD = {
     "gap": "gap",
     "upper": "upper bound only",
     "lower": "separation only",
-    "none": "no bound exists",
-    "unbounded": "unbounded",
+    "unbounded": "no bound exists",
     "exp": "exponential only",
     "log": "log-type only",
     "bare": "records, no exponent",
 }
 # Cells where no polynomial bound is on the table at all.
 _VGLYPH = {
-    "none": ("⊘", "no bound of this form exists"),
-    "unbounded": ("∞", "unbounded: no bound at all"),
+    "unbounded": ("∞", "no bound at all: M1 is not O(M2^k) for any k"),
     "exp": ("2ⁿ", "only an exponential bound is known"),
     "log": ("log", "only a logarithmic-type bound is known"),
 }
@@ -1275,8 +1394,14 @@ def _tex_bound(z, f):
                     % (sa, sb))
         if f["kind"] == "exp":
             return r"%s(f_n) = 2^{\Omega(%s(f_n))}" % (sa, sb)
+        if f["kind"] == "log":
+            return r"%s(f_n) = \Omega\big(\log %s(f_n)\big)" % (sa, sb)
         head = r"\widetilde\Omega" if f["kind"] == "tilde" else r"\Omega"
         return r"%s(f_n) = %s\big(%s(f_n)%s\big)" % (sa, head, sb, pw)
+    if f["kind"] == "exp":
+        return r"%s(f) = 2^{O(%s(f))}" % (sa, sb)
+    if f["kind"] == "log":
+        return r"%s(f) = O\big(\log %s(f)\big)" % (sa, sb)
     if f["kind"] == "exact" and not lg:
         return r"%s(f) \le %s(f)%s" % (sa, sb, pw)
     head = {"theta": r"\Theta", "tilde": r"\widetilde O"}.get(f["kind"], "O")
@@ -1304,9 +1429,15 @@ def _plain_fact(z, f):
             return f"{f['a']} unbounded, {b} = O(1)"
         if f["kind"] == "exp":
             return f"{f['a']} = 2^Omega({b})"
+        if f["kind"] == "log":
+            return f"{f['a']} = Omega(log {b})"
         head = {"tilde": "Omega~", "theta": "Theta", "exact": ">="}.get(f["kind"], "Omega")
         return (f"{f['a']} >= {b}{pw}" if head == ">="
                 else f"{f['a']} = {head}({b}{pw})")
+    if f["kind"] == "exp":
+        return f"{f['a']} = 2^O({b})"
+    if f["kind"] == "log":
+        return f"{f['a']} = O(log {b})"
     if f["kind"] == "exact" and not lg:
         return f"{f['a']} <= {b}{pw}"
     head = {"theta": "Theta", "tilde": "O~"}.get(f["kind"], "O")
@@ -1377,7 +1508,7 @@ def _side_view(z, f, src):
 
 
 def _token(z, row, col, setting, cell):
-    """The merged cell for (row, col) in one setting: published table + derived."""
+    """The merged cell for (row, col) in one setting: exponent table + derived."""
     slot = (z.best.get((row, col)) or {}).get(setting) or {}
     up, lo = slot.get("up"), slot.get("lo")
     vs = slot.get("verdicts") or []
@@ -1392,38 +1523,41 @@ def _token(z, row, col, setting, cell):
     if pub_b is not None and (b_exp is None or pub_b < b_exp - 1e-9):
         b_exp, b_src, up = pub_b, "table", None
 
-    # The published table rounds (1.63 for log 6 / log 3); where the zoo's own
-    # exponent agrees to within that rounding, show the table's number so the
-    # core grid still reads exactly like the source. The tooltip is exact.
+    # The table rounds (1.63 for log 6 / log 3); where the derived exponent
+    # agrees to within that rounding, show the table's number so the core grid
+    # reads consistently. The tooltip is exact.
     if pub_a is not None and a_exp is not None and abs(pub_a - a_exp) < 0.02:
         a_exp = pub_a
     if pub_b is not None and b_exp is not None and abs(pub_b - b_exp) < 0.02:
         b_exp = pub_b
 
-    fails = next((v for v in vs if v["kind"] == "none"), None)
     # A non-polynomial statement is still a statement, and it has a side: an
     # exponential *upper bound* goes in the upper column, an exponential
     # *separation* in the separation column. Lumping them together was what
     # made a cell read "no bound" on one line and "bound" on the next.
-    # strongest verdict first, and among equals the one somebody wrote down
-    def _vkey(rank):
-        return lambda v: (rank[v["kind"]], v["origin"] != "recorded")
-
-    other_up = min((v for v in vs if v["side"] == "upper"
-                    and v["kind"] in ("exp", "log")),
-                   key=_vkey({"log": 0, "exp": 1}), default=None)
-    other_lo = min((v for v in vs if v["side"] == "lower"
-                    and v["kind"] in ("unbounded", "exp", "log")),
-                   key=_vkey({"unbounded": 0, "exp": 1, "log": 2}), default=None)
+    other_up = _nonpoly(vs, "upper")
+    other_lo = _nonpoly(vs, "lower")
+    # A *logarithmic* upper bound beats every polynomial one -- M1 = O(log M2)
+    # is stronger than M1 = O(M2^p) for any p > 0 -- so it takes the column
+    # instead of hiding behind the weaker exponent. (An exponential upper bound
+    # is the other way round and keeps its place.)
+    if other_up is not None and other_up["kind"] == "log" and b_src != "table":
+        b_exp, b_src, up = None, None, None
     unb = other_lo is not None and other_lo["kind"] == "unbounded"
-    if fails is not None:
-        verdict = "none"
-    elif b_exp is None and unb:
+    if b_exp is None and unb:
         verdict = "unbounded"
     elif b_exp is None and (other_up is not None or other_lo is not None):
         verdict = (other_up or other_lo)["kind"]
     elif a_exp is not None and b_exp is not None:
         verdict = "settled" if abs(a_exp - b_exp) < 1e-9 else "gap"
+    elif b_exp is not None and other_lo is not None and other_lo["kind"] == "log":
+        # A logarithmic separation under a polynomial upper bound. There is no
+        # exponent to put in the separation column, but "upper" would say that
+        # nothing at all is known below the bound, which is false: the cell is
+        # log-separated, and for an upper exponent of 1 or less that is close
+        # to all the room there is. (`exp`/`unbounded` under a polynomial upper
+        # would be a contradiction, and validation flags it as one.)
+        verdict = "log"
     elif b_exp is not None:
         verdict = "upper"
     elif a_exp is not None:
@@ -1437,36 +1571,43 @@ def _token(z, row, col, setting, cell):
         """Is this side of the cell something a human put in the data?"""
         if src == "table" or (f is not None and f["origin"] == "recorded"):
             return True
-        # the closure reproduced a value the published table already states
+        # the closure reproduced a value the exponent table already states
         return pub_v is not None and exp is not None and abs(pub_v - exp) < 1e-9
 
-    if verdict == "none":
-        drivers = [fails is not None and fails["origin"] == "recorded"]
-    elif verdict in ("unbounded", "exp", "log"):
+    if verdict in ("unbounded", "exp", "log"):
         drivers = [v["origin"] == "recorded"
                    for v in (other_up, other_lo) if v is not None]
     else:
         drivers = [written_down(f, src, pv, ex) for f, src, pv, ex in
                    ((up, b_src, pub_b, b_exp), (lo, a_src, pub_a, a_exp))
                    if ex is not None]
-    # `none` and `unbounded` still get a glyph: there is nothing to put in the
-    # two columns, and "no bound at all" deserves to be shouted. `exp`/`log`
-    # do have something to say in each column, so they read like exponents.
-    glyph, glyph_name = (_VGLYPH.get(verdict, ("", ""))
-                         if verdict in ("none", "unbounded") else ("", ""))
+    # `unbounded` gets a glyph rather than two columns: there is nothing to put
+    # in them, and "no bound at all" deserves to be shouted. `exp`/`log` do have
+    # something to say in each column, so they read like exponents.
+    glyph, glyph_name = (_VGLYPH[verdict] if verdict == "unbounded"
+                         else ("", ""))
     a_txt = fmt_exp(a_exp) if a_exp is not None else "?"
     b_txt = fmt_exp(b_exp) if b_exp is not None else "?"
+    # An exponential separation dominates *every* polynomial one, so when both are
+    # on the table the cell must report the exponential: reading "Omega, 1" next to
+    # a recorded 2^Omega(.) understates what is known by an exponential. A `log`
+    # separation only beats an exponent of 1 or less.
+    nonpoly_lo = other_lo is not None and (
+        a_exp is None
+        or other_lo["kind"] == "exp"
+        or (other_lo["kind"] == "log" and a_exp <= 1 + 1e-9))
     if verdict in ("exp", "log"):
-        if other_lo is not None and a_exp is None:
+        if nonpoly_lo:
             a_txt = _NONPOLY_LABEL[other_lo["kind"]]
         if other_up is not None and b_exp is None:
             b_txt = _NONPOLY_LABEL[other_up["kind"]]
     # A proved impossibility is not a mystery: wherever a column would otherwise
-    # read `?`, say what was proved. No upper bound exists at all, so the upper
-    # column is ∞ (`unbounded`) or ⊘ (`none`, no bound *of this form*); an
-    # unbounded separation is likewise ∞ rather than a missing exponent.
-    glyph_lo = unb and verdict in ("none", "unbounded")
-    if verdict in ("none", "unbounded"):
+    # read `?`, say what was proved. No bound exists at all, so both columns read
+    # ∞ -- the upper one because there is no exponent to have, the separation one
+    # because the family beats every exponent.
+    glyph_lo = (unb and verdict == "unbounded") or \
+               (verdict in ("exp", "log") and nonpoly_lo)
+    if verdict == "unbounded":
         if b_exp is None:
             b_txt = _VGLYPH[verdict][0]
         if glyph_lo:
@@ -1490,7 +1631,6 @@ def _token(z, row, col, setting, cell):
         "tight_exact": tight_exact,
         "glyph": glyph, "glyph_name": glyph_name,
         "up": _side_view(z, up, b_src), "lo": _side_view(z, lo, a_src),
-        "fails": _side_view(z, fails, "zoo"),
         "other_up": _side_view(z, other_up, "zoo") if b_exp is None else None,
         "other_lo": _side_view(z, other_lo, "zoo"),
         # "derived" = nothing a human wrote states this cell; the closure or
@@ -1568,6 +1708,7 @@ class Builder:
         env.filters["tex"] = lambda s: _safe(r.tex(s))
         env.filters["texd"] = lambda s: _safe(r.texd(s))
         env.filters["cites"] = cites
+        env.filters["plain"] = strip_tex
         env.globals["xref"] = xref
         env.globals["url"] = link_to
         env.globals["site"] = zoo.site
@@ -1618,6 +1759,7 @@ class Builder:
         if self.out.exists():
             shutil.rmtree(self.out)
         self.out.mkdir(parents=True)
+        (self.out / ".nojekyll").touch()
         if STATIC.exists():
             shutil.copytree(STATIC, self.out / "static")
 
@@ -1698,7 +1840,7 @@ class Builder:
                 "eq": equiv.get((row, col)) if not pair else None,
             }
 
-        # -- the published table: its own row/column order, kept verbatim.
+        # -- the core grid: the exponent table's own row/column order.
         grid = [
             {"row": row, "m": z.measure[row], "entries": [entry(row, c) for c in t["axis"]]}
             for row in t["rows"]
@@ -1730,10 +1872,41 @@ class Builder:
             for e in ladder
         ]
 
+        # `nd`: the settings in which this measure has no conventional
+        # definition at all.  A row of empty cells is not information, so the
+        # view buttons hide those rows and columns outright.
+        # `nc`: defined, but not on the grid's scale -- it either degenerates
+        # into another measure in that setting (cbs = bs on functions) or is
+        # dimensionless everywhere (MaxInf, NS, Stab live in [0,1], so no
+        # exponent relates them to a query count).  Hidden for the same reason,
+        # kept everywhere else: the pair pages, the closure, and the
+        # exponent-table cross-check all still use them.
         meta = {
             "measures": [
-                {"id": m["id"], "cat": m["category"], "scope": scope_of[m["id"]]} for m in allm
+                {
+                    "id": m["id"],
+                    "cat": m["category"],
+                    "scope": scope_of[m["id"]],
+                    "nd": [
+                        s["id"] for s in z.site["settings"]
+                        if m["settings"].get(s["id"], {}).get("defined") == "no"
+                    ],
+                    "nc": [
+                        s["id"] for s in z.site["settings"]
+                        if m.get("dimensionless")
+                        or m["settings"].get(s["id"], {}).get("defined")
+                        == "degenerate"
+                    ],
+                    # dimensionless everywhere, as against degenerate in one
+                    # setting: the count line names the two reasons apart.
+                    "dl": bool(m.get("dimensionless")),
+                }
+                for m in allm
             ],
+            "ladder": [e["id"] for e in ladder],
+            # The core grid is not square -- rdeg has a column but no recorded
+            # row -- so the count line reports the two sides separately.
+            "core": {"rows": list(t["rows"]), "cols": list(t["axis"])},
             "counts": {
                 "core": len(core),
                 "recorded": len(recorded),
@@ -1751,6 +1924,9 @@ class Builder:
             t=t,
             grid=grid,
             cols=cols,
+            # rows with no recorded exponents, drawn from the derived layer:
+            # flagged in the row header rather than passed off as recorded.
+            added=t.get("rows_added") or {},
             big=big,
             allm=allm,
             lad=lad,
@@ -1760,7 +1936,7 @@ class Builder:
             glyphs=_GLYPH,
         )
         self.index_entry("matrix.html", "page", "Exponent matrix",
-                         f"The {len(core)}x{len(core)} table of best-known exponents, "
+                         f"The {len(t['rows'])}x{len(t['axis'])} table of best-known exponents, "
                          f"expandable to all {len(allm)} measures, or to the "
                          f"{len(ladder)}-measure ladder ordered by size",
                          t.get("convention", ""))
@@ -1783,21 +1959,50 @@ class Builder:
                 nbrs.setdefault(p["b"], {})["out"] = p
             for p in m["pairs_in"]:
                 nbrs.setdefault(p["a"], {})["in"] = p
-            rows = []
-            for oid, d in nbrs.items():
-                o = z.measure[oid]
-                rows.append(
-                    {
-                        "other": o,
-                        "out": d.get("out"),
-                        "in": d.get("in"),
-                        "st_out": _pair_statuses(d.get("out"), z.settings),
-                        "st_in": _pair_statuses(d.get("in"), z.settings),
-                    }
-                )
-            rows.sort(key=lambda r: (cat_order.get(r["other"]["category"], 99),
-                                     r["other"]["order"], r["other"]["id"]))
-            m["nbrs"] = rows
+            mcells = (z.matrix or {}).get("cells") or {}
+
+            def nbr_tok(a, b):
+                """What the zoo knows about one ordered pair, per setting.
+
+                The same merged token the matrix cells use, so a row reports
+                the state of the *cell* rather than the presence of a relation
+                record. Those are different things: most ordered pairs are
+                known only through the closure, and every one of them has a
+                pair view whether or not anyone wrote a record for it.
+                """
+                cell = (mcells.get(a) or {}).get(b)
+                return {s: t for s in z.settings
+                        for t in [_token(z, a, b, s, cell)] if t}
+
+            def nbr_row(oid):
+                d = nbrs.get(oid) or {}
+                return {
+                    "other": z.measure[oid],
+                    "out": d.get("out"),
+                    "in": d.get("in"),
+                    "st_out": _pair_statuses(d.get("out"), z.settings),
+                    "st_in": _pair_statuses(d.get("in"), z.settings),
+                    "tok_out": nbr_tok(m["id"], oid),
+                    "tok_in": nbr_tok(oid, m["id"]),
+                }
+
+            # Two lists, not one. What a reader wants first is the handful of
+            # measures this one is actually discussed against -- named in the
+            # entry's own `related:`, in the order the author put them. What
+            # they may want next is the rest of the zoo, which the closure has
+            # something to say about for nearly every pair; that is the second
+            # list, folded away. Deciding the first list from the presence of
+            # relation records, as this page used to, produced neither: it
+            # missed close neighbours nobody had written a record for and it
+            # dragged in the normalized quantities, which carry a `fails`
+            # record against every measure in the zoo (see the header of
+            # 12-normalized.yaml for why those have to be written out by hand).
+            m["nbrs"] = [nbr_row(oid) for oid in m["related"]]
+            rest = [x["id"] for x in z.measures
+                    if x["id"] != m["id"] and x["id"] not in m["related"]]
+            rest.sort(key=lambda i: (cat_order.get(z.measure[i]["category"], 99),
+                                     z.measure[i]["order"], i))
+            m["nbrs_rest"] = [nbr_row(oid) for oid in rest]
             # parameter-dependence records that mention this measure
             prm = defaultdict(list)
             for r in m["out"] + m["inn"]:
@@ -1847,8 +2052,7 @@ class Builder:
             "chip_names": _CHIP_NAME,
             "chips_lo": _CHIP_LO,
             "chip_lo_names": _CHIP_LO_NAME,
-            "source": (z.matrix or {}).get("source"),
-        }, separators=(",", ":")))
+            }, separators=(",", ":")))
 
         for a in z.measure:
             cols = {}
@@ -1888,7 +2092,7 @@ class Builder:
             s: t for s in z.settings for t in [_token(z, a, b, s, cell)] if t
         }
         for t in tok.values():
-            for k in ("up", "lo", "fails", "other"):
+            for k in ("up", "lo", "other"):
                 v = t.get(k)
                 if v and v.get("note"):
                     v["note"] = self.r.inline(v["note"], "")
@@ -1902,8 +2106,8 @@ class Builder:
             c = dict(cell)
             if c.get("note"):
                 c["note"] = self.r.inline(c["note"], "")
-            if c.get("update_note"):
-                c["update_note"] = self.r.inline(c["update_note"], "")
+            if c.get("own_note"):
+                c["own_note"] = self.r.inline(c["own_note"], "")
             out["cell"] = c
         if a == b:
             out["self"] = self.diagonal_payload(a)
@@ -2037,21 +2241,30 @@ class Builder:
         sw = P["setting_weight"]
 
         # Cells named by an open problem, in either direction. `open-X-vs-Y`
-        # names its pair exactly; the rest are about a cluster of measures, so
-        # every pair among their see_also counts.
+        # names its pair exactly, and `pairs:` names a list of them; failing
+        # both, the problem is about a cluster of measures, so every pair
+        # among their see_also counts.
         op_cells = {}
         for o in z.open_problems:
             named = re.fullmatch(r"open-(\w+)-vs-(\w+)", o["id"])
-            ms = ([named.group(1), named.group(2)] if named
-                  and named.group(1) in z.measure and named.group(2) in z.measure
-                  else [x for x in (o.get("see_also") or []) if x in z.measure])
-            for a in ms:
-                for b in ms:
-                    if a != b:
-                        op_cells.setdefault((a, b, o["setting"]), o["id"])
+            if named and all(named.group(i) in z.measure for i in (1, 2)):
+                cells = [(named.group(1), named.group(2))]
+            elif o["pairs"]:
+                cells = [tuple(p) for p in o["pairs"]]
+            else:
+                ms = [x for x in o["see_also"] if x in z.measure]
+                cells = [(a, b) for a in ms for b in ms if a != b]
+            for a, b in cells:
+                op_cells.setdefault((a, b, o["setting"]), o["id"])
+                op_cells.setdefault((b, a, o["setting"]), o["id"])
 
         rows = []
-        ids = [m["id"] for m in z.measures]
+        # Dimensionless quantities are out of the worklist entirely: they live
+        # in [0,1], so no exponent can relate them to a query count and every
+        # cell they touch is "open" for a reason no proof will ever close. The
+        # question worth scoring is about their normalized forms (osss, nsr),
+        # which are ordinary measures and are scored below.
+        ids = [m["id"] for m in z.measures if not m.get("dimensionless")]
         for a in ids:
             for b in ids:
                 if a == b:
@@ -2069,8 +2282,23 @@ class Builder:
                     slot = (z.best.get((a, b)) or {}).get(s) or {}
                     up, lo = slot.get("up"), slot.get("lo")
                     verdict = slot.get("verdict", "bare")
+                    # The verdict is set by the non-polynomial statements when
+                    # there are any, so the row has to quote those and not the
+                    # best exponent underneath them: a cell whose separation is
+                    # unbounded should not advertise a square.
+                    nu = nl = None
+                    if verdict in ("unbounded", "exp", "log"):
+                        nu = _nonpoly(slot.get("verdicts"), "upper")
+                        nl = _nonpoly(slot.get("verdicts"), "lower")
+                        up, lo = nu or up, nl or lo
 
                     key = verdict
+                    # Both columns non-polynomial and agreeing: the cell is
+                    # settled, exponentially or logarithmically. It is not an
+                    # open question, and the pair page says as much.
+                    if (verdict in ("exp", "log") and nu and nl
+                            and nu["kind"] == nl["kind"] == verdict):
+                        key = "settled"
                     if verdict == "settled" and up and lo:
                         loose = (up["log"] > lo["log"] + 1e-9
                                  or (up["kind"] == "tilde" and lo["kind"] != "tilde"))
@@ -2126,6 +2354,8 @@ class Builder:
         blob = json.dumps(payload, separators=(",", ":"))
         self.write("gaps.html", "gaps.html", n_rows=len(live), total=len(rows),
                    by_verdict=by_verdict, by_setting=by_setting,
+                   dimless=[m["id"] for m in self.zoo.measures
+                            if m.get("dimensionless")],
                    dropped=len(rows) - len(live), blob=_safe(blob))
         (self.out / "gaps.json").write_text(blob)
         # a grep-able dump of the same thing
@@ -2169,7 +2399,7 @@ def report_derived(zoo):
             if slot.get("up") or slot.get("lo"):
                 cov[s] += 1
 
-    # every derived exponent, checked against the published table
+    # every derived exponent, checked against the exponent table
     clash = 0
     for row, cols in ((zoo.matrix or {}).get("cells") or {}).items():
         for col, c in (cols or {}).items():
@@ -2197,7 +2427,7 @@ def report_derived(zoo):
           f"{used['values']} of them the best on record")
     print("bounds: " + ", ".join(f"{cov[s]} {s}" for s in zoo.settings)
           + f" (pair, setting) slots of {slots}; "
-          + f"{clash} conflict(s) with the published table")
+          + f"{clash} conflict(s) with the exponent table")
 
 
 def main():

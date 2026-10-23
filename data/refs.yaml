@@ -74,7 +74,15 @@ IJKKKSWW23:
   title: "On the Rational Degree of Boolean Functions and Applications"
   year: 2023
   arxiv: "2310.08004"
-  note: "Table 1 of this paper is the seed of the big matrix in this zoo. Introduces the rdeg column."
+  note: "Introduces rdeg, and collects the best known separation and upper-bound exponents between the classical and quantum measures."
+
+KKWY26:
+  aliases: ["KKW+26", "KovacsDeak26"]
+  authors: [Kothari, R., Kovacs-Deak, M., Wang, D., Yang, R. Z.]
+  title: "Rational degree is polynomially related to degree"
+  year: 2026
+  arxiv: "2601.08727"
+  note: "Answers Fortnow's 1994 question affirmatively: D <= 16 rdeg^4, and deg = O~(rdeg^3). Fills in the whole rdeg column, which had read '?' since the question was posed."
 
 # ------------------------------------------------- classical foundations
 Nisan91:
@@ -204,7 +212,7 @@ Turan84:
   title: "The critical complexity of graph properties"
   venue: "Information Processing Letters 18:151-153"
   year: 1984
-  note: "s(f) >= ceil((n+1)/2) for non-constant symmetric f."
+  note: "Every non-trivial graph property on n vertices has critical complexity (sensitivity) s = Omega(n)."
 
 NisanWigderson95:
   aliases: ["NW95"]
@@ -301,7 +309,15 @@ KulkarniTal16:
   venue: "Chicago Journal of Theoretical Computer Science 2016(8)"
   year: 2016
   eccc: "TR13-168"
-  note: "fbs = Theta(RC); RC(f) = O(deg-tilde(f)^2); R0(f) = O(R(f) s(f) log RC(f)) -- one of the few genuinely log-factor relations known."
+  note: "fbs = Theta(RC); RC(f) = O(deg-tilde(f)^2); R0(f) = O(R(f) s(f) log RC(f)) -- one of the few genuinely log-factor relations known. Also the randomized strengthening of the certificate complexity barrier: the positive adversary is at most sqrt(FC^0 FC^1), hence at most fbs, for total f."
+
+CPS23:
+  authors: [Chugh, R., Podder, S., Sanyal, S.]
+  title: "Decision Tree Complexity versus Block Sensitivity and Degree"
+  venue: "FSTTCS 2023"
+  year: 2023
+  arxiv: "2209.08042"
+  note: "Asks whether D = O(bs^3) and D = O(deg^3) are tight, and proves the quadratic bounds for graph properties, for functions of bounded alternation, and for 'zebra' functions. Records what a quadratic answer would buy: D = O(R^2), Q = O-tilde(fbs^2), R0 = O(fbs^2), D = O(s^4) and D = O(QE^2)."
 
 Ambainis13:
   aliases: ["Amb13"]
@@ -521,7 +537,7 @@ GLSS19:
   venue: "ICALP 2019"
   year: 2019
   arxiv: "1811.10752"
-  note: "Max-conflict complexity chi-bar. R(f o g^n) = Omega(R(f) chi-bar(g)); chi-bar = Omega(sqrt(R)) even for partial g; chi-bar = Omega(RS); unbounded separation from RS."
+  note: "Max-conflict complexity chi-bar. R(f o g^n) = Omega(R(f) chi-bar(g)); chi(g) = Omega(sqrt(R(g))) even for partial g (Thm 6), hence the same for chi-bar; chi-bar = Omega(RS) (Thm 7). The two combine with the collision problem to separate chi-bar from RS on partial functions, though the paper states neither as a separation."
 
 Li18:
   authors: [Li, Y.]
@@ -545,6 +561,145 @@ BenDavidBlais20composition:
   arxiv: "2002.10809"
   note: "R(f o g) = Omega(noisyR(f) R(g)); noisyR is the largest outer measure with this property; also disproves the randomized composition conjecture for partial functions."
 
+BDGHMT20:
+  authors: [Bassilakis, A., Drucker, A., "Goos, M.", Hu, L., Ma, W., Tan, L.-Y.]
+  title: "The Power of Many Samples in Query Complexity"
+  venue: "ICALP 2020, LIPIcs 168, 9:1-9:18"
+  year: 2020
+  arxiv: "2002.10654"
+  aliases: [BDG+20]
+  note: "Concurrent with and independent of BenDavidBlais20composition. R(f o g) = Omega(fbs(f) R(g)), strengthening the Goos-Jayram-Pitassi-Watson bound Omega(s(f) R(g)); also direct-sum-style results on solving many copies of g."
+
+Samorodnitsky16:
+  authors: [Samorodnitsky, A.]
+  title: "On the entropy of a noisy function"
+  venue: "IEEE Transactions on Information Theory 62(10):5446-5464"
+  year: 2016
+  arxiv: "1508.01464"
+  aliases: [Sam16, Sam15]
+  note: "For a Boolean f and X ~ mu, the noisy copy N_rho(X) preserves at least as much information about f(X) as the erasure copy E_{rho^2}(X). The special case used in BenDavidBlais20composition is the one isolated by PolyanskiyWu17. The paper's own target is the Courtade-Kumar conjecture, which it settles for high noise (Theorem 1.15)."
+
+CourtadeKumar14:
+  authors: [Courtade, T. A., Kumar, G. R.]
+  title: "Which Boolean functions maximize mutual information on noisy inputs?"
+  venue: "IEEE Transactions on Information Theory 60(8):4515-4525"
+  year: 2014
+  doi: "10.1109/TIT.2014.2326877"
+  aliases: [CK14]
+  note: "The 'most informative Boolean function' conjecture: I(f(X); Y) <= 1 - H(eps) for every Boolean f, where Y is X passed through a binary symmetric channel of crossover probability eps. Dictators attain it."
+
+PolyanskiyWu17:
+  authors: [Polyanskiy, Y., Wu, Y.]
+  title: "Strong data-processing inequalities for channels and Bayesian networks"
+  venue: "Convexity and Concentration, IMA Volumes in Mathematics and its Applications 161, Springer, pp. 211-249"
+  year: 2017
+  arxiv: "1508.06025"
+  note: "Contains the clean special case of Samorodnitsky's inequality (noise beats erasure) used to prove Rna = O(noisyRna)."
+
+HellmanRaviv70:
+  authors: [Hellman, M. E., Raviv, J.]
+  title: "Probability of error, equivocation, and the Chernoff bound"
+  venue: "IEEE Transactions on Information Theory 16(4):368-372"
+  year: 1970
+  doi: "10.1109/TIT.1970.1054466"
+  note: "Error probability is at most half the conditional entropy: the direction of Fano's inequality that turns an entropy gap into a guessing advantage."
+
+Drucker12:
+  authors: [Drucker, A.]
+  title: "Improved direct product theorems for randomized query complexity"
+  venue: "Computational Complexity 21(2):197-244, CCC 2011"
+  year: 2012
+  arxiv: "1005.0644"
+  note: "Direct product: solving k independent copies of f with fewer than ~k R(f) queries succeeds with exponentially small probability."
+
+JainKlauckSantha10:
+  authors: [Jain, R., Klauck, H., Santha, M.]
+  title: "Optimal direct sum results for deterministic and randomized decision tree complexity"
+  venue: "Information Processing Letters 110(20):893-897"
+  year: 2010
+  arxiv: "1004.0105"
+  note: "Direct sum for D and R: computing k copies costs k times as much, up to constants."
+
+Montanaro14:
+  authors: [Montanaro, A.]
+  title: "A composition theorem for decision tree complexity"
+  venue: "Chicago Journal of Theoretical Computer Science 2014, Article 6"
+  year: 2014
+  arxiv: "1302.4207"
+  aliases: [Mon14]
+  note: "D(f o g) = D(f) D(g), independently of Tal13, and for an outer *relation* with boolean-valued inner relations. Also gives the direct sum for D as a corollary, and a 3-query counterexample showing the theorem fails when the inner alphabet is not boolean."
+
+# --------------------------------------------- direct sum and direct product
+Savicky02:
+  authors: ["Savicky, P."]
+  title: "On determinism versus unambiguous nondeterminism for decision trees"
+  venue: "ECCC report TR02-009"
+  year: 2002
+  eccc: "TR02-009"
+  aliases: [Sav02]
+  note: "The earliest of the three independent proofs that D composes exactly; the composition theorem is a lemma on the way to D vs UC."
+
+Shaltiel04:
+  authors: [Shaltiel, R.]
+  title: "Towards proving strong direct product theorems"
+  venue: "Computational Complexity 12(1-2):1-22, CCC 2001"
+  year: 2004
+  doi: "10.1007/s00037-003-0175-x"
+  aliases: [Sha01, Sha04]
+  note: "The counterexamples every direct product theorem has to dodge: distributions with a small easy part, where solving k copies is much cheaper than k times solving one. Also proves an optimal XOR lemma for 'fair' algorithms that query every copy equally often."
+
+NRS94:
+  authors: [Nisan, N., Rudich, S., Saks, M.]
+  title: "Products and help bits in decision trees"
+  venue: "SIAM Journal on Computing 28(3):1035-1050, FOCS 1994"
+  year: 1999
+  doi: "10.1137/S0097539795282444"
+  aliases: [NRS99]
+  note: "Direct product in the weaker 'decision forest' model: k separate algorithms, each producing one output. Does not give a direct sum theorem for a single k-output algorithm, which is why JainKlauckSantha10 was needed."
+
+KSdW07:
+  authors: [Klauck, H., "Spalek, R.", de Wolf, R.]
+  title: "Quantum and classical strong direct product theorems and optimal time-space tradeoffs"
+  venue: "SIAM Journal on Computing 36(5):1472-1493, FOCS 2004"
+  year: 2007
+  arxiv: "quant-ph/0402123"
+  aliases: ["KSdW07", "KlauckSpalekdeWolf07"]
+  note: "First general DPT for randomized query complexity, with the query budget scaling as bs(f)k rather than R(f)k; also the quantum version at sqrt(bs(f))k. Superseded classically by Drucker12."
+
+LeeRoland13:
+  authors: [Lee, T., Roland, J.]
+  title: "A strong direct product theorem for quantum query complexity"
+  venue: "Computational Complexity 22(2):429-462, CCC 2012"
+  year: 2013
+  arxiv: "1104.4468"
+  aliases: [LR11, LR12]
+  note: "Quantum DPT at the right scale: Omega(Q(f)k) queries still leave success probability exponentially small in k. The classical analogue at Omega(R(f)k) is open."
+
+BNRdW07:
+  authors: [Buhrman, H., Newman, I., "Rohrig, H.", de Wolf, R.]
+  title: "Robust polynomials and quantum algorithms"
+  venue: "Theory of Computing Systems 40(4):379-395, STACS 2005"
+  year: 2007
+  arxiv: "quant-ph/0309220"
+  note: "Among other things, settles how well k copies can be computed quantumly with a query budget a large constant times Q(f)k -- the question Drucker12 leaves open classically."
+
+ACGT09:
+  authors: [Ambainis, A., Childs, A. M., Le Gall, F., Tani, S.]
+  title: "The quantum query complexity of certification"
+  venue: "Quantum Information and Computation 10(3-4):181-189"
+  year: 2010
+  arxiv: "0903.1291"
+  aliases: [ACGT09]
+  note: "Shows the general adversary bound has direct sum behaviour, which with Reichardt's tightness theorem gives a quantum direct sum for boolean functions up to a log factor."
+
+BBKW14:
+  authors: [Beimel, A., Ben Daniel, S., Kushilevitz, E., Weinreb, E.]
+  title: "Choosing, agreeing, and eliminating in communication complexity"
+  venue: "Computational Complexity 23:1-42"
+  year: 2014
+  doi: "10.1007/s00037-013-0075-7"
+  note: "The communication-complexity ancestor of the selection problem: solve any one of k given instances."
+
 BBGM22:
   authors: [Ben-David, S., Blais, E., "Goos, M.", Maystre, G.]
   title: "Randomised Composition and Small-Bias Minimax"
@@ -566,14 +721,8 @@ Sanyal24:
   venue: "STACS 2024; ACM Transactions on Computation Theory (2025)"
   year: 2024
   eccc: "TR24-016"
-  note: "RS(g) = Omega-tilde(D^prod(g)) for total g, hence R(f o g^n) = Omega-tilde(R(f) D^prod(g))."
-
-BlaisBrody19:
-  authors: [Blais, E., Brody, J.]
-  title: "Optimal Separation and Strong Direct Sum for Randomized Query Complexity"
-  venue: "CCC 2019"
-  year: 2019
-  eccc: "TR19-071"
+  arxiv: "2401.15352"
+  note: "RS(g) = Omega-tilde(D^prod(g)) for total g, hence R(f o g^n) = Omega-tilde(R(f) D^prod(g)). Also the first polynomial separation of R from D^prod, on the balanced NAND tree, which shows that lower bound is not tight."
 
 Vereshchagin98:
   authors: [Vereshchagin, N. K.]
@@ -966,14 +1115,6 @@ GIPS21:
   eccc: "TR21-003"
   note: "Exponential separation between randomized and pseudo-deterministic query complexity; Omega(sqrt n) psD lower bound for SearchCNF."
 
-Spalek08:
-  authors: ["Spalek, R."]
-  title: "The multiplicative quantum adversary"
-  venue: "CCC 2008"
-  year: 2008
-  arxiv: "quant-ph/0703237"
-  note: "The multiplicative adversary method; strong direct product theorems."
-
 AmbainisdeWolf14:
   authors: [Ambainis, A., de Wolf, R.]
   title: "How low can approximate degree and quantum query complexity be for total Boolean functions?"
@@ -1243,6 +1384,15 @@ Kutin05:
   year: 2005
   arxiv: "quant-ph/0304162"
   doi: "10.4086/toc.2005.v001a002"
+
+BBHT98:
+  authors: ["Boyer, M.", "Brassard, G.", "Hoyer, P.", "Tapp, A."]
+  title: "Tight bounds on quantum searching"
+  venue: "Fortschritte der Physik 46(4-5):493-505"
+  year: 1998
+  arxiv: "quant-ph/9605034"
+  doi: "10.1002/(SICI)1521-3978(199806)46:4/5<493::AID-PROP493>3.0.CO;2-P"
+  note: "Grover search when the number of marked items is unknown, in O(sqrt(N/m)) queries."
 
 BHT98:
   authors: ["Brassard, G.", "Hoyer, P.", "Tapp, A."]
@@ -1801,3 +1951,74 @@ Gavinsky17quadratic:
   year: 2017
   eccc: "TR17-123"
   note: "Uses prt for the logarithm of the Jain-Klauck LP optimum, the convention this zoo follows. Also: EC <= R_0 = O(EC^2), FC <= EC <= FC^{3/2}, so EC^{2/3} <= R."
+
+# Quantum sabotage and September–October 2026 updates.
+CMP24:
+  authors:
+  - Cornelissen, Arjan
+  - Mande, Nikhil S.
+  - Patro, Subhasree
+  title: Quantum Sabotage Complexity
+  year: 2024
+  arxiv: '2408.12595'
+  note: 'Sections 1.1 and 3 define four variants, not just two: weak/strong oracle access and decision/index
+    output. Appendix B supplies the strong-model Index lower bound.'
+KLLPV26:
+  authors:
+  - Kayal, Chandrima
+  - Laplante, Sophie
+  - Larroque, Émile
+  - Prūsis, Krišjānis
+  - Vihrovs, Jevgēnijs
+  title: Certification complexity of Boolean functions
+  year: 2026
+  arxiv: '2609.26757'
+  note: Read v1, September 22, 2026. The degree measures, including degree certification, require bounded
+    polynomials on the whole Boolean cube, even outside a promise.
+BenDavidKothari26:
+  authors:
+  - Ben-David, Shalev
+  - Kothari, Robin
+  title: Randomized query complexity can beat certificate complexity
+  year: 2026
+  arxiv: '2609.15063'
+  note: Theorem 1 simultaneously gives C = Ω(n²), R = O(n log n), and Q = Õ(√n). Concurrent independent
+    work of Ambainis, Iraids and Kokainis is credited in the paper.
+AIK26:
+  authors:
+  - Ambainis, Andris
+  - Iraids, Jānis
+  - Kokainis, Martins
+  title: Near-Optimal Separations of Certificate Complexity from Randomized and Quantum Query Complexity
+  year: 2026
+  arxiv: '2609.11664'
+  note: 'Read v3, October 5, 2026. Theorems 2.1–2.3: quartic C/Q, log-free quadratic C/R₁, and quadratic
+    C/Q₀ and C/Q_E separations. R₀/Q is also quartic. Builds on Pabbaraju; independent of Ben-David–Kothari.'
+Pabbaraju26:
+  authors:
+  - Pabbaraju, Chirag
+  title: Optimal Unambiguous DNFs and Alon-Saks-Seymour
+  year: 2026
+  arxiv: '2608.02533'
+  venue: SODA 2027 (camera-ready preprint)
+  note: Read v2, October 15, 2026. Theorem 4 proves a quartic C/approximate-degree separation, not a quantum
+    query upper bound. Theorem 1 and Corollaries 1.2–1.3 remove logarithms in other certificate separations.
+OpenAISensitivity26:
+  authors:
+  - OpenAI
+  title: A superquadratic separation between sensitivity and block sensitivity
+  year: 2026
+  url: https://github.com/openai/math/blob/main/preprints/A-superquadratic-separation-between-sensitivity-and-block-sensitivity-September-25-2026/paper.pdf
+  note: September 25, 2026. Theorem 1.1 refutes every universal quadratic bound; Corollary 4.3 obtains
+    a fixed exponent α>2 by self-composition. Adapts Meiburg’s tournament architecture to ordinary sensitivity.
+Prove2MeSensitivity26:
+  authors:
+  - Prove2Me campaign contributors (including yousofy; see source attribution)
+  title: 'Block Sensitivity vs. Sensitivity: exact exponent log(14055^8)/log(3738277295413674)'
+  year: 2026
+  url: https://prove2.me/theorems/01bb63ef-ced2-4ae9-8b81-b5ed295526c6
+  note: 'Public theorem marked Proved, October 20, 2026; inspected October 22, 2026. Campaign: https://prove2.me/campaigns/block-sensitivity-vs-sensitivity.
+    Exponent 2.1308255793978239476… . The displayed statement quantifies over every ε>0 and sensitivity
+    threshold S≥2. Attribution to Robin Kothari and OpenAI’s earlier construction is retained in the proof
+    source. Verification status is reported by Prove2Me; the zoo did not independently replay the Lean
+    proof.'

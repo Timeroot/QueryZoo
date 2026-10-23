@@ -15,7 +15,7 @@
 
 # ------------------------------------------------------- measure weight
 # 5   the two measures the field is organised around
-# 4   the classical/quantum core: anything in the 13x13 published table
+# 4   the classical/quantum core: anything in the 13x13 exponent matrix
 # 3   standard, widely used, appears in the literature under its own name
 # 2   a variant or a specialist tool
 # 1   defined here mostly for completeness, or not a query count at all
@@ -117,12 +117,11 @@ openness:
   bare: 10        # no upper bound, no separation, nothing recorded either
   lower: 8        # a separation, but no bound at all -- could be unbounded
   upper: 6.5      # a bound, but no example showing any loss is needed
-  log: 5          # only a log-type separation, no upper bound
+  log: 5          # the separation is only log-type: a bound may be nearly tight
   gap: 3          # both sides known, exponents differ -- see gap_curve
   exp: 2.5        # exponential separation, no polynomial bound: how far up?
   polylog: 1.5    # exponents agree, log factors do not
-  unbounded: 0.7  # answered: no bound exists
-  none: 0.5       # answered: recorded as impossible
+  unbounded: 0    # answered: no bound exists (a proved impossibility)
   settled: 0      # answered
 
 # For `gap` cells the score slides from `base` (a hair's-worth of gap) to

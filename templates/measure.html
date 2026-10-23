@@ -2,6 +2,40 @@
 {% from "macros.html" import status_pill, setting_pill, measure_chip, relation_block, putative_mark, conf_mark with context %}
 {% block title %}{{ m.name }} &middot; {{ site.title }}{% endblock %}
 
+{#
+   One direction of a "relations to other measures" row. `tok` is the merged
+   per-setting cell -- the same structure the matrix draws, so this reports
+   what is *known* about the ordered pair rather than merely whether someone
+   wrote a relation record for it. `st` is the status of the records that do
+   exist, kept as the setting chip's colour, and `rec` is the record itself:
+   absent means the direction is known only through the closure, which is the
+   common case and not a hole. Every ordered pair has a pair view either way.
+#}
+{% macro nbrcell(url, tok, st, rec) %}
+  <a class="pairlink" href="{{ url }}">
+    {% for s in site.settings %}{% set d = tok[s.id] %}{% if d %}
+      <span class="nbtok" title="{{ s.name }}: {{ verdict_word[d.verdict] }}{% if st[s.id] %} &middot; recorded relation is {{ statuses[st[s.id]].label }}{% endif %}">
+        <span class="minipill{% if st[s.id] %} st-{{ st[s.id] }}{% endif %}">{{ s.short }}</span
+        >{% if d.glyph %}<span class="glyph g-{{ d.verdict }}">{{ d.glyph }}</span>
+        {%- else %}<span class="exp"><span class="a">{{ d.a }}</span><span class="comma">,</span><span class="b">{{ d.b }}</span></span>{% endif %}
+      </span>
+    {% endif %}{% endfor %}
+    {%- if not tok %}<span class="dim nothing" title="Nothing is on record for this ordered pair in any setting, and nothing follows from the closure. For a normalized quantity on the left that is not an oversight but the definition -- a number in [0,1] is never large in terms of anything.">&mdash;</span>{% endif %}
+    {%- if not rec %}<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>{% endif %}
+    <span class="go">open pair &rarr;</span>
+  </a>
+{% endmacro %}
+
+{# One row of that table: the other measure, then both ordered directions. #}
+{% macro nbrrow(m, r) %}
+            <tr>
+              <td class="nm">{{ measure_chip(r.other.id) }}
+                <a href="{{ root }}measures/{{ r.other.id }}.html">{{ r.other.name }}</a></td>
+              <td>{{ nbrcell(pair_url(m.id, r.other.id), r.tok_out, r.st_out, r.out) }}</td>
+              <td>{{ nbrcell(pair_url(r.other.id, m.id), r.tok_in, r.st_in, r['in']) }}</td>
+            </tr>
+{% endmacro %}
+
 {% block body %}
 <div class="wrap">
   <div class="crumbs"><a href="{{ root }}measures/index.html">Measures</a> &rsaquo;
@@ -21,6 +55,24 @@
     </div>
   </header>
 
+  {% if m.dimensionless %}
+  <div class="banner note">Not a query count: {{ m.name }} is {{ m.dimensionless | mdi }}.
+  It is left out of the <a href="{{ root }}matrix.html">matrix</a> for that reason &mdash; the
+  relations below are still derived and closed over, and the pair pages are still built.
+  {% if m.normalization %}<a href="#normalization">What goes in the matrix instead &darr;</a>{% endif %}</div>
+  {% endif %}
+  {% set degen = [] %}
+  {% for s in zoo.site.settings if m.settings.get(s.id, {}).get('defined') == 'degenerate' %}
+    {% if degen.append(s) %}{% endif %}
+  {% endfor %}
+  {% if degen %}
+  <div class="banner note">Degenerate for
+  {% for s in degen %}{{ s.name | lower }}{% if not loop.last %} and {% endif %}{% endfor %}:
+  {{ m.name }} coincides with another measure there, so its row would only restate that one and
+  the <a href="{{ root }}matrix.html">matrix</a> omits it in
+  {{ 'those views' if degen | length > 1 else 'that view' }}. The collapse itself is recorded
+  under <a href="#equivalent">equivalent measures</a> below.</div>
+  {% endif %}
   {% if m.todo %}<div class="banner todo"><b>TODO:</b> {{ m.todo | mdi }}</div>{% endif %}
   {% if m.confidence == 'low' %}
   <div class="banner warn">Entries on this page are marked low confidence &mdash; check the cited
@@ -34,6 +86,14 @@
         <h2>Definition</h2>
         {{ m.definition | md }}
       </section>
+
+      {% if m.normalization %}
+      <section class="card norm" id="normalization">
+        <h2>{{ 'Why this is not a query complexity measure' if m.dimensionless
+               else 'Normalization' }}</h2>
+        {{ m.normalization | md }}
+      </section>
+      {% endif %}
 
       {% if m.params %}
       <section class="card">
@@ -68,7 +128,7 @@
       {% endif %}
 
       {% if m.equivalent %}
-      <section class="card">
+      <section class="card" id="equivalent">
         <h2>Equivalent / near-equivalent measures</h2>
         <ul class="equivs">
           {% for e in m.equivalent %}
@@ -82,12 +142,30 @@
       </section>
       {% endif %}
 
+      {# The default rows are the entry's own `related:` list, in the order the
+         author chose. The rest of the zoo is rendered too but folded away: the
+         closure has something to say about nearly every pair, and that is worth
+         one click but not the top of the page. Each *cell* reports the state of
+         its ordered pair as the closure sees it, not merely whether someone
+         wrote a relation record -- an earlier version conflated the two and
+         showed a dash wherever no record happened to exist in that direction,
+         which read as "nothing is known" when the pair view had plenty to say. #}
       {% if m.nbrs %}
       <section class="card">
         <h2>Relations to other measures</h2>
-        <p class="dim">A row shows what the zoo records for the ordered pairs involving
-        \({{ m.symbol }}\). &ldquo;\({{ m.symbol }}\) bounded by&rdquo; is the pair with
-        \({{ m.symbol }}\) on the left (the matrix row); &ldquo;bounds&rdquo; is the reverse.</p>
+        <p class="dim">A row shows what the zoo knows about the two ordered pairs involving
+        \({{ m.symbol }}\). &ldquo;\({{ m.symbol }}\) in terms of it&rdquo; is the pair with
+        \({{ m.symbol }}\) on the left (the matrix row); the other column is the reverse.
+        Each cell gives, per setting, the exponent range
+        <span class="exp"><span class="a">a</span><span class="comma">,</span><span class="b">b</span></span>
+        of the best bounds known &mdash; \(\mathrm{M_1} = \Omega(\mathrm{M_2}^{a})\) below and
+        \(\mathrm{M_1} = O(\mathrm{M_2}^{b})\) above, so \(a = b\) means settled &mdash;
+        or a glyph where no polynomial bound exists at all. These are derived, not
+        just read off the exponent table, so they are present for pairs the table
+        does not cover. A cell with no entry for a setting is one where the zoo has
+        nothing at that setting, and a &mdash; one where the ordered pair is empty
+        in all three; <span class="norec">derived</span> marks a direction with no
+        hand-written relation record behind it, which is the common case and not a hole.</p>
         <table class="listing nbrs">
           <thead>
             <tr>
@@ -97,40 +175,23 @@
             </tr>
           </thead>
           <tbody>
-          {% for r in m.nbrs %}
-            <tr>
-              <td class="nm">{{ measure_chip(r.other.id) }}
-                <a href="{{ root }}measures/{{ r.other.id }}.html">{{ r.other.name }}</a></td>
-              <td>
-                {% if r.out %}
-                  <a class="pairlink" href="{{ pair_url(m.id, r.other.id) }}">
-                    {% if r.out.cell %}<span class="exp"><span class="a">{{ r.out.cell.a }}</span>,<span class="b">{{ r.out.cell.b }}</span></span>{% endif %}
-                    <span class="go">open pair &rarr;</span>
-                  </a>
-                  <span class="stbadges">
-                  {% for s in site.settings %}{% if r.st_out[s.id] %}
-                    <span class="minipill st-{{ r.st_out[s.id] }}" title="{{ s.name }}: {{ statuses[r.st_out[s.id]].label }}">{{ s.short }}</span>
-                  {% endif %}{% endfor %}
-                  </span>
-                {% else %}<span class="dim">&mdash;</span>{% endif %}
-              </td>
-              <td>
-                {% if r['in'] %}
-                  <a class="pairlink" href="{{ pair_url(r.other.id, m.id) }}">
-                    {% if r['in'].cell %}<span class="exp"><span class="a">{{ r['in'].cell.a }}</span>,<span class="b">{{ r['in'].cell.b }}</span></span>{% endif %}
-                    <span class="go">open pair &rarr;</span>
-                  </a>
-                  <span class="stbadges">
-                  {% for s in site.settings %}{% if r.st_in[s.id] %}
-                    <span class="minipill st-{{ r.st_in[s.id] }}" title="{{ s.name }}: {{ statuses[r.st_in[s.id]].label }}">{{ s.short }}</span>
-                  {% endif %}{% endfor %}
-                  </span>
-                {% else %}<span class="dim">&mdash;</span>{% endif %}
-              </td>
-            </tr>
-          {% endfor %}
+          {% for r in m.nbrs %}{{ nbrrow(m, r) }}{% endfor %}
           </tbody>
+          {% if m.nbrs_rest %}
+          <tbody class="nbrs-rest" hidden>
+          {% for r in m.nbrs_rest %}{{ nbrrow(m, r) }}{% endfor %}
+          </tbody>
+          {% endif %}
         </table>
+        {% if m.nbrs_rest %}
+        <p class="nbrs-more">
+          <button type="button" class="unfold" data-nbrs-toggle
+                  data-few="Show most relevant only"
+                  data-all="Show all {{ m.nbrs|length + m.nbrs_rest|length }} measures">Show all {{ m.nbrs|length + m.nbrs_rest|length }} measures</button>
+          <span class="dim">The {{ m.nbrs|length }} above are this entry&rsquo;s hand-picked neighbours; the
+          other {{ m.nbrs_rest|length }} are everything else in the zoo, by category.</span>
+        </p>
+        {% endif %}
       </section>
       {% endif %}
 

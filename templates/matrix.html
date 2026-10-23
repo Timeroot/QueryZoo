@@ -10,6 +10,22 @@
    The token for one setting: the two exponents, a tightness chip, or a glyph
    when no polynomial bound is on the table. `k` is the view class (vt/vp/vr).
 #}
+{#
+   Why a row or column can be legitimately empty: the measure has only a
+   partial definition in the setting being viewed, so nothing propagates into
+   or out of it. The marker is toggled by the body class, like the cells.
+   The other two reasons -- dimensionless measures, and ones that degenerate
+   into another measure in this setting -- never reach the grid at all: app.js
+   drops those rows and columns, and their pair pages carry the relations.
+#}
+{% macro caveat(m) %}
+  {%- for s in ['total', 'partial', 'relation'] -%}
+    {%- if m.settings.get(s, {}).get('defined') == 'partial' -%}
+      <sup class="cav cav-{{ s }}" title="{{ m.name }} has only a partial definition for {{ s }}{{ ' functions' if s != 'relation' else 's' }}{% if m.settings[s].note %}: {{ m.settings[s].note | plain }}{% endif %}. The zoo propagates nothing into or out of a setting where a measure is not squarely defined.">&deg;</sup>
+    {%- endif -%}
+  {%- endfor -%}
+{% endmacro %}
+
 {% macro tok(e, k, s) %}
   {% set d = e.tok[s] %}
   <span class="v {{ k }}{% if d and d.derived %} drv{% endif %}">
@@ -32,7 +48,6 @@
   <div class="tipset">
     <span class="tl">{{ short }}</span>
     <span class="tv v-{{ d.verdict }}">{{ verdict_word[d.verdict] }}</span>
-    {% if d.fails %}<div class="tstmt">{{ d.fails.tex | tex }}</div>{% endif %}
     {% if d.other_up %}<div class="tstmt">{{ d.other_up.tex | tex }}</div>
       {% if d.other_up.deriv %}<div class="tipnote">{{ derivline(d.other_up.deriv) }}</div>{% endif %}
     {% endif %}
@@ -58,6 +73,7 @@
     derived: read off the recorded values{% if v.fn %} on {{ v.fn }}{% endif %},
     {%- for x in v.vals %} \({{ x.m }} = {{ x.tex }}\){{ ' against' if loop.first }}{% endfor -%}
     {%- if v.how == 'setting' %} (inherited from the {{ v.from_setting }} setting){% endif -%}
+    {%- if v.how == 'push' %}, pushed through {{ v.steps | length - 1 }} recorded bound{{ '' if v.steps | length == 2 else 's' }}{% endif -%}
   {%- elif v.how == 'setting' -%}
     derived: inherited from the {{ v.from_setting }} setting
   {%- elif v.how == 'push' -%}
@@ -86,7 +102,7 @@
     </td>
   {% elif e.tok or e.cell or e.have_pair %}
     {% set c = e.cell %}
-    <td class="mcell x-{{ e.col }}{% if c and c.updated %} updated{% endif %}"
+    <td class="mcell x-{{ e.col }}{% if c and c.own %} own{% endif %}"
         data-col="{{ e.col }}"
         data-vt="{{ e.tok.total.verdict if e.tok.total else '' }}"
         data-vp="{{ e.tok.partial.verdict if e.tok.partial else '' }}"
@@ -95,7 +111,7 @@
       {% set body %}
         {{ tok(e, 'vt', 'total') }}{{ tok(e, 'vp', 'partial') }}{{ tok(e, 'vr', 'relation') }}
         {% if c and c.w %}<span class="wit-mark" title="witness: {{ zoo.function[c.w].name }}">&#9670;</span>{% endif %}
-        {% if c and c.updated %}<span class="upd-mark" title="{{ c.update_note }}">&#9733;</span>{% endif %}
+        {% if c and c.own %}<span class="upd-mark" title="{{ c.own_note }}">&#9733;</span>{% endif %}
       {% endset %}
       <a href="{{ pair_url(e.a, e.b) }}" class="cellinner">{{ body }}</a>
       <div class="celltip">
@@ -105,7 +121,7 @@
         {% if c.w %}<div>witness: {{ zoo.function[c.w].name }}</div>{% endif %}
         {% if c.refs %}<div>{{ c.refs | join(', ') }}</div>{% endif %}
         {% if c.note %}<div class="tipnote">{{ c.note | mdi }}</div>{% endif %}
-        {% if c.update_note %}<div class="tipnote">&#9733; {{ c.update_note | mdi }}</div>{% endif %}
+        {% if c.own_note %}<div class="tipnote">&#9733; {{ c.own_note | mdi }}</div>{% endif %}
         {% endif %}
         {% for s in site.settings %}{{ tiptok(e, s.id, s.short) }}{% endfor %}
         {% if e.eq %}<div class="tipnote">Equivalent measures: {{ e.eq.statement | mdi }}</div>{% endif %}
@@ -140,16 +156,19 @@
 
   <div class="card">
     <p>{{ t.convention | md }}</p>
-    <p class="dim">Source: {{ t.source_note | mdi }}</p>
   </div>
 
   <div class="matrix-controls" id="matrix-controls">
     <span class="lbl">Measures</span>
     <div class="segmented" id="matrix-scope">
-      <button class="on" data-scope="core">Core {{ meta.counts.core }}</button>
-      <button data-scope="recorded">With records {{ meta.counts.recorded }}</button>
-      <button data-scope="all">All {{ meta.counts.all }}</button>
-      <button data-scope="ladder">Ladder {{ meta.counts.ladder }}</button>
+      {# The counts are how many measures that button actually puts on screen in
+         the setting showing, so they move with the view; the server-rendered
+         numbers are the no-JS fallback.  A button whose grid would be identical
+         to the next one along is hidden outright rather than left to puzzle. #}
+      <button class="on" data-scope="core">Core <span class="n">{{ meta.counts.core }}</span></button>
+      <button data-scope="recorded">With records <span class="n">{{ meta.counts.recorded }}</span></button>
+      <button data-scope="all">All <span class="n">{{ meta.counts.all }}</span></button>
+      <button data-scope="ladder">Ladder <span class="n">{{ meta.counts.ladder }}</span></button>
     </div>
     <span class="lbl">View</span>
     <div class="segmented" id="matrix-view">
@@ -175,24 +194,25 @@
     <button class="linkish" id="cats-none">none</button>
   </div>
 
-  {# -------------------------------------------------- the published table #}
+  {# ------------------------------------------------------- the core grid #}
   <div class="matrixwrap" id="wrap-core">
     <table class="matrix" id="matrix">
       <thead>
         <tr>
           <th class="corner"><span class="m1">\(M_1\)</span><span class="slash">/</span><span class="m2">\(M_2\)</span></th>
           {% for c in cols %}
-          <th class="colhead cat-{{ c.category }}" data-col="{{ c.id }}">
-            <a href="{{ root }}measures/{{ c.id }}.html" title="{{ c.name }}">\({{ c.symbol }}\)</a>
+          <th class="colhead cat-{{ c.category }} x-{{ c.id }}" data-col="{{ c.id }}">
+            <a href="{{ root }}measures/{{ c.id }}.html" title="{{ c.name }}">\({{ c.symbol }}\)</a>{{ caveat(c) }}
           </th>
           {% endfor %}
         </tr>
       </thead>
       <tbody>
         {% for r in grid %}
-        <tr>
-          <th class="rowhead cat-{{ r.m.category }}">
-            <a href="{{ root }}measures/{{ r.m.id }}.html" title="{{ r.m.name }}">\({{ r.m.symbol }}\)</a>
+        <tr class="y-{{ r.m.id }}">
+          <th class="rowhead cat-{{ r.m.category }}{% if added[r.m.id] %} added{% endif %}">
+            <a href="{{ root }}measures/{{ r.m.id }}.html" title="{{ r.m.name }}">\({{ r.m.symbol }}\)</a>{{ caveat(r.m) }}
+            {% if added[r.m.id] %}<span class="row-mark" title="{{ added[r.m.id] | plain }}">&dagger;</span>{% endif %}
           </th>
           {% for e in r.entries %}{{ mcell(e, r.m) }}{% endfor %}
         </tr>
@@ -209,7 +229,7 @@
           <th class="corner"><span class="m1">\(M_1\)</span><span class="slash">/</span><span class="m2">\(M_2\)</span></th>
           {% for c in allm %}
           <th class="colhead cat-{{ c.category }} x-{{ c.id }}" data-col="{{ c.id }}" data-cat="{{ c.category }}">
-            <a href="{{ root }}measures/{{ c.id }}.html" title="{{ c.name }}">\({{ c.symbol }}\)</a>
+            <a href="{{ root }}measures/{{ c.id }}.html" title="{{ c.name }}">\({{ c.symbol }}\)</a>{{ caveat(c) }}
           </th>
           {% endfor %}
         </tr>
@@ -218,7 +238,7 @@
         {% for r in big %}
         <tr class="y-{{ r.m.id }}" data-cat="{{ r.m.category }}">
           <th class="rowhead cat-{{ r.m.category }}">
-            <a href="{{ root }}measures/{{ r.m.id }}.html" title="{{ r.m.name }}">\({{ r.m.symbol }}\)</a>
+            <a href="{{ root }}measures/{{ r.m.id }}.html" title="{{ r.m.name }}">\({{ r.m.symbol }}\)</a>{{ caveat(r.m) }}
           </th>
           {% for e in r.entries %}{{ mcell(e, r.m) }}{% endfor %}
         </tr>
@@ -234,15 +254,15 @@
         <tr>
           <th class="corner"><span class="m1">\(M_1\)</span><span class="slash">/</span><span class="m2">\(M_2\)</span></th>
           {% for e in lad %}
-          <th class="colhead cat-{{ e.m.category }}" data-col="{{ e.m.id }}">
-            <a href="{{ root }}measures/{{ e.m.id }}.html" title="{{ e.m.name }}">\({{ e.m.symbol }}\)</a>
+          <th class="colhead cat-{{ e.m.category }} x-{{ e.m.id }}" data-col="{{ e.m.id }}">
+            <a href="{{ root }}measures/{{ e.m.id }}.html" title="{{ e.m.name }}">\({{ e.m.symbol }}\)</a>{{ caveat(e.m) }}
           </th>
           {% endfor %}
         </tr>
       </thead>
       <tbody>
         {% for r in lad %}
-        <tr>
+        <tr class="y-{{ r.m.id }}">
           <th class="rowhead cat-{{ r.m.category }}">
             <span class="rank">{{ loop.index }}</span>
             <a href="{{ root }}measures/{{ r.m.id }}.html"
@@ -257,9 +277,9 @@
 
   <p class="dim small mtnote">Row \(M_1\), column \(M_2\). Hover a cell for the statements behind
   it &mdash; including, for a derived cell, the chain the build walked to get there; click to
-  open the pair page. The <b>Core</b> grid reproduces the published table in its original row
-  order, and its total-function exponents are the source's; everywhere else the exponents are the
-  best the zoo's own records support, which for most pairs off the published table means a
+  open the pair page. The <b>Core</b> grid takes its total-function exponents from the recorded
+  exponent table in <code>data/tables/</code>; everywhere else the exponents are the best the
+  zoo's records support, which for most pairs outside the core means a
   <span class="exp drv"><span class="a">derived</span></span> one.</p>
 
   <div class="legendrow">
@@ -275,9 +295,10 @@
          <span class="swatch v-gap"></span> gap &nbsp;
          <span class="swatch v-upper"></span> upper bound only &nbsp;
          <span class="swatch v-lower"></span> separation only &nbsp;
-         <span class="swatch v-none"></span> no bound exists &nbsp;
+         <span class="swatch v-unbounded"></span> no bound exists &nbsp;
          &#9670; separation has a named witness &nbsp;
-         &#9733; this zoo updated the source's value</p>
+         &#9733; exponent worked out here, argument in the note &nbsp;
+         &dagger; row with no recorded exponents, drawn from the derived layer</p>
       <p class="dim">{{ t.shading | mdi }}</p>
     </div>
 
@@ -317,7 +338,9 @@
         <li><b>transitive closure</b>: \(M_1 \le M_2^{p}\) and \(M_2 \le M_3^{q}\) give
           \(M_1 = O(M_3^{pq})\), carrying log factors and tightness along;</li>
         <li><b>separations pushed forward</b>: a family with \(M_1 \ge M_2^{p}\), plus a universal
-          \(M_3 = O(M_2^{r})\), separates \(M_1\) from \(M_3\) at exponent \(p/r\);</li>
+          \(M_3 = O(M_2^{r})\), separates \(M_1\) from \(M_3\) at exponent \(p/r\); the same
+          family and a universal \(M_1 = O(M_3^{r})\) instead separate \(M_3\) from \(M_2\),
+          since \(M_3\) is then polynomially larger than \(M_1\);</li>
         <li><b>setting inheritance</b>: an upper bound proved for relations holds for partial and
           total functions; a separation exhibited by a total function is a separation for partial
           functions and for relations. See {{ xref('settings') }}.</li>
@@ -330,10 +353,11 @@
     <div class="card tight">
       <h3>Cells with no exponent</h3>
       <ul class="legend glyphkey">
-        <li><span class="glyph g-none">&#8856;</span> proved that <em>no</em> bound of this form
-          exists in this setting &mdash; the usual fate of a polynomial relation on partial functions</li>
-        <li><span class="glyph g-unbounded">&infin;</span> unbounded: \(M_1\) can be arbitrarily
-          large at fixed \(M_2\)</li>
+        <li><span class="glyph g-unbounded">&infin;</span> proved that <em>no</em> bound exists in
+          this setting: \(M_1\) is not \(O(M_2^k)\) for any \(k\) &mdash; the usual fate of a
+          polynomial relation on partial functions. Usually \(M_1\) can be made arbitrarily large
+          at fixed \(M_2\); among the normalized quantities, where neither side can grow, it is
+          the <em>ratio</em> that is unbounded because the denominator collapses.</li>
         <li><b>exp</b> / <b>log</b> in place of an exponent &mdash; the relationship is
           real but not polynomial. A cell reading
           <span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">exp</span></span>
@@ -343,6 +367,11 @@
         <li><span class="glyph">&#8728;</span> on the <b>diagonal</b>: records about a measure and
           itself &mdash; composition theorems, \(\varepsilon\)-dependence</li>
         <li>blank &mdash; nothing recorded and nothing derivable for that ordered pair</li>
+        <li>blank in a row or column whose header carries a <sup class="cav"
+          style="display:inline">&deg;</sup> &mdash; <em>not</em> a gap: the measure is only
+          partially defined in the setting you are looking at, and the zoo propagates nothing
+          into or out of a setting where a measure is not squarely defined. Hover the marker for
+          which part of the definition is missing.</li>
       </ul>
     </div>
 
@@ -351,10 +380,37 @@
       <p><b>Total / Partial / Relations</b> switches which setting each cell reports; every
       exponent, chip and colour is recomputed for that setting, so most of the grid goes pale
       when you leave the total world &mdash; that is the honest picture.</p>
-      <p><b>Core</b> is the published table. <b>With records</b> adds every measure appearing in at
-      least one relation record. <b>All</b> shows all {{ meta.counts.all }} measures in the zoo,
-      including ones whose pairs are entirely unpopulated &mdash; useful for seeing what is
+      <p>Some measures are left out of every grid, and the count line says how many. A measure
+      with no conventional definition in the setting on screen has nothing to report there
+      (\(\mathrm{MaxInf}\) for relations). Neither does one that <em>degenerates</em> in that
+      setting: \(\mathrm{cbs} = \mathrm{bs}\) exactly on functions, and
+      \(\mathrm{psD} = \Theta(\mathrm{R})\) once the answer is unique, so their rows would only
+      restate another row. Nor do the dimensionless ones &mdash; \(\mathrm{Var}\),
+      \(\mathrm{MaxInf}\), \(\mathrm{NS}_\delta\), \(\mathrm{Stab}_\rho\) live in \([0,1]\), so no
+      exponent relates them to a query count, in any setting. All of them keep their measure and
+      pair pages, and their relations are still computed and closed over: that is where the
+      collapses are recorded, and they double as a check on the closure.</p>
+      <p>The dimensionless quantities do appear in the grid, in <em>normalized</em> form: what has
+      a query scale is not the influence but the ratio
+      \(\mathrm{osss} = \mathrm{Var}/\mathrm{MaxInf}\), the quantity the OSSS inequality bounds by
+      the average depth of a decision tree, and not the noise sensitivity but the critical rate,
+      \(\mathrm{nsr} = 1/\delta^{*}\). Each of the four hidden pages explains its own
+      normalization; <a href="{{ root }}concepts/normalization.html">the concept page</a> gives the
+      general recipe.</p>
+      <p><b>Core</b> is the classical/quantum core: the thirteen measures the exponent table
+      records, in its row order. \(\mathrm{rdeg}\) carries a column but no recorded row, because it
+      sits at the bottom of the order and the row is all corollary &mdash; every upper bound in it
+      factors through \(\mathrm{rdeg}\le\mathrm{C}\) and every separation is witnessed by
+      \(\vee_n\). It is drawn anyway, from the derived layer, and marked &dagger;. <b>With records</b> adds every measure appearing in at
+      least one relation record. <b>All</b> adds the rest of the {{ meta.counts.all }} measures in
+      the zoo, including ones whose pairs are entirely unpopulated &mdash; useful for seeing what is
       missing. Narrow either with the category chips.</p>
+      <p>The number on a scope button is how many measures it <em>draws</em>, in the setting on
+      screen and under the chips showing &mdash; not how many exist, since the rows hidden for the
+      reasons above never appear in any of them. Where two scopes would draw the same grid the
+      narrower button is dropped rather than left to look broken: as the zoo stands the only
+      measure with no relation record is a dimensionless one, which is hidden anyway, so
+      <b>With records</b> and <b>All</b> coincide and only <b>All</b> is offered.</p>
       <p><b>Ladder</b> drops the grouping by subject and puts {{ meta.counts.ladder }} of the
       measures in a rough order of size, biggest first, so the direction of the whole table is
       visible by eye: the free \(1,1^{\le}\) inequalities collect <em>below</em> the diagonal,

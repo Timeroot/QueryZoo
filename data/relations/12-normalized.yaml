@@ -1591,83 +1591,58 @@ relations:
   see_also: [rprt, Stab, MAJ]
 
 # ---------------------------------------------------------------------
-# The three of them against each other. None of these is an *unbounded*
-# separation -- each side is at most 1, so the constant function bounds it --
-# but neither is any of them a polynomial bound, because the small side can go
-# to zero while the large side stays put. `none` is the right verdict: no
-# bound of the form $a = O(b^k)$ exists, for any $k > 0$.
+# The three of them against each other. `unbounded` is the right verdict every
+# time, but for an unusual reason: neither quantity grows -- each is at most 1 --
+# and it is the *ratio* that blows up, because the small side goes to zero while
+# the large side stays put. So no bound $a = O(b^k)$ exists, for any $k > 0$.
 # ---------------------------------------------------------------------
 
 - from: NS
   to: Stab
   setting: total
   status: fails
-  upper:
-    - stmt: '\mathrm{NS}_{\delta}(f) \text{ admits no bound of the form } O(\mathrm{Stab}_{\rho}(f)^k).'
-      form: {kind: none}
-      refs: [ODonnell14]
-      note: |
-        Not because the two are unrelated -- they are the *same quantity*,
-        reparameterised:
-        $$\mathrm{NS}_{\delta}(f) = \tfrac12\big(1 - \mathrm{Stab}_{1-2\delta}(f)\big),
-          \qquad \mathrm{Stab}_{\rho}(f) = 1 - 2\,\mathrm{NS}_{(1-\rho)/2}(f),$$
-        an exact identity for every Boolean $f$, immediate from
-        $\mathrm{Stab}_\rho = \sum_S \rho^{|S|}\hat f(S)^2$ and
-        $\mathrm{NS}_\delta = \tfrac12\sum_S(1-(1-2\delta)^{|S|})\hat f(S)^2$.
-        The relationship is *affine*, and the matrix records multiplicative
-        ones, so it registers as no bound at all: $\oplus_n$ has
-        $\mathrm{Stab}_\rho = \rho^{\,n} \to 0$ while $\mathrm{NS}_\delta \to \tfrac12$.
-        Read the identity, not the cell.
-      conf: high
   lower:
     - stmt: '\mathrm{NS}_{\delta}(\oplus_n) = \tfrac12\big(1-(1-2\delta)^n\big) \to \tfrac12, \qquad \mathrm{Stab}_{\rho}(\oplus_n) = \rho^{\,n} \to 0'
       form: {kind: unbounded}
       witness: PARITY
+      refs: [ODonnell14]
       note: 'The ratio blows up not because the numerator grows -- it cannot, $\mathrm{NS}_\delta \le \tfrac12$ always -- but because the denominator collapses. That is the whole content of the cell.'
       conf: high
+  notes: |
+    No bound $\mathrm{NS}_\delta = O(\mathrm{Stab}_\rho^k)$ exists for any $k$ -- not
+    because the two are unrelated, but because they are the *same quantity*,
+    reparameterised:
+    $$\mathrm{NS}_{\delta}(f) = \tfrac12\big(1 - \mathrm{Stab}_{1-2\delta}(f)\big),
+      \qquad \mathrm{Stab}_{\rho}(f) = 1 - 2\,\mathrm{NS}_{(1-\rho)/2}(f),$$
+    an exact identity for every Boolean $f$, immediate from
+    $\mathrm{Stab}_\rho = \sum_S \rho^{|S|}\hat f(S)^2$ and
+    $\mathrm{NS}_\delta = \tfrac12\sum_S(1-(1-2\delta)^{|S|})\hat f(S)^2$.
+    The relationship is *affine*, and the matrix records multiplicative ones, so it
+    registers as no bound at all. Read the identity, not the cell.
   see_also: [NS, Stab, PARITY]
 
 - from: Stab
   to: NS
   setting: total
   status: fails
-  upper:
-    - stmt: '\mathrm{Stab}_{\rho}(f) \text{ admits no bound of the form } O(\mathrm{NS}_{\delta}(f)^k).'
-      form: {kind: none}
-      refs: [ODonnell14]
-      note: |
-        The same affine identity as in the other direction,
-        $\mathrm{Stab}_{\rho} = 1 - 2\,\mathrm{NS}_{(1-\rho)/2}$, and the same
-        reason it is invisible to a multiplicative matrix. Witness $\vee_n$:
-        $\mathrm{Stab}_\rho(\vee_n) \to 1$ while
-        $\mathrm{NS}_\delta(\vee_n) = 2^{1-n}(1-(1-\delta)^n) \to 0$.
-      conf: high
   lower:
     - stmt: '\mathrm{Stab}_{\rho}(\vee_n) \to 1, \qquad \mathrm{NS}_{\delta}(\vee_n) = 2^{1-n}\big(1-(1-\delta)^n\big) \to 0'
       form: {kind: unbounded}
       witness: OR
+      refs: [ODonnell14]
       note: 'OR is asymptotically constant, so it is perfectly noise *stable* and has vanishing noise *sensitivity* at the same time. The ratio $\mathrm{Stab}/\mathrm{NS}^k$ diverges for every $k$.'
       conf: high
+  notes: |
+    The same affine identity as in the other direction,
+    $\mathrm{Stab}_{\rho} = 1 - 2\,\mathrm{NS}_{(1-\rho)/2}$, and the same reason it is
+    invisible to a multiplicative matrix: no bound
+    $\mathrm{Stab}_\rho = O(\mathrm{NS}_\delta^k)$ holds for any $k$.
   see_also: [Stab, NS, OR]
 
 - from: NS
   to: MaxInf
   setting: total
   status: fails
-  upper:
-    - stmt: '\mathrm{NS}_{\delta}(f) \text{ admits no bound of the form } O(\mathrm{MaxInf}(f)^k).'
-      form: {kind: none}
-      refs: [KKL88, ODonnell14]
-      witness: TRIBES
-      note: |
-        This is the Kahn--Kalai--Linial regime and the one genuinely interesting
-        cell of the three: $\mathrm{TRIBES}_n$ has
-        $\mathrm{MaxInf} = \Theta(\log n / n) \to 0$ -- as small as a monotone
-        balanced function can have it -- and is nonetheless *maximally* noise
-        sensitive, $\mathrm{NS}_\delta \to \tfrac12$ for every fixed $\delta$.
-        So vanishing maximal influence does not buy any noise stability at all.
-        The reverse direction does hold, and tightly: see [[MaxInf]] vs [[NS]].
-      conf: high
   lower:
     - stmt: '\mathrm{NS}_{\delta}(\mathrm{TRIBES}_n) \to \tfrac12, \qquad \mathrm{MaxInf}(\mathrm{TRIBES}_n) = \Theta(\log n / n) \to 0'
       form: {kind: unbounded}
@@ -1675,54 +1650,52 @@ relations:
       refs: [KKL88, ODonnell14]
       note: 'The Kahn--Kalai--Linial extremal case: the smallest maximal influence a balanced monotone function can have, together with maximal noise sensitivity.'
       conf: high
+  notes: |
+    No bound $\mathrm{NS}_\delta = O(\mathrm{MaxInf}^k)$ exists. This is the
+    Kahn--Kalai--Linial regime and the one genuinely interesting cell of the three:
+    $\mathrm{TRIBES}_n$ has $\mathrm{MaxInf} = \Theta(\log n / n) \to 0$ -- as small as
+    a monotone balanced function can have it -- and is nonetheless *maximally* noise
+    sensitive, $\mathrm{NS}_\delta \to \tfrac12$ for every fixed $\delta$. So vanishing
+    maximal influence does not buy any noise stability at all. The reverse direction
+    does hold, and tightly: see [[MaxInf]] vs [[NS]].
   see_also: [NS, MaxInf, Inf, TRIBES]
 
 - from: Stab
   to: MaxInf
   setting: total
   status: fails
-  upper:
-    - stmt: '\mathrm{Stab}_{\rho}(f) \text{ admits no bound of the form } O(\mathrm{MaxInf}(f)^k).'
-      form: {kind: none}
-      witness: OR
-      note: |
-        $\vee_n$ is asymptotically constant, so its variance vanishes and
-        $\mathrm{Stab}_\rho(\vee_n) \to 1$, while every coordinate has influence
-        only $2^{1-n}$. A function can be perfectly noise stable with no
-        influential coordinate whatsoever -- it just has to be nearly constant.
-      conf: high
   lower:
     - stmt: '\mathrm{Stab}_{\rho}(\vee_n) \to 1, \qquad \mathrm{MaxInf}(\vee_n) = 2^{1-n} \to 0'
       form: {kind: unbounded}
       witness: OR
       note: 'Perfect noise stability with no influential coordinate at all -- being nearly constant is enough.'
       conf: high
+  notes: |
+    No bound $\mathrm{Stab}_\rho = O(\mathrm{MaxInf}^k)$ exists. $\vee_n$ is
+    asymptotically constant, so its variance vanishes and
+    $\mathrm{Stab}_\rho(\vee_n) \to 1$, while every coordinate has influence only
+    $2^{1-n}$. A function can be perfectly noise stable with no influential
+    coordinate whatsoever -- it just has to be nearly constant.
   see_also: [Stab, MaxInf, OR]
 
 - from: MaxInf
   to: Stab
   setting: total
   status: fails
-  upper:
-    - stmt: '\mathrm{MaxInf}(f) \le \dfrac{1 - \mathrm{Stab}_{\rho}(f)}{1-\rho}, \text{ but no bound } O(\mathrm{Stab}_{\rho}(f)^k).'
-      form: {kind: none}
-      refs: [ODonnell14]
-      witness: PARITY
-      note: |
-        Substituting $\delta = (1-\rho)/2$ into the $\mathrm{MaxInf} \le
-        \mathrm{NS}_\delta/\delta$ bound proved at [[MaxInf]] vs [[NS]] gives
-        $\mathrm{MaxInf}(f) \le (1 - \mathrm{Stab}_\rho(f))/(1-\rho)$, which is
-        the real content of this cell. It is a bound in $1 - \mathrm{Stab}$, not
-        in $\mathrm{Stab}$, and no bound in $\mathrm{Stab}$ itself is possible:
-        $\oplus_n$ has $\mathrm{MaxInf} = 1$ with
-        $\mathrm{Stab}_\rho = \rho^{\,n} \to 0$.
-      conf: high
   lower:
     - stmt: '\mathrm{MaxInf}(\oplus_n) = 1, \qquad \mathrm{Stab}_{\rho}(\oplus_n) = \rho^{\,n} \to 0'
       form: {kind: unbounded}
       witness: PARITY
-      note: 'Maximal influence pinned at its ceiling while noise stability decays geometrically. The genuine bound in this cell is the one in $1 - \mathrm{Stab}$ given above.'
+      refs: [ODonnell14]
+      note: 'Maximal influence pinned at its ceiling while noise stability decays geometrically. The genuine bound in this cell is the one in $1 - \mathrm{Stab}$, recorded in the notes.'
       conf: high
+  notes: |
+    $$\mathrm{MaxInf}(f) \le \frac{1 - \mathrm{Stab}_{\rho}(f)}{1-\rho}$$
+    is the real content of this cell -- substitute $\delta = (1-\rho)/2$ into the
+    $\mathrm{MaxInf} \le \mathrm{NS}_\delta/\delta$ bound proved at [[MaxInf]] vs
+    [[NS]]. It is a bound in $1 - \mathrm{Stab}$, not in $\mathrm{Stab}$, and no
+    bound $O(\mathrm{Stab}_\rho^k)$ in $\mathrm{Stab}$ itself is possible:
+    $\oplus_n$ has $\mathrm{MaxInf} = 1$ with $\mathrm{Stab}_\rho = \rho^{\,n} \to 0$.
   see_also: [MaxInf, Stab, NS, PARITY]
 
 - from: MaxInf

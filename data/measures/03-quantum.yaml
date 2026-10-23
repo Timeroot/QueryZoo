@@ -43,6 +43,7 @@ measures:
     - 'Quantum query complexity **composes perfectly**: $\mathrm{Q}(f\circ g) = \Theta(\mathrm{Q}(f)\mathrm{Q}(g))$.'
     - 'For partial functions the gap with $\mathrm{R}$ is unbounded: $\mathrm{Q}=O(1)$ vs $\mathrm{R}=\tilde\Omega(n^{1-1/2k})$; exponential for Simon''s problem.'
   refs: [BBCMdW01, Reichardt11, ABKRT21, ABBLSS17, BansalSinha21, SSW21]
+  related: [QE, Q0, R, adeg, Advpm, D]
   see_also: [QE, Q0, Advpm, adeg, R, D, lambda]
   confidence: high
 
@@ -66,6 +67,7 @@ measures:
     - 'First superlinear-advantage total function: $\mathrm{Q}_{\mathrm{E}}(f) = O(\mathrm{D}(f)^{0.8675\ldots})$ [Ambainis13], giving the $1.15$ exponents in the $\mathrm{Q}_{\mathrm{E}}$ column.'
     - 'It is open whether $\mathrm{Q}_{\mathrm{E}}(f) = O(\deg(f))$ for total $f$ [BdW02, Open problem 4].'
   refs: [BBCMdW01, Ambainis13, BdW02, AmbainisGruslysEtAl16]
+  related: [Q, Q0, deg, D, R0]
   see_also: [Q, Q0, deg, D]
   confidence: high
 
@@ -77,13 +79,33 @@ measures:
   short: 'Quantum algorithm that never errs but may output "don''t know" with probability <= 1/2.'
   definition: |
     The quantum analogue of $\mathrm{R}_0$: outputs in $\{0,1,\bot\}$, never wrong,
-    $\Pr[\bot]\le 1/2$; cost is the (worst-case, or expected) number of queries.
+    $\Pr[\bot]\le 1/2$; cost is the worst-case number of queries. The $\bot$ outcome
+    is what makes a worst-case count meaningful -- as with $\mathrm{R}_0$, an
+    always-answering algorithm with a worst-case bound collapses to $\mathrm{D}$.
+    Charging expected cost instead and never outputting $\bot$ gives the same measure
+    up to a factor of two (Markov in one direction, repetition in the other), and the
+    same conversion applied to a classical Las Vegas algorithm gives
+    $\mathrm{Q}_0(f) \le 2\,\mathrm{R}_0(f)$.
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
   facts:
-    - '$\mathrm{Q}(f) \le \mathrm{Q}_0(f) \le \mathrm{Q}_{\mathrm{E}}(f)$.'
+    - '$\mathrm{Q}(f) \le \mathrm{Q}_0(f) \le \mathrm{Q}_{\mathrm{E}}(f)$, and $\mathrm{Q}_0(f) \le 2\,\mathrm{R}_0(f)$.'
+    - |
+      The polynomial floor under $\mathrm{Q}_0$ is $\mathrm{rdeg}/2$, **not** $\deg/2$.
+      Writing $p_b$ for the probability of output $b$ after $T$ queries -- a polynomial
+      of degree $\le 2T$ -- zero error says only that $p_1$ vanishes on $f^{-1}(0)$ and
+      $p_0$ vanishes on $f^{-1}(1)$. So $p_1$ is a nondeterministic polynomial for $f$
+      and $p_0$ one for $\bar f$, giving
+      $\mathrm{Q}_0(f) \ge \tfrac12\max\{\mathrm{ndeg}(f), \mathrm{ndeg}(\bar f)\} = \mathrm{rdeg}(f)/2 \ge \mathrm{NQ}(f) - \tfrac12$
+      -- a zero-error algorithm is in particular a nondeterministic one for $f$ *and* for $\bar f$.
+      The stronger $\deg(f) \le 2T$ needs $p_1 = f$ exactly, which is
+      $\mathrm{Q}_{\mathrm{E}}$; the difference is real, and it is large -- on
+      [[NANDtree]] $\deg = N$ while $\mathrm{rdeg} = \Theta(\sqrt N)$.
     - 'For total $f$, $\mathrm{Q}_0$ is polynomially related to all the other measures; the exact relations to $\mathrm{Q}_{\mathrm{E}}$ are less studied than the $\mathrm{R}_0$-vs-$\mathrm{R}$ ones.'
-  refs: [BdW02]
-  see_also: [Q, QE, R0]
+    - 'New certification lower bounds: $\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}=\Theta(\mathrm{Q}_0^{\mathrm{cert}})=O(\mathrm{Q}_0)$, $\overline{\deg}^{\mathrm{cert}}=O(\mathrm{Q}_0)$, and $\overline{\mathrm{osdeg}}=O(\mathrm{Q}_0)$ [KLLPV26].'
+    - '[[ANDNotExactOne]] has $\mathrm{Q}_0=\widetilde\Theta(m^{3/2})$ but $\mathrm{Q}=\Theta(m)$ and $\mathrm{rdeg}=m$; bounded degree certification proves the stronger lower bound [KLLPV26, Theorem 10 and Lemma 55].'
+  refs: [BdW02, BCWZ99, KLLPV26]
+  related: [Q, QE, R0, ndeg, NQ, rdeg, QEcert, degcert, osdeg]
+  see_also: [Q, QE, R0, rdeg, ndeg, NQ, certification, ANDNotExactOne]
   confidence: medium
 
 - id: PostQ
@@ -105,6 +127,7 @@ measures:
   facts:
     - 'Post-selection and bounded error are *incomparable* resources: for partial functions there are unbounded separations between $\mathrm{rdeg}$ and $\widetilde{\deg}$ in both directions [IJKKKSWW23].'
   refs: [MahadevdeWolf15, Aaronson05postselection, IJKKKSWW23]
+  related: [rdeg, ardeg, Q, adeg]
   see_also: [rdeg, ardeg, Q, adeg]
   confidence: high
 
@@ -123,8 +146,11 @@ measures:
   facts:
     - '$\mathrm{QC}(f) = \Theta(\sqrt{\mathrm{RC}(f)}) = \Theta(\sqrt{\mathrm{fbs}(f)})$ [Aaronson08].'
     - '$\mathrm{QC}(f) \le \mathrm{Q}(f)$.'
-  refs: [Aaronson08]
-  see_also: [RC, fbs, C, Q]
+    - Operational certification for $\mathrm{Q}$, quantum distinguishing complexity, the quantum adversary bound, all four quantum sabotage variants, bounded approximate degree and block-multilinear bounded approximate degree equals $\Theta(\mathrm{QC})$ [KLLPV26, Theorems 4 and 6].
+    - For every quantum sabotage variant, $\mathrm{QC}=O(\mathrm{QS})$ even on partial functions; Index shows the inequality need not be tight [CMP24, KLLPV26].
+  refs: [Aaronson08, CMP24, KLLPV26]
+  related: [RC, fbs, C, Q, QSstr, QEcert]
+  see_also: [RC, fbs, C, Q, certification, ADDR]
   confidence: high
 
 - id: NQ
@@ -141,6 +167,7 @@ measures:
   equivalent:
     - {measure: ndeg, form: {exp: 1, kind: theta}, statement: '$\mathrm{NQ}(f) = \lceil \mathrm{ndeg}(f)/2 \rceil$', refs: [deWolf03]}
   refs: [deWolf03]
+  related: [ndeg, C1, rdeg, Q0]
   see_also: [ndeg, C1, rdeg]
   confidence: high
 
@@ -161,6 +188,7 @@ measures:
     - '$\mathrm{Q}^{\mathrm{rob}}(\mathrm{PARITY}_n) = \Theta(n)$ -- **no** $\log n$ overhead, in contrast to the classical $\Theta(n\log n)$ [FRPU94 vs BNRdW05].'
     - '$\mathrm{Q}^{\mathrm{rob}}(f) = O(\mathrm{Q}(f)\log \mathrm{Q}(f))$ in general; whether the log is needed is open.'
   refs: [BNRdW05, FRPU94]
+  related: [Q, Np, noisyR]
   see_also: [Q, Np]
   confidence: medium
 
@@ -185,6 +213,7 @@ measures:
     - '$\lambda(f) \le \mathrm{Adv}(f)$ [ABKRT21 via BSS03].'
     - 'For **total search problems** $\mathrm{Adv}$ can be exponentially smaller than $\widetilde{\deg}$ [BenDavidKundu24search].'
   refs: [Ambainis02, SpalekSzegedy06, Zhang05, BarnumSaksSzegedy03, LLS06, KulkarniTal16]
+  related: [Advpm, Q, gamma2, lambda, C, fbs]
   see_also: [Advpm, lambda, Q, gamma2]
   confidence: high
 
@@ -210,6 +239,7 @@ measures:
     - 'Perfect composition: $\mathrm{Adv}^{\pm}(f\circ g)=\Theta(\mathrm{Adv}^{\pm}(f)\mathrm{Adv}^{\pm}(g))$, which is how one proves $\mathrm{Q}$ composes.'
     - 'Being an SDP, $\mathrm{Adv}^{\pm}$ is computable in time exponential in $n$ but polynomial in the domain size.'
   refs: [HLS07, Reichardt11, LMRSS11, BelovsLee20]
+  related: [Adv, Q, gamma2, MAdv, lambda]
   see_also: [Adv, Q, gamma2, lambda]
   confidence: high
 
@@ -226,6 +256,7 @@ measures:
     objects; it coincides with $\mathrm{Adv}^{\pm}$ up to constants.
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: partial}}
   refs: [LMRSS11]
+  related: [Advpm, Q, Adv, MAdv]
   see_also: [Advpm, Q]
   confidence: medium
 
@@ -241,6 +272,7 @@ measures:
     (strong direct product theorems), where $\mathrm{Adv}^{\pm}$ degrades.
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: partial}}
   refs: [Spalek08, SpalekSzegedy06]
+  related: [Advpm, Adv, Q, gamma2]
   see_also: [Advpm, Adv, Q]
   confidence: medium
 
@@ -270,6 +302,8 @@ measures:
     - '$\lambda(f) \le \mathrm{Adv}(f) = O(\mathrm{Q}(f))$, so $\lambda$ lower-bounds quantum query complexity.'
     - '**2026:** $\mathrm{bs}(f)$ can exceed $\lambda(f)^2$ -- there is a total $f$ with $\mathrm{bs}(f)\ge\lambda(f)^{2.127}$ [Meiburg26], refuting an ABKRT question. Best upper bound remains $\mathrm{bs} = O(\lambda^4)$.'
     - 'The single-bit private-coin certificate game value equals $\lambda(f)^2$ [CGLMSG23].'
+    - 'On a promise $\lambda$ is not weak but empty: if no two promise inputs are adjacent the sensitivity graph has no edges at all, so $\lambda = 0$ while $\mathrm{D} = \Theta(n)$ ([[Forrelation]], [[GapMaj]]). The collapse is sharper than for $\mathrm{Adv}$, which merely drops to $\Theta(1)$ there: an exact $0$ kills every candidate bound $M \le g(\lambda)$ at once, since it would read $M \le g(0)$.'
   refs: [ABKRT21, Huang19, Koutsoupias93, Meiburg26, CGLMSG23]
+  related: [s, deg, adeg, Adv, Q, bs]
   see_also: [s, s0, s1, deg, adeg, bs, Adv, Q]
   confidence: high

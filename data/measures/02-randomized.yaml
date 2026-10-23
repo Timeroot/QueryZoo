@@ -47,6 +47,7 @@ measures:
     - 'Composition can *fail*: there are partial $f,g$ with $\mathrm{R}(f\circ g) \ll \mathrm{R}(f)\mathrm{R}(g)$ [BenDavidBlais20composition].'
     - '$\mathrm{R}_\varepsilon(f) = \max_\mu \mathrm{D}^\mu_\varepsilon(f)$ (Yao), for the worst-case-cost convention.'
   refs: [Nisan91, BBCMdW01, BdW02, ABBLSS17]
+  related: [R0, D, Q, Rbar, RS, noisyR]
   see_also: [R0, Rbar, D, Q, noisyR, LR, RS]
   confidence: high
 
@@ -76,6 +77,7 @@ measures:
     - '$\bar{\mathrm{R}}_0(f) = \mathrm{R}_0(f)$: the zero-error measure is by definition an expected-cost measure.'
     - 'Yao (1977) asked for a distributional characterisation of $\bar{\mathrm{R}}_\varepsilon$; resolved positively for constant $\varepsilon$ and negatively for $\varepsilon = 1/2-o(1)$.'
   refs: [Yao77, Vereshchagin98, BBGM22]
+  related: [R, R0, Dmu, R1]
   see_also: [R, R0, Dmu]
   confidence: high
 
@@ -100,6 +102,7 @@ measures:
     - '$\mathrm{R}_0(f) = O\big(\mathrm{R}(f)^2\log \mathrm{R}(f)\big)$ [KulkarniTal16], improving $O(\mathrm{R}(f)^2\log n)$ [Midrijanis05].'
     - '$\mathrm{R}_0(\text{NAND-tree}_n) = \Theta(n^{0.7537\ldots})$ [Saks-Wigderson], matching $\mathrm{R}$ [Santha].'
   refs: [SaksWigderson86, Santha95, KulkarniTal16, ABBLSS17, BdW02]
+  related: [R, D, Q0, Rbar, C]
   see_also: [R, D, Rbar, Q0]
   confidence: high
 
@@ -122,6 +125,7 @@ measures:
     - '$\mathrm{R}^1(f) \ge \mathrm{C}^1(f)$: a certain "yes" must exhibit a 1-certificate.'
     - '$\mathrm{R}(f) \le \mathrm{R}^1(f) \le \mathrm{R}_0(f) \le \mathrm{D}(f)$.'
   refs: [BdW02]
+  related: [R, R0, C1, Rbar]
   see_also: [R, R0, C1]
   confidence: medium
 
@@ -148,14 +152,16 @@ measures:
     - '**Quadratically tight for total $f$:** $\mathrm{R}(f) = O(\mathrm{RS}(f)^2\log \mathrm{RS}(f))$ [BenDavidKothari18, Thm 32]. No total $f$ with $\mathrm{RS}(f) = o(\mathrm{R}(f))$ is known.'
     - '$\mathrm{RS}$ can be quadratically larger than the partition bound, and $\mathrm{RS}(f) = \tilde\Omega(\mathrm{Q}(f)^{2.5})$ for some total $f$ [BenDavidKothari18, Thm 30].'
     - '$\mathrm{RS}(g) = \tilde\Omega(\mathrm{D}^{\mathrm{prod}}(g))$ for total $g$, and the gap is polynomial (NAND-tree) [Sanyal24].'
-    - '$\bar{\chi}(g) = \Omega(\mathrm{RS}(g))$, with an unbounded separation [GLSS19].'
+    - '**The quadratic tightness above is total-only, and badly so.** On partial functions $\mathrm{R}$ is *unbounded* in terms of $\mathrm{RS}$: any promise whose two sides are far apart in Hamming distance has $\mathrm{RS} = O(1)$ whatever its randomized complexity, because every sabotaged input is then riddled with stars. The collision problem is the clean instance -- $\mathrm{RS}(\mathrm{COL}_n) = \Theta(1)$ against $\mathrm{R} = \Theta(\sqrt n)$ [BenDavidKothari18, Sec. 1.4]. See [[Collision]].'
+    - '$\bar{\chi}(g) = \Omega(\mathrm{RS}(g))$ for all partial $g$ [GLSS19, Thm 7]; the same collision witness makes that gap unbounded. Repairing the partial-function collapse is what $\chi$, $\bar\chi$ and $\mathrm{LR}$ are for: each is $\Omega(\sqrt{\mathrm{R}})$ even off the promise, and $\mathrm{RS}$ is not.'
   refs: [BenDavidKothari18, GLSS19, Sanyal24]
-  see_also: [R, chi, chibar, LR, noisyR]
+  related: [R, chibar, chi, LR, D_prod, noisyR]
+  see_also: [R, chi, chibar, LR, noisyR, Collision, open-RS-vs-R]
   confidence: high
 
 - id: chi
   name: Conflict complexity
-  symbol: '\chi(g)'
+  symbol: '\chi(f)'
   category: composition
   order: 35
   short: 'A measure of how hard it is for a decision tree to distinguish a random 0-input from a random 1-input, one query at a time.'
@@ -169,15 +175,18 @@ measures:
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
   facts:
     - '$\mathrm{R}(f\circ g^n) = \Omega(\mathrm{R}(f)\,\chi(g))$ [Sanyal18; AGJKLMSS17].'
-    - '$\chi(g) = \Omega(\mathrm{bs}(g))$ [Li18].'
+    - '$\chi(g) = \Omega(\mathrm{bs}(g))$ -- more precisely $\chi(f)\ge(\mathrm{bs}(f)+1)/2$ for total $f$ [Li18, Thm 1].'
     - '$\chi(g) = \Omega(\sqrt{\mathrm{R}(g)})$.'
+    - '$\chi(g)\le\mathrm{D}(g)$ [Li18, Sec. 2] is the *only* upper bound proved directly for $\chi$; everything else runs through $\chi\le\bar\chi\le\mathrm{LR}\le\mathrm{R}$. It gives $\chi\le\mathrm{C}^2$ and $\chi\le\mathrm{bs}^3$, so the $\mathrm{bs}$ cell is a gap $[1,3]$ and the $\mathrm{C}$ cell a gap $[1,2]$ -- both inherited from $\mathrm{D}$, neither touched since.'
+    - 'Whether $\chi=\Omega(\mathrm{C})$ or $\chi=O(\mathrm{C})$ -- or neither -- is [[open-chi-vs-C]].'
   refs: [Sanyal18, AGJKLMSS17, Li18]
-  see_also: [chibar, RS, LR, R]
+  related: [chibar, RS, LR, R, bs]
+  see_also: [chibar, RS, LR, R, bs, C, D, open-chi-vs-C]
   confidence: medium
 
 - id: chibar
   name: Max-conflict complexity
-  symbol: '\bar{\chi}(g)'
+  symbol: '\bar{\chi}(f)'
   category: composition
   order: 36
   short: 'A strengthening of conflict complexity that dominates sabotage complexity.'
@@ -188,11 +197,12 @@ measures:
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
   facts:
     - '$\mathrm{R}(f\circ g^n) = \Omega(\mathrm{R}(f)\,\bar{\chi}(g))$ [GLSS19].'
-    - '$\bar{\chi}(g) = \Omega(\sqrt{\mathrm{R}(g)})$ even for partial $g$.'
-    - '$\bar{\chi}(g) = \Omega(\mathrm{RS}(g))$ for all partial $g$, with an unbounded separation in the other direction.'
+    - '$\bar{\chi}(g) = \Omega(\sqrt{\mathrm{R}(g)})$ even for partial $g$ [GLSS19, Thm 6] -- proved there for the smaller measure $\chi$, so it holds a fortiori for $\bar\chi$.'
+    - '$\bar{\chi}(g) = \Omega(\mathrm{RS}(g))$ for all partial $g$ [GLSS19, Thm 7]. The two facts together make the gap *unbounded* on partial functions: the collision problem has $\mathrm{RS} = \Theta(1)$ but $\mathrm{R} = \Theta(\sqrt n)$, hence $\bar\chi = \Omega(n^{1/4})$. Not being able to collapse that way is the whole point of the measure.'
     - 'Ordering: $\mathrm{RS} \lesssim \bar{\chi} \lesssim \mathrm{LR} \lesssim \mathrm{R}$; no asymptotic separation among the first three is known for *total* functions.'
-  refs: [GLSS19, BBGM22]
-  see_also: [chi, RS, LR, R]
+  refs: [GLSS19, BBGM22, BenDavidKothari18]
+  related: [chi, RS, LR, R]
+  see_also: [chi, RS, LR, R, Collision]
   confidence: high
 
 - id: LR
@@ -216,6 +226,7 @@ measures:
     - '$\mathrm{LR}$ can be polynomially larger than $\bar{\chi}$ [BBGM22].'
     - '$\mathrm{R}^*(f) \ge \Omega(\mathrm{LR}(f))$.'
   refs: [BBGM22]
+  related: [chibar, RS, R, Rstar, noisyR]
   see_also: [chibar, RS, noisyR, Rstar, R]
   confidence: high
 
@@ -232,14 +243,131 @@ measures:
     cost of an algorithm that computes $f$ with error $\le 1/3$.
 
     Ben-David and Blais showed this is exactly the right *outer* measure for composition.
-  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: partial}}
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes}
+    relation: {defined: yes, note: 'Buying biased copies and then having to name *some* valid output is a perfectly ordinary search problem; Lemma 37 of [BenDavidBlais20composition] is stated for relations, and the relational case is where the model comes apart from $\mathrm{R}$ for good -- see [[AgreeString]].'}
   facts:
-    - '$\mathrm{noisyR}(f) \le \mathrm{R}(f) = O(\mathrm{noisyR}(f)\cdot \text{polylog})$? -- the two are within a polynomial; $\mathrm{noisyR} \le \mathrm{R}$ always.'
+    - '$\mathrm{noisyR}(f) \le \mathrm{R}(f)$ always, and the two are *not* within a constant: $\mathrm{R}$ can be exponentially larger for partial $f$ ([[ApproxIndex]]). Whether $\mathrm{R} = 2^{O(\mathrm{noisyR})}$ in general is open.'
     - '$\mathrm{R}(f\circ g^n) = \Omega(\mathrm{noisyR}(f)\,\mathrm{R}(g))$, and $\mathrm{noisyR}$ is the largest measure with this property [BenDavidBlais20composition].'
     - 'Characterisation: $\mathrm{noisyR}(f) = \Theta\!\big(\mathrm{R}(f\circ \mathrm{GapMaj}_n)/\mathrm{R}(\mathrm{GapMaj}_n)\big)$.'
     - 'If $\mathrm{R}(f) = \Theta(n)$ then $\mathrm{noisyR}(f) = \Theta(\mathrm{R}(f))$.'
+    - '**Lemma 37** of [BenDavidBlais20composition]: $\mathrm{noisyR}(f) = \Omega(1)$ for every non-constant $f$, and more precisely distinguishing two inputs that differ on a block $B$ costs $\Omega(1)$ *inside $B$*. Both hold for relations with two inputs whose allowed output sets are disjoint.'
+    - '**Lemma 38**: $\mathrm{noisyR}(f) = \Omega(\mathrm{fbs}(f))$, by LP-weighting the previous item over the sensitive blocks. Composed with $\mathrm{R} = O(\mathrm{fbs}^3)$ this is the only general *upper* bound on $\mathrm{R}$ in terms of $\mathrm{noisyR}$ we have, and only for total $f$.'
+    - '**Normal form** (Lemmas 36, Theorem 39): an optimal noisy algorithm may be assumed to use only two bias values, $\gamma = 1$ and $\gamma = 1/\sqrt n$.'
   refs: [BenDavidBlais20minimax, BenDavidBlais20composition, GoosMaystre21]
-  see_also: [R, LR, Rstar, Np]
+  related: [R, LR, Np, noisyRna, Rstar, fbs]
+  see_also: [R, LR, Rstar, Np, noisyRna, fbs]
+  confidence: high
+
+- id: noisyRna
+  name: Non-adaptive noisy randomized query complexity
+  symbol: '\mathrm{noisyR}^{\mathrm{na}}(f)'
+  category: composition
+  order: 38.5
+  short: 'The bias-purchasing model with the whole schedule of biases committed to in advance.'
+  definition: |
+    As [[noisyR]], but non-adaptively: the algorithm draws, from a distribution of its
+    choosing, a vector of biases $(\gamma_1,\dots,\gamma_n)$; it then receives one copy
+    of each $x_i$ through a binary symmetric channel of bias $\gamma_i$, all at once,
+    and must output an answer. The cost is $\sum_i \gamma_i^2$ and the error must be
+    at most $1/3$.
+
+    Setting every $\gamma_i \in \{0,1\}$ recovers [[Rna]], so
+    $\mathrm{noisyR}^{\mathrm{na}} \le \mathrm{R}^{\mathrm{na}}$.
+  settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
+  facts:
+    - '**Theorem 8** of [BenDavidBlais20composition]: $\mathrm{noisyR}^{\mathrm{na}}(f) = \Theta(\mathrm{R}^{\mathrm{na}}(f))$ for every (possibly *partial*) Boolean $f$. Non-adaptively, buying cheap bias buys nothing at all.'
+    - 'This is **false for relations**: on the [[AgreeString]] family of [GLSS19], $\mathrm{noisyR}^{\mathrm{na}} = O(1)$ while $\mathrm{R}^{\mathrm{na}} = \Omega(\sqrt n)$. The proof of Theorem 8 therefore has to "notice" that $f$ is a function, which is unusual in query complexity.'
+    - 'The adaptive analogue is exactly [[open-noisyR-vs-R]], and is *false* as an exact $\Theta$ for partial $f$ ([[ApproxIndex]]).'
+    - 'The proof goes through Samorodnitsky''s inequality [Samorodnitsky16, PolyanskiyWu17]: a noisy copy at bias $\rho$ tells you at least as much about $f(X)$ as an erasure copy that survives with probability $\rho^2$. Erasures are honest queries, so the noisy budget can be converted into a query budget -- and it is the entropy-to-error step (Fano / [HellmanRaviv70]) that breaks for relations.'
+  refs: [BenDavidBlais20composition, Samorodnitsky16, PolyanskiyWu17, HellmanRaviv70]
+  related: [noisyR, Rna, R, Dna]
+  see_also: [noisyR, Rna, R, Dna, AgreeString]
+  confidence: high
+
+- id: Corr
+  name: Correlated samples complexity
+  symbol: '\mathrm{Corr}_{\varepsilon}(f)'
+  aliases: ['correlated samples problem', 'multiple-sample distributional complexity']
+  category: composition
+  order: 38.6
+  short: 'Distributional complexity when the algorithm may query as many independent samples from the same side as it likes.'
+  definition: |
+    Fix an input distribution $D = \tfrac12 D_0 + \tfrac12 D_1$, where $D_b$ is supported on
+    $f^{-1}(b)$; distinguishing $D_0$ from $D_1$ with one sample is exactly the distributional
+    complexity $\mathrm{D}_\varepsilon(f, D)$. Now hand the algorithm $k$ samples drawn from the
+    *same* side, so that $f^k$ evaluates to $0^k$ or to $1^k$, and let it choose $k$:
+    $$\mathrm{Corr}_\varepsilon(f, D) \;:=\; \min_{k\ge 1}\ \mathrm{D}_\varepsilon\big(f^k,\ \tfrac12 D_0^k + \tfrac12 D_1^k\big),
+    \qquad \mathrm{Corr}_\varepsilon(f) := \max_D \mathrm{Corr}_\varepsilon(f, D).$$
+    More samples never hurt, so the minimand is non-increasing in $k$, and $k \le n$ is without
+    loss of generality. Unadorned $\mathrm{Corr} := \mathrm{Corr}_{1/3}$.
+
+    For a *fixed* $D$ the extra samples can help enormously; the content of the measure is that
+    against the **hardest** $D$ they do not.
+  params:
+    - name: eps
+      symbol: '\varepsilon'
+      default: '1/3'
+      range: '[0, 1/2)'
+      description: 'Error probability, over the draw of the samples.'
+      dependence: |
+        Unlike single-sample distributional complexity, this model **does** admit cheap error
+        reduction: $\mathrm{Corr}_\varepsilon(f, D) \le O(\log(1/\varepsilon)/\delta^2)\cdot
+        \mathrm{Corr}_{1/2-\delta}(f, D)$ (Fact 1 of [BDGHMT20]). Run the weak algorithm on fresh
+        samples and take the majority -- which is legal precisely because all the samples come
+        from the same side. In the single-sample setting the same trick is unavailable, and that
+        failure is the reason $\mathrm{D}_\varepsilon(f,D)$ is so badly behaved at small bias.
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes, note: '$D_0$ and $D_1$ are supported inside the promise.'}
+    relation: {defined: no, note: 'The definition splits the distribution by the *value* of $f$ into two sides; with many valid outputs there is no such split, and $f^k$ has no "all copies agree" event.'}
+  equivalent:
+    - {measure: R, setting: total, form: {exp: 1, kind: theta}, statement: '$\mathrm{Corr}(f) = \Theta(\mathrm{R}(f))$ -- Theorem 1, for partial $f$ as well', refs: [BDGHMT20]}
+    - {measure: Sel, setting: total, form: {exp: 1, kind: theta}, statement: '$\mathrm{Corr}(f) = \Theta(\mathrm{Sel}(f))$, both being $\Theta(\mathrm{R}(f))$ -- but *not* distribution by distribution', refs: [BDGHMT20]}
+  facts:
+    - '**Theorem 1** of [BDGHMT20]: $\mathrm{Corr}(f) = \Theta(\mathrm{R}(f))$ for every (possibly partial) Boolean $f$. The easy direction is $\mathrm{Corr} \le \mathrm{R}$ (take $k=1$ and apply Yao).'
+    - 'Against a fixed distribution the measure genuinely differs: on $\mathrm{XOR}_n$ with Shaltiel''s distribution ($0U^{n-1}$ w.p. $99\%$, $1U^{n-2}0$ w.p. $1\%$) one has $\mathrm{D}(\mathrm{XOR}_n, D) = \Omega(n)$ but $\mathrm{Corr}(\mathrm{XOR}_n, D) = O(1)$ -- query the first bit of many samples until an easy one turns up.'
+    - 'So Theorem 1 is exactly the statement that **Shaltiel examples can be avoided by choosing the distribution well**, which is what makes it useful for composition.'
+    - 'Lemma 7 of [BDGHMT20]: $\mathrm{Corr}(f, D) = \Theta(\mathrm{biCorr}(f, D))$, the variant where the algorithm must also say which side it thinks the samples came from at every leaf.'
+    - 'The application: with $\mathrm{Corr} = \Theta(\mathrm{R})$ in hand, [BDGHMT20] prove $\mathrm{R}(f\circ g) = \Omega(\mathrm{fbs}(f)\mathrm{R}(g))$ -- see [[comp-R]].'
+    - '[BenDavidBlais20minimax] reprove Theorem 1 by a different route (Shaltiel-free minimax theorems), concurrently and independently.'
+  refs: [BDGHMT20, BenDavidBlais20minimax, Shaltiel04]
+  related: [R, Sel, Dmu, noisyR]
+  see_also: [R, Sel, Dmu, fbs, noisyR, direct-sum, comp-R]
+  confidence: high
+
+- id: Sel
+  name: Selection complexity
+  symbol: '\mathrm{Sel}_{\varepsilon}(f)'
+  aliases: ['selection problem', 'choose problem']
+  category: composition
+  order: 38.7
+  short: 'Cost of solving *any one* of k independent instances, with k chosen by the algorithm and the instances drawn from the hardest distribution.'
+  definition: |
+    In the $k$-selection problem for $(f, D)$ the input is $x = (x^1,\dots,x^k) \sim D^k$ and the
+    algorithm must output a pair $(i, f(x^i))$ for some $i$ of its choosing: it picks which
+    instance to be graded on. Writing $k\text{-}\mathrm{Sel}_\varepsilon(f,D)$ for the query
+    complexity of that task,
+    $$\mathrm{Sel}_\varepsilon(f, D) := \min_{k\ge1} k\text{-}\mathrm{Sel}_\varepsilon(f, D),
+    \qquad \mathrm{Sel}_\varepsilon(f) := \max_D \mathrm{Sel}_\varepsilon(f, D).$$
+    The communication-complexity ancestor of the problem is *choose* [BBKW14].
+  params:
+    - {name: eps, symbol: '\varepsilon', default: '1/3', range: '[0, 1/2)', description: 'Error probability.', dependence: 'Selection admits **no** efficient error reduction, in contrast to [[Corr]]: item 3 of Theorem 2 of [BDGHMT20]. Having many instances does not help you check an answer, because the instance you would re-solve is the one you already found hard.'}
+  settings:
+    total:    {defined: yes}
+    partial:  {defined: yes}
+    relation: {defined: no, note: 'Inherits the obstruction of [[Corr]]: the hardest-distribution definition is set up around a Boolean output.'}
+  equivalent:
+    - {measure: R, setting: total, form: {exp: 1, kind: theta}, statement: '$\mathrm{Sel}(f) = \Theta(\mathrm{R}(f))$ -- Corollary 1, for partial $f$ as well', refs: [BDGHMT20]}
+  facts:
+    - '**Corollary 1** of [BDGHMT20]: $\mathrm{Sel}(f) = \Theta(\mathrm{R}(f))$ for every (possibly partial) Boolean $f$. Being allowed to duck the hard instances is worth nothing against the hardest distribution.'
+    - 'Pointwise in the distribution, selection is the harder task: $\mathrm{Corr}(f, D) = O(\mathrm{Sel}(f, D))$ for every $(f,D)$ (Theorem 2.1), and there are $(f,D)$ with $\mathrm{Sel}(f,D) = \Omega(n)$ while $\mathrm{Corr}(f,D) = O(1)$ (Theorem 2.2).'
+    - 'Like [[Corr]], it is subject to Shaltiel examples at a fixed distribution: $\mathrm{Sel}(\mathrm{XOR}_n, D) = O(1)$ for the same $D$, by hunting for an easy instance.'
+    - 'The distribution-free collapse $\mathrm{Sel} = \Theta(\mathrm{R})$ is a corollary of $\mathrm{Corr} = \Theta(\mathrm{R})$, not an independent argument.'
+  refs: [BDGHMT20, BBKW14, Shaltiel04]
+  related: [Corr, R, Dmu]
+  see_also: [Corr, R, Dmu, direct-sum, comp-R]
   confidence: high
 
 - id: Rstar
@@ -260,6 +388,7 @@ measures:
     - '$\mathrm{R}^*(f) \ge \Omega(\mathrm{Q}(f))$, since quantum query complexity composes perfectly.'
     - 'Whether either bound dominates the other is open.'
   refs: [BBGM22]
+  related: [R, Q, LR, noisyR]
   see_also: [LR, Q, R, noisyR]
   confidence: high
 
@@ -297,6 +426,7 @@ measures:
     - 'Almost all $f$ need $\Omega(n\log n)$ noisy queries [Reischuk-Schmeltz].'
     - 'Quantum contrast: the *robust* quantum query complexity of PARITY is $\Theta(n)$ -- no log factor [BNRdW05].'
   refs: [FRPU94, EvansPippenger98, ReischukSchmeltz91, BNRdW05, Gu25noisy, GLX26noisy]
+  related: [R, noisyR, robustQ, NS]
   see_also: [R, noisyR, robustQ]
   confidence: high
 
@@ -325,6 +455,7 @@ measures:
     - '$\mathrm{EC}(f) \le \mathrm{C}(f)$ **for total $f$ only**. The proof hands each input the indicator of a minimal certificate as its weight scheme, and checks the constraint on a pair $x,y$ with $f(x) \ne f(y)$ by observing that their certificates must conflict. On a promise problem two certificates can fail to conflict, because the string stitched together from both may simply be outside the domain -- the same step that breaks the [[CG]] sandwich. On a partial function, prove an $\mathrm{EC}$ upper bound by exhibiting a weighting directly.'
     - 'There are partial functions with $\mathrm{R}(f)$ exponentially larger than $\mathrm{CA}(f)$ [CGLMSG23].'
   refs: [Aaronson06, LaplanteMagniez08, ABIKPS17, CGLMSG23]
+  related: [R, fbs, CGpub, CG, EC, Adv]
   see_also: [fbs, CG, CGpub, EC, R, Adv]
   confidence: high
 
@@ -347,6 +478,7 @@ measures:
     - '$\mathrm{CG}$ is **not** bounded by $\mathrm{D}$: it can exceed the arity of the function. $\mathrm{CG}(\oplus_n) = \Theta(n^2)$, because $\mathrm{C}^0\mathrm{C}^1 = n^2$ above and $\mathrm{Adv}(\oplus_n)^2 = n^2$ below.'
     - 'The *single-bit* private-coin variant (inputs at Hamming distance $1$) equals $\lambda(f)^2$ [CGLMSG23, Thm 8.9]; the single-bit public-coin variant is $\Theta(\mathrm{s}(f))$ [CGLMSG23, Thm 8.4]. Since restricting the adversary to distance-$1$ pairs can only help the players, these are lower bounds on the unrestricted games.'
   refs: [CGLMSG23, GJKKLSSV17]
+  related: [CGpub, CGstar, CGns, CA, EC, R0]
   see_also: [CGpub, CGstar, CGns, CA, lambda, EC, R0, Adv]
   confidence: medium
 
@@ -365,6 +497,7 @@ measures:
     - '$\mathrm{CG}^{\mathrm{pub}}(f) = O(\mathrm{R}(f))$.'
     - 'The single-bit public-coin variant $= \Theta(\mathrm{s}(f))$, a new characterisation of sensitivity.'
   refs: [CGLMSG23]
+  related: [CG, CA, CGstar, fbs, s]
   see_also: [CA, CG, s, fbs]
   confidence: medium
 
@@ -380,6 +513,7 @@ measures:
     - 'Surprisingly $\mathrm{CG}^*$ is *not* below $\mathrm{Q}$: $\mathrm{CG}^*(\mathrm{OR}_n)=\Theta(n)$ while $\mathrm{Q}(\mathrm{OR}_n)=\Theta(\sqrt n)$.'
     - 'All certificate-game models except the private-coin one collapse to the classical adversary bound for high-sensitivity functions.'
   refs: [CGLMSG23]
+  related: [CG, CGpub, CGns, CA, Q]
   see_also: [CG, CGpub, CGns, Q]
   confidence: medium
 
@@ -392,6 +526,7 @@ measures:
   definition: 'As [[CG]] but the players may use any non-signaling box.'
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
   refs: [CGLMSG23]
+  related: [CG, CGpub, CGstar, CA]
   see_also: [CG, CGpub, CGstar]
   confidence: medium
 
@@ -417,12 +552,16 @@ measures:
     total:    {defined: degenerate, note: 'For total (or partial) Boolean functions $\mathrm{psD} = \Theta(\mathrm{R})$: there is only one correct answer, so reproducibility is free.'}
     partial:  {defined: degenerate, note: 'Same collapse as for total functions.'}
     relation: {defined: yes, note: 'The natural home of this measure. Only interesting when a single input admits several valid outputs.'}
+  equivalent:
+    - {measure: R, setting: total, form: {exp: 1, kind: theta}, statement: '$\mathrm{psD}(f) = \Theta(\mathrm{R}(f))$ for Boolean-valued $f$: the canonical answer is forced, so reproducibility is free', refs: [GGR13]}
+    - {measure: R, setting: partial, form: {exp: 1, kind: theta}, statement: '$\mathrm{psD}(f) = \Theta(\mathrm{R}(f))$ on the promise as well -- the collapse only needs the answer to be unique', refs: [GGR13]}
   facts:
     - '$\mathrm{R}(S) \le \mathrm{psD}(S) \le \mathrm{D}(S)$.'
     - '$\mathrm{D}(S) = O(\mathrm{psD}(S)^3)$ for total search problems [CDM23], improving the quartic bound of [GGR13].'
     - '$\mathrm{R}$ and $\mathrm{psD}$ are **exponentially separated**: for the approximate-Hamming-weight relation $\mathrm{ApproxHW}$, $\mathrm{R} = O(1)$ while $\mathrm{psD} = \Omega(n)$ [CDM23]; and $\mathrm{psD}(\mathrm{SearchCNF}) = \Omega(n^{1/3})$ for random $k$-CNFs [CDM23], $\Omega(\sqrt{n})$ in the setting of [GIPS21].'
     - 'In the zero-error average-case setting, deterministic, randomized and pseudo-deterministic complexity all coincide [GIPS21].'
   refs: [GGR13, GIPS21, CDM23]
+  related: [R, D, R0, cbs]
   see_also: [R, D, R0]
   confidence: high
 
@@ -453,6 +592,8 @@ measures:
     - 'Yao''s minimax applies verbatim: $\mathrm{R}^{\mathrm{na}}_\varepsilon(f) = \max_\mu \mathrm{D}^{\mathrm{na},\mu}_\varepsilon(f)$, the max over input distributions of the best *fixed* query set of that size.'
     - 'Adaptivity can save exponentially even with randomness: $\mathrm{R}(\mathrm{ADDR}) = \Theta(\log n)$ while $\mathrm{R}^{\mathrm{na}}(\mathrm{ADDR}) = \Theta(n)$, since a fixed distribution over $k$ data bits finds the addressed bit with probability $\le k/n$ and must otherwise guess.'
     - 'For $\mathrm{OR}_n$ adaptivity buys nothing: $\mathrm{R}(\mathrm{OR}_n) = \Theta(n) = \mathrm{R}^{\mathrm{na}}(\mathrm{OR}_n)$.'
-  refs: [BdW02]
-  see_also: [R, Dna, D, Rbar, ADDR]
+    - 'Non-adaptively, *noise is free to resist*: $\mathrm{R}^{\mathrm{na}}(f) = \Theta(\mathrm{noisyR}^{\mathrm{na}}(f))$ for every partial Boolean $f$ [BenDavidBlais20composition, Thm. 8], although the same statement is false for relations. Contrast the adaptive case, where $\mathrm{noisyR}$ can be exponentially smaller than $\mathrm{R}$.'
+  refs: [BdW02, BenDavidBlais20composition]
+  related: [R, Dna, D, noisyRna]
+  see_also: [R, Dna, D, Rbar, ADDR, noisyRna]
   confidence: medium

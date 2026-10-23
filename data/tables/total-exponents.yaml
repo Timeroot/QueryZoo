@@ -1,7 +1,7 @@
 # =====================================================================
 # THE EXPONENT MATRIX for TOTAL Boolean functions.
 #
-# Convention (verbatim from the source):
+# Convention:
 #   An entry `a, b` in row M1 and column M2 means that there exists a
 #   function g with  M1(g) >= M2(g)^{a - o(1)},  and that for all total
 #   functions f,  M1(f) <= M2(f)^{b + o(1)}.
@@ -14,15 +14,16 @@
 # Editing:
 #   * `a` and `b` are numbers, or the strings '?' (unknown) or 'inf'.
 #   * `w` names a function id from data/functions/*.yaml that witnesses
-#     the separation (rendered as a link), OR is omitted when the source
-#     gives only a citation.
+#     the separation (rendered as a link); omit it when the exponent rests
+#     on a citation alone.
 #   * `refs` are citation keys from data/refs.yaml.
-#   * `tight: true` mirrors the white background in the source table.
+#   * `tight: true` marks a settled cell (a == b), shown light.
+#   * `own: true` plus an `own_note` marks an exponent the zoo worked out
+#     for itself rather than quoting; the note carries the argument.
 #   * Anything you add under `note` shows in the cell's tooltip and on
 #     the pair page.
 #
-# This table is deliberately kept as a faithful reproduction plus
-# explicitly-marked updates; the *fine-grained* statements (constants,
+# Only the exponents live here; the *fine-grained* statements (constants,
 # log factors, epsilon dependence) live in data/relations/*.yaml and are
 # what the pair pages actually show. The matrix is the index into them.
 # =====================================================================
@@ -30,13 +31,6 @@
 id: total-exponents
 name: "Exponent matrix (total functions)"
 setting: total
-source: IJKKKSWW23
-source_note: >
-  Table 1 of [IJKKKSWW23], which is itself a reproduction of [ABKRT21, Table 1]
-  updated with more recent developments and with a new rdeg column
-  (their Proposition 29). Cells marked `updated: true` below are further
-  updates made in this zoo, with the reason given.
-
 convention: >
   An entry $a, b$ in row $M_1$ and column $M_2$ means that there exists a
   function $g$ with $M_1(g) \ge M_2(g)^{a-o(1)}$, and that for all total
@@ -47,19 +41,32 @@ convention: >
 
 shading: >
   Cells are shown "tight" (light) if the relationship is optimal
-  ($a = b$) and "gap" (shaded) otherwise. Getting any polynomial upper bound
-  in the rdeg column -- replacing a `?` by a constant -- would resolve
-  Fortnow's question on whether rational degree is polynomially related to the
-  other measures.
+  ($a = b$) and "gap" (shaded) otherwise. The rdeg column read `?` from top to
+  bottom until 2026, when [KKWY26] proved $\mathrm{D}\le16\,\mathrm{rdeg}^4$ and
+  settled Fortnow's question on whether rational degree is polynomially related
+  to the other measures. Every entry in the column now descends from that
+  bound, or from the sharper $\widetilde O(\mathrm{rdeg}^3)$ available for
+  $\deg$ and $\mathrm{s}$; none of them is yet tight.
 
 # Column (and row) order, by measure id.
 axis: [D, R0, R, C, RC, bs, s, lambda, QE, deg, Q, adeg, rdeg]
 
-# rdeg has a column but no row: no separation of the form
-# rdeg(g) >= M(g)^a is recorded in the source, because rdeg is bounded
-# above by essentially everything (rdeg <= adeg <= ... ), so the
-# interesting direction is the other one.
-rows: [D, R0, R, C, RC, bs, s, lambda, QE, deg, Q, adeg]
+# rdeg sits at the bottom of the order (rdeg <= C), so bounding anything
+# *above* by a power of it -- the column -- was Fortnow's question until
+# [KKWY26], while the row is all corollary. The row is kept anyway, so that the core grid is square
+# and the reader can see what the corollaries say; it carries no `cells:`
+# block, so every entry in it is drawn from the derived layer and is marked as
+# such.
+rows: [D, R0, R, C, RC, bs, s, lambda, QE, deg, Q, adeg, rdeg]
+
+# Rows with no exponents of their own, drawn entirely from the derived layer.
+# Flagged in the row header, so nothing in them is passed off as quoted.
+rows_added:
+  # Plain prose, no TeX: this text is a tooltip, not a rendered paragraph.
+  rdeg: >
+    Every entry in this row is a corollary: the upper bounds all factor
+    through rdeg <= C, and the separations are all witnessed by OR, where
+    rdeg = n.
 
 legend:
   '\oplus': PARITY
@@ -84,7 +91,7 @@ cells:
     deg:    {a: 2,   b: 3, tight: false, refs: [GPW18], note: 'Upper bound: $\mathrm{D}\le\mathrm{bs}\cdot\deg\le2\deg^3$ [Midrijanis04, NS94]. Whether $\mathrm{D}=O(\deg^2)$ is a well-known open problem.'}
     Q:      {a: 4,   b: 4, tight: true,  refs: [ABKRT21, ABBLSS17], w: pointer, note: 'Settled. $\mathrm{D}=O(\mathrm{Q}^4)$ is [ABKRT21, Thm 2]: $\mathrm{D}\le\mathrm{bs}\cdot\deg$ [Midrijanis04] with $\mathrm{bs}=O(\mathrm{Q}^2)$ [NS94, BBCMdW01] and $\deg=O(\mathrm{Q}^2)$ [ABKRT21, Thm 3]. Matched (up to log factors) by the pointer function.'}
     adeg:   {a: 4,   b: 4, tight: true,  refs: [ABKRT21, ABBLSS17], w: pointer, note: 'Settled. $\mathrm{D}\le\mathrm{bs}\cdot\deg = O(\widetilde{\deg}^2)\cdot O(\widetilde{\deg}^2)$ using [NS94] and [ABKRT21, Thm 4].'}
-    rdeg:   {a: 2,   b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+    rdeg:   {a: 2,   b: 4, tight: false, w: ANDEH, refs: [KKWY26, IJKKKSWW23], note: 'Upper bound: $\mathrm{D}\le4\deg_{\pm}^2\mathrm{rdeg}^2\le16\,\mathrm{rdeg}^4$ [KKWY26, Thm 4] -- the theorem that answered Fortnow. Also $\mathrm{D}=O(\mathrm{rdeg}^3\log n)$ [KKWY26, Thm 8], but the $\log$ is in the arity and $\mathrm{rdeg}=\Omega(\log n)$ is tight, so the exponent stays $4$.'}
 
   # ---------------------------------------------------------------- R0
   R0:
@@ -97,9 +104,9 @@ cells:
     lambda: {a: 4,   b: 6, tight: false, refs: [ABBLSS17]}
     QE:     {a: 2,   b: 3, tight: false, refs: [ABBLSS17]}
     deg:    {a: 2,   b: 3, tight: false, refs: [GJPW18]}
-    Q:      {a: 3,   b: 4, tight: false, refs: [ABBLSS17]}
+    Q: {a: 4, b: 4, tight: true, w: AIKCheatSheet, refs: [AIK26, ABKRT21], note: 'AIK26 Theorem 2.1: R₀≥C=Ω(n²), Q=O(√n log³n); upper bound R₀≤D=O(Q⁴).'}
     adeg:   {a: 4,   b: 4, tight: true,  refs: [ABBLSS17]}
-    rdeg:   {a: 2,   b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+    rdeg:   {a: 2,   b: 4, tight: false, w: ANDEH, refs: [KKWY26, IJKKKSWW23], note: 'Through $\mathrm{D}\le16\,\mathrm{rdeg}^4$ [KKWY26].'}
 
   # ---------------------------------------------------------------- R
   R:
@@ -114,22 +121,22 @@ cells:
     deg:    {a: 2,   b: 3, tight: false, refs: [GJPW18]}
     Q:      {a: 3,   b: 4, tight: false, refs: [BansalSinha21, SSW21, ABK16], note: 'Cubic separation from $k$-Forrelation + cheat sheets; the $\mathrm{R}=O(\mathrm{Q}^4)$ upper bound is [BBCMdW01]. **The** headline open problem of the total-function theory.'}
     adeg:   {a: 4,   b: 4, tight: true,  refs: [ABBLSS17]}
-    rdeg:   {a: 2,   b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+    rdeg:   {a: 2,   b: 4, tight: false, w: ANDEH, refs: [KKWY26, IJKKKSWW23], note: 'Through $\mathrm{D}\le16\,\mathrm{rdeg}^4$ [KKWY26].'}
 
   # ---------------------------------------------------------------- C
   C:
     D:      {a: 1,   b: 1, tight: true,  w: PARITY}
     R0:     {a: 1,   b: 1, tight: true,  w: PARITY}
-    R:      {a: 1,   b: 2, tight: false, w: PARITY, note: 'Upper bound $\mathrm{C}\le\mathrm{R}^2$; no separation better than equality is known.'}
+    R: {a: 2, b: 2, tight: true, w: AIKDNF, refs: [AIK26, BenDavidKothari26, Nisan91], note: Settled without logarithmic loss by AIK26 Theorem 2.2. Ben-David–Kothari independently attain the exponent with logarithmic slack.}
     RC:     {a: 2,   b: 2, tight: true,  refs: [GSS16]}
     bs:     {a: 2,   b: 2, tight: true,  refs: [GSS16], note: 'Settled: $\mathrm{C}\le\mathrm{bs}^2$ (Nisan) and [GSS16] matches it.'}
-    s:      {a: 3,   b: 5, tight: false, refs: [BBGJK21], note: 'Upper bound: $\mathrm{C}\le\mathrm{s}\cdot\mathrm{bs}$ [Nisan91] and $\mathrm{bs}\le 2\deg^2\le 2\mathrm{s}^4$ [NS94, Huang19], so $\mathrm{C}\le 2\mathrm{s}^5$.'}
+    s: {a: 3, b: 5, tight: false, w: PabbarajuCubicSensitivity, refs: [Pabbaraju26, Nisan91, Huang19], note: Corollary 1.3 removes logarithms from the cubic separation. The upper bound C≤s·bs≤2s⁵ remains.}
     lambda: {a: 4,   b: 6, tight: false, refs: [BBGJK21]}
-    QE:     {a: 1.15, b: 3, tight: false, refs: [Ambainis13], note: 'From Ambainis'' function with $\mathrm{Q}_E = O(\mathrm{D}^{0.8675})$ -- the first super-linear advantage for *exact* quantum algorithms; $1/0.8675 \approx 1.15$.'}
-    deg:    {a: 2,   b: 3, tight: false, refs: [BBGJK21]}
-    Q:      {a: 2,   b: 4, tight: false, w: AND}
-    adeg:   {a: 3,   b: 4, tight: false, refs: [BBGJK21]}
-    rdeg:   {a: 2,   b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+    QE: {a: 2, b: 3, tight: false, w: AIKCheatSheet, refs: [AIK26, KLLPV26], note: 'AIK26 v3 Theorem 2.3 gives Q_E=Θ(n log²n), C=Ω(n²). Upper bound C=O(degcert³)=O(Q_E³).'}
+    deg: {a: 2, b: 3, tight: false, w: PabbarajuDNF, refs: [Pabbaraju26, Midrijanis04, NS94], note: Corollary 1.2 gives a log-free quadratic separation. Upper bound through C≤D≤bs·deg=O(deg³).}
+    Q: {a: 4, b: 4, tight: true, w: AIKCheatSheet, refs: [AIK26, BenDavidKothari26, ABKRT21], note: 'Quartic separation, tight at the exponent. AIK26 gives Q=O(√n log³n), C=Ω(n²); Ben-David–Kothari give an independent family.'}
+    adeg: {a: 4, b: 4, tight: true, w: PabbarajuQuartic, refs: [Pabbaraju26, ABKRT21], note: 'Theorem 4: C=Ω(n²), approximate degree=O(√n log^{3/2}n). August result precedes the quantum-query separations.'}
+    rdeg:   {a: 2,   b: 4, tight: false, w: ANDEH, refs: [KKWY26, IJKKKSWW23], note: 'Through $\mathrm{D}\le16\,\mathrm{rdeg}^4$ [KKWY26]. Note $\mathrm{rdeg}\le\mathrm{C}$ in the other direction, so this cell brackets the two.'}
 
   # ---------------------------------------------------------------- RC
   RC:
@@ -138,14 +145,13 @@ cells:
     R:      {a: 1,   b: 1, tight: true, w: PARITY}
     C:      {a: 1,   b: 1, tight: true, w: PARITY}
     bs:     {a: 1.5, b: 2, tight: false, refs: [GSS16]}
-    s:      {a: 2,   b: 4, tight: false, refs: [Rubinstein95]}
-    lambda: {a: 2.127, b: 4, tight: false, w: MeiburgTournament, refs: [Meiburg26], updated: true,
-             update_note: 'Source table has $2, 4$ (witness $\wedge$). Updated for the same reason as the $\mathrm{bs}$ row: $\mathrm{RC} = \Theta(\mathrm{fbs}) \ge \mathrm{bs}$, so the $\mathrm{bs} \ge \lambda^{2.127}$ of [Meiburg26] carries over verbatim. Leaving this cell at $2$ while the $\mathrm{bs}$ cell reads $2.127$ would make the table internally inconsistent.'}
+    s: {a: 2.130825579397823, b: 4, tight: false, w: Prove2MeTournament, refs: [Prove2MeSensitivity26, OpenAISensitivity26, Huang19], note: Exact lower endpoint α=log(14055^8)/log(3738277295413674)=2.1308255793978239…; the numeric exponent is rounded down. Source gives arbitrary ε loss and unbounded sensitivity. Via bs≤fbs=Θ(RC) and λ≤s.}
+    lambda: {a: 2.130825579397823, b: 4, tight: false, w: Prove2MeTournament, refs: [Prove2MeSensitivity26, OpenAISensitivity26, Huang19], note: Exact lower endpoint α=log(14055^8)/log(3738277295413674)=2.1308255793978239…; the numeric exponent is rounded down. Source gives arbitrary ε loss and unbounded sensitivity. Via bs≤fbs=Θ(RC) and λ≤s.}
     QE:     {a: 1.15, b: 2, tight: false, refs: [Ambainis13]}
     deg:    {a: 1.63, b: 2, tight: false, refs: [NisanWigderson95], note: '$1.63 = \log 6/\log 3 = 1.6309\ldots$, from iterating Kushilevitz'' $6$-variable function ($\mathrm{D}=6$, $\deg=3$), reported in [NisanWigderson95].'}
     Q:      {a: 2,   b: 2, tight: true,  w: AND}
     adeg:   {a: 2,   b: 2, tight: true,  w: AND}
-    rdeg:   {a: 2,   b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+    rdeg:   {a: 2,   b: 4, tight: false, w: ANDEH, refs: [KKWY26, IJKKKSWW23], note: 'Through $\mathrm{D}\le16\,\mathrm{rdeg}^4$ [KKWY26].'}
 
   # ---------------------------------------------------------------- bs
   bs:
@@ -154,14 +160,13 @@ cells:
     R:      {a: 1,   b: 1, tight: true, w: PARITY}
     C:      {a: 1,   b: 1, tight: true, w: PARITY}
     RC:     {a: 1,   b: 1, tight: true, w: PARITY}
-    s:      {a: 2,   b: 4, tight: false, refs: [Rubinstein95, Huang19], note: 'The sensitivity-vs-block-sensitivity gap. $\mathrm{bs}\le\mathrm{s}^4$ from Huang''s $\deg\le\mathrm{s}^2$ plus $\mathrm{bs}\le\deg^2$; Rubinstein gives $\mathrm{bs}\ge\mathrm{s}^2/2$.'}
-    lambda: {a: 2.127, b: 4, tight: false, w: MeiburgTournament, refs: [Meiburg26], updated: true,
-             update_note: 'Source table has $2, 4$ (witness $\wedge$). Updated: [Meiburg26] shows $\mathrm{bs} \ge \lambda^{2.127}$, i.e. block sensitivity can exceed spectral sensitivity squared.'}
+    s: {a: 2.130825579397823, b: 4, tight: false, w: Prove2MeTournament, refs: [Prove2MeSensitivity26, OpenAISensitivity26, Huang19], note: Exact lower endpoint α=log(14055^8)/log(3738277295413674)=2.1308255793978239…; the numeric exponent is rounded down. Source gives arbitrary ε loss and unbounded sensitivity. Universal quadratic bound refuted.}
+    lambda: {a: 2.130825579397823, b: 4, tight: false, w: Prove2MeTournament, refs: [Prove2MeSensitivity26, OpenAISensitivity26, Huang19], note: Exact lower endpoint α=log(14055^8)/log(3738277295413674)=2.1308255793978239…; the numeric exponent is rounded down. Source gives arbitrary ε loss and unbounded sensitivity. Via bs≤fbs=Θ(RC) and λ≤s.}
     QE:     {a: 1.15, b: 2, tight: false, refs: [Ambainis13]}
     deg:    {a: 1.63, b: 2, tight: false, refs: [NisanWigderson95]}
     Q:      {a: 2,   b: 2, tight: true, w: AND}
     adeg:   {a: 2,   b: 2, tight: true, w: AND}
-    rdeg:   {a: 2,   b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+    rdeg:   {a: 2,   b: 4, tight: false, w: ANDEH, refs: [KKWY26, IJKKKSWW23], note: 'Through $\mathrm{D}\le16\,\mathrm{rdeg}^4$ [KKWY26].'}
 
   # ---------------------------------------------------------------- s
   s:
@@ -176,7 +181,7 @@ cells:
     deg:    {a: 1.63, b: 2, tight: false, refs: [NisanWigderson95]}
     Q:      {a: 2, b: 2, tight: true, w: AND}
     adeg:   {a: 2, b: 2, tight: true, w: AND}
-    rdeg:   {a: 2, b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+    rdeg:   {a: 2, b: 3, tight: false, w: ANDEH, refs: [KKWY26, IJKKKSWW23], note: 'Upper bound: $\mathrm{s}=\widetilde O(\mathrm{rdeg}^3)$ [KKWY26, Cor. 4] -- one of the two cells where the restriction trick removes the $\log n$ of Theorem 8.'}
 
   # ---------------------------------------------------------------- lambda
   lambda:
@@ -191,8 +196,8 @@ cells:
     deg:    {a: 1, b: 1, tight: true, w: PARITY}
     Q:      {a: 1, b: 1, tight: true, w: PARITY, note: '$\mathrm{Q}(f)=\Omega(\lambda(f))$ -- spectral sensitivity is a quantum lower bound [ABKRT21] -- and PARITY matches.'}
     adeg:   {a: 1, b: 1, tight: true, w: PARITY}
-    rdeg:   {a: 1.5, b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true,
-             note: 'Proposition 29 of [IJKKKSWW23]: $\wedge_n\circ\overline{\mathrm{EH}}_n$ has $\mathrm{rdeg}=\Theta(n)$ and $\lambda=\Theta(n^{3/2})$. In particular $\lambda \le \mathrm{rdeg}$ is FALSE.'}
+    rdeg:   {a: 1.5, b: 3, tight: false, w: ANDEH, refs: [KKWY26, IJKKKSWW23],
+             note: 'Upper bound: $\lambda\le\mathrm{s}=\widetilde O(\mathrm{rdeg}^3)$ [KKWY26, Cor. 4]. Separation, Proposition 29 of [IJKKKSWW23]: $\wedge_n\circ\overline{\mathrm{EH}}_n$ has $\mathrm{rdeg}=\Theta(n)$ and $\lambda=\Theta(n^{3/2})$. In particular $\lambda \le \mathrm{rdeg}$ is FALSE.'}
 
   # ---------------------------------------------------------------- QE
   QE:
@@ -207,7 +212,7 @@ cells:
     deg:    {a: 2,    b: 3, tight: false, refs: [ABK16]}
     Q:      {a: 2,    b: 4, tight: false, w: AND}
     adeg:   {a: 4,    b: 4, tight: true,  refs: [ABK16]}
-    rdeg:   {a: 2,    b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+    rdeg:   {a: 2,    b: 4, tight: false, w: ANDEH, refs: [KKWY26, IJKKKSWW23], note: 'Through $\mathrm{D}\le16\,\mathrm{rdeg}^4$ [KKWY26].'}
 
   # ---------------------------------------------------------------- deg
   deg:
@@ -222,7 +227,7 @@ cells:
     QE:     {a: 1,    b: 1, tight: true,  w: PARITY}
     Q:      {a: 2,    b: 2, tight: true,  w: AND, note: 'Settled: $\deg = O(\mathrm{Q}^2)$ [ABKRT21, Thm 3] and $\deg(\wedge_n)=n$, $\mathrm{Q}(\wedge_n)=\Theta(\sqrt n)$.'}
     adeg:   {a: 2,    b: 2, tight: true,  w: AND, note: 'Settled: $\deg = O(\widetilde{\deg}^2)$ [ABKRT21, Thm 4], optimal for OR/AND.'}
-    rdeg:   {a: 2,    b: '?', tight: false, w: ANDEH, refs: [IJKKKSWW23], new_in_source: true}
+    rdeg:   {a: 2,    b: 3, tight: false, w: ANDEH, refs: [KKWY26, GPW18, IJKKKSWW23], note: 'Fortnow''s question in its original form. Upper bound: $\deg=\widetilde O(\mathrm{rdeg}^3)$ [KKWY26, Cor. 4], answering it after thirty-two years; the exponent is now known to lie in $[2,3]$.'}
 
   # ---------------------------------------------------------------- Q
   Q:
@@ -237,13 +242,14 @@ cells:
     QE:     {a: 1, b: 1, tight: true,  w: PARITY}
     deg:    {a: 2, b: 3, tight: false, refs: [ABK16], note: 'How lossy is the polynomial method? $\mathrm{Q}\le O(\deg^3)$ vs a quadratic separation.'}
     adeg:   {a: 4, b: 4, tight: true,  refs: [ABK16], note: 'Settled: $\mathrm{Q} \le O(\widetilde{\deg}^4)$ [BBCMdW01] and cheat sheets match.'}
-    rdeg:   {a: 2, b: '?', tight: false, w: cheatsheet, refs: [ABK16, IJKKKSWW23],
-             new_in_source: true, updated: true,
-             update_note: 'Source table has $1.5$ (witness $\wedge_n\circ\overline{\mathrm{EH}}_n$, Proposition 29
-               of [IJKKKSWW23]). Updated to $2$: that paper''s own $\mathrm{rdeg}\le\mathrm{C}$ composes with the
+    rdeg:   {a: 2, b: 4, tight: false, w: cheatsheet, refs: [KKWY26, ABK16, IJKKKSWW23],
+             note: 'Upper bound: through $\mathrm{D}\le16\,\mathrm{rdeg}^4$ [KKWY26].',
+             own: true,
+             own_note: 'A one-line composition: $\mathrm{rdeg}\le\mathrm{C}$ [IJKKKSWW23] applied to the
                cheat-sheet function of [ABK16], which has $\mathrm{Q}=\widetilde\Theta(n)$ and
                $\mathrm{C}=\widetilde O(\sqrt n)$ -- the very pair the $\mathrm{Q}$ vs $\mathrm{C}$ cell of this
-               table already records -- giving $\mathrm{Q}=\widetilde\Omega(\mathrm{C}^2)=\widetilde\Omega(\mathrm{rdeg}^2)$.'}
+               table already records -- gives $\mathrm{Q}=\widetilde\Omega(\mathrm{C}^2)=\widetilde\Omega(\mathrm{rdeg}^2)$.
+               The direct witness $\wedge_n\circ\overline{\mathrm{EH}}_n$ [IJKKKSWW23, Prop. 29] only reaches $1.5$.'}
 
   # ---------------------------------------------------------------- adeg
   adeg:
@@ -258,10 +264,11 @@ cells:
     QE:     {a: 1, b: 1, tight: true,  w: PARITY}
     deg:    {a: 1, b: 1, tight: true,  w: PARITY}
     Q:      {a: 1, b: 1, tight: true,  w: PARITY}
-    rdeg:   {a: 2, b: '?', tight: false, refs: [BunThaler17, IJKKKSWW23],
-             new_in_source: true, updated: true,
-             update_note: 'Source table has $1.5$ (witness $\wedge_n\circ\overline{\mathrm{EH}}_n$, Proposition 29
-               of [IJKKKSWW23]). Updated to $2$ by the same one-line composition as the $\mathrm{Q}$ vs
-               $\mathrm{rdeg}$ cell: $\mathrm{rdeg}\le\mathrm{C}$ [IJKKKSWW23] turns the settled quadratic
+    rdeg:   {a: 2, b: 3, tight: false, refs: [KKWY26, BunThaler17, IJKKKSWW23],
+             note: 'Upper bound: $\widetilde{\deg}\le\deg=\widetilde O(\mathrm{rdeg}^3)$ [KKWY26, Cor. 4].',
+             own: true,
+             own_note: 'The same one-line composition as the $\mathrm{Q}$ vs $\mathrm{rdeg}$ cell:
+               $\mathrm{rdeg}\le\mathrm{C}$ [IJKKKSWW23] turns the settled quadratic
                $\widetilde{\deg}$ vs $\mathrm{C}$ separation of [BunThaler17] into
-               $\widetilde{\deg}=\widetilde\Omega(\mathrm{rdeg}^2)$.'}
+               $\widetilde{\deg}=\widetilde\Omega(\mathrm{rdeg}^2)$. The direct witness
+               $\wedge_n\circ\overline{\mathrm{EH}}_n$ [IJKKKSWW23, Prop. 29] only reaches $1.5$.'}

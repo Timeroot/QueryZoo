@@ -87,6 +87,10 @@ class G:
     def bounded(self):
         return not self.grows()
 
+    def is_zero(self):
+        """Exactly 0, as opposed to merely tending to 0 (like 1/n)."""
+        return self.c == 0 and self.key() == G().key()
+
     def __str__(self):
         bits = []
         if abs(self.c - 1) > EPS or not (self.e or self.p or self.q):
@@ -550,6 +554,15 @@ def compare(a: G, b: G):
         # settle on a positive constant. If it tends to *zero* -- as fractional
         # measures like MaxInf do -- then g(x) = log(1/x) may well bound the
         # first measure on this family, and there is no separation to claim.
+        #
+        # Identically zero is the exception, and the strongest case there is.
+        # A bound M1 <= g(M2) evaluated along a family with M2 == 0 says
+        # M1 <= g(0), one fixed number, so a growing M1 refutes every g at
+        # once. This is what the promise functions with s = 0, lambda = 0 or
+        # D^prod = 0 are for: no g(x) = log(1/x) dodge is available at an
+        # exact zero.
+        if b.is_zero():
+            return ("unbounded",)
         if b.limit() <= 0:
             return None
         return ("unbounded",)
@@ -634,6 +647,12 @@ def _selftest():
     # a decaying Inf is *not* an unbounded separation, for the same reason
     # MaxInf is not: log(1/x) is a function, and it bounds n here
     assert cmp2("n", r"\Theta(n^3 2^{-n^2})") is None
+    # but an *exact* zero is: g(0) is one number, and n outgrows it
+    assert cmp2("n", "0") == ("unbounded",)                     # deg vs s, GapMaj
+    assert cmp2(r"\Theta(n)", "0") == ("unbounded",)
+    assert cmp2("1", "0") is None            # a constant is bounded by g(0)
+    assert cmp2("0", "0") is None
+    assert val("0").lo.is_zero() and not val("1/n").lo.is_zero()
     # MaxInf(OR) -> 0, and g(x) = log(1/x) does bound n on this family, so
     # there is nothing to claim -- see the note in compare()
     assert cmp2("n", r"n\,2^{1-n}") is None

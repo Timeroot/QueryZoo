@@ -1,0 +1,444 @@
+# =====================================================================
+# RELATIONS, part 13: the facts that hold *by definition*, recorded in
+# the relational setting so they inherit everywhere.
+#
+# Nobody writes these down in a paper -- they are one line of unfolding
+# the definitions -- which is exactly why the relational half of the
+# matrix was missing them. A simulation argument that never looks at the
+# output ("a query is a parity query on a singleton", "a deterministic
+# tree is a pseudo-deterministic algorithm") does not care whether $f$
+# is total, partial, or a search problem, so the right place to record
+# it is `setting: relation`; the upper bound then travels down to
+# partial and total on its own.
+#
+# Only put an entry here if the proof really is "unfold the definition".
+# Anything needing a construction, a promise, or a counting argument
+# belongs in a topical file with a reference.
+#
+# Schema: see 01-classical-core.yaml.
+# =====================================================================
+
+relations:
+
+# ------------------------------------------------- PDT vs D (relation)
+- from: PDT
+  to: D
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{D}^{\oplus}(f) \le \mathrm{D}(f)'
+      form: {exp: 1, kind: exact}
+      note: |
+        A parity decision tree may branch on $\bigoplus_{i \in S} x_i$ for any $S$;
+        taking $S = \{i\}$ is an ordinary query, so every decision tree *is* a
+        parity decision tree of the same depth. The simulation never inspects the
+        leaf labels, so it is indifferent to whether the leaves carry a bit, a
+        partial-function value, or one of several valid answers.
+      conf: high
+  notes: |
+    The reverse fails badly and in the most familiar way: $\mathrm{D}^{\oplus}(\oplus_n) = 1$
+    while $\mathrm{D}(\oplus_n) = n$.
+  see_also: [PDT, D]
+
+# ------------------------------------------------- C^1 vs C (relation)
+- from: C1
+  to: C
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{C}^1(f) \le \mathrm{C}(f)'
+      form: {exp: 1, kind: exact}
+      note: |
+        $\mathrm{C}^1$ is $\max_x \mathrm{C}_x$ restricted to $x \in f^{-1}(1)$ and
+        $\mathrm{C}$ is the same maximum over all of $\mathrm{Dom}(f)$: a maximum over
+        a subset. Wherever the $1$-inputs are a meaningful set -- Boolean-valued
+        relations included -- the inequality is immediate.
+      conf: high
+  see_also: [C1, C, C0]
+
+# -------------------------------------------------- C^0 vs C (partial)
+- from: C0
+  to: C
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{C}^0(f) \le \mathrm{C}(f)'
+      form: {exp: 1, kind: exact}
+      note: |
+        The mirror of the $\mathrm{C}^1$ line above: a maximum over the $0$-inputs
+        is a maximum over a subset of the domain. Recorded at `partial` rather
+        than `relation` only because $\mathrm{C}^0$ needs a distinguished "no"
+        answer to mean anything, so the relational cell is not the zoo's to fill;
+        the bound still travels up to `total` on its own.
+      conf: high
+  notes: |
+    Tight, and by the dullest possible witness: a $0$-input of $\mathrm{OR}_n$ is
+    the all-zero string and certifying it takes all $n$ bits, so
+    $\mathrm{C}^0(\mathrm{OR}_n) = \mathrm{C}(\mathrm{OR}_n) = n$.
+
+    Trivial, and the reason it is worth writing down: without it the whole
+    $\mathrm{C}^0$ row has no upper bound of any kind, because the one recorded
+    $\mathrm{C}^0$ bound -- $\mathrm{C}^0 \le \mathrm{s}^1\,\mathrm{bs}^0$
+    [Nisan91] -- is a *product* of two measures and so carries no exponent.
+    With this line the row inherits everything $\mathrm{C}$ has:
+    $\mathrm{C}^0 \le \mathrm{C} \le \mathrm{D}$, $\mathrm{C}^0 \le \mathrm{R}_0$,
+    $\mathrm{C}^0 = O(\mathrm{R}^2)$, and so on.
+
+    Note what does *not* follow. $\mathrm{D} \le \mathrm{C}^0\mathrm{C}^1$
+    [Tardos89] needs both sides: $\mathrm{D}$ is not bounded by $\mathrm{C}^0$
+    alone, since $\mathrm{C}^0(\mathrm{AND}_n) = 1$ while $\mathrm{D} = n$. The
+    $\mathrm{C}^0$ *column* stays empty for that reason, and legitimately.
+  see_also: [C0, C, C1, D, OR, AND]
+
+# --------------------------------------------- C_min vs C (relation)
+- from: Cmin
+  to: C
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{C}_{\min}(f) \le \mathrm{C}(f)'
+      form: {exp: 1, kind: exact}
+      note: |
+        $\min_x \mathrm{C}_x(f) \le \max_x \mathrm{C}_x(f)$ over a non-empty domain.
+        Nothing here reads the output, so certificates for a search problem --
+        assignments that fix *some* valid answer -- behave the same way.
+      conf: high
+  notes: |
+    The gap between the two can be everything: $\mathrm{C}_{\min}(\mathrm{OR}_n) = 1$
+    (any $1$-input has a one-bit certificate) while $\mathrm{C}(\mathrm{OR}_n) = n$.
+  see_also: [Cmin, C, C1]
+
+# --------------------------------------------- D vs DTsize (relation)
+- from: D
+  to: D_size
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{D}(f) \le \mathrm{DTsize}(f) - 1'
+      form: {exp: 1, kind: exact}
+      refs: [BdW02]
+      note: |
+        Each internal node on a root-to-leaf path of length $d$ splits off at least
+        one further leaf, so a tree with $L$ leaves has depth at most $L-1$; apply
+        this to a minimum-*size* tree.
+      conf: high
+  notes: |
+    The bound is tight on the read-once path-shaped trees: $\mathrm{D}(\mathrm{AND}_n) = n$
+    and $\mathrm{DTsize}(\mathrm{AND}_n) = n+1$. See the reverse pair for the
+    exponential in the other direction.
+  see_also: [D, D_size, Dna, rank]
+
+# ------------------------------------------- DTsize vs D (relation)
+- from: D_size
+  to: D
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{DTsize}(f) \le 2^{\mathrm{D}(f)}'
+      form: {kind: exp}
+      refs: [BdW02]
+      note: |
+        A binary tree of depth $d$ has at most $2^d$ leaves; apply it to a
+        minimum-*depth* tree.
+      conf: high
+  notes: |
+    With $\mathrm{D} \le \mathrm{DTsize}-1$ on the reverse pair this pins the two
+    measures to "exponentially related, and no better": $\mathrm{PARITY}_n$ has
+    $\mathrm{D} = n$ and $\mathrm{DTsize} = 2^n$, so the exponential is achieved.
+    This is why the zoo carries the *size* and its logarithm as one measure and
+    states everything else against $\log \mathrm{DTsize}$.
+  see_also: [D, D_size, rank]
+
+# ----------------------------------------- D^na vs DTsize (relation)
+- from: Dna
+  to: D_size
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{D}^{\mathrm{na}}(f) \le \mathrm{DTsize}(f) - 1'
+      form: {exp: 1, kind: exact}
+      note: |
+        Take a minimum-size tree and query, non-adaptively, every variable that
+        labels one of its internal nodes: there are at most $\mathrm{DTsize}(f)-1$
+        of them, and knowing all of them lets you walk the tree offline.
+        Adaptivity buys nothing once you are paying for the whole tree.
+      conf: high
+  notes: |
+    Strictly stronger than the $\mathrm{D}$ version of the same argument, which it
+    implies through $\mathrm{D} \le \mathrm{D}^{\mathrm{na}}$.
+  see_also: [Dna, D_size, D]
+
+# --------------------------------------------- noisyR vs R (relation)
+- from: noisyR
+  to: R
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{noisyR}(f) \le \mathrm{R}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BenDavidBlais20composition]
+      note: |
+        Buying a copy of $x_i$ at bias $\gamma = 1$ costs $\gamma^2 = 1$ and returns
+        the bit exactly, so the noisy model contains the query model verbatim and the
+        budget $\sum_i \gamma_i^2$ counts queries. The simulation is output-blind, so
+        it holds for search problems -- which matters, because it is the *only*
+        direction that survives there.
+      conf: high
+  notes: |
+    Recorded at the relational level because the reverse direction is exactly where
+    relations break: $\mathrm{R}$ is unbounded in terms of $\mathrm{noisyR}$ on
+    [[AgreeString]], the relational barrier of [BenDavidBlais20composition].
+    The partial-function record carries the interesting content (Theorem 4, the
+    $\mathrm{GapMaj}$ characterisation).
+  see_also: [noisyR, R, noisyRna, AgreeString, open-noisyR-vs-R]
+
+# ------------------------------------ noisyR^na vs R^na (relation)
+- from: noisyRna
+  to: Rna
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{noisyR}^{\mathrm{na}}(f) \le \mathrm{R}^{\mathrm{na}}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BenDavidBlais20composition]
+      note: |
+        Setting every $\gamma_i \in \{0,1\}$ turns a noisy non-adaptive algorithm into
+        an ordinary one and back; the cost $\sum_i \gamma_i^2$ becomes $|S|$.
+      conf: high
+  notes: |
+    The easy half of Theorem 8. The hard half -- $\mathrm{R}^{\mathrm{na}} =
+    O(\mathrm{noisyR}^{\mathrm{na}})$ -- holds for partial Boolean functions and is
+    **false** for relations, so it is recorded one setting down.
+  see_also: [noisyRna, Rna, noisyR, AgreeString]
+
+# ------------------------------------------------ psD vs D (relation)
+- from: psD
+  to: D
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{psD}(S) \le \mathrm{D}(S)'
+      form: {exp: 1, kind: exact}
+      refs: [GGR13, CDM23]
+      note: |
+        A deterministic tree is pseudo-deterministic with room to spare: take the
+        canonical solution $s(x)$ to be whatever the tree outputs on $x$, and the
+        "reproducibility" probability is $1$.
+      conf: high
+  notes: |
+    The interesting direction is the reverse, $\mathrm{D}(S) = O(\mathrm{psD}(S)^3)$
+    for *total* search problems [CDM23] -- see that record for why the totality
+    hypothesis is doing real work.
+  see_also: [psD, D, R, settings]
+
+# ------------------------------------------------- CA vs R (relation)
+- from: CA
+  to: R
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{CA}(S) = O\big(\mathrm{R}(S)\big)'
+      form: {exp: 1, kind: const}
+      refs: [Aaronson06, LaplanteMagniez08]
+      note: |
+        Soundness of the method, which is what makes $\mathrm{CA}$ a complexity
+        measure at all: the adversary argument charges a randomized algorithm for the
+        progress it makes on a hard pair of inputs, and it never uses that the two
+        inputs carry *different* answers rather than merely disjoint sets of valid
+        answers. The Kolmogorov formulation of [LaplanteMagniez08] is stated for
+        relations outright.
+      conf: high
+  notes: |
+    The relational setting is the one the classical adversary was built for -- it is
+    how randomized lower bounds for search problems and for local search are proved.
+    For total functions the bound collapses into the fractional block sensitivity
+    picture, $\mathrm{CA} = \Theta(\mathrm{fbs})$ [ABIKPS17]; for partial functions
+    $\mathrm{CA}$ is strictly stronger than $\mathrm{fbs}$ [CGLMSG23].
+  see_also: [CA, R, fbs, cbs, prt]
+
+# --------------------------------------------- Q vs Q^rob (relation)
+- from: Q
+  to: robustQ
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{Q}(f) \le \mathrm{Q}^{\mathrm{rob}}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BNRdW05]
+      note: |
+        A perfect oracle is a noisy oracle that happens never to err, so a robust
+        algorithm may be run against it unchanged -- or, in the "noisy copies"
+        formulation, the copies are prepared from the perfect oracle at no extra
+        query cost.
+      conf: high
+  notes: |
+    The reverse is the theorem: $\mathrm{Q}^{\mathrm{rob}}(f) = O(\mathrm{Q}(f)\log \mathrm{Q}(f))$
+    [BNRdW05], and for $\mathrm{PARITY}$ the logarithm is not needed but the linear
+    term is -- robustness is nearly free for quantum algorithms, unlike the classical
+    $\mathrm{N}_p$ story.
+  see_also: [Q, robustQ, Np, R]
+
+# =====================================================================
+# The same sweep one setting down: polynomials are not defined for
+# relations, but the degree family has the same kind of hole on partial
+# functions -- with one trap. For partial $f$ the zoo follows the
+# standard conventions, under which $\deg$, $\mathrm{sdeg}$ and
+# $\widetilde{\deg}_+$ constrain $\mathrm{Dom}(f)$ only while
+# $\widetilde{\deg}$ must stay bounded off the promise as well. That is
+# exactly why $\widetilde{\deg} \le \deg$ **fails** on a promise (see the
+# adeg vs deg record and [[UniqueSearch]]) while the two below survive:
+# they never ask anything of the polynomial off the domain.
+# =====================================================================
+
+# ----------------------------------------- sdeg vs deg (partial)
+- from: sdeg
+  to: deg
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{sdeg}(f) \le \deg(f)'
+      form: {exp: 1, kind: exact}
+      note: |
+        If $p$ agrees with $f$ on $\mathrm{Dom}(f)$ then $1-2p$ takes the value $+1$
+        on $f^{-1}(0)$ and $-1$ on $f^{-1}(1)$, so it sign-represents $f$ at the same
+        degree. Both measures look only at the domain, so the promise costs nothing
+        here -- unlike $\widetilde{\deg}$, which must also stay bounded off it.
+      conf: high
+  see_also: [sdeg, deg, adeg, UniqueSearch]
+
+# ----------------------------------------- odeg vs deg (partial)
+- from: odeg
+  to: deg
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\widetilde{\deg}_+(f) \le \deg(f)'
+      form: {exp: 1, kind: exact}
+      note: |
+        An exact representation is a one-sided approximation with room to spare:
+        $p = 0$ on $f^{-1}(0)$ satisfies $|p| \le 1/3$, and $p = 1$ on $f^{-1}(1)$
+        satisfies $p \ge 2/3$. The one-sided constraints are imposed on
+        $\mathrm{Dom}(f)$ only, so nothing is asked of $p$ off the promise.
+      conf: high
+  notes: |
+    Worth contrasting with $\widetilde{\deg} \le \deg$, which fails on
+    [[UniqueSearch]]: the two-sided measure is the one that carries an off-promise
+    boundedness requirement, and that requirement is the whole difference.
+  see_also: [odeg, deg, adeg, UniqueSearch]
+
+# ----------------------------------------- Q0 vs R0 (relation)
+- from: Q0
+  to: R0
+  setting: relation
+  status: settled
+  upper:
+    - stmt: '\mathrm{Q}_0(f) \le 2\,\mathrm{R}_0(f)'
+      form: {exp: 1, kind: const}
+      note: |
+        A classical algorithm is a quantum one, so the only content is the change of
+        cost convention. $\mathrm{R}_0$ is worst-case *expected* cost (worst-case cost
+        would collapse to $\mathrm{D}$); $\mathrm{Q}_0$ charges the worst case and pays
+        for it with the $\bot$ outcome. Truncate the Las Vegas algorithm after
+        $2\,\mathrm{R}_0(f)$ queries and output $\bot$ if it has not finished: by
+        Markov it finishes with probability $\ge 1/2$, and when it finishes it is
+        right. The same truncation works for partial functions and relations, and in
+        the other direction repeating a $\bot$-algorithm until it answers costs
+        $2\,\mathrm{Q}_0$ in expectation -- the two conventions agree up to a factor
+        of two.
+      conf: high
+  notes: |
+    Recording this edge is what keeps the $\mathrm{Q}_0$ column honest: without it
+    nothing stops a $\mathrm{Q}_0$ value from being entered above the function's own
+    $\mathrm{R}_0$. Note also that the polynomial floor under $\mathrm{Q}_0$ is
+    $\mathrm{rdeg}/2$, not $\deg/2$ -- see the $\mathrm{Q}_0$ measure page.
+  see_also: [Q0, R0, QE, rdeg, cost-conventions]
+
+# ----------------------------------------- ndeg vs deg / C1 / rdeg (partial)
+# Three one-line unfoldings. Without them the whole `ndeg` row -- and the
+# `NQ` row underneath it, which reaches everything only through
+# NQ = ceil(ndeg/2) -- carried no upper bound at all, so every cell in both
+# rows read "separation, no bound" when in fact ndeg sits under three
+# different measures at exponent 1.
+- from: ndeg
+  to: deg
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{ndeg}(f) \le \deg(f)'
+      form: {exp: 1, kind: exact}
+      note: |
+        A representing polynomial is a nondeterministic one. If $p$ agrees with $f$
+        on $\mathrm{Dom}(f)$ then, $f$ being $\{0,1\}$-valued, $p(x) \ne 0$ exactly
+        when $f(x) = 1$ there. Both measures constrain the domain only, so the
+        promise costs nothing.
+      conf: high
+  lower:
+    - stmt: '\mathrm{ndeg}(\wedge_n) = \deg(\wedge_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: AND
+      note: 'Tight: $\prod_i x_i$ is the only multilinear polynomial vanishing off $1^n$, up to scale.'
+      conf: high
+  notes: |
+    The reverse fails as badly as possible -- [[OR]] has $\mathrm{ndeg} = 1$ and
+    $\deg = n$ -- so *nothing* is bounded in terms of $\mathrm{ndeg}$, and the
+    $\mathrm{ndeg}$ column is a column of $\infty$. That asymmetry is the measure's
+    whole character: a nondeterministic degree only has to be nonzero, and "nonzero"
+    is a single linear condition away for any function with a one-bit certificate.
+  see_also: [ndeg, deg, NQ, rdeg, AND, OR]
+
+- from: ndeg
+  to: C1
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{ndeg}(f) \le \mathrm{C}^1(f)'
+      form: {exp: 1, kind: exact}
+      note: |
+        Sum the certificates. For each minimal $1$-certificate $C$ let
+        $\mathbb{1}_C(x) = \prod_{i \in C} \tfrac{1 + (2c_i-1)(2x_i-1)}{2}$, of degree
+        $|C| \le \mathrm{C}^1(f)$, and put $p = \sum_C \mathbb{1}_C$. Every term is
+        $0$ or $1$, so on the domain $p(x) > 0$ exactly when $x$ is consistent with
+        some $1$-certificate -- that is, exactly when $f(x) = 1$.
+      conf: high
+  lower:
+    - stmt: '\mathrm{ndeg}(\wedge_n) = \mathrm{C}^1(\wedge_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: AND
+      conf: high
+  notes: |
+    Incomparable to $\mathrm{ndeg} \le \deg$ and often much sharper: [[OR]] has
+    $\mathrm{C}^1 = \mathrm{ndeg} = 1$ against $\deg = n$, while [[MinskyPapert]] has
+    $\mathrm{C}^1 = \mathrm{ndeg} = m$ against $\deg = m^3$. Both bounds are needed
+    for the closure to see the smaller of the two.
+  see_also: [ndeg, C1, NQ, deg, OR, MinskyPapert]
+
+- from: ndeg
+  to: rdeg
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{ndeg}(f) \le \mathrm{rdeg}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [deWolf03, MahadevdeWolf15]
+      note: |
+        Take the numerator. If $p/q = f$ on $\mathrm{Dom}(f)$ then, $f$ being
+        $\{0,1\}$-valued, $f(x) = 1 \iff p(x) \ne 0$ there, so
+        $\mathrm{ndeg}(f) \le \deg p \le \mathrm{rdeg}(f)$; running the same argument
+        on $p - q$, which vanishes exactly on $f^{-1}(1)$, gives
+        $\mathrm{ndeg}(\bar f) \le \mathrm{rdeg}(f)$. Those two are the easy half of
+        the characterisation $\mathrm{rdeg}(f) = \max\{\mathrm{ndeg}(f),
+        \mathrm{ndeg}(\bar f)\}$ quoted at [[rdeg]].
+      conf: high
+  lower:
+    - stmt: '\mathrm{ndeg}(\wedge_n) = \mathrm{rdeg}(\wedge_n) = n'
+      form: {exp: 1, kind: exact}
+      witness: AND
+      note: 'Tight whenever the harder of the two sides is the function''s own: $\mathrm{ndeg}(\overline{\wedge_n}) = 1$.'
+      conf: high
+  notes: |
+    So $\mathrm{ndeg}$ is the one-sided half of $\mathrm{rdeg}$, and an upper bound in
+    terms of $\mathrm{ndeg}$ is strictly the stronger statement -- which is why the
+    $\mathrm{rdeg}$ column is full of *open* cells (is $\mathrm{D}$ polynomially
+    bounded by $\mathrm{rdeg}$?) while the $\mathrm{ndeg}$ column is full of *closed*
+    ones: [[OR]] settles every cell there in the negative at once.
+  see_also: [ndeg, rdeg, NQ, ardeg, AND, OR]

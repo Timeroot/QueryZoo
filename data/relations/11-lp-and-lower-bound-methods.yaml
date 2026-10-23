@@ -216,7 +216,7 @@ relations:
   upper:
     - stmt: '\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{cjdeg}_{\varepsilon}(f)'
       form: {exp: 1, kind: exact}
-      note: 'Drop the nonnegativity requirement: a conical junta of width $d$ *is* a real polynomial of degree $d$ that $\varepsilon$-approximates $f$.'
+      note: 'Drop the nonnegativity requirement: a conical junta of width $d$ *is* a real polynomial of degree $d$ that $\varepsilon$-approximates $f$. On a promise the argument needs the junta to be bounded *off* the promise too, since that is where $\widetilde{\deg}$ asks for $|p| \le 1+\varepsilon$ and $\mathrm{cjdeg}$ would otherwise be free; see the convention recorded on [[cjdeg]], and the width-2 junta for $\oplus_3$-minus-a-point that violates the inequality without it.'
       conf: high
   see_also: [cjdeg, adeg, Q]
 
@@ -420,6 +420,36 @@ relations:
       conf: high
   see_also: [D_prod, RS, R]
 
+- from: R
+  to: D_prod
+  setting: total
+  status: open
+  headline: 'How much hardness do product distributions miss? At least a polynomial factor, and no upper bound of any kind is known.'
+  lower:
+    - stmt: '\mathrm{R}(g_d) = \Omega\big(\mathrm{D}^{\mathrm{prod}}(g_d)^{1.08}\big)'
+      form: {exp: 1.08, kind: const}
+      witness: NANDtree
+      refs: [Sanyal24]
+      note: 'The balanced NAND tree has $\mathrm{R} = \Theta(N^{0.75384\ldots})$ [Santha95] and $\mathrm{D}^{\mathrm{prod}} = O(N^{0.69789\ldots})$ [Sanyal24, Lem. 1.8], a ratio of exponents of $1.0802\ldots$. This is the first -- and so far only -- polynomial separation of the two.'
+      conf: high
+  notes: |
+    The other direction is $\mathrm{D}^{\mathrm{prod}} \le \mathrm{R}$ by Yao, so the cell is
+    asking how far a product distribution can be from optimal. Nothing polynomial is known:
+    the best general statement in this direction runs through sabotage complexity,
+    $\mathrm{RS} = \tilde\Omega(\mathrm{D}^{\mathrm{prod}})$, and that is a bound on
+    $\mathrm{D}^{\mathrm{prod}}$ from above, not below. It is also the wrong shape to close
+    the cell even if [[RS]] were known to be $\Theta(\mathrm{R})$, which is itself the
+    Ben-David-Kothari question at [[open-RS-vs-R]].
+
+    Why the NAND tree separates is worth stating, because the natural guess is that it does
+    not. Saks and Wigderson's $\Theta(\alpha^d)$ lower bound, $\alpha = (1+\sqrt{33})/4$, *is*
+    proved against a product distribution -- but for *zero-error* cost. Allowing error
+    $1/3$ lets an algorithm that knows $\mu$ recurse first on the child likelier to evaluate
+    to $0$ instead of on a random one, and under a product distribution the two subtrees are
+    independent, so that greedy choice is available at every level and compounds over the
+    depth. Against a correlated distribution it is not.
+  see_also: [D_prod, R, RS, NANDtree, MinskyPapert, open-Dprod-vs-R, open-RS-vs-R]
+
 # ---------------------------------------------------------------------
 # Mod-p degree
 # ---------------------------------------------------------------------
@@ -475,10 +505,6 @@ relations:
   setting: partial
   status: fails
   headline: 'On promise problems the private-coin game is unboundedly harder than the public-coin one.'
-  upper:
-    - stmt: '\mathrm{CG}(f) \text{ is known to be unbounded in terms of } \mathrm{CG}^{\mathrm{pub}}(f).'
-      form: {kind: none}
-      conf: high
   lower:
     - stmt: '\mathrm{CG}(\mathrm{DJ}_N) = \Theta(N) \text{ while } \mathrm{CG}^{\mathrm{pub}}(\mathrm{DJ}_N) = \Theta(1)'
       form: {kind: unbounded}
@@ -581,6 +607,87 @@ relations:
       refs: [ABIKPS17]
       conf: high
   see_also: [fbs, CA, CGpub, RC]
+
+# The collapse above is total-only. What survives the promise is weaker but is the
+# load-bearing part: it is what carries fbs -- and hence RC -- down to the quantum
+# measures off the promise. The three cells below are that chain.
+- from: fbs
+  to: Adv
+  setting: partial
+  status: settled
+  headline: 'The adversary bound sees fractional block sensitivity, promise or no promise.'
+  upper:
+    - stmt: '\mathrm{fbs}(f) \le \mathrm{Adv}(f)^2'
+      form: {exp: 2, kind: exact}
+      refs: [Ambainis02, SpalekSzegedy06]
+      putative: true
+      note: 'The fractional refinement of $\mathrm{bs} \le \mathrm{Adv}^2$ [Ambainis02], by the same star matrix with the LP weights written onto its edges. Fix $x$ attaining $\mathrm{fbs}$, with weights $w_B$ on the sensitive blocks $B$ (so $\sum_{B \ni i} w_B \le 1$ for every $i$, and $\sum_B w_B = \mathrm{fbs}$). Put $\Gamma[x, x^B] = \Gamma[x^B, x] = \sqrt{w_B}$ and $0$ elsewhere. This is legal: each $x^B$ lies in $\mathrm{Dom}$ with $f(x^B) \ne f(x)$ *by the definition of a sensitive block*, and distinct blocks give distinct strings, so $\Gamma$ is a nonnegative matrix supported on pairs of unequal value. It is a weighted star, whose spectral norm is the $\ell_2$ norm of its edge weights: $\|\Gamma\| = \sqrt{\sum_B w_B} = \sqrt{\mathrm{fbs}}$. And $\Gamma \circ D_i$ keeps exactly the edges with $i \in B$, another star, so $\|\Gamma \circ D_i\| = \sqrt{\sum_{B \ni i} w_B} \le 1$. Hence $\mathrm{Adv}(f) \ge \sqrt{\mathrm{fbs}(f)}$. **Nothing here uses totality** -- the blocks were required to land in $\mathrm{Dom}$ from the start -- which is the whole point: the total-function route to the same conclusion goes through $\mathrm{fbs} = \Theta(\mathrm{CA})$ or through [KulkarniTal16], and both of those hypotheses are load-bearing. With $\mathrm{Adv} \le \mathrm{Adv}^{\pm} = \Theta(\mathrm{Q})$ [SpalekSzegedy06, Reichardt11] this gives $\mathrm{fbs} = O(\mathrm{Q}^2)$, and with $\mathrm{RC} = \Theta(\mathrm{fbs})$ the same for $\mathrm{RC}$, off the promise.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{fbs}(\vee_n) = n = \Theta\big(\mathrm{Adv}(\vee_n)^2\big)'
+      form: {exp: 2, kind: exact}
+      witness: OR
+      refs: [Ambainis02]
+      conf: high
+  see_also: [fbs, Adv, Advpm, Q, RC, CA, bs]
+
+# ...and the converse, which needs totality.
+- from: Adv
+  to: fbs
+  setting: total
+  status: settled
+  headline: 'The positive adversary is at most fractional block sensitivity -- on total functions.'
+  upper:
+    - stmt: '\mathrm{Adv}(f) \le \sqrt{\mathrm{FC}^{0}(f)\,\mathrm{FC}^{1}(f)} \le \mathrm{fbs}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [KulkarniTal16, ABIKPS17]
+      note: 'The randomised strengthening of the certificate complexity barrier: $\mathrm{Adv} \le \sqrt{\mathrm{C}^{0}\mathrm{C}^{1}}$ [SpalekSzegedy06, Zhang05] survives replacing certificates by *fractional* ones. The second step is $\sqrt{ab} \le \max(a,b)$ together with $\mathrm{FC} = \mathrm{fbs}$ (an equality of LPs, see [[FC]]). **Totality is load-bearing.** Off the promise the bound weakens to $\mathrm{Adv}(f) \le 2\sqrt{n \cdot \min\{\mathrm{FC}^{0},\mathrm{FC}^{1}\}}$ [ABIKPS17], which is no use when the promise makes both fractional certificate complexities constant -- [[Collision]] again. Combined with $\mathrm{fbs} \le \mathrm{Adv}^2$ (cell above) this pins the positive adversary inside a square: $\sqrt{\mathrm{fbs}} \le \mathrm{Adv} \le \mathrm{fbs}$, which is what makes [[open-Advpm-vs-Adv]] a question about $\mathrm{Q}$ versus $\mathrm{fbs}$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{Adv}(\oplus_n) = \Theta(n) = \Theta\big(\mathrm{fbs}(\oplus_n)\big)'
+      form: {exp: 1, kind: exact}
+      witness: PARITY
+      note: 'Every coordinate is sensitive at every input, so both sides are $n$ and the bound is attained.'
+      conf: high
+  see_also: [Adv, fbs, FC, C, Advpm, Q, open-Advpm-vs-Adv]
+
+- from: CA
+  to: adeg
+  setting: partial
+  status: settled
+  headline: 'Approximate degree is at least the square root of the classical adversary bound -- on partial functions too.'
+  upper:
+    - stmt: '\widetilde{\deg}_{\varepsilon}(f) \ge \tfrac{1}{\pi}\sqrt{(1-2\varepsilon)\,\mathrm{CA}(f)}'
+      form: {exp: 2, kind: const}
+      refs: [ABK21lifting]
+      note: 'Tal had the $\widetilde{\deg} = \Omega(\sqrt{\mathrm{fbs}})$ form for total $f$; [ABK21lifting, Thm 8] get the stronger $\mathrm{CA}$ version and, crucially, get it **for partial $f$**, by composing with a promise-$\mathrm{OR}$ rather than by symmetrising in place. Since $\mathrm{CA} \ge \mathrm{fbs}$ on partial functions (cell above), this is what finally carries $\mathrm{fbs}$ -- and hence $\mathrm{RC} = \Theta(\mathrm{fbs})$ -- down to $\widetilde{\deg}$, and through $\widetilde{\deg} \le 2\mathrm{Q}$ down to $\mathrm{Q}$, off the promise. It is the promise-robust replacement for [KulkarniTal16].'
+      conf: high
+  lower:
+    - stmt: '\mathrm{CA}(\vee_n) = \Theta(n) = \Theta\big(\widetilde{\deg}(\vee_n)^2\big)'
+      form: {exp: 2, kind: exact}
+      witness: OR
+      refs: [ABK21lifting]
+      conf: high
+  see_also: [CA, adeg, fbs, Adv, Q, RC]
+
+- from: CA
+  to: Adv
+  setting: partial
+  status: settled
+  headline: 'The classical and quantum adversary bounds are quadratically related, promise or no promise.'
+  upper:
+    - stmt: '\mathrm{Adv}(f) \le \mathrm{CA}(f) \le 2\,\mathrm{Adv}(f)^2'
+      form: {exp: 2, kind: const}
+      refs: [ABK21lifting]
+      note: '[ABK21lifting, Thm 9], for all possibly-partial Boolean $f$; the upper half also survives to relations. The left inequality is definitional -- the classical bound imposes the harder $\min$-form feasibility constraint on the same weights. The quadratic gap on the right is real and is attained by $\mathrm{OR}$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{CA}(\vee_n) = \Theta(n) = \Theta\big(\mathrm{Adv}(\vee_n)^2\big)'
+      form: {exp: 2, kind: exact}
+      witness: OR
+      refs: [ABK21lifting]
+      conf: high
+  see_also: [CA, Adv, Advpm, fbs, adeg, Q]
 
 - from: R0
   to: CG

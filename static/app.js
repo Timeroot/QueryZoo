@@ -113,6 +113,12 @@
   }
 
   /* ------------------------------------------------------- matrix views */
+  /* Which of total/partial/relation the grids are showing.  The scope filter
+     below reads it too: a measure with no definition in the current setting
+     has nothing to say, so its row and column come out of the table. */
+  var matrixView = "total";
+  var onMatrixView = null;
+
   var mc = document.getElementById("matrix-controls");
   if (mc) {
     var btns = mc.querySelectorAll("[data-view]");
@@ -120,8 +126,10 @@
       b.addEventListener("click", function () {
         btns.forEach(function (o) { o.classList.remove("on"); });
         b.classList.add("on");
+        matrixView = b.getAttribute("data-view");
         document.body.classList.remove("view-total", "view-partial", "view-relation");
-        document.body.classList.add("view-" + b.getAttribute("data-view"));
+        document.body.classList.add("view-" + matrixView);
+        if (onMatrixView) onMatrixView();
       });
     });
     var ht = document.getElementById("hide-tight");
@@ -155,10 +163,28 @@
     var wrapLadder = document.getElementById("wrap-ladder");
     var catbox = document.getElementById("matrix-cats");
     var countEl = document.getElementById("matrix-count");
+    var scopeBtns = mc ? mc.querySelectorAll("[data-scope]") : [];
     var catInputs = catbox ? catbox.querySelectorAll("input[type=checkbox]") : [];
 
     function visible(m) {
       return SCOPE_RANK[m.scope] <= SCOPE_RANK[scope] && !offCats[m.cat];
+    }
+
+    /* Defined -- in any conventional sense -- in the setting on screen? */
+    function defined(m) {
+      return !m.nd || m.nd.indexOf(matrixView) < 0;
+    }
+
+    /* Defined, but nothing for a grid of exponents to say: it degenerates into
+       another measure in this setting, or it is dimensionless and no exponent
+       can relate it to a query count.  Its pair pages are still built -- the
+       relations are computed and are a useful check on the closure. */
+    function comparable(m) {
+      return !m.nc || m.nc.indexOf(matrixView) < 0;
+    }
+
+    function hideRules(tbl, id) {
+      return "#" + tbl + " tr.y-" + id + ",#" + tbl + " .x-" + id;
     }
 
     /* A grid is skipped at load (class mj-defer) because MathJax mismeasures
@@ -175,15 +201,47 @@
       var core = scope === "core";
       var ladder = scope === "ladder";
       var big = !core && !ladder;
-      var shown = 0;
-      if (big) {
-        var hidden = [];
-        meta.measures.forEach(function (m) {
-          if (visible(m)) shown++;
-          else hidden.push("#matrix-all tr.y-" + m.id + ",#matrix-all .x-" + m.id);
-        });
-        sheet.textContent = hidden.length ? hidden.join(",") + "{display:none}" : "";
-      }
+      /* How many measures each button would show, in the setting on screen and
+         under the current chips -- what goes on the buttons, so that no button
+         promises a measure the grid will not draw. */
+      var tier = { core: 0, recorded: 0, all: 0, ladder: 0 };
+      /* ...and why the rest are out, for the scope showing: no definition in
+         this setting, dimensionless everywhere, or degenerate in this one. */
+      var out = { undef: 0, dimless: 0, degen: 0 };
+      var inLadder = {};
+      (meta.ladder || []).forEach(function (id) { inLadder[id] = true; });
+      /* the core grid is not square: rdeg has a column but no recorded row */
+      var isRow = {}, isCol = {}, coreRows = 0, coreCols = 0;
+      ((meta.core || {}).rows || []).forEach(function (id) { isRow[id] = true; });
+      ((meta.core || {}).cols || []).forEach(function (id) { isCol[id] = true; });
+      var hidden = [];
+      meta.measures.forEach(function (m) {
+        var rank = SCOPE_RANK[m.scope];
+        var inScope = core ? m.scope === "core"
+          : ladder ? inLadder[m.id]
+          : rank <= SCOPE_RANK[scope] && !offCats[m.cat];
+        if (!defined(m) || !comparable(m)) {
+          /* out of every grid, whatever the scope */
+          if (inScope) {
+            if (!defined(m)) out.undef++;
+            else if (m.dl) out.dimless++;
+            else out.degen++;
+          }
+          hidden.push(hideRules("matrix", m.id), hideRules("matrix-all", m.id),
+                      hideRules("matrix-ladder", m.id));
+          return;
+        }
+        if (m.scope === "core") tier.core++;
+        if (isRow[m.id]) coreRows++;
+        if (isCol[m.id]) coreCols++;
+        if (inLadder[m.id]) tier.ladder++;
+        if (!offCats[m.cat]) {
+          tier.all++;
+          if (rank <= SCOPE_RANK.recorded) tier.recorded++;
+        }
+        if (!visible(m)) hidden.push(hideRules("matrix-all", m.id));
+      });
+      sheet.textContent = hidden.length ? hidden.join(",") + "{display:none}" : "";
       wrapCore.hidden = !core;
       wrapAll.hidden = !big;
       if (wrapLadder) wrapLadder.hidden = !ladder;
@@ -191,15 +249,41 @@
          so there is nothing sensible for them to do while it is showing. */
       if (catbox) catbox.hidden = !big;
       document.body.classList.toggle("scope-all", big);
+      labelScopes(tier);
       if (countEl) {
-        countEl.textContent = core
-          ? meta.counts.core + " x " + meta.counts.core + " published table"
-          : ladder
-            ? meta.counts.ladder + " measures, roughly ordered by size"
-            : shown + " x " + shown + " of " + meta.counts.all + " measures";
+        var what = matrixView === "relation" ? "relations"
+          : matrixView === "partial" ? "partial functions" : "total functions";
+        var why = [];
+        if (out.undef) why.push(out.undef + " undefined for " + what);
+        if (out.dimless) why.push(out.dimless + " dimensionless");
+        if (out.degen) why.push(out.degen + " degenerate here");
+        var n = ladder ? tier.ladder : tier[scope];
+        countEl.textContent = (ladder
+          ? n + " measures, roughly ordered by size"
+          : core ? coreRows + " x " + coreCols + " core table"
+                 : n + " x " + n + " grid")
+          + (why.length ? " · " + why.join(", ") + ", hidden" : "");
       }
       reveal(big ? wrapAll : ladder ? wrapLadder : null);
     }
+
+    /* Put the live counts on the buttons, and drop a button whose grid would be
+       a duplicate: the scopes nest, so equal counts mean the same measures, and
+       an "All" that draws exactly what "With records" drew reads as a bug. */
+    function labelScopes(tier) {
+      var dup = null;
+      scopeBtns.forEach(function (b) {
+        var v = b.getAttribute("data-scope");
+        var n = b.querySelector(".n");
+        if (n) n.textContent = tier[v];
+        if (v === "recorded" && tier.recorded === tier.all) dup = b;
+      });
+      scopeBtns.forEach(function (b) {
+        b.hidden = b === dup && scope !== "recorded";
+      });
+    }
+
+    onMatrixView = applyScope;
 
     bindSeg("matrix-scope", "data-scope", function (v) {
       scope = v;
@@ -351,6 +435,22 @@
       });
     });
   }
+
+  /* ------------------------------------------- measure page: all neighbours
+     The default rows are the entry's hand-picked `related:` list. The rest of
+     the zoo is already in the page, in a second <tbody>; this just unhides it.
+     Server-rendered rather than fetched, so the fold works with no network and
+     the full table is in the page source for anyone reading it that way. */
+  document.querySelectorAll("[data-nbrs-toggle]").forEach(function (btn) {
+    var rest = document.querySelector(".nbrs-rest");
+    if (!rest) return;
+    btn.addEventListener("click", function () {
+      var showing = !rest.hidden;
+      rest.hidden = showing;
+      btn.textContent = btn.getAttribute(showing ? "data-all" : "data-few");
+      btn.classList.toggle("on", !showing);
+    });
+  });
 
   /* --------------------------------------------------------- ref filter */
   var reff = document.getElementById("reffilter");

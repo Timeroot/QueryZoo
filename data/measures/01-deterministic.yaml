@@ -47,6 +47,7 @@ measures:
     - '$\mathrm{D}$ is the largest of all the standard measures: every other measure in this zoo is $O(\mathrm{D})$ for total functions (except the size-based ones).'
     - '$\mathrm{D}(f\circ g) = \mathrm{D}(f)\,\mathrm{D}(g)$ exactly, for total $f,g$ (composition is perfect).'
   refs: [BdW02, Nisan91]
+  related: [R, R0, Q, QE, C, deg]
   see_also: [R, R0, Q, QE, C, deg, D_size]
   confidence: high
 
@@ -73,6 +74,7 @@ measures:
     - '$\mathrm{Q}_{2/5}(f) = O(\sqrt{\mathrm{DTsize}(f)})$, even for relations, and even if the tree is randomized.'
     - 'Size can be exponentially larger than depth ($\mathrm{DTsize} \le 2^{\mathrm{D}}$).'
   refs: [BdW02]
+  related: [D, rank, Q, sdeg, L1]
   see_also: [D, Q]
   confidence: medium
 
@@ -99,6 +101,7 @@ measures:
     - 'Whether the converse $\mathrm{D}^{\oplus}(f) = \mathrm{polylog}\,\mathrm{spar}(f)$ holds -- the log-rank conjecture for parity decision trees -- is a major open problem.'
     - '$\mathrm{D}^{\oplus}(f) = O(\sqrt{\mathrm{spar}(f)}\,\log \mathrm{spar}(f))$ is known for total $f$.'
   refs: [TsangWongXieZhang13, Sanyal19]
+  related: [D, spar, L1, deg2]
   see_also: [D, spar, L1, deg2]
   confidence: medium
 
@@ -126,7 +129,9 @@ measures:
     - 'Huang''s theorem: $\deg(f) \le \mathrm{s}(f)^2$, hence $\mathrm{D}(f) = O(\mathrm{s}(f)^6)$ and all measures are polynomially related to $\mathrm{s}$ (for total $f$).'
     - '$\mathrm{s}(f) \ge \tfrac{1}{2}(\log_2 n - \log_2\log_2 n)$ for total $f$ depending on all $n$ variables.'
     - 'For monotone $f$: $\mathrm{s}(f) = \mathrm{bs}(f) = \mathrm{C}(f)$.'
+    - 'On a promise the collapse is total, not merely polynomial. [[Forrelation]], [[GapMaj]] and [[AmbainisBelovsFn]] have no two promise inputs at Hamming distance $1$, so $\mathrm{s} = 0$ while $\mathrm{D} = \Theta(n)$. A candidate bound $M \le g(\mathrm{s})$ would then read $M \le g(0)$, a single number, so *no* function $g$ works: every column of the matrix reads $\infty$ against $\mathrm{s}$ in the partial setting.'
   refs: [Nisan91, Huang19, Simon83, BdW02]
+  related: [bs, C, deg, lambda, s0, s1]
   see_also: [bs, C, lambda, Inf, s0, s1]
   confidence: high
 
@@ -140,6 +145,7 @@ measures:
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
   facts: ['$\mathrm{s}(f) = \max(\mathrm{s}^0(f), \mathrm{s}^1(f))$.', '$\lambda(f) \le \sqrt{\mathrm{s}^0(f)\,\mathrm{s}^1(f)}$.']
   refs: [ABKRT21]
+  related: [s, s1, bs0, lambda]
   see_also: [s, s1, lambda]
   confidence: high
 
@@ -153,6 +159,7 @@ measures:
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
   facts: ['$\lambda(f) \le \sqrt{\mathrm{s}^0(f)\,\mathrm{s}^1(f)}$ [ABKRT21, Lemma 31].']
   refs: [ABKRT21]
+  related: [s, s0, bs1, lambda]
   see_also: [s, s0, lambda]
   confidence: high
 
@@ -179,8 +186,10 @@ measures:
     - '$\mathrm{bs}(f) = O(\mathrm{Q}(f)^2)$.'
     - '$\mathrm{bs}_\ell(f) = O(\mathrm{s}(f)^\ell)$ [Kenyon-Kutin].'
     - 'Whether $\mathrm{D}(f) = O(\mathrm{bs}(f)^2)$ is a long-standing open problem.'
-  refs: [Nisan91, NS94, KenyonKutin04, BdW02]
-  see_also: [s, fbs, RC, C, D]
+    - 'Universal quadratic bounds are false: [OpenAISensitivity26] give a fixed separation exponent $\alpha>2$. The public Prove2Me theorem improves the lower endpoint to $\alpha=\log(14055^8)/\log(3738277295413674)=2.1308255793978239\ldots$ [Prove2MeSensitivity26]. The universal quartic upper bound remains.'
+  refs: [Nisan91, NS94, KenyonKutin04, BdW02, OpenAISensitivity26, Prove2MeSensitivity26]
+  related: [s, fbs, C, D, RC, bs0]
+  see_also: [s, fbs, RC, C, D, Prove2MeTournament, open-bs-vs-s]
   confidence: high
 
 - id: fbs
@@ -208,6 +217,7 @@ measures:
     - '$\mathrm{fbs}(f) \le \mathrm{bs}(f)^{?}$ -- the best known separation is $\mathrm{fbs} = \Omega(\mathrm{bs}^{3/2})$ and the best upper bound is $\mathrm{fbs} = O(\mathrm{bs}^2)$ [GSS16].'
     - '$\mathrm{fbs}(f) = O(\widetilde{\deg}(f)^2)$ [Kulkarni-Tal].'
   refs: [KulkarniTal16, GSS16, Aaronson08]
+  related: [bs, RC, C, CA, FC, Q]
   see_also: [bs, RC, C, CA]
   confidence: high
 
@@ -235,8 +245,11 @@ measures:
     - '$\mathrm{D}(f) \le \mathrm{C}^0(f)\,\mathrm{C}^1(f)$ [Blum-Impagliazzo; Hartmanis-Hemachandra; Tardos].'
     - '$\mathrm{D}(f) \le \mathrm{C}^1(f)\,\mathrm{bs}(f)$ and $\mathrm{D}(f)\le \mathrm{C}^1(f)\deg(f)$ [BBCMdW01].'
     - '$\mathrm{C}(f) \le \mathrm{D}(f)$ and $\mathrm{C}(f) \ge \mathrm{bs}(f) \ge \mathrm{s}(f)$.'
-  refs: [Nisan91, Tardos89, BBCMdW01, BdW02]
-  see_also: [C0, C1, UC, RC, bs, D]
+    - 'The maximum separation from bounded-error randomized queries is quadratic, with no log loss: $\mathrm{C}=\Omega(\mathrm{R}^2)$ on [[AIKDNF]] [AIK26]. [[Champion]] independently gives the same exponent with logarithmic slack [BenDavidKothari26].'
+    - The $\mathrm{C}/\mathrm{Q}$ and $\mathrm{C}/\widetilde{\deg}$ exponents are settled at $4$, up to logarithms [AIK26, BenDavidKothari26, Pabbaraju26]. Exact and zero-error quantum queries have a quadratic separation from $\mathrm{C}$, against a cubic universal upper bound [AIK26, KLLPV26].
+  refs: [Nisan91, Tardos89, BBCMdW01, BdW02, AIK26, BenDavidKothari26, Pabbaraju26, KLLPV26]
+  related: [C0, C1, bs, D, RC, UC, R, Q, degcert]
+  see_also: [C0, C1, UC, RC, bs, D, AIKCheatSheet, Champion]
   confidence: high
 
 - id: C0
@@ -258,6 +271,7 @@ measures:
     - '$\mathrm{C}^0(f) = \mathrm{C}^1(\bar f)$.'
     - '$\mathrm{ndeg}(f) \le \mathrm{C}^1(f)$ and $\mathrm{rdeg}(f) \le \mathrm{C}(f)$.'
   refs: [Tardos89, BdW02, deWolf03]
+  related: [C, C1, bs0, ndeg, NQ]
   see_also: [C, C1, ndeg, NQ]
   confidence: high
 
@@ -272,6 +286,7 @@ measures:
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
   facts: ['$\mathrm{D}(f) \le \mathrm{C}^1(f)\,\mathrm{bs}(f)$ [BBCMdW01, Thm 11].']
   refs: [BBCMdW01, BdW02]
+  related: [C, C0, bs1, ndeg]
   see_also: [C, C0]
   confidence: high
 
@@ -290,6 +305,7 @@ measures:
     partial: {defined: yes}
     relation: {defined: yes, note: 'Inherited from [[C]], which *is* defined for relations: a certificate is a set of queries whose answers fix some valid output, and $\mathrm{C}_{\min}$ takes the min of $\mathrm{C}_x$ over $x$ rather than the max. Nothing in that reading needs a Boolean output. This flag previously read `no`, which silently dropped the recorded $\mathrm{C}_{\min}$ rows on [[GroverSearch]], [[promiseFind1]], [[ApproxHW]], [[YamakawaZhandry]] and [[TseitinExpander]]. Unlike $\mathrm{C}_{\min}$, the unambiguous variants [[UC]], [[UCmin]] and [[SP]] stay undefined here, because unambiguity is a statement about the fibres of the output and a relation need not have any.'}
   refs: [BHT17]
+  related: [C, UCmin, C0, C1]
   see_also: [C, UCmin]
   confidence: medium
 
@@ -315,6 +331,7 @@ measures:
     - '$\mathrm{UC}(f) = \mathrm{SP}(f)$ exactly, for every $f$. Splitting a monochromatic subcube partition by colour gives an unambiguous family on each side, and conversely two unambiguous families glue into a partition. The two ids are kept apart only because the literature uses them in different places -- [[SP]] is what lifts to the communication partition number, $\mathrm{UC}$ is what appears in low-sensitivity constructions -- so $\mathrm{D}$ vs $\mathrm{SP}$ and $\mathrm{D}$ vs $\mathrm{UC}$ are one open problem, not two. The one-sided $\mathrm{UC}_{\min}$ has no such partner.'
     - '$\mathrm{D}(f) = O(\mathrm{UC}(f)^2)$; separations up to $\mathrm{D} = \tilde\Omega(\mathrm{UC}^2)$ come from the Göös-Pitassi-Watson function.'
   refs: [BHT17, GPW18, KRS15]
+  related: [C, SP, UCmin, D]
   see_also: [C, SP, D, UCmin]
   confidence: medium
 
@@ -331,6 +348,7 @@ measures:
     - '$\mathrm{fbs}(f) \le 2\,\mathrm{UC}_{\min}(f) - 1$ [BHT17, Thm 9], and the factor $2$ cannot be removed. This is exactly why the unambiguous-certificate route cannot produce a super-quadratic $\mathrm{bs}$-vs-$\mathrm{s}$ separation.'
     - '$\mathrm{UC}_{\min}(f) \le \mathrm{UC}(f)$, but $\mathrm{UC}_{\min}$ is *not* above $\mathrm{C}$ -- only above $\mathrm{fbs}$.'
   refs: [BHT17]
+  related: [UC, Cmin, C, fbs, D]
   see_also: [UC, C, lambda, fbs, D]
   confidence: medium
 
@@ -353,6 +371,7 @@ measures:
     - '$\mathrm{D}(f) = O(\mathrm{SP}(f)^2)$, and this is essentially tight: [AKK16] give a total $f$ with $\mathrm{D}(f) = \tilde\Omega(\mathrm{SP}(f)^2)$, in fact already $\mathrm{R}(f) = \tilde\Omega(\mathrm{SP}(f)^2)$. The first separation of any kind is [KRS15]; the power-$1.5$ stage is the query half of [GPW18].'
     - 'Quantum is *not* settled: $\mathrm{Q} = \tilde\Omega(\mathrm{SP}^{1.5})$ [AKK16] against the $O(\mathrm{SP}^2)$ ceiling. The quadratic quantum separation in [AKK16], like the $\log^2\chi_1$ bound of [GPW18], is against the **one-sided** partition number -- a different measure, and not one the zoo carries.'
   refs: [KRS15, GPW18, AKK16]
+  related: [UC, C, D]
   see_also: [UC, C, D]
   confidence: medium
 
@@ -376,6 +395,7 @@ measures:
     - '$\mathrm{RC}(f) = O(\widetilde{\deg}(f)^2)$ [Kulkarni-Tal].'
     - '$\mathrm{RC}(f) \le \mathrm{C}(f)$ and $\mathrm{RC}(f) \ge \mathrm{bs}(f)$.'
   refs: [Aaronson08, KulkarniTal16, GSS16]
+  related: [fbs, C, bs, QC, adeg]
   see_also: [fbs, QC, C, bs]
   confidence: high
 
@@ -397,6 +417,7 @@ measures:
     - '$\mathrm{CG}^{\mathrm{pub}}(f) = O(\mathrm{EC}(f))$ and $\mathrm{CG}(f) = O(\mathrm{EC}(f)^2)$ [CGLMSG23].'
     - '$\mathrm{EC}(f) \le \mathrm{R}_0(f) = O(\mathrm{EC}(f)^2)$ -- the "quadratically tight" relation that motivated the definition [GJKKLSSV17].'
   refs: [GJKKLSSV17, CGLMSG23]
+  related: [fbs, CA, C, CG, R0]
   see_also: [fbs, C, CA, CG, R0]
   confidence: high
 
@@ -418,7 +439,10 @@ measures:
   facts:
     - '$\mathrm{D}^{\mathrm{prod}}(f) \le \mathrm{R}(f)$.'
     - '$\mathrm{RS}(g) = \tilde\Omega(\mathrm{D}^{\mathrm{prod}}(g))$ for total $g$, hence $\mathrm{R}(f\circ g^n) = \tilde\Omega(\mathrm{R}(f)\,\mathrm{D}^{\mathrm{prod}}(g))$ [Sanyal24].'
+    - 'Product distributions genuinely miss hardness: on the balanced [[NANDtree]], $\mathrm{D}^{\mathrm{prod}} = O(N^{0.698})$ against $\mathrm{R} = \Theta(N^{0.754})$ [Sanyal24]. Whether $\mathrm{R}$ is polynomially bounded by $\mathrm{D}^{\mathrm{prod}}$ at all is open ([[R]] vs $\mathrm{D}^{\mathrm{prod}}$).'
+    - 'The restriction to total $g$ above is not a technicality. The support of a product distribution is a combinatorial rectangle, and a rectangle sitting inside a promise is usually forced to be one-sided, so $\mathrm{D}^\mu = 0$ for *every* product $\mu$: this happens at [[Forrelation]], [[Simon]], [[BV]], [[Collision]] and [[GapMaj]]. Nothing is bounded in terms of $\mathrm{D}^{\mathrm{prod}}$ on partial functions.'
   refs: [Sanyal24, Yao77]
+  related: [R, Dmu, RS, D]
   see_also: [R, Dmu, RS]
   confidence: medium
 
@@ -439,6 +463,7 @@ measures:
     - {name: mu, symbol: '\mu', default: 'worst case', description: 'input distribution'}
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: yes}}
   refs: [Yao77, Vereshchagin98, BenDavidBlais20minimax, BBGM22]
+  related: [R, Rbar, D_prod, D]
   see_also: [R, Rbar, D_prod]
   confidence: high
 
@@ -486,6 +511,7 @@ measures:
     - '$\mathrm{FC}(f) = O(\widetilde{\deg}(f)^2)$ [KulkarniTal16].'
     - 'For monotone $f$, $\mathrm{FC}(f) = \mathrm{C}(f)$: the LP has an integral optimum.'
   refs: [Tal13, KulkarniTal16, Aaronson08, GSS16]
+  related: [fbs, RC, C, EC, QC]
   see_also: [fbs, C, RC, EC, QC, bs]
   confidence: high
 
@@ -502,6 +528,7 @@ measures:
     - '$\mathrm{C}^0(f) \le \mathrm{s}^1(f)\,\mathrm{bs}^0(f)$: a minimal sensitive block of a $0$-input has size at most $\mathrm{s}^1(f)$, and a maximal disjoint family of them is a certificate [Nisan91].'
     - 'The one-sided quantities are what the $\mathrm{D} \le \mathrm{C}^0\mathrm{C}^1$-style bounds actually use, and they can be wildly asymmetric: $\mathrm{bs}^0(\mathrm{OR}_n) = n$ while $\mathrm{bs}^1(\mathrm{OR}_n) = 1$.'
   refs: [Nisan91, BdW02]
+  related: [bs, bs1, s0, C0]
   see_also: [bs, bs1, s0, C0]
   confidence: high
 
@@ -518,6 +545,7 @@ measures:
     - '$\mathrm{C}^1(f) \le \mathrm{s}^0(f)\,\mathrm{bs}^1(f)$ [Nisan91], the one-sided form of $\mathrm{C} \le \mathrm{s}\cdot\mathrm{bs}$.'
     - '$\mathrm{bs}^1(f) = \mathrm{bs}^0(\bar f)$, so every statement about one is a statement about the other with $f$ negated.'
   refs: [Nisan91, BdW02]
+  related: [bs, bs0, s1, C1]
   see_also: [bs, bs0, s1, C1]
   confidence: high
 
@@ -542,12 +570,17 @@ measures:
     total:    {defined: degenerate, note: 'For a Boolean function every input is critical and $s = f$ is forced, so $\mathrm{cbs}(f) = \mathrm{bs}(f)$.'}
     partial:  {defined: degenerate, note: 'Same collapse.'}
     relation: {defined: yes, note: 'The setting it was invented for -- in particular for the "false clause" search problems $\mathrm{SearchCNF}$ attached to unsatisfiable CNFs.'}
+  equivalent:
+    - {measure: bs, setting: total, form: {exp: 1, kind: exact}, statement: '$\mathrm{cbs}(f) = \mathrm{bs}(f)$ exactly: every input is critical and $s = f$ is forced', refs: [GoosPitassi14]}
+    - {measure: bs, setting: partial, form: {exp: 1, kind: exact}, statement: '$\mathrm{cbs}(f) = \mathrm{bs}(f)$ on the promise too', refs: [GoosPitassi14]}
   facts:
     - '$\mathrm{cbs}(f) = \mathrm{bs}(f)$ for Boolean $f$; the measure only says something new when an input has several valid answers.'
     - 'Lifting: $\mathrm{R}^{cc}(S \circ g^n) = \Omega(\mathrm{cbs}(S))$ for a suitable constant-size gadget $g$ [GoosPitassi14]. This is the source of the tight monotone-circuit-depth and Cutting-Planes lower bounds obtained there.'
     - 'For the false-clause search problem of a random $\Delta$-dense unsatisfiable $k$-CNF, $\mathrm{cbs} = \Omega(n)$; for the Tseitin search problem on a bounded-degree expander, $\mathrm{cbs} = \Omega(n)$ [GoosPitassi14].'
     - 'The min over solution functions is essential: the *maximum* over $s$ can be large for trivially easy search problems.'
+    - 'The max over *critical* inputs is equally essential, and it cuts the other way: a search problem in which every input has at least two valid answers has no critical inputs at all, so the max is over the empty set and $\mathrm{cbs} = 0$. [[promiseFind1]], [[ApproxHW]] and [[AgreeString]] are of this kind, and there $\mathrm{cbs}$ certifies nothing whatsoever -- not a weak bound but no bound, so the relational column reads $\infty$ against it.'
   refs: [GoosPitassi14, CDM23]
+  related: [bs, RS, psD, D]
   see_also: [bs, RS, psD, SearchCNF, D]
   confidence: medium
 
@@ -578,6 +611,7 @@ measures:
     - 'A tree of rank $r$ and depth $d$ has at most $\sum_{i\le r}\binom{d}{i} \le (ed/r)^r$ leaves, so $\mathrm{DTsize}(f) \le n^{O(\mathrm{rank}(f))}$ -- this is the Ehrenfeucht-Haussler learning bound [EhrenfeuchtHaussler89].'
     - '$\mathrm{rank}(f) \le \mathrm{rank}(T)$ for the *size*-optimal tree $T$; rank and size are the pair of measures that behave well under composition of read-once formulas.'
   refs: [EhrenfeuchtHaussler89, BdW02]
+  related: [D, D_size, C, cbs]
   see_also: [D, D_size, C, cbs]
   confidence: medium
 
@@ -607,5 +641,6 @@ measures:
     - 'The other direction is exponential, not unbounded: $\mathrm{D}^{\mathrm{na}}(f) \le 2^{\mathrm{D}(f)}-1$, since a depth-$\mathrm{D}$ tree has at most that many internal nodes and so touches at most that many variables. Binary tree navigation $\mathrm{Nav}_k$ attains it exactly.'
     - '$\mathrm{D}^{\mathrm{na}}(f) \ge \mathrm{s}(f)$, $\mathrm{bs}(f)$, $\mathrm{deg}(f)$ and every other measure, since all of them are supported on relevant variables.'
   refs: [BdW02]
+  related: [D, Rna, D_size, C]
   see_also: [D, Rna, ADDR, TreeNav, D_size]
   confidence: medium

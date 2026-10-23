@@ -517,7 +517,7 @@ functions:
     - {measure: QC, value: '\Theta(\sqrt n)', note: 'Squeeze: $\mathrm{QC}=\Theta(\sqrt{\mathrm{fbs}})$.'}
     - {measure: s0, value: '\Theta(n)', note: 'Squeeze: the $\mathrm{s}$ line above exhibits a $0$-input with $n$ sensitive blocks-of-size-one, and $\mathrm{s}_0\le\mathrm{s}=O(n)$.'}
     - {measure: bs0, value: '\Theta(n)', note: 'Squeeze: $\mathrm{s}_0\le\mathrm{bs}_0\le\mathrm{bs}=O(n)$.'}
-    - {measure: R,  value: '\Omega(n)', note: 'Squeeze: $\mathrm{R}=\Omega(\mathrm{fbs})=\Omega(n)$; the ceiling is $\mathrm{R}\le\mathrm{D}=O(n^2)$. Unlike $\mathrm{R}_0$, bounded-error randomized complexity is not pinned by $\mathrm{C}$, and [GSS16] do not compute it.'}
+    - {measure: R,  value: '\Theta(n^2)', putative: true, refs: [Sanyal18, Li18], note: 'Not computed in [GSS16], and the fractional certificate leaves it open from below -- $\mathrm{fbs}=\Theta(n)$ only gives $\mathrm{R}=\Omega(n)$. But the family is an $\mathrm{OR}$-composition, so the randomized composition theorem applies: $\mathrm{R}(\mathrm{OR}_n\circ g_n^{\,n})=\Omega(\mathrm{R}(\mathrm{OR}_n)\,\chi(g_n))$ [Sanyal18] ([[comp-R]]), and $\chi(g_n)\ge(\mathrm{bs}(g_n)+1)/2$ [Li18, Thm 1] with $\mathrm{bs}(g_n)\ge\mathrm{s}(g_n)=n$, since a $1$-input of $g_n$ is an isolated point. So $\mathrm{R}=\Omega(n\cdot n)=\Omega(n^2)$, and $\mathrm{R}\le\mathrm{D}=n^2$. The cheap fractional certificate buys nothing after all: this family separates $\mathrm{C}$ from $\mathrm{RC}$ quadratically but not from $\mathrm{R}$ at all.'}
     - {measure: Q,  value: '\Omega(\sqrt n)', note: 'Squeeze: $\mathrm{bs}=O(\mathrm{Q}^2)$ [BBCMdW01] with $\mathrm{bs}=\Theta(n)$.'}
     - {measure: lambda, value: 'O(n)', note: 'Squeeze: $\lambda\le\mathrm{s}=O(n)$, with the Huang floor $\lambda\ge\sqrt{\mathrm{s}}=\Omega(\sqrt n)$.'}
     - {measure: deg, value: '\Omega(n^{2/3})', note: 'Squeeze: $\mathrm{D}=O(\deg^3)$ [Midrijanis04] against $\mathrm{D}=\Theta(n^2)$. The inner $g_n$ is a random indicator, so its degree is almost surely full and the true value is presumably $\Theta(n^2)$; only the lower bound is recorded.'}
@@ -534,15 +534,16 @@ functions:
     - {measure: Q0, value: '\Omega(\sqrt n)', note: 'Squeeze: $\mathrm{Q}\le\mathrm{Q}_0\le\mathrm{Q}_E$.'}
     - {measure: Advpm, value: '\Omega(\sqrt n)', refs: [Reichardt11], note: 'Squeeze: $\mathrm{Adv}^{\pm}=\Theta(\mathrm{Q})$.'}
     - {measure: MAdv, value: '\Omega(\sqrt n)', note: 'Squeeze: $\mathrm{MAdv}=\Theta(\mathrm{Q})$.'}
-    - {measure: R1, value: '\Omega(n)', note: 'Squeeze: $\mathrm{R}^1\ge\mathrm{R}=\Omega(n)$; the ceiling is $\mathrm{D}=\Theta(n^2)$.'}
+    - {measure: R1, value: '\Theta(n^2)', note: 'Squeeze: $\mathrm{R}^1\ge\mathrm{R}=\Omega(n^2)$ by the line above; the ceiling is $\mathrm{D}=\Theta(n^2)$.'}
     - {measure: RS, value: '\Omega(n),\ O(n^2)', refs: [BenDavidKothari18], note: 'The sabotage inequality runs $\mathrm{R}_\varepsilon\ge\overline{\mathrm{R}}_\varepsilon\ge(1-2\varepsilon)\mathrm{RS}$ [BenDavidKothari18, Thm 12], so $\mathrm{R}$ is the *ceiling*, $\mathrm{RS}=O(\mathrm{R})=O(n^2)$. The floor is $\mathrm{RS}\ge\mathrm{CG}^{\mathrm{pub}}\ge\mathrm{fbs}=\Theta(n)$, which matches the recorded $\mathrm{R}$ floor.'}
-    - {measure: Rna, value: '\Omega(n)', note: 'Squeeze: $\mathrm{R}^{\mathrm{na}}\ge\mathrm{R}=\Omega(n)$; the ceiling is $\mathrm{D}^{\mathrm{na}}=n^2$.'}
-    - {measure: psD, value: '\Omega(n)', note: 'For a Boolean function the canonical solution is forced to be $f$ itself, so $\mathrm{psD}=\mathrm{R}=\Omega(n)$.'}
+    - {measure: Rna, value: '\Theta(n^2)', note: 'Squeeze: $\mathrm{R}^{\mathrm{na}}\ge\mathrm{R}=\Omega(n^2)$; the ceiling is $\mathrm{D}^{\mathrm{na}}=n^2$.'}
+    - {measure: psD, value: '\Theta(n^2)', note: 'For a Boolean function the canonical solution is forced to be $f$ itself, so $\mathrm{psD}=\mathrm{R}=\Theta(n^2)$.'}
     - {measure: Rbar, value: '\Omega(n)', note: 'The distributional form of $\mathrm{R}$: $\overline{\mathrm{R}}=\Theta(\mathrm{R})=\Omega(n)$.'}
     - {measure: Dmu, value: '\Omega(n)', note: 'Yao''s minimax: $\max_\mu\mathrm{D}^{\mu}=\Theta(\mathrm{R})=\Omega(n)$.'}
     - {measure: Inf, value: '2^{-\Theta(n)}', putative: true, note: 'Direct computation. The inner $g_n$ is the indicator of $2^{n/50}$ isolated points, so $\mathrm{I}(g_n)=2^{-n}\sum_x \mathrm{s}(g_n,x)=2^{-n}\cdot 2n\cdot 2^{n/50}=2n\,2^{-49n/50}$. In $f=\mathrm{OR}_n\circ g_n$ a bit is influential only if it flips its own copy *and* the other $n-1$ copies all evaluate to $0$, an event of probability $1-o(1)$, so $\mathrm{I}(f)=(1\pm o(1))\,n\,\mathrm{I}(g_n)=2^{-\Theta(n)}$. Total influence is therefore exponentially small while $\mathrm{D}=\Theta(n^2)$ -- a reminder that no polynomial bound on $\mathrm{D}$ in terms of $\mathrm{I}$ can exist.'}
     - {measure: Inf1, value: '2^{-\Theta(n)}', note: 'For a Boolean-valued function the $L_1$ and $L_2$ influences coincide coordinate by coordinate, so $\mathrm{I}^{1}=\mathrm{I}=2^{-\Theta(n)}$.'}
     - {measure: MaxInf, value: '2^{-\Theta(n)}', note: 'Squeeze: $\mathrm{MaxInf}\le\mathrm{I}=2^{-\Theta(n)}$, and $\mathrm{MaxInf}\ge\mathrm{I}/n^2$, which changes only the constant in the exponent.'}
+    - {measure: Var, value: '2^{-\Theta(n)}', note: 'From $\mathrm{Var} = 2\,\mathrm{NS}_{1/2}$ and the [[NS]] entry; the exponent is not pinned tightly enough to read off [[osss]] or [[nsr]].'}
     - {measure: NS, value: '2^{-\Theta(n)}', note: 'For any constant $\delta$: $\mathrm{NS}_\delta\le\delta\,\mathrm{I}(f)=2^{-\Theta(n)}$.'}
     - {measure: Stab, value: '1-2^{-\Theta(n)}', note: 'For any constant $\rho$: $f$ takes the value $1$ with probability $n\,2^{-49n/50}$, so $\Pr[f(x)\ne f(y)]\le 2\Pr[f=1]=2^{-\Theta(n)}$ for correlated $x,y$, giving $\mathrm{Stab}_\rho=1-2^{-\Theta(n)}$ -- the function is essentially constant in the Fourier-analytic sense despite being maximally hard to query.'}
     - {measure: chi, value: '\Omega(n),\ O(n^2)', refs: [Li18], note: 'Floor $\chi=\Omega(\mathrm{bs})=\Omega(n)$ [Li18]; ceiling $\chi=O(\mathrm{R})=O(n^2)$. The composition-friendly relaxation of $\mathrm{R}$ therefore sees the $\mathrm{bs}$ scale, not the $\mathrm{C}$ scale.'}
@@ -588,6 +589,73 @@ functions:
     and $\mathrm{crit}(\mathrm{fbs},\mathrm{bs}) \ge 3/2$.
   refs: [GSS16, KulkarniTal16]
   see_also: [C, RC, bs, fbs, OR]
+
+- id: GSSinner
+  name: Random-indicator gadget
+  symbol: 'g_n'
+  aliases: ['the GSS inner function', 'indicator of a random code']
+  group: separating
+  order: 34
+  kind: total
+  arity: '$n$ bits'
+  short: 'The inner gadget of [[GSSfn]], on its own: $\mathrm{C}^0 = \Theta(n)$ with $\mathrm{bs}^0 = O(1)$.'
+  definition: |
+    The indicator of $2^{n/50}$ points of the cube chosen uniformly at random.
+    A random set that sparse is a good code -- its points are far apart, so no
+    $0$-input has more than a constant number of disjoint sensitive blocks --
+    and yet it is dense enough that no small subcube avoids it, so every
+    $0$-input needs a linear certificate.
+  formal: |
+    Pick $x^1,\dots,x^N \in \{0,1\}^n$ uniformly at random with $N = 2^{n/50}$
+    and let $g_n$ be their indicator. With high probability [GSS16, Thm 32,
+    Claim 34]:
+
+    * the points are at pairwise Hamming distance $\ge n/100$, so a $0$-input
+      has at most $200$ disjoint sensitive blocks --
+      $\mathrm{bs}^0(g_n),\ \mathrm{fbs}^0(g_n) = O(1)$;
+    * every subcube of codimension $n/100$ contains one of the points, so no
+      $0$-certificate is shorter than $n/100$ -- $\mathrm{C}^0(g_n)\ge n/100$.
+
+    The $1$-side is the opposite extreme: a $1$-input is an isolated point, so
+    all $n$ of its bits are sensitive and its only certificate is the whole
+    input.
+  scale: {var: n}
+  values:
+    - {measure: C0, value: '\Theta(n)', refs: [GSS16], note: 'Floor $\mathrm{C}^0\ge n/100$ [GSS16, Thm 32]: a $0$-certificate is a subcube of $0$-inputs, and every subcube of codimension $n/100$ contains a planted point. Ceiling: the whole input, $n$.'}
+    - {measure: bs0, value: '\Theta(1)', refs: [GSS16], note: 'Ceiling $\mathrm{bs}^0 = O(1)$ [GSS16, Thm 32]. A sensitive block $B$ at a $0$-input $x$ means $x^B$ is a planted point, so two disjoint blocks give two planted points at Hamming distance exactly $|B_1|+|B_2|$; pairwise distance $\ge n/100$ therefore forces every pair of blocks to have total size $\ge n/100$, and disjoint blocks fit in $n$ coordinates, so there are at most $201$ of them. Floor $1$: a neighbour of a planted point is a $0$-input with a sensitive bit.'}
+    - {measure: s0, value: '\Theta(1)', putative: true, note: 'Squeeze: $1\le\mathrm{s}^0\le\mathrm{bs}^0=O(1)$.'}
+    - {measure: C1, value: 'n', refs: [GSS16], putative: true, note: 'The $1$-inputs are isolated (pairwise distance $\ge n/100$), so any subcube containing one and no $0$-input is that single point.'}
+    - {measure: s1, value: 'n', putative: true, note: 'Every neighbour of an isolated planted point is a $0$-input.'}
+    - {measure: bs1, value: 'n', putative: true, note: 'Squeeze: $\mathrm{s}^1\le\mathrm{bs}^1\le\mathrm{C}^1$, both $n$.'}
+    - {measure: s, value: 'n', note: 'Squeeze: $\mathrm{s}=\max\{\mathrm{s}^0,\mathrm{s}^1\}=n$.'}
+    - {measure: bs, value: 'n', note: 'Squeeze: $\mathrm{s}\le\mathrm{bs}\le\mathrm{C}=n$. The whole gap between $\mathrm{C}^0$ and $\mathrm{bs}^0$ is invisible to the two-sided measures, which the $1$-side saturates.'}
+    - {measure: fbs, value: 'n', note: 'Squeeze: $\mathrm{bs}\le\mathrm{fbs}\le\mathrm{C}=n$.'}
+    - {measure: C, value: 'n', note: 'Squeeze: $\mathrm{C}=\max\{\mathrm{C}^0,\mathrm{C}^1\}=n$.'}
+    - {measure: Cmin, value: '\Theta(n)', putative: true, note: 'Floor: every $0$-input needs $n/100$ bits and every $1$-input needs $n$, so the *minimum* certificate complexity is already linear -- unusually, $\mathrm{C}_{\min}=\Theta(\mathrm{C})$ here.'}
+    - {measure: D, value: 'n', note: 'Squeeze: $\mathrm{C}\le\mathrm{D}\le n$.'}
+    - {measure: UC, value: 'n', note: 'Squeeze: $\mathrm{C}\le\mathrm{UC}\le\mathrm{D}$, both $n$.'}
+    - {measure: R0, value: '\Theta(n)', note: 'Squeeze: $\mathrm{C}\le\mathrm{R}_0\le\mathrm{D}$.'}
+    - {measure: R, value: '\Theta(n)', note: 'Squeeze: $\mathrm{R}=\Omega(\mathrm{fbs})=\Omega(n)$ and $\mathrm{R}\le\mathrm{D}=n$. Nothing about this gadget is easy for randomness; the point of it is the shape of the $0$-side, not a speed-up.'}
+    - {measure: FC, value: 'n', note: 'Squeeze: $\mathrm{FC}=\mathrm{fbs}$ exactly.'}
+    - {measure: RC, value: '\Theta(n)', note: 'Squeeze: $\mathrm{RC}=\Theta(\mathrm{fbs})$.'}
+    - {measure: Q, value: '\Omega(\sqrt n)', note: 'Squeeze: $\mathrm{bs}=O(\mathrm{Q}^2)$ [BBCMdW01] with $\mathrm{bs}=n$.'}
+  witnesses:
+    - {of: [C0, bs0], setting: total, statement: '$\mathrm{C}^0 = \Theta(n)$ while $\mathrm{bs}^0 = O(1)$: **no bound of any kind** holds in the other direction. The one-sided certificate complexity is not a function of the one-sided block sensitivity -- Nisan''s $\mathrm{C}^0 \le \mathrm{s}^1\,\mathrm{bs}^0$ needs the $1$-side, and here it pays the full $\mathrm{s}^1 = n$.', refs: [GSS16]}
+  notes: |
+    Recorded separately from [[GSSfn]] because the two say different things.
+    The composed $\mathrm{OR}_n\circ g_n$ multiplies the $0$-side by $n$ and so
+    turns a constant $\mathrm{bs}^0$ into $\mathrm{bs}^0 = \Theta(n)$; that is
+    what makes it a *quadratic* $\mathrm{C}$-vs-$\mathrm{bs}$ separation. The
+    gadget on its own is the extreme case in a different direction: the ratio
+    $\mathrm{C}^0/\mathrm{bs}^0$ is unbounded, which no amount of composition
+    can improve on and which the composed function hides.
+
+    Not explicit: the construction is probabilistic, and the properties hold
+    with high probability over the choice of the $N$ points. That is enough for
+    a separation -- some choice works -- but the family has no description
+    shorter than the list of points.
+  refs: [GSS16]
+  see_also: [GSSfn, C0, bs0, s1, C, OR]
 
 - id: GPWfn
   name: Goos-Pitassi-Watson partition-number function
@@ -899,6 +967,8 @@ functions:
     - {measure: Inf, value: '\Omega((5/3)^d)', putative: true, note: 'Exact recursion. Coordinate $i$ of the top $\mathrm{NE}$ is sensitive at $y$ iff the *other two* children agree, an event independent of child $i$; hence $\mathrm{I}(\mathrm{NE}^d)=3\big(p_{d-1}^2+(1-p_{d-1})^2\big)\,\mathrm{I}(\mathrm{NE}^{d-1})$ with $p_d=\Pr[\mathrm{NE}^d=1]=3p_{d-1}(1-p_{d-1})$ and $\mathrm{I}(\mathrm{NE}^0)=1$. Since $p_d\to 2/3$, the factor tends to $3(4/9+1/9)=5/3$; the convergence is only neutral ($g''(2/3)=-1$), so the product picks up a $d^{o(1)}$ correction and only the lower bound $\mathrm{I}=\Omega((5/3)^d)$ is recorded (numerically the ratio $\mathrm{I}_d/(5/3)^d$ stays in $[0.9,1.2]$ out to $d=200$). Note $(5/3)^d=n^{0.4650}$, well below $\mathrm{s}=n$: the function is maximally sensitive at one input but only polynomially sensitive on average.'}
     - {measure: Inf1, value: '\Omega((5/3)^d)', note: 'For a Boolean-valued function the $L_1$ and $L_2$ influences coincide coordinate by coordinate, so $\mathrm{I}^{1}=\mathrm{I}$.'}
     - {measure: MaxInf, value: '\Omega((5/9)^d)', note: '$\mathrm{NE}^d$ is transitive -- the automorphism group permuting the three children at every node acts transitively on the $3^d$ leaves -- so every coordinate has the same influence and $\mathrm{MaxInf}=\mathrm{I}/3^d=\Omega((5/9)^d)$. Individual influences are exponentially small even though $\mathrm{D}$ is maximal.'}
+    - {measure: Var, value: '\Theta(1)', note: 'Exactly $8/9-o(1)$: $\Pr[\mathrm{NE}^d = 1] \to 2/3$, so $\mathrm{Var} = 4p(1-p) \to 8/9$; equivalently $1-\hat f(\emptyset)^2$ with the $1/9$ of the [[Stab]] entry.'}
+    - {measure: osss, value: 'O((9/5)^d) = O(N^{0.5350})', putative: true, note: '$\mathrm{Var} = \Theta(1)$ over $\mathrm{MaxInf} = \Omega((5/9)^d)$. Only an upper bound, because the recorded influence is only a lower bound; the matching direction would need the constant in the influence recursion.'}
     - {measure: chi, value: '\Theta(3^d)', refs: [Li18], note: 'Squeeze: $\chi=\Omega(\mathrm{bs})=\Omega(3^d)$ [Li18], and $\chi\le\bar\chi=O(\mathrm{LR})=O(\mathrm{R}^{*})\le O(\mathrm{R})=O(3^d)$. All four inner measures of randomized composition collapse to the arity here.'}
     - {measure: chibar, value: '\Theta(3^d)', refs: [GLSS19], note: 'Squeeze: $\bar\chi=\Omega(\mathrm{RS})=\Omega(3^d)$ [GLSS19] and $\bar\chi=O(\mathrm{LR})\le O(\mathrm{R})=O(3^d)$.'}
     - {measure: LR, value: '\Theta(3^d)', refs: [BBGM22], note: 'Squeeze: $\bar\chi=O(\mathrm{LR})$ and $\mathrm{LR}=O(\mathrm{R}^{*})\le\mathrm{R}$ [BBGM22]; both ends are $3^d$. This is the $\mathrm{LR}=\Theta(\mathrm{R})$ end of the range, as the recorded $\mathrm{RS}=\Theta(\mathrm{R})$ forces.'}

@@ -101,6 +101,48 @@ relations:
     upper bound is $\mathrm{EC} \le \mathrm{C} = O(\mathrm{FC}^2)$.
   see_also: [FC, EC, fbs, C]
 
+- from: EC
+  to: C
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{EC}(f) \le \mathrm{C}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [GJKKLSSV17]
+      note: |
+        Take $w^x$ to be the indicator of a minimal certificate for $x$. If
+        $f(x)\ne f(y)$ then the two certificates must disagree on some queried
+        coordinate -- otherwise they would be jointly satisfiable and the value
+        undetermined -- so $\sum_{i:x_i\ne y_i} w^x_i w^y_i \ge 1$, and
+        $\sum_i w^x_i = \mathrm{C}_x(f)$. Nothing here needs $f$ total.
+      conf: high
+  notes: |
+    Recorded because without it the $\mathrm{EC}$ *row* has no upper bound at all:
+    the measure was introduced for the inequalities that bound $\mathrm{R}_0$ from
+    *below*, and $\mathrm{EC} \le \mathrm{R}_0 = O(\mathrm{EC}^2)$ [GJKKLSSV17]
+    reaches nothing else. Through $\mathrm{C}$ the row inherits the rest of the
+    zoo, and the two routes agree: $\mathrm{EC}\le\mathrm{C}\le\mathrm{R}_0$.
+  see_also: [EC, C, FC, fbs, R0]
+
+- from: UCmin
+  to: UC
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\mathrm{UC}_{\min}(f) \le \mathrm{UC}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BHT17]
+      note: |
+        $\mathrm{UC}_{\min} = \min\{\mathrm{UC}^0,\mathrm{UC}^1\}$ and
+        $\mathrm{UC} = \max\{\mathrm{UC}^0,\mathrm{UC}^1\}$ [BHT17, Sec. 2.5]:
+        the cheaper side is at most the dearer one. As with $\mathrm{C}^0$, this
+        is the line that gives the row an upper bound of any kind -- the other
+        recorded $\mathrm{UC}_{\min}$ facts,
+        $\mathrm{D} \le \mathrm{UC}_{\min}^2$ and
+        $\mathrm{fbs} \le 2\,\mathrm{UC}_{\min}-1$, both point the other way.
+      conf: high
+  see_also: [UCmin, UC, C, D, fbs]
+
 # ================================================ one-sided sensitivity
 
 - from: bs0
@@ -130,10 +172,6 @@ relations:
   to: bs0
   setting: total
   status: fails
-  upper:
-    - stmt: '\mathrm{bs}(f) \text{ is known to be unbounded in terms of } \mathrm{bs}^0(f).'
-      form: {kind: none}
-      conf: high
   lower:
     - stmt: '\mathrm{bs}(\mathrm{AND}_n) = n,\quad \mathrm{bs}^0(\mathrm{AND}_n) = 1'
       form: {kind: unbounded}
@@ -172,10 +210,6 @@ relations:
   to: bs1
   setting: total
   status: fails
-  upper:
-    - stmt: '\mathrm{bs}(f) \text{ is known to be unbounded in terms of } \mathrm{bs}^1(f).'
-      form: {kind: none}
-      conf: high
   lower:
     - stmt: '\mathrm{bs}(\mathrm{OR}_n) = n,\quad \mathrm{bs}^1(\mathrm{OR}_n) = 1'
       form: {kind: unbounded}
@@ -230,11 +264,11 @@ relations:
 - from: C0
   to: bs0
   setting: total
-  status: gap
+  status: fails
   upper:
     - stmt: '\mathrm{C}^0(f) \le \mathrm{s}^1(f)\,\mathrm{bs}^0(f)'
       refs: [Nisan91, BdW02]
-      note: 'Nisan''s argument, kept one-sided: take a maximal family of disjoint *minimal* sensitive blocks at a $0$-input $x$; each has size at most $\mathrm{s}^1(f)$ because flipping it lands on a $1$-input all of whose bits in the block are sensitive. Their union is a $0$-certificate. No `form:` -- the bound is a product of two other measures.'
+      note: 'Nisan''s argument, kept one-sided: take a maximal family of disjoint *minimal* sensitive blocks at a $0$-input $x$; each has size at most $\mathrm{s}^1(f)$ because flipping it lands on a $1$-input all of whose bits in the block are sensitive. Their union is a $0$-certificate. No `form:` -- the bound is a product of two other measures, and the $\mathrm{s}^1$ factor is not decoration: it is the whole content of the bound.'
       conf: high
     - stmt: '\mathrm{C}^0(f) \le \mathrm{s}(f)\,\mathrm{bs}^0(f) \le \mathrm{bs}(f)\,\mathrm{bs}^0(f)'
       refs: [Nisan91]
@@ -244,12 +278,39 @@ relations:
       form: {exp: 1, kind: exact, dir: reverse}
       note: 'Disjoint sensitive blocks must each be touched by any certificate.'
       conf: high
-  see_also: [C0, bs0, s1, bs, C]
+    - stmt: '\mathrm{C}^0(g_n) = \Theta(n),\quad \mathrm{bs}^0(g_n) = O(1)'
+      form: {kind: unbounded}
+      witness: GSSinner
+      refs: [GSS16]
+      note: 'The [[GSSinner]] gadget: the indicator of $2^{n/50}$ random points. They are far apart, so a $0$-input has $O(1)$ disjoint sensitive blocks; they are dense, so no subcube of codimension $n/100$ misses them and every $0$-certificate is linear.'
+      conf: high
+  notes: |
+    There is no upper bound on $\mathrm{C}^0$ in terms of $\mathrm{bs}^0$ alone,
+    of any shape. Both recorded inequalities are products, and the witness shows
+    the second factor is doing all the work: at $g_n$ the bound reads
+    $n \le n\cdot O(1)$.
+
+    This is the one-sided anomaly. Two-sidedly $\mathrm{C}\le\mathrm{s}\cdot
+    \mathrm{bs}\le\mathrm{bs}^2$ and the exponent $2$ is attained ([[GSSfn]]),
+    so $\mathrm{C}$ vs $\mathrm{bs}$ is settled; but the $0$-side of $\mathrm{C}$
+    is controlled by the $1$-side of $\mathrm{s}$, and a function whose $1$-side
+    is maximally sensitive can hide an arbitrarily large $0$-certificate behind
+    a constant $\mathrm{bs}^0$. Composing with $\mathrm{OR}_n$ trades the
+    unbounded ratio for the quadratic one: it multiplies $\mathrm{bs}^0$ by $n$
+    and $\mathrm{C}^0$ by $n$ as well, turning $g_n$ into a family where both
+    sides are polynomial and the exponent $2$ can be read off.
+
+    A hypothesis that does buy the bound: for **monotone** $f$ the three
+    measures collapse pointwise, $\mathrm{s}(f,x)=\mathrm{C}(f,x)$ for every $x$
+    [Nisan91], so $\mathrm{s}^0=\mathrm{bs}^0=\mathrm{C}^0$ exactly and the cell
+    is settled at exponent $1$. The witness is as far from monotone as a
+    function gets -- an indicator of scattered points.
+  see_also: [C0, bs0, s1, bs, C, GSSinner, GSSfn]
 
 - from: C1
   to: bs1
   setting: total
-  status: gap
+  status: fails
   upper:
     - stmt: '\mathrm{C}^1(f) \le \mathrm{s}^0(f)\,\mathrm{bs}^1(f)'
       refs: [Nisan91, BdW02]
@@ -259,7 +320,16 @@ relations:
     - stmt: '\mathrm{bs}^1(f) \le \mathrm{C}^1(f)'
       form: {exp: 1, kind: exact, dir: reverse}
       conf: high
-  see_also: [C1, bs1, s0]
+    - stmt: '\mathrm{C}^1(\neg g_n) = \Theta(n),\quad \mathrm{bs}^1(\neg g_n) = O(1)'
+      form: {kind: unbounded}
+      refs: [GSS16]
+      note: 'Negating the output of [[GSSinner]] swaps the two sides, so the $\mathrm{C}^0$-vs-$\mathrm{bs}^0$ impossibility transfers verbatim. Not recorded as a separate function entry: $\neg g_n$ has the same table as $g_n$ with every superscript flipped.'
+      conf: high
+  notes: |
+    The dual of the [[C0]] vs [[bs0]] record, and it fails for the same reason:
+    the product bound spends its whole budget on the *other* side, here
+    $\mathrm{s}^0$.
+  see_also: [C1, bs1, s0, C0, bs0, GSSinner]
 
 # ============================================ critical block sensitivity
 
@@ -284,12 +354,7 @@ relations:
   to: cbs
   setting: relation
   status: fails
-  upper:
-    - stmt: '\mathrm{D} \text{ is known to be unbounded in terms of } \mathrm{cbs}'
-      form: {kind: none}
-      refs: [GoosPitassi14, LNNW95]
-      note: 'No bound of any form. Critical block sensitivity lower-bounds the *randomized* cost, and for search problems $\mathrm{R}$ and $\mathrm{D}$ are already unboundedly far apart, so $\mathrm{cbs}$ cannot see $\mathrm{D}$ at all.'
-      conf: high
+  headline: '\mathrm{D} \text{ is unbounded in terms of } \mathrm{cbs} \text{: critical block sensitivity lower-bounds the randomized cost, and } \mathrm{R}, \mathrm{D} \text{ are already unboundedly far apart for search problems}'
   lower:
     - stmt: '\mathrm{cbs}(S) \le \mathrm{D}(S)'
       form: {exp: 1, kind: exact, dir: reverse}
@@ -365,16 +430,12 @@ relations:
   to: rank
   setting: total
   status: fails
-  upper:
-    - stmt: '\mathrm{D}(f) \text{ is known to be unbounded in terms of } \mathrm{rank}(f).'
-      form: {kind: none}
-      refs: [EhrenfeuchtHaussler89]
-      note: 'Rank measures branching, not depth; a "caterpillar" tree has rank $1$ at any depth.'
-      conf: high
   lower:
     - stmt: '\mathrm{rank}(\mathrm{OR}_n) = 1,\quad \mathrm{D}(\mathrm{OR}_n) = n'
       form: {kind: unbounded}
       witness: OR
+      refs: [EhrenfeuchtHaussler89]
+      note: 'Rank measures branching, not depth; a "caterpillar" tree -- which is what a tree for $\mathrm{OR}_n$ is -- has rank $1$ at any depth.'
       conf: high
   notes: |
     What *is* true is a bound involving the arity: a rank-$r$ tree on $n$ variables has
@@ -616,16 +677,11 @@ relations:
   to: odeg
   setting: total
   status: fails
-  upper:
-    - stmt: '\widetilde{\deg}(f) \text{ is known to be unbounded in terms of } \widetilde{\deg}_+(f).'
-      form: {kind: none}
-      refs: [Sherstov14onesided]
-      conf: high
   lower:
     - stmt: '\widetilde{\deg}(\mathrm{OR}_n) = \Theta(\sqrt n),\quad \widetilde{\deg}_+(\mathrm{OR}_n) = 1'
       form: {kind: unbounded}
       witness: OR
-      refs: [BT22]
+      refs: [BT22, Sherstov14onesided]
       note: '$p(x) = \sum_i x_i$ is $0$ at $0^n$ and at least $1$ everywhere else, which is all the one-sided definition asks for.'
       conf: high
   see_also: [adeg, odeg, OR]
@@ -660,10 +716,6 @@ relations:
   to: sdeg
   setting: total
   status: fails
-  upper:
-    - stmt: '\widetilde{\deg}_+(f) \text{ is known to be unbounded in terms of } \mathrm{sdeg}(f).'
-      form: {kind: none}
-      conf: high
   lower:
     - stmt: '\widetilde{\deg}_+(\mathrm{AND}_n) = \Theta(\sqrt n),\quad \mathrm{sdeg}(\mathrm{AND}_n) = 1'
       form: {kind: unbounded}
@@ -722,18 +774,14 @@ relations:
 - from: CGstar
   to: Q
   setting: total
-  status: fails
-  headline: 'The entangled certificate game is *not* a quantum query lower bound — it can be quadratically larger than $\mathrm{Q}$.'
-  upper:
-    - stmt: '\mathrm{Q}(f) \text{ is known to be unbounded in terms of } \mathrm{CG}^{*}(f).'
-      form: {kind: none, dir: reverse}
-      conf: high
+  status: gap
+  headline: '\text{The entangled certificate game is not a quantum query lower bound: } \mathrm{CG}^{*} \text{ can be quadratically larger than } \mathrm{Q}'
   lower:
     - stmt: '\mathrm{CG}^{*}(\mathrm{OR}_n) = \Theta(n) \text{ while } \mathrm{Q}(\mathrm{OR}_n) = \Theta(\sqrt n)'
-      form: {exp: 2, kind: theta, dir: reverse}
+      form: {exp: 2, kind: theta}
       refs: [CGLMSG23]
       witness: OR
-      note: 'Read the other way: $\mathrm{CG}^{*}$ can be quadratically *larger* than $\mathrm{Q}$, so despite the shared entanglement it is a lower bound on randomized, not quantum, query complexity. This is the sharpest way to see that the certificate-game hierarchy is a classical object.'
+      note: '$\mathrm{CG}^{*}$ can be quadratically *larger* than $\mathrm{Q}$, so despite the shared entanglement it is a lower bound on randomized, not quantum, query complexity. This is the sharpest way to see that the certificate-game hierarchy is a classical object.'
       conf: high
   see_also: [CGstar, Q, OR, CGpub]
 
@@ -836,7 +884,14 @@ relations:
 - from: Inf1
   to: D_size
   setting: total
-  status: gap
+  status: settled
+  upper:
+    - stmt: '\mathrm{I}^{1}(f) \le \log_2 \mathrm{DTsize}(f)'
+      form: {kind: log}
+      refs: [ODonnell14]
+      note: 'For a Boolean-valued $f$ the $L_1$ and $L_2$ influences agree coordinate by coordinate, so this is the $\mathrm{I} \le \log_2 \mathrm{DTsize}$ record of `05-fourier.yaml` verbatim. Recorded separately because nothing in the zoo derives one row from the other.'
+      conf: high
+      putative: true
   lower:
     - stmt: '\mathrm{I}_1(\oplus_n) = n = \log_2 \mathrm{DTsize}(\oplus_n)'
       form: {kind: log}

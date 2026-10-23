@@ -49,6 +49,7 @@ measures:
     - '**But it is not tight:** there is a total $f$ with $\mathrm{RS}(f) \ge \mathrm{prt}(f)^{2-o(1)}$, hence $\mathrm{R}(f) \ge \mathrm{prt}(f)^{2-o(1)}$ [BenDavidKothari18, Thm 30].'
     - 'Query-to-communication lifting theorems typically show $\mathrm{prt}$-type query bounds lift to communication bounds.'
   refs: [JainKlauck10, BenDavidKothari18, KLLRX15]
+  related: [rprt, R, RS, CA, SP]
   see_also: [rprt, RS, R, SP, CA]
   confidence: medium
 
@@ -97,5 +98,6 @@ measures:
     - 'In the query setting **every** lower bound the partition bound subsumes survives the relaxation -- see the $\mathrm{bs} \to \overline{\mathrm{prt}}$ record for the argument -- so $\overline{\mathrm{prt}}$ is pinned to $\Theta(\mathrm{R})$ on all the usual functions, exactly like $\mathrm{prt}$.'
     - 'For **total search problems** there is an exponential separation between quantum information complexity (communication) and the relaxed partition bound [BenDavidKundu24search]; even the randomized-vs-$\overline{\mathrm{prt}}$ separation was previously unknown for total search problems.'
   refs: [KLLRX15, BenDavidKundu24search]
+  related: [prt, R, cjdeg, CA]
   see_also: [prt, cjdeg, CA]
   confidence: medium

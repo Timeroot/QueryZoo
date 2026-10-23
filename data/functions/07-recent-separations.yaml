@@ -1,0 +1,577 @@
+# Primary-source updates through October 22, 2026.
+functions:
+- id: Champion
+  name: Ben-David–Kothari championship function
+  group: separating-total
+  kind: total
+  order: 101
+  short: Simultaneously $\mathrm{C}=\Omega(n^2)$, $\mathrm{R}=O(n\log n)$ and $\mathrm{Q}=\widetilde O(\sqrt
+    n)$.
+  definition: There are $2n$ countries with $n$ athletes each. Each country-pair has a race-results list
+    of length $n$, with spectators encoded as $\bot$. An athlete supplies a proposal card containing cumulative
+    counts of spectators ahead in its races. The function accepts iff an athlete has a correctly formatted
+    card, beats every other athlete in all its races, and loses to fewer than $n$ spectators in total.
+    Only that athlete’s card and relevant race prefixes must be well formed. Section 2 of [BenDavidKothari26]
+    specifies the bit encoding; malformed irrelevant data does not create a promise.
+  refs:
+  - BenDavidKothari26
+  - AIK26
+  see_also:
+  - C
+  - R
+  - Q
+  - C0
+  - C1
+  - QE
+  - Q0
+  - AIKCheatSheet
+  arity: $\Theta(n^3\log n)$ bits
+  scale:
+    var: n
+  values:
+  - measure: C
+    value: \Omega(n^2)
+    refs:
+    - BenDavidKothari26
+    note: Theorem 1 and Lemma 4.
+  - measure: C0
+    value: \Omega(n^2)
+    refs:
+    - BenDavidKothari26
+    note: All race lists are spectators and proposal cards are zero.
+  - measure: C1
+    value: O(n\log n)
+    refs:
+    - BenDavidKothari26
+    note: Lemma 2.
+  - measure: R
+    value: O(n\log n)
+    refs:
+    - BenDavidKothari26
+    note: Lemma 3; the logarithm pays for binary labels.
+  - measure: Q
+    value: \tilde O(\sqrt n)
+    refs:
+    - BenDavidKothari26
+    note: Lemma 5; the final verification costs O(√n log² n), with polylogs also in the sink-finding subroutine.
+  - measure: QE
+    value: \Theta(n\log n)
+    refs:
+    - AIK26
+    note: v3 concurrent-work discussion extends the championship algorithm to exact queries and gives
+      a matching restriction.
+  - measure: Q0
+    value: \Theta(n\log n)
+    refs:
+    - AIK26
+    note: Same discussion; zero-error lower bound from a description-bit restriction.
+  formal: 'An input contains race lists $X^{\{c,d\}}$ of length $n$, and cards
+
+    $Y^{(c,b)}$ of length $2n-1$, in the binary encoding of [BenDavidKothari26, Section 2].
+
+    Write the races involving $c$ in their fixed order as $r_1,\ldots,r_{2n-1}$,
+
+    and the card entries as $y_1,\ldots,y_{2n-1}$; put $y_0=0$ and
+
+    $q_t=y_t-y_{t-1}$. Athlete $(c,b)$ is valid precisely when
+
+    $0\le y_1\le\cdots\le y_{2n-1}<n$ and, for every $t$,
+
+    $X^{r_t}_{q_t+1}=(c,b)$ and $X^{r_t}_j=\bot$ for $1\le j\le q_t$.
+
+    $$f(X,Y)=1\quad\Longleftrightarrow\quad\exists(c,b)\in[2n]\times[n]
+
+    \text{ satisfying these checks}. $$
+
+    Only these checked fields need valid encodings; no promise is imposed on other fields.'
+- id: AIKDNF
+  name: Ambainis–Iraids–Kokainis unambiguous DNF
+  group: separating-total
+  kind: total
+  order: 102
+  short: Log-free optimal separation $\mathrm{C}=\Theta(\mathrm{R}_{\mathrm{RP}}^2)$.
+  definition: Partition $n^2$ bits into $n$ blocks $x_i$. Fix lists $P_j\in[n]^{8n}$ satisfying Lemma
+    3.1. For a half-sized set $S$, put $m_j(S)=\min\{a:P_j(a)\in S\}$ and $A_{ij}(S)=\{P_i(a):1\le a\le
+    m_j(S)\}$. Term $T_{i,S}$ fixes block $i$ to the characteristic vector of $S$ and requires $x_j(p)=0$
+    for $j\ne i$ and $p\in A_{ij}(S)$. Accept iff a term is satisfied. The lists guarantee term width
+    at most $9n$; terms are pairwise incompatible.
+  refs:
+  - AIK26
+  see_also:
+  - C
+  - R
+  - R1RP
+  - UCmin
+  - AIKCheatSheet
+  - PabbarajuDNF
+  formal: 'Fix even $n$, $k=n/2$, and lists $P_j\in[n]^{8n}$ satisfying Lemma 3.1 of [AIK26].
+
+    Put $m_j(S)=\min\{a:P_j(a)\in S\}$ and
+
+    $A_{ij}(S)=\{P_i(a):1\le a\le m_j(S)\}$.
+
+    $$T_{i,S}(x)=\left(\bigwedge_{p\in S}x_i(p)\right)
+
+    \left(\bigwedge_{p\notin S}\neg x_i(p)\right)
+
+    \left(\bigwedge_{j\ne i}\bigwedge_{p\in A_{ij}(S)}\neg x_j(p)\right),
+
+    \qquad f_n(x)=\bigvee_{i\in[n],\,|S|=k}T_{i,S}(x).$$'
+  arity: $n^2$ bits (even $n$)
+  scale:
+    var: n
+  values:
+  - measure: C
+    value: \Theta(n^2)
+    refs:
+    - AIK26
+    note: Theorem 2.2.
+  - measure: C0
+    value: \Theta(n^2)
+    refs:
+    - AIK26
+    note: Lemma 3.4 and the input-size ceiling.
+  - measure: R
+    value: \Theta(n)
+    refs:
+    - AIK26
+    note: Theorem 2.2 and the universal C = O(R²) bound.
+  - measure: R1RP
+    value: \Theta(n)
+    refs:
+    - AIK26
+    note: Theorem 2.2; accepts only after a term is verified.
+  - measure: UCmin
+    value: O(n)
+    refs:
+    - AIK26
+    note: Every 1-input satisfies exactly one term of width ≤9n.
+  - measure: C1
+    value: O(n)
+    refs:
+    - AIK26
+    note: The satisfied term is a certificate.
+  - measure: deg
+    value: O(n)
+    refs:
+    - AIK26
+    note: A disjoint DNF equals the sum of its term indicators, each of degree ≤9n.
+- id: AIKCheatSheet
+  name: Ambainis–Iraids–Kokainis certificate cheat sheet
+  group: separating-total
+  kind: total
+  order: 103
+  short: Quartic $\mathrm{C}/\mathrm{Q}$ and $\mathrm{R}_0/\mathrm{Q}$ separations, with quadratic $\mathrm{C}/\mathrm{Q}_{\mathrm{E}}$
+    and $\mathrm{C}/\mathrm{Q}_0$.
+  definition: 'Use [[AIKDNF]] to specify a partial function $H(x,y)$: if its unique satisfied term is
+    $T_{i,S}$, return $\bigvee_{p\in S}y_i(p)$; otherwise $H$ is undefined. Take $r=\lfloor\log_2\tau_n\rfloor+1$
+    copies of $H$, where $\tau_n=n(\lceil n/2\rceil+1)$, and a $2^r$-cell array of certificate descriptions.
+    Their $H$ outputs address a cell. The total function accepts iff all $H$ inputs lie in their domains
+    and the addressed cell contains valid local certificates for those outputs. Section 3.2 of [AIK26]
+    specifies the checks and all malformed encodings.'
+  refs:
+  - AIK26
+  see_also:
+  - C
+  - Q
+  - QE
+  - Q0
+  - R0
+  - adeg
+  - AIKDNF
+  - Champion
+  arity: $\Theta(n^3\log^2 n)$ bits
+  scale:
+    var: n
+  values:
+  - measure: C
+    value: \Omega(n^2)
+    refs:
+    - AIK26
+    note: Theorem 2.1, with explicit lower bound n(⌈n/2⌉+1).
+  - measure: Q
+    value: O(\sqrt n\log^3 n)
+    refs:
+    - AIK26
+    note: Theorem 2.1.
+  - measure: QE
+    value: \Theta(n\log^2 n)
+    refs:
+    - AIK26
+    note: Theorem 2.3; exact amplification and the count-field restriction.
+  - measure: Q0
+    value: \Theta(n\log^2 n)
+    refs:
+    - AIK26
+    note: Theorem 2.3.
+  - measure: R0
+    value: \Omega(n^2)
+    refs:
+    - AIK26
+    note: C=Ω(n²); under the zoo’s expected-cost zero-error convention, R₀=Ω(C), so this retains an Ω
+      bound rather than a literal coefficient-one inequality.
+  - measure: adeg
+    value: O(\sqrt n\log^3 n)
+    refs:
+    - BBCMdW01
+    - AIK26
+    note: Approximate degree ≤2Q; an immediate consequence of the quantum algorithm.
+  formal: 'Let $H(x,y)=\bigvee_{p\in S}y_i(p)$ if $x$ satisfies the unique term
+
+    $T_{i,S}$ of [[AIKDNF]], and leave $H$ undefined otherwise.
+
+    Fix the verifier $A(x,y,\beta,z)$ from [AIK26, Lemma 3.3 and Appendix D.1],
+
+    $\tau_n=n(\lceil n/2\rceil+1)$ and $r=\lfloor\log_2\tau_n\rfloor+1$.
+
+    An input has $r$ pairs $(x^{(t)},y^{(t)})$ and $2^r$ cells, each holding $r$ descriptions.
+
+    $$F_n=1\iff\exists\beta\in\{0,1\}^r:\
+
+    \forall t\in[r],\ H(x^{(t)},y^{(t)})=\beta_t
+
+    \ \text{and}\ A(x^{(t)},y^{(t)},\beta_t,z^{(t)}_\beta)=1.$$
+
+    Every other input rejects. Cell $\beta$ contains the descriptions $z^{(t)}_\beta$;
+
+    the source''s bit encoding and verifier are part of this definition.'
+- id: PabbarajuDNF
+  name: Pabbaraju’s optimal unambiguous DNF
+  group: separating-total
+  kind: total
+  order: 104
+  short: $\mathrm{C}^0=\Omega(n^2)$ and $\mathrm{UC}^1=O(n)$, without logarithmic losses.
+  definition: The unambiguous DNF of Theorem 1 on $n$ blocks of $n$ bits. Terms select a block and a half-sized
+    positive set, and signed set-pair systems specify the cross-block negative literals (Section 3). Every
+    term has width $O(n)$, distinct terms are incompatible, and the all-zero input needs $\Omega(n^2)$
+    bits to certify rejection.
+  refs:
+  - Pabbaraju26
+  see_also:
+  - C0
+  - C
+  - UCmin
+  - deg
+  - PabbarajuQuartic
+  arity: $n^2$ bits
+  scale:
+    var: n
+  values:
+  - measure: C0
+    value: \Omega(n^2)
+    refs:
+    - Pabbaraju26
+    note: Theorem 1.
+  - measure: C
+    value: \Theta(n^2)
+    refs:
+    - Pabbaraju26
+    note: C≥C₀ and C≤n².
+  - measure: UCmin
+    value: O(n)
+    refs:
+    - Pabbaraju26
+    note: Theorem 1 gives UC¹=O(n).
+  - measure: deg
+    value: O(n)
+    refs:
+    - Pabbaraju26
+    note: 'Corollary 1.2: exact representation by the sum of disjoint term indicators.'
+  formal: 'Fix disjoint blocks $B_1,\ldots,B_n$ of size $n$ and $k=\lfloor n/2\rfloor$.
+
+    For every unordered pair $\{i,j\}$ choose bijections
+
+    $\pi_i^{ij}:B_i\to[n]$, $\pi_j^{ij}:B_j\to[n]$ with
+
+    $\sum_{j\ne i}\min_{u\in S}\pi_i^{ij}(u)=O(n)$ uniformly over $i$ and $k$-subsets $S\subseteq B_i$;
+
+    [Pabbaraju26, Section 3] proves such choices exist.
+
+    Put $a_{ij}(S)=\min_{u\in S}\pi_i^{ij}(u)$ and
+
+    $A_{ij}(S)=\{v\in B_j:\pi_j^{ij}(v)\le a_{ij}(S)\}$.
+
+    $$f_n(x)=\bigvee_{i,\,S\subseteq B_i,\,|S|=k}
+
+    \left(\bigwedge_{u\in S}x_u\right)
+
+    \left(\bigwedge_{v\in(B_i\setminus S)\cup\bigcup_{j\ne i}A_{ij}(S)}\neg x_v\right).$$'
+- id: PabbarajuQuartic
+  name: Pabbaraju’s quartic approximate-degree function
+  group: separating-total
+  kind: total
+  order: 105
+  short: $\mathrm{C}\ge\Omega(\widetilde{\deg}^{\,4}/\log^6 n)$; settles the exponent at four.
+  definition: The function $G(x,p,K)$ of Section 5. Its input comprises the $n^2$ DNF bits from [[PabbarajuDNF]],
+    a cell pointer attached to each bit, and $n^2$ cells of $O(n\log n)$-bit certificate descriptions.
+    A cell validates the selected DNF term via $O(n)$ local checks of depth $O(\log n)$ and requires the
+    pointer of its first positive literal to designate that cell. At most one cell can be valid. Accept
+    iff a valid cell exists.
+  refs:
+  - Pabbaraju26
+  see_also:
+  - C
+  - adeg
+  - PabbarajuDNF
+  - AIKCheatSheet
+  arity: $O(n^3\log n)$ bits
+  scale:
+    var: n
+  values:
+  - measure: C
+    value: \Omega(n^2)
+    refs:
+    - Pabbaraju26
+    note: Theorem 4; equation (42).
+  - measure: C0
+    value: \Omega(n^2)
+    refs:
+    - Pabbaraju26
+    note: All-zero input, equation (42).
+  - measure: adeg
+    value: O(\sqrt n\log^{3/2}n)
+    refs:
+    - Pabbaraju26
+    note: Section 5, equation (43); approximate each cell to error 1/(3n²) and sum its polynomial.
+  notes: This source proves a low-degree approximation. It does not give a quantum algorithm of the same
+    complexity; [AIK26] supplies the subsequent quantum result for a modified construction.
+  formal: 'Fix [[PabbarajuDNF]] and its bijections. An input is $(x,p,K)$:
+
+    DNF bits $x$, pointers $p_u\in[n^2]$ (invalid encodings fail any check using them), and
+
+    cells $K_z$, $z\in[n^2]$, in the fixed-size encoding of [Pabbaraju26, Section 5].
+
+    Each cell contains a block index $i$, sorted lists $a_1,\ldots,a_k$ and
+
+    $b_1,\ldots,b_{n-k}$, witnesses $t_j$, and a padded list $\Gamma$ of cross-block positions.
+
+    The verifier $V(x,K_z)$ checks:
+
+    the two sorted lists partition $B_i$, with $x_{a_h}=1$ and $x_{b_h}=0$;
+
+    for $j\ne i$, $t_j\in B_i$ and $x_{t_j}=1$;
+
+    writing $\ell_j=\pi_i^{ij}(t_j)$, $\Gamma$ lists exactly the pairs
+
+    $(j,1),\ldots,(j,\ell_j)$ for $j\ne i$ in increasing order, followed by at least one padding entry;
+
+    and $x_{(\pi_j^{ij})^{-1}(h)}=0$ for every listed $(j,h)$.
+
+    The list has fixed length one greater than the uniform maximum term width; malformed checks reject.
+
+    $$G(x,p,K)=\bigvee_{z\in[n^2]}\big(V(x,K_z)\wedge[p_{a_1}=z]\big).$$'
+- id: PabbarajuCubicSensitivity
+  name: Pabbaraju’s certificate–sensitivity separator
+  group: separating-total
+  kind: total
+  order: 106
+  short: Log-free $\mathrm{C}=\Omega(\mathrm{s}^3)$.
+  definition: Apply the sensitivity-reducing transformation of [BHT17] and the construction in Appendix
+    C of [Pabbaraju26] to the optimal one-sided unambiguous-DNF separator [[PabbarajuDNF]]. Corollary
+    1.3 gives $\mathrm{C}\ge\Omega(\mathrm{s}^3)$ without the logarithmic loss in the earlier construction.
+    The full definition is in that appendix.
+  refs:
+  - Pabbaraju26
+  see_also:
+  - C
+  - s
+  - PabbarajuDNF
+  - BHTfn
+  formal: 'Let $f$ be [[PabbarajuDNF]] and $u=\mathrm{UC}^1(f)=\Theta(n)$.
+
+    Let $f''(x,y,z)$ accept iff $f(x)=f(y)=f(z)=1$ and all three inputs satisfy
+
+    the same unique DNF term. Define
+
+    $$F_n=\mathrm{OR}_{3u}\circ f''.$$
+
+    Appendix C of [Pabbaraju26] proves $\mathrm{s}(F_n)\le3u$ and
+
+    $\mathrm{C}^0(F_n)=3u\mathrm{C}^0(f'')\ge3u\mathrm{C}^0(f)=\Omega(u^3)$.'
+  values:
+  - measure: s
+    value: O(n)
+    refs:
+    - Pabbaraju26
+    note: 'Appendix C: s(F)≤3u, u=Θ(n).'
+  - measure: C
+    value: \Omega(n^3)
+    refs:
+    - Pabbaraju26
+    note: 'Appendix C: C⁰(F)≥3u C⁰(f)=Ω(n³).'
+  scale:
+    var: n
+- id: OpenAINestedTournament
+  name: OpenAI’s nested tournament sensitivity separator
+  group: separating-total
+  kind: total
+  order: 107
+  short: Refutes $\mathrm{bs}=O(\mathrm{s}^2)$; a fixed seed yields an exponent strictly greater than
+    two.
+  definition: 'For depth $d$ and $M\ge9^{d+1}$, put $L=d+2$, $k=2M^2+1$ and $r=\lceil\sqrt M\rceil$. A
+    regular tournament on $k$ rows is edge-labelled in $[r]$ with the forbidden-configuration property
+    of Lemma 2.1. Begin with nested unions of Hamming balls of successive radii about $M$ disjoint weight-$L$
+    centres. Each recursive predicate is an OR over rows: its row’s strongest child predicates must all
+    accept, while the edge-labelled children in outgoing rows must reject the chosen weaker predicate.
+    Finally OR $M$ copies to balance 0- and 1-sensitivity. To obtain one asymptotic family, fix $d=9$,
+    $M=9^{10}$ and an admissible labelling, and self-compose the resulting seed $m$ times.'
+  refs:
+  - OpenAISensitivity26
+  see_also:
+  - bs
+  - s
+  - OpenAISensitivity26
+  - Prove2MeTournament
+  - MeiburgTournament
+  arity: $N_0^m$ bits, with $N_0=LM^2(kr)^9$, $L=11$, $M=9^{10}$
+  scale:
+    var: m
+  values:
+  - measure: s
+    value: O(5843507755269244925453189084787151790243135958374678911440649158260034799828648025876463378968022^m)
+    refs:
+    - OpenAISensitivity26
+    note: 'Corollary 4.3: sensitivity ≤A^m, A=22M¹⁰.'
+  - measure: bs
+    value: \Omega(36122005036315302778151792217492267728323576313688938488653910762565727724823376796778788409135057260835654187889331715677969332701578439948333928007781625724245588074795233962798724758384452483^m)
+    refs:
+    - OpenAISensitivity26
+    note: 'Corollary 4.3: block sensitivity at zero ≥B^m, B=M²(2M²+1)⁹.'
+  notes: Corollary 4.3 gives $\alpha=\log B/\log A>2$ and $\mathrm{bs}(F_m,0)\ge\mathrm{s}(F_m)^\alpha$.
+    Theorem 1.1 separately gives $\mathrm{bs}/\mathrm{s}^2\ge2^d/[4(d+2)^2]$ for varying depth. The fixed
+    exponent is small; the later [[Prove2MeTournament]] improves it substantially.
+  formal: 'Fix $d=9$, $M=9^{10}$, $L=11$, $k=2M^2+1$, $r=\lceil\sqrt M\rceil$,
+
+    and a regular tournament with labels $a(i,j)\in[r]$ satisfying [OpenAISensitivity26, Lemma 2.1].
+
+    Choose $M$ disjoint weight-$L$ centres $z_h$ in $LM$ bits and set
+
+    $P_{0,q}(x)=[\min_h\operatorname{dist}(x,z_h)\le10-q]$ for $1\le q\le10$.
+
+    At level $\ell$, $1\le\ell\le9$, put $Q=11-\ell$, arrange $kr$ child inputs in rows, and define
+
+    $$P_{\ell,q}(x)=\bigvee_{i\in[k]}
+
+    \left(\bigwedge_{c\in[r]}P_{\ell-1,Q}(x_{i,c})\right)
+
+    \left(\bigwedge_{i\to j}\neg P_{\ell-1,Q-q}(x_{j,a(i,j)})\right),
+
+    \quad1\le q\le10-\ell.$$
+
+    Set $g=\mathrm{OR}_M\circ P_{9,1}$ and $F_m=g^{\circ m}$.
+
+    All copies act on disjoint inputs. This is the fixed-seed family of Corollary 4.3.'
+- id: Prove2MeTournament
+  name: Prove2Me’s refined tournament sensitivity family
+  group: separating-total
+  kind: total
+  order: 108
+  short: $\mathrm{bs}\ge\mathrm{s}^{\alpha-o(1)}$, $\alpha=\log(14055^8)/\log(3738277295413674)=2.1308255793978239\ldots$.
+  definition: The accepted public theorem SensitivityPrimitiveCampaign.reach_source_q5_3738277295413674_strict
+    refines the nested tournament construction. It uses a single binary tournament labelling with ordinary
+    defect cutoffs $(24,31,38,44,50,55)$ and source cutoff $22$, followed by an exact recursive Boolean
+    profile. The theorem states, without construction hypotheses, that for every $\varepsilon>0$ and $S\ge2$
+    there is a finite total Boolean function with $\mathrm{s}\ge S$ and $\mathrm{bs}\ge\mathrm{s}^{\alpha-\varepsilon}$.
+    The exact logarithmic quotient, rather than its rounded decimal, is the endpoint.
+  refs:
+  - Prove2MeSensitivity26
+  - OpenAISensitivity26
+  see_also:
+  - bs
+  - s
+  - fbs
+  - RC
+  - lambda
+  - OpenAINestedTournament
+  - open-bs-vs-s
+  notes: The campaign and linked theorem were inspected on October 22, 2026. Prove2Me marks the theorem
+    Proved (October 20), with human endorsements on October 21. This records the source’s verification
+    status; the zoo has not independently rebuilt the Lean proof. The statement gives arbitrarily large
+    sensitivity and arbitrarily small exponent loss, not a loss-free endpoint inequality on every member
+    of a prescribed one-parameter family.
+- id: ANDNotExactOne
+  name: AND of complemented EXACT-ONE functions
+  group: separating-total
+  kind: total
+  order: 109
+  short: New quantum-certification lower bounds separate $\mathrm{Q}_0$ from both $\mathrm{Q}$ and rational
+    degree.
+  definition: Partition $m^2$ bits into $m$ blocks of length $m$. Accept iff no block has Hamming weight
+    exactly one.
+  refs:
+  - KLLPV26
+  see_also:
+  - degcert
+  - rdeg
+  - QEcert
+  - Q0cert
+  - Q0
+  - Q
+  - osdeg
+  - certification
+  formal: $f_m=\mathrm{AND}_m\circ(\neg\mathrm{EXACT}_{1,m})$
+  arity: $m^2$ bits
+  scale:
+    var: m
+  values:
+  - measure: rdeg
+    value: m
+    refs:
+    - KLLPV26
+    note: Theorem 10.
+  - measure: degcert
+    value: \Omega(m^{3/2}/\log^2 m)
+    refs:
+    - KLLPV26
+    note: 'Theorem 10 proof: Ω(√(m³/log⁴m)).'
+  - measure: Q0
+    value: \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})
+    refs:
+    - KLLPV26
+    note: Theorem 10 and Lemma 55.
+  - measure: Q
+    value: \Theta(m)
+    refs:
+    - KLLPV26
+    note: Lemma 55 gives O(m). At the all-zero input, all m² single-bit flips reject, so bs=m² and Q=Ω(√bs).
+  - measure: bs
+    value: m^2
+    refs:
+    - KLLPV26
+    note: All m² bits are sensitive at zero; the arity is the matching ceiling.
+  - measure: s
+    value: m^2
+    refs:
+    - KLLPV26
+    note: Every single-bit flip at zero creates an EXACT-ONE block.
+  - measure: C
+    value: m^2
+    refs:
+    - KLLPV26
+    note: At zero every bit is sensitive; C≥s and C≤m².
+  - measure: fbs
+    value: m^2
+    refs:
+    - KLLPV26
+    note: Squeezed between bs and C.
+  - measure: QC
+    value: \Theta(m)
+    refs:
+    - Aaronson08
+    - KLLPV26
+    note: QC=Θ(√fbs).
+  - measure: QEcert
+    value: \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})
+    refs:
+    - KLLPV26
+    note: 2QEcert≥degcert and QEcert=O(Q₀).
+  - measure: Q0cert
+    value: \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})
+    refs:
+    - KLLPV26
+    note: Theorem 5 and the QEcert bounds.
+  - measure: osdeg
+    value: \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})
+    refs:
+    - KLLPV26
+    note: degcert=O(osdeg) and osdeg=O(Q₀).

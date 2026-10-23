@@ -18,10 +18,6 @@ relations:
   to: R
   setting: partial
   status: fails
-  upper:
-    - stmt: '\mathrm{D}(f) \text{ is known to be unbounded in terms of } \mathrm{R}(f).'
-      form: {kind: none}
-      conf: high
   lower:
     - stmt: '\mathrm{R}(\mathrm{promiseFind1}_n)=O(1),\ \mathrm{D}(\mathrm{promiseFind1}_n)=n/2+1'
       form: {kind: unbounded}
@@ -40,14 +36,39 @@ relations:
     (certificates, blocks, sensitivity) that the total-function proofs use.
   see_also: [D, R, promiseFind1, settings]
 
+- from: D
+  to: R0
+  setting: partial
+  status: fails
+  lower:
+    - stmt: '\mathrm{R}_0(\mathrm{Find1}^{\mathrm{par}}_n) = O(1),\ \ \mathrm{D}(\mathrm{Find1}^{\mathrm{par}}_n) = n/4+1'
+      form: {kind: unbounded}
+      witness: Find1Parity
+      putative: true
+      note: 'Promise $|x| = n/4$ with $\mathrm{supp}(x)$ inside the odd coordinates or inside the even ones, and ask which. Every input carries $n/4$ ones and each of them names the answer on its own, so probing at random finds a *certain* answer after four expected queries; an adversary answering $0$ makes a deterministic algorithm exhaust a whole parity class.'
+      conf: high
+  notes: |
+    The total-function bound $\mathrm{D} = O(\mathrm{R}_0^2)$ goes through
+    $\mathrm{C} \le \mathrm{R}_0$ and $\mathrm{D} \le \mathrm{C}^0\mathrm{C}^1$,
+    and it is the second step that dies here: a promise can leave every
+    certificate one bit long and still hide it, so knowing that a zero-error
+    algorithm stops quickly says nothing about how a deterministic one should
+    search. The first step survives -- $\mathrm{C} \le \mathrm{R}_0$ needs no
+    totality -- and [[Find1Parity]] has $\mathrm{C} = \mathrm{R}_0 = \Theta(1)$
+    with $\mathrm{D} = n/4+1$, so it breaks $\mathrm{D}$ vs $\mathrm{C}$ in the
+    same breath.
+
+    [[promiseFind1]] is the same construction as a relation, and the parity
+    label is exactly what is needed to say it about a partial *function*.
+    Contrast [[GapMaj]], the usual partial-setting counterexample, which is no
+    use here: its $\mathrm{R}_0 = \Theta(n)$ matches its $\mathrm{D}$, because
+    the gapped promise leaves no short certificate to find.
+  see_also: [D, R0, C, Find1Parity, promiseFind1, GapMaj, settings]
+
 - from: R
   to: Q
   setting: partial
   status: fails
-  upper:
-    - stmt: '\mathrm{R}(f) \text{ is known to be unbounded in terms of } \mathrm{Q}(f).'
-      form: {kind: none}
-      conf: high
   lower:
     - stmt: '\mathrm{Q}(\mathrm{Forrelation}_n)=1,\ \ \mathrm{R}(\mathrm{Forrelation}_n)=\tilde\Theta(\sqrt n)'
       form: {kind: unbounded}
@@ -150,10 +171,17 @@ relations:
   setting: relation
   status: gap
   upper:
-    - stmt: '\mathrm{D}(S) = O\big(\mathrm{psD}(S)^3\big)'
-      form: {exp: 3, kind: const}
+    - stmt: '\mathrm{D}(S) = O\big(\mathrm{psD}(S)^3\big) \quad (S \text{ a \emph{total} search problem})'
+      form: {exp: 3, kind: const, inherit: false}
       refs: [CDM23]
-      note: 'Improves the quartic bound implicit in [GGR13]. Only meaningful for relations -- for functions $\mathrm{psD}=\mathrm{R}$ trivially.'
+      note: |
+        Improves the quartic bound implicit in [GGR13]. The hypothesis is that
+        every input has *some* valid answer, and it does real work:
+        `inherit: false`, because a partial function is a search problem that is
+        **not** total, and there the bound is plainly false --
+        $\mathrm{psD}(\mathrm{DeutschJozsa}) = \Theta(\mathrm{R}) = O(1)$ while
+        $\mathrm{D} = \Omega(n)$. Only meaningful for relations anyway: for
+        functions $\mathrm{psD} = \Theta(\mathrm{R})$ trivially.
       conf: high
   lower:
     - stmt: '\mathrm{D}(S_n) = \tilde\Omega\big(\mathrm{psD}(S_n)^{?}\big)'

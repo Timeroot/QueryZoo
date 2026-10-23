@@ -10,6 +10,12 @@
   it is a claim about <em>what this zoo currently records</em>, so a high-scoring row is as
   likely to mean "nobody entered it" as "nobody knows it" &mdash; the <code>undoc</code> flag
   and the filters below separate the two. Both are worth walking down.</p>
+  <p class="dim">The {{ dimless | length }} dimensionless quantities
+  ({% for id in dimless %}{{ xref(id) }}{% if not loop.last %}, {% endif %}{% endfor %})
+  are left out. They live in \([0,1]\), so no exponent relates them to a query count: every cell
+  they touch scores as wide open and stays that way whatever anyone proves. Their normalized
+  forms &mdash; {{ xref('osss') }} and {{ xref('nsr') }} &mdash; are ordinary measures and are
+  scored here in their place; see {{ xref('normalization') }}.</p>
 
   <div class="card gapkey">
     <p><code>score = importance<sup>1.5</sup> &times; openness &times; setting weight &times; modifiers</code>,
@@ -20,7 +26,7 @@
       nothing known 10 &middot; separation but no bound 8 &middot; bound but no separation 6.5 &middot;
       log-type only 5 &middot; exponent gap 3&ndash;6.5 (by how wide) &middot;
       exponential separation only 2.5 &middot; polylog slack 1.5 &middot;
-      known unbounded 0.7 &middot; known impossible 0.5 &middot; settled 0 (dropped).
+      settled 0 (dropped, and a proved impossibility counts as settled).
       <b>modifiers</b>: partial &times;0.9, relation &times;0.85; named open problem &times;1.3;
       nothing recorded &times;0.7; measure only loosely defined in this setting &times;0.5.</p>
     <p class="dim"><b>flags</b>: <span class="flag u">undoc</span> no relation record filed in this

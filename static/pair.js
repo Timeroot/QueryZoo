@@ -157,28 +157,25 @@
     if (c.w) h += "<p>Separation witness: " + witlink(c.w) + ".</p>";
     if (c.refs) h += "<p>" + cites(c.refs) + "</p>";
     if (c.note) h += '<div class="note">' + c.note + "</div>";
-    if (c.new_in_source && META.source) {
-      h += '<p class="tag">new in <a class="xref ref" href="' + ROOT + "refs.html#" +
-        esc(META.source) + '">' + esc(META.source) + "</a></p>";
-    }
-    if (c.updated) {
-      h += '<div class="banner star">&#9733; This zoo departs from the published table here: ' +
-        (c.update_note || "") + "</div>";
+    if (c.own) {
+      h += '<div class="banner star">&#9733; This exponent is the zoo\'s own: ' +
+        (c.own_note || "") + "</div>";
     }
     h += '<p class="dim">Exponents suppress \\(o(1)\\) in the exponent, hence all log factors. ' +
       "The statements below are the fine-grained versions.</p></div></section>";
     return h;
   }
 
-  /* Only a number can have come from the published exponent table; "exp",
-     "log" and the glyphs are the zoo's own vocabulary. */
+  /* Only a number can have come from the exponent table; "exp", "log" and the
+     glyphs belong to the derived layer. */
   function numeric(v) { return /^[0-9]/.test(String(v)); }
 
   /* An exponential upper bound met by an exponential separation is as settled
      as `2, 2` is -- say so rather than "exponential only". */
   function verdictWord(d) {
     var w = META.verdicts[d.verdict];
-    if ((d.verdict === "exp" || d.verdict === "log") && d.a !== "?" && d.b !== "?") {
+    if ((d.verdict === "exp" || d.verdict === "log") &&
+        d.a !== "?" && d.b !== "?" && !numeric(d.b)) {
       return "settled, " + (d.verdict === "exp" ? "exponentially" : "logarithmically");
     }
     return w;

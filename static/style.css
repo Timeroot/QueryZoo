@@ -129,6 +129,9 @@ main { padding-bottom: 60px; }
   padding: 20px 22px; margin: 0 0 18px;
 }
 .card.tight { padding: 14px 16px; font-size: 14px; }
+/* The essay explaining why a dimensionless quantity is kept out of the matrix
+   and what replaces it. Set apart from the plain definition above it. */
+.card.norm { background: #f8f9fb; border-color: #dde3e9; }
 .card > h2 { font: 600 17px/1.3 var(--sans); margin: 0 0 12px; letter-spacing: -0.005em; }
 .card.tight > h2 {
   font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--dim);
@@ -182,6 +185,9 @@ main { padding-bottom: 60px; }
 .banner.warn { background: #fdf6e8; border-color: #e6d3a3; color: #6b5320; }
 .banner.todo { background: #eef4fb; border-color: #bcd3ea; color: #274a68; }
 .banner.star { background: #f6f0fa; border-color: #d6c2e6; color: #533a68; margin-top: 10px; }
+/* Why this measure is absent from the matrix: dimensionless, or degenerate in
+   some setting. A fact about the measure, not a warning about the page. */
+.banner.note { background: #f4f6f8; border-color: #d3dae0; color: #3c4a55; }
 
 /* ----------------------------------------------------------------- pills */
 .pill {
@@ -375,9 +381,29 @@ ul.bounds { list-style: none; margin: 0; padding: 0; }
 .notes th, .notes td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; }
 .notes th { background: #f6f3ec; }
 
-.nbrs .pairlink { display: inline-flex; gap: 8px; align-items: baseline; }
+.nbrs .pairlink { display: inline-flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
 .nbrs .go { font-size: 12px; color: var(--dim); }
 .stbadges { display: inline-flex; gap: 3px; margin-left: 6px; }
+/* one setting's cell inside a neighbour row: the setting chip, then the
+   exponent range or the glyph standing in for "no polynomial bound". */
+.nbtok { display: inline-flex; gap: 4px; align-items: baseline; white-space: nowrap; }
+.nbtok .exp { font-size: 13px; }
+.nbtok .glyph { font-size: 13px; }
+.norec {
+  font-size: 10.5px; color: var(--dim); border: 1px dashed var(--line-2);
+  border-radius: 9px; padding: 0 5px; cursor: help;
+}
+/* the fold between an entry's hand-picked neighbours and the rest of the zoo */
+.nbrs-more { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; margin: 10px 0 0; }
+.nbrs-more .dim { font-size: 12px; }
+.unfold {
+  font: inherit; font-size: 12.5px; cursor: pointer; white-space: nowrap;
+  padding: 3px 10px; border-radius: 5px;
+  border: 1px solid var(--line-2); background: #faf8f4; color: var(--ink-2);
+}
+.unfold:hover { background: #f2efe8; }
+.unfold.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.nbrs-rest tr:first-child td { border-top: 2px solid var(--line-2); }
 .exp { font: 600 14px var(--mono); white-space: nowrap; }
 .exp .a { color: var(--accent); }
 .exp .b { color: var(--c-deterministic); }
@@ -405,6 +431,10 @@ ul.bounds { list-style: none; margin: 0; padding: 0; }
 .segmented button:last-child { border-right: none; }
 .segmented button:hover { background: #f2efe8; }
 .segmented button.on { background: var(--accent); color: #fff; }
+/* The number on a scope button is how many measures it puts on screen in the
+   setting showing, not how many exist -- kept quiet beside the label. */
+.segmented button .n { opacity: .6; font-size: 11px; }
+.segmented button.on .n { opacity: .8; }
 .ck { font-size: 13px; color: var(--ink-2); display: inline-flex; gap: 5px; align-items: center; cursor: pointer; }
 
 .matrixwrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
@@ -436,6 +466,9 @@ td.mcell.empty { background: #fcfbf8; }
 td.mcell:hover { outline: 2px solid var(--accent); outline-offset: -2px; z-index: 5; }
 .wit-mark { position: absolute; top: 2px; right: 3px; font-size: 7px; color: var(--dim); }
 .upd-mark { position: absolute; bottom: 1px; left: 3px; font-size: 8px; color: var(--fails); }
+/* A row with no recorded exponents, drawn from the derived layer: said in
+   the header rather than in a footnote nobody reads. */
+.row-mark { color: var(--fails); font-size: 9px; vertical-align: super; cursor: help; }
 /* The per-cell tooltip lives in the DOM as hidden data; app.js clones it into a
    viewport-fixed element so it is never clipped by the table's scroll box. */
 .celltip { display: none; }
@@ -453,14 +486,25 @@ td.mcell:hover { outline: 2px solid var(--accent); outline-offset: -2px; z-index
 body.view-partial .cellinner .vp,
 body.view-relation .cellinner .vr,
 body:not(.view-partial):not(.view-relation) .cellinner .vt { display: inline; }
+/* Row/column headers of measures whose empty cells are explained, not missing:
+   ones with only a partial definition in the setting being viewed, marked in
+   that view only. (Measures that are undefined, degenerate or dimensionless
+   here are not marked -- app.js drops their rows and columns entirely.) */
+.cav { color: var(--dim); font-size: 11px; cursor: help; margin-left: 1px; }
+.cav:hover { color: var(--fails); }
+.cav-total, .cav-partial, .cav-relation { display: none; }
+body.view-partial .cav-partial,
+body.view-relation .cav-relation,
+body:not(.view-partial):not(.view-relation) .cav-total { display: inline; }
+
 .glyph { font-size: 15px; line-height: 1; color: var(--dim); }
 .glyph.g-settled { color: var(--settled); }
 .glyph.g-gap     { color: var(--gap); }
 .glyph.g-open    { color: var(--open); }
 .glyph.g-fails   { color: var(--fails); }
 .glyph.g-eq      { color: var(--link); }
-.glyph.g-none    { color: var(--fails); }
-.glyph.g-unbounded, .glyph.g-exp, .glyph.g-log { color: #a8672a; font-size: 12px; }
+.glyph.g-unbounded { color: var(--fails); }
+.glyph.g-exp, .glyph.g-log { color: #a8672a; font-size: 12px; }
 td.mcell.equiv { background: #f3f7fa; }
 /* Diagonal cells that do hold records: composition, parameter dependence. */
 td.mcell.diag {
@@ -530,8 +574,8 @@ td.mcell[data-vt="settled"] { background: #f2f8f4; }
 td.mcell[data-vt="gap"]     { background: #fdf8ec; }
 td.mcell[data-vt="upper"]   { background: #f6f4fb; }
 td.mcell[data-vt="lower"]   { background: #fbeeee; }
-td.mcell[data-vt="none"]    { background: #f0e4fa; }
-td.mcell[data-vt="unbounded"], td.mcell[data-vt="exp"], td.mcell[data-vt="log"] { background: #f7ece2; }
+td.mcell[data-vt="unbounded"] { background: #f0e4fa; }
+td.mcell[data-vt="exp"], td.mcell[data-vt="log"] { background: #f7ece2; }
 td.mcell[data-vt="bare"], td.mcell[data-vt=""] { background: #fdfcf9; }
 
 body.view-partial td.mcell, body.view-relation td.mcell { background: #fdfcf9; }
@@ -543,12 +587,10 @@ body.view-partial td.mcell[data-vp="upper"],
 body.view-relation td.mcell[data-vr="upper"] { background: #f6f4fb; }
 body.view-partial td.mcell[data-vp="lower"],
 body.view-relation td.mcell[data-vr="lower"] { background: #fbeeee; }
-body.view-partial td.mcell[data-vp="none"],
-body.view-relation td.mcell[data-vr="none"] { background: #f0e4fa; }
 body.view-partial td.mcell[data-vp="unbounded"],
+body.view-relation td.mcell[data-vr="unbounded"] { background: #f0e4fa; }
 body.view-partial td.mcell[data-vp="exp"],
 body.view-partial td.mcell[data-vp="log"],
-body.view-relation td.mcell[data-vr="unbounded"],
 body.view-relation td.mcell[data-vr="exp"],
 body.view-relation td.mcell[data-vr="log"] { background: #f7ece2; }
 
@@ -588,7 +630,7 @@ body.hide-derived.view-relation td.mcell[data-dr="1"] { background: #fdfcf9; }
 .swatch.gapc, .swatch.v-gap { background: #fdf8ec; }
 .swatch.unknown, .swatch.v-lower { background: #fbeeee; }
 .swatch.v-upper { background: #f6f4fb; }
-.swatch.v-none { background: #f0e4fa; }
+.swatch.v-unbounded { background: #f0e4fa; }
 ul.legend { list-style: none; margin: 0; padding: 0; font-size: 13.5px; }
 ul.legend li { padding: 3px 0; }
 
@@ -619,7 +661,7 @@ table.dtab td.vw { color: var(--ink-2); font-size: 13px; }
 table.dtab tr.det td { padding-top: 0; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
 table.dtab tr.v-settled td.ex { color: var(--settled); }
 table.dtab tr.v-gap td.ex { color: var(--gap); }
-table.dtab tr.v-none td.ex, table.dtab tr.v-unbounded td.ex { color: var(--fails); }
+table.dtab tr.v-unbounded td.ex { color: var(--fails); }
 .dline { margin: 3px 0; font-size: 14px; }
 .dlbl {
   display: inline-block; min-width: 84px; font: 600 10.5px var(--sans);

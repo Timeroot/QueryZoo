@@ -1,0 +1,1212 @@
+# Primary-source results; partial and total settings are deliberately separate.
+relations:
+- id: recent-QSstr-vs-QSweak-partial
+  from: QSstr
+  to: QSweak
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QS}_{\mathrm{str}}(f)=O(\mathrm{QS}_{\mathrm{weak}}(f))
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: Additional oracle information can be ignored; an index reveals the sabotage symbol with one
+      extra query.
+- id: recent-QSstrind-vs-QSweakind-partial
+  from: QSstrind
+  to: QSweakind
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f)=O(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(f))
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: Additional oracle information can be ignored; an index reveals the sabotage symbol with one
+      extra query.
+- id: recent-QSstr-vs-QSstrind-partial
+  from: QSstr
+  to: QSstrind
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QS}_{\mathrm{str}}(f)=O(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f))
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: Additional oracle information can be ignored; an index reveals the sabotage symbol with one
+      extra query.
+- id: recent-QSweak-vs-QSweakind-partial
+  from: QSweak
+  to: QSweakind
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QS}_{\mathrm{weak}}(f)=O(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(f))
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: Additional oracle information can be ignored; an index reveals the sabotage symbol with one
+      extra query.
+- id: recent-QSweak-vs-RS-partial
+  from: QSweak
+  to: RS
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QS}_{\mathrm{weak}}(f)=O(\mathrm{RS}(f))
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: The classical weak/strong and decision/index sabotage variants agree up to constants.
+- id: recent-QC-vs-QSweak-partial
+  from: QC
+  to: QSweak
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QC}(f)=O(\mathrm{QS}_{\mathrm{weak}}(f))
+    refs:
+    - CMP24
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'KLLPV26, proof of Theorem 4(v): the fractional-block-sensitivity adversary proof also covers
+      partial functions.'
+- id: recent-QSweak-vs-fbs-total
+  from: QSweak
+  to: fbs
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{QS}_{\mathrm{weak}}(\mathrm{IND}_n)=\Theta(\mathrm{fbs}(\mathrm{IND}_n))
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    witness: ADDR
+    note: Theorem 5.3 and Appendix B; this is stronger than the universal square-root floor.
+- id: recent-Q-vs-QSweak-total
+  from: Q
+  to: QSweak
+  setting: total
+  status: gap
+  upper:
+  - stmt: \mathrm{Q}(f)=\widetilde O(\mathrm{QS}_{\mathrm{weak}}(f)^6)
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 6
+      kind: tilde
+    note: 'Equations (1)–(4): Q=Õ(bs³), bs≤fbs=O(QS²).'
+  lower:
+  - stmt: \mathrm{Q}(\mathrm{PARITY}_n)=\Omega(\mathrm{QS}_{\mathrm{weak}}(\mathrm{PARITY}_n)^2)
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 2
+      kind: const
+    witness: PARITY
+    note: Q(PARITY)=Θ(n); every sabotage variant is Θ(√n).
+- id: recent-QSstr-vs-RS-partial
+  from: QSstr
+  to: RS
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QS}_{\mathrm{str}}(f)=O(\mathrm{RS}(f))
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: The classical weak/strong and decision/index sabotage variants agree up to constants.
+- id: recent-QC-vs-QSstr-partial
+  from: QC
+  to: QSstr
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QC}(f)=O(\mathrm{QS}_{\mathrm{str}}(f))
+    refs:
+    - CMP24
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'KLLPV26, proof of Theorem 4(v): the fractional-block-sensitivity adversary proof also covers
+      partial functions.'
+- id: recent-QSstr-vs-fbs-total
+  from: QSstr
+  to: fbs
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{QS}_{\mathrm{str}}(\mathrm{IND}_n)=\Theta(\mathrm{fbs}(\mathrm{IND}_n))
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    witness: ADDR
+    note: Theorem 5.3 and Appendix B; this is stronger than the universal square-root floor.
+- id: recent-Q-vs-QSstr-total
+  from: Q
+  to: QSstr
+  setting: total
+  status: gap
+  upper:
+  - stmt: \mathrm{Q}(f)=\widetilde O(\mathrm{QS}_{\mathrm{str}}(f)^6)
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 6
+      kind: tilde
+    note: 'Equations (1)–(4): Q=Õ(bs³), bs≤fbs=O(QS²).'
+  lower:
+  - stmt: \mathrm{Q}(\mathrm{PARITY}_n)=\Omega(\mathrm{QS}_{\mathrm{str}}(\mathrm{PARITY}_n)^2)
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 2
+      kind: const
+    witness: PARITY
+    note: Q(PARITY)=Θ(n); every sabotage variant is Θ(√n).
+- id: recent-QSweakind-vs-RS-partial
+  from: QSweakind
+  to: RS
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(f)=O(\mathrm{RS}(f))
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: The classical weak/strong and decision/index sabotage variants agree up to constants.
+- id: recent-QC-vs-QSweakind-partial
+  from: QC
+  to: QSweakind
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QC}(f)=O(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(f))
+    refs:
+    - CMP24
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'KLLPV26, proof of Theorem 4(v): the fractional-block-sensitivity adversary proof also covers
+      partial functions.'
+- id: recent-QSweakind-vs-fbs-total
+  from: QSweakind
+  to: fbs
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(\mathrm{IND}_n)=\Theta(\mathrm{fbs}(\mathrm{IND}_n))
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    witness: ADDR
+    note: Theorem 5.3 and Appendix B; this is stronger than the universal square-root floor.
+- id: recent-Q-vs-QSweakind-total
+  from: Q
+  to: QSweakind
+  setting: total
+  status: gap
+  upper:
+  - stmt: \mathrm{Q}(f)=\widetilde O(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(f)^6)
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 6
+      kind: tilde
+    note: 'Equations (1)–(4): Q=Õ(bs³), bs≤fbs=O(QS²).'
+  lower:
+  - stmt: \mathrm{Q}(\mathrm{PARITY}_n)=\Omega(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(\mathrm{PARITY}_n)^2)
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 2
+      kind: const
+    witness: PARITY
+    note: Q(PARITY)=Θ(n); every sabotage variant is Θ(√n).
+- id: recent-QSstrind-vs-RS-partial
+  from: QSstrind
+  to: RS
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f)=O(\mathrm{RS}(f))
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: The classical weak/strong and decision/index sabotage variants agree up to constants.
+- id: recent-QC-vs-QSstrind-partial
+  from: QC
+  to: QSstrind
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QC}(f)=O(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f))
+    refs:
+    - CMP24
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'KLLPV26, proof of Theorem 4(v): the fractional-block-sensitivity adversary proof also covers
+      partial functions.'
+- id: recent-QSstrind-vs-fbs-total
+  from: QSstrind
+  to: fbs
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(\mathrm{IND}_n)=\Theta(\mathrm{fbs}(\mathrm{IND}_n))
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    witness: ADDR
+    note: Theorem 5.3 and Appendix B; this is stronger than the universal square-root floor.
+- id: recent-Q-vs-QSstrind-total
+  from: Q
+  to: QSstrind
+  setting: total
+  status: gap
+  upper:
+  - stmt: \mathrm{Q}(f)=\widetilde O(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f)^6)
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 6
+      kind: tilde
+    note: 'Equations (1)–(4): Q=Õ(bs³), bs≤fbs=O(QS²).'
+  lower:
+  - stmt: \mathrm{Q}(\mathrm{PARITY}_n)=\Omega(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(\mathrm{PARITY}_n)^2)
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 2
+      kind: const
+    witness: PARITY
+    note: Q(PARITY)=Θ(n); every sabotage variant is Θ(√n).
+- id: recent-QSstr-vs-Q-partial
+  from: QSstr
+  to: Q
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QS}_{\mathrm{str}}(f)=O(\mathrm{Q}(f))
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: Lemma 1.1, for partial functions.
+- id: recent-QSstrind-vs-Q-partial
+  from: QSstrind
+  to: Q
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f)=O(\mathrm{Q}(f)^{3/2})
+    refs:
+    - CMP24
+    conf: high
+    form:
+      exp: 1.5
+      kind: const
+    note: Theorem 1.2; valid for partial functions.
+- id: recent-QSweak-vs-Q-total
+  from: QSweak
+  to: Q
+  setting: total
+  status: gap
+  upper:
+  - stmt: \mathrm{QS}_{\mathrm{weak}}(f)=O(\mathrm{Q}(f)^4)
+    refs:
+    - CMP24
+    - ABKRT21
+    conf: high
+    form:
+      exp: 4
+      kind: const
+    note: Via QS≤O(RS)≤O(R)≤O(Q⁴); no claim of a linear weak-model bound.
+- id: recent-QSweakind-vs-Q-total
+  from: QSweakind
+  to: Q
+  setting: total
+  status: gap
+  upper:
+  - stmt: \mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(f)=O(\mathrm{Q}(f)^4)
+    refs:
+    - CMP24
+    - ABKRT21
+    conf: high
+    form:
+      exp: 4
+      kind: const
+    note: Via QS≤O(RS)≤O(R)≤O(Q⁴); no claim of a linear weak-model bound.
+- id: recent-C-vs-R-total
+  from: C
+  to: R
+  setting: total
+  status: settled
+  upper:
+  - stmt: \mathrm{C}(f)=O(\mathrm{R}(f)^2)
+    refs:
+    - Nisan91
+    conf: high
+    form:
+      exp: 2
+      kind: const
+  lower:
+  - stmt: \mathrm{C}(f_n)=\Omega(\mathrm{R}(f_n)^2)
+    refs:
+    - AIK26
+    conf: high
+    form:
+      exp: 2
+      kind: const
+    witness: AIKDNF
+    note: 'Theorem 2.2: C=Θ(n²) and R≤R₁=O(n), with no logarithms.'
+  - stmt: \mathrm{C}(f_n)=\Omega(\mathrm{R}(f_n)^2/\log^2\mathrm{R}(f_n))
+    refs:
+    - BenDavidKothari26
+    conf: high
+    form:
+      exp: 2
+      kind: const
+      log: -2
+    witness: Champion
+    note: C=Ω(n²), R=O(n log n); R=Ω(n) by the universal C/R bound.
+- id: recent-C-vs-R1RP-total
+  from: C
+  to: R1RP
+  setting: total
+  status: settled
+  upper:
+  - stmt: \mathrm{C}(f)=O(\mathrm{R}_{\mathrm{RP}}(f)^2)
+    refs:
+    - Nisan91
+    conf: high
+    form:
+      exp: 2
+      kind: const
+    note: C=O(R²), R≤R₁.
+  lower:
+  - stmt: \mathrm{C}(f_n)=\Theta(\mathrm{R}_{\mathrm{RP}}(f_n)^2)
+    refs:
+    - AIK26
+    conf: high
+    form:
+      exp: 2
+      kind: const
+    witness: AIKDNF
+    note: Theorem 2.2.
+- id: recent-C-vs-Q-total
+  from: C
+  to: Q
+  setting: total
+  status: settled
+  upper:
+  - stmt: \mathrm{C}(f)=O(\mathrm{Q}(f)^4)
+    refs:
+    - ABKRT21
+    conf: high
+    form:
+      exp: 4
+      kind: const
+    note: C≤D=O(Q⁴).
+  lower:
+  - stmt: \mathrm{C}(F_n)=\Omega(\mathrm{Q}(F_n)^4/\log^{12}\mathrm{Q}(F_n))
+    refs:
+    - AIK26
+    conf: high
+    form:
+      exp: 4
+      kind: const
+      log: -12
+    witness: AIKCheatSheet
+    note: 'Theorem 2.1: C=Ω(n²), Q=O(√n log³n), and the universal C=O(Q⁴) gives Q=Ω(√n).'
+  - stmt: \mathrm{C}(f_n)=\widetilde\Omega(\mathrm{Q}(f_n)^4)
+    refs:
+    - BenDavidKothari26
+    conf: high
+    form:
+      exp: 4
+      kind: tilde
+    witness: Champion
+    note: Theorem 1 simultaneously separates R and Q from C.
+  notes: Settled at the exponent, with logarithmic slack in the lower bound. Pabbaraju’s August paper
+    proves the analogous approximate-degree result; it does not assert this quantum query upper bound.
+- id: recent-C-vs-QE-total
+  from: C
+  to: QE
+  setting: total
+  status: gap
+  upper:
+  - stmt: \mathrm{C}(f)=O(\mathrm{Q}_{\mathrm{E}}(f)^3)
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 3
+      kind: const
+    note: 'Theorem 12: C=O(degcert³), degcert=O(Q₀)≤O(Q_E).'
+  lower:
+  - stmt: \mathrm{C}(F_n)=\Omega(\mathrm{Q}_{\mathrm{E}}(F_n)^2/\log^4\mathrm{Q}_{\mathrm{E}}(F_n))
+    refs:
+    - AIK26
+    conf: high
+    form:
+      exp: 2
+      kind: const
+      log: -4
+    witness: AIKCheatSheet
+    note: 'Theorems 2.1 and 2.3: C=Ω(n²), Q₀=Q_E=Θ(n log²n).'
+  notes: Gap between exponents 2 and 3. The v3 paper also gives Θ(n log n) exact and zero-error quantum
+    complexities for [[Champion]].
+- id: recent-C-vs-Q0-total
+  from: C
+  to: Q0
+  setting: total
+  status: gap
+  upper:
+  - stmt: \mathrm{C}(f)=O(\mathrm{Q}_0(f)^3)
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 3
+      kind: const
+    note: 'Theorem 12: C=O(degcert³), degcert=O(Q₀)≤O(Q_E).'
+  lower:
+  - stmt: \mathrm{C}(F_n)=\Omega(\mathrm{Q}_0(F_n)^2/\log^4\mathrm{Q}_0(F_n))
+    refs:
+    - AIK26
+    conf: high
+    form:
+      exp: 2
+      kind: const
+      log: -4
+    witness: AIKCheatSheet
+    note: 'Theorems 2.1 and 2.3: C=Ω(n²), Q₀=Q_E=Θ(n log²n).'
+  notes: Gap between exponents 2 and 3. The v3 paper also gives Θ(n log n) exact and zero-error quantum
+    complexities for [[Champion]].
+- id: recent-C-vs-adeg-total
+  from: C
+  to: adeg
+  setting: total
+  status: settled
+  upper:
+  - stmt: \mathrm{C}(f)=O(\widetilde{\deg}(f)^4)
+    refs:
+    - ABKRT21
+    conf: high
+    form:
+      exp: 4
+      kind: const
+    note: C≤D=O(approximate degree⁴).
+  lower:
+  - stmt: \mathrm{C}(G_n)=\Omega(\widetilde{\deg}(G_n)^4/\log^6\widetilde{\deg}(G_n))
+    refs:
+    - Pabbaraju26
+    conf: high
+    form:
+      exp: 4
+      kind: const
+      log: -6
+    witness: PabbarajuQuartic
+    note: 'Theorem 4 and equation (43): C=Ω(n²), approximate degree=O(√n log^{3/2}n); the universal upper
+      bound implies approximate degree=Ω(√n).'
+- id: recent-C-vs-deg-total
+  from: C
+  to: deg
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{C}(f_n)=\Omega(\deg(f_n)^2)
+    refs:
+    - Pabbaraju26
+    conf: high
+    form:
+      exp: 2
+      kind: const
+    witness: PabbarajuDNF
+    note: Corollary 1.2 removes the earlier logarithmic loss.
+- id: recent-R0-vs-Q-total
+  from: R0
+  to: Q
+  setting: total
+  status: settled
+  upper:
+  - stmt: \mathrm{R}_0(f)\le\mathrm{D}(f)=O(\mathrm{Q}(f)^4)
+    refs:
+    - ABKRT21
+    conf: high
+    form:
+      exp: 4
+      kind: const
+  lower:
+  - stmt: \mathrm{R}_0(F_n)=\Omega(\mathrm{Q}(F_n)^4/\log^{12}\mathrm{Q}(F_n))
+    refs:
+    - AIK26
+    conf: high
+    form:
+      exp: 4
+      kind: const
+      log: -12
+    witness: AIKCheatSheet
+    note: 'Theorem 2.1 discussion: R₀≥C=Ω(n²), Q=O(√n log³n).'
+- id: recent-bs-vs-s-total
+  from: bs
+  to: s
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{bs}(f_j)=\Omega(\mathrm{s}(f_j)^{2.130825579397823})
+    refs:
+    - Prove2MeSensitivity26
+    conf: high
+    form:
+      exp: 2.130825579397823
+      kind: const
+    witness: Prove2MeTournament
+    note: The recorded decimal exponent is strictly below the exact endpoint $\alpha=\frac{\log(14055^8)}{\log(3738277295413674)}=2.1308255793978239\ldots$.
+      The source supplies every ε>0 and arbitrarily large sensitivity; choose a fixed ε small enough.
+      Direct separation.
+  notes: "The exact source statement is $\\mathrm{bs}\\ge\\mathrm{s}^{\alpha-\varepsilon}$ for every positive\
+    \ ε and arbitrarily large sensitivity. The lower numeric shadow is rounded down and asserts a literal\
+    \ fixed-power separation, not a polylogarithmic endpoint bound."
+- id: recent-fbs-vs-s-total
+  from: fbs
+  to: s
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{fbs}(f_j)=\Omega(\mathrm{s}(f_j)^{2.130825579397823})
+    refs:
+    - Prove2MeSensitivity26
+    conf: high
+    form:
+      exp: 2.130825579397823
+      kind: const
+    witness: Prove2MeTournament
+    note: The recorded decimal exponent is strictly below the exact endpoint $\alpha=\frac{\log(14055^8)}{\log(3738277295413674)}=2.1308255793978239\ldots$.
+      The source supplies every ε>0 and arbitrarily large sensitivity; choose a fixed ε small enough.
+      Immediate consequence of bs≤fbs=Θ(RC) and λ≤s.
+  notes: "The exact source statement is $\\mathrm{bs}\\ge\\mathrm{s}^{\alpha-\varepsilon}$ for every positive\
+    \ ε and arbitrarily large sensitivity. The lower numeric shadow is rounded down and asserts a literal\
+    \ fixed-power separation, not a polylogarithmic endpoint bound."
+- id: recent-RC-vs-s-total
+  from: RC
+  to: s
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{RC}(f_j)=\Omega(\mathrm{s}(f_j)^{2.130825579397823})
+    refs:
+    - Prove2MeSensitivity26
+    conf: high
+    form:
+      exp: 2.130825579397823
+      kind: const
+    witness: Prove2MeTournament
+    note: The recorded decimal exponent is strictly below the exact endpoint $\alpha=\frac{\log(14055^8)}{\log(3738277295413674)}=2.1308255793978239\ldots$.
+      The source supplies every ε>0 and arbitrarily large sensitivity; choose a fixed ε small enough.
+      Immediate consequence of bs≤fbs=Θ(RC) and λ≤s.
+  notes: "The exact source statement is $\\mathrm{bs}\\ge\\mathrm{s}^{\alpha-\varepsilon}$ for every positive\
+    \ ε and arbitrarily large sensitivity. The lower numeric shadow is rounded down and asserts a literal\
+    \ fixed-power separation, not a polylogarithmic endpoint bound."
+- id: recent-bs-vs-lambda-total
+  from: bs
+  to: lambda
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{bs}(f_j)=\Omega(\lambda(f_j)^{2.130825579397823})
+    refs:
+    - Prove2MeSensitivity26
+    conf: high
+    form:
+      exp: 2.130825579397823
+      kind: const
+    witness: Prove2MeTournament
+    note: The recorded decimal exponent is strictly below the exact endpoint $\alpha=\frac{\log(14055^8)}{\log(3738277295413674)}=2.1308255793978239\ldots$.
+      The source supplies every ε>0 and arbitrarily large sensitivity; choose a fixed ε small enough.
+      Immediate consequence of bs≤fbs=Θ(RC) and λ≤s.
+  notes: "The exact source statement is $\\mathrm{bs}\\ge\\mathrm{s}^{\alpha-\varepsilon}$ for every positive\
+    \ ε and arbitrarily large sensitivity. The lower numeric shadow is rounded down and asserts a literal\
+    \ fixed-power separation, not a polylogarithmic endpoint bound."
+- id: recent-fbs-vs-lambda-total
+  from: fbs
+  to: lambda
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{fbs}(f_j)=\Omega(\lambda(f_j)^{2.130825579397823})
+    refs:
+    - Prove2MeSensitivity26
+    conf: high
+    form:
+      exp: 2.130825579397823
+      kind: const
+    witness: Prove2MeTournament
+    note: The recorded decimal exponent is strictly below the exact endpoint $\alpha=\frac{\log(14055^8)}{\log(3738277295413674)}=2.1308255793978239\ldots$.
+      The source supplies every ε>0 and arbitrarily large sensitivity; choose a fixed ε small enough.
+      Immediate consequence of bs≤fbs=Θ(RC) and λ≤s.
+  notes: "The exact source statement is $\\mathrm{bs}\\ge\\mathrm{s}^{\alpha-\varepsilon}$ for every positive\
+    \ ε and arbitrarily large sensitivity. The lower numeric shadow is rounded down and asserts a literal\
+    \ fixed-power separation, not a polylogarithmic endpoint bound."
+- id: recent-RC-vs-lambda-total
+  from: RC
+  to: lambda
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{RC}(f_j)=\Omega(\lambda(f_j)^{2.130825579397823})
+    refs:
+    - Prove2MeSensitivity26
+    conf: high
+    form:
+      exp: 2.130825579397823
+      kind: const
+    witness: Prove2MeTournament
+    note: The recorded decimal exponent is strictly below the exact endpoint $\alpha=\frac{\log(14055^8)}{\log(3738277295413674)}=2.1308255793978239\ldots$.
+      The source supplies every ε>0 and arbitrarily large sensitivity; choose a fixed ε small enough.
+      Immediate consequence of bs≤fbs=Θ(RC) and λ≤s.
+  notes: "The exact source statement is $\\mathrm{bs}\\ge\\mathrm{s}^{\alpha-\varepsilon}$ for every positive\
+    \ ε and arbitrarily large sensitivity. The lower numeric shadow is rounded down and asserts a literal\
+    \ fixed-power separation, not a polylogarithmic endpoint bound."
+- id: recent-QEcert-vs-QE-partial
+  from: QEcert
+  to: QE
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)=O(\mathrm{Q}_{\mathrm{E}}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-Q0cert-vs-Q0-partial
+  from: Q0cert
+  to: Q0
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{Q}_0^{\mathrm{cert}}(f)=O(\mathrm{Q}_0(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-QEcert-vs-C-partial
+  from: QEcert
+  to: C
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)=O(\mathrm{C}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-QC-vs-Q0cert-partial
+  from: QC
+  to: Q0cert
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{QC}(f)=O(\mathrm{Q}_0^{\mathrm{cert}}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-degcert-vs-QEcert-partial
+  from: degcert
+  to: QEcert
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \overline{\deg}^{\mathrm{cert}}(f)=O(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-degcert-vs-Q0cert-partial
+  from: degcert
+  to: Q0cert
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \overline{\deg}^{\mathrm{cert}}(f)=O(\mathrm{Q}_0^{\mathrm{cert}}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-degcert-vs-C-partial
+  from: degcert
+  to: C
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \overline{\deg}^{\mathrm{cert}}(f)=O(\mathrm{C}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-degcert-vs-bdeg-partial
+  from: degcert
+  to: bdeg
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \overline{\deg}^{\mathrm{cert}}(f)=O(\overline{\deg}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-rdeg-vs-degcert-partial
+  from: rdeg
+  to: degcert
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{rdeg}(f)=O(\overline{\deg}^{\mathrm{cert}}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-bdeg-vs-QE-partial
+  from: bdeg
+  to: QE
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \overline{\deg}(f)=O(\mathrm{Q}_{\mathrm{E}}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-deg-vs-bdeg-partial
+  from: deg
+  to: bdeg
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \deg(f)=O(\overline{\deg}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-osdeg-vs-bdeg-partial
+  from: osdeg
+  to: bdeg
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \overline{\mathrm{osdeg}}(f)=O(\overline{\deg}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-osdeg-vs-Q0-partial
+  from: osdeg
+  to: Q0
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \overline{\mathrm{osdeg}}(f)=O(\mathrm{Q}_0(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-adeg-vs-osdeg-partial
+  from: adeg
+  to: osdeg
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \widetilde{\deg}(f)=O(\overline{\mathrm{osdeg}}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-rdeg-vs-osdeg-partial
+  from: rdeg
+  to: osdeg
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{rdeg}(f)=O(\overline{\mathrm{osdeg}}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-degcert-vs-osdeg-partial
+  from: degcert
+  to: osdeg
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \overline{\deg}^{\mathrm{cert}}(f)=O(\overline{\mathrm{osdeg}}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-bs-vs-degcert-partial
+  from: bs
+  to: degcert
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{bs}(f)=O(\overline{\deg}^{\mathrm{cert}}(f)^{2})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 2
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-osdeg0-vs-osdeg-partial
+  from: osdeg0
+  to: osdeg
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \overline{\mathrm{osdeg}}^{\,0}(f)=O(\overline{\mathrm{osdeg}}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-osdeg1-vs-osdeg-partial
+  from: osdeg1
+  to: osdeg
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \overline{\mathrm{osdeg}}^{\,1}(f)=O(\overline{\mathrm{osdeg}}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-adeg-vs-osdeg0-partial
+  from: adeg
+  to: osdeg0
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \widetilde{\deg}(f)=O(\overline{\mathrm{osdeg}}^{\,0}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-adeg-vs-osdeg1-partial
+  from: adeg
+  to: osdeg1
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \widetilde{\deg}(f)=O(\overline{\mathrm{osdeg}}^{\,1}(f)^{1})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1
+      kind: const
+    note: 'Certification framework: Theorems 3–9, Theorem 12, Remark 45, Lemmas 48 and 50, and Corollary
+      51. Approximation statements are for constant error.'
+- id: recent-C-vs-degcert-total
+  from: C
+  to: degcert
+  setting: total
+  status: gap
+  upper:
+  - stmt: \mathrm{C}(f)=O((\overline{\deg}^{\mathrm{cert}}(f))^3)
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 3
+      kind: const
+    note: Theorem 12(2). Totality is essential to this application of the maxonomial argument.
+- id: recent-deg-vs-degcert-total
+  from: deg
+  to: degcert
+  setting: total
+  status: gap
+  lower:
+  - stmt: \deg(\mathrm{ANDOR}_{m^2})=\Theta((\overline{\deg}^{\mathrm{cert}}(\mathrm{ANDOR}_{m^2}))^2)
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 2
+      kind: const
+    witness: ANDOR
+    note: 'Proposition 52: balanced AND-of-OR has degree m² and certified bounded degree m.'
+- id: recent-degcert-vs-rdeg-total
+  from: degcert
+  to: rdeg
+  setting: total
+  status: gap
+  lower:
+  - stmt: \overline{\deg}^{\mathrm{cert}}(f_m)=\widetilde\Omega(\mathrm{rdeg}(f_m)^{3/2})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1.5
+      kind: tilde
+    witness: ANDNotExactOne
+    note: Theorem 10 and Lemma 55; bounded degree certification is Ω(m^{3/2}/log²m), while rdeg=m, Q=Θ(m),
+      and QC=Θ(m).
+- id: recent-QEcert-vs-QC-total
+  from: QEcert
+  to: QC
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f_m)=\widetilde\Omega(\mathrm{QC}(f_m)^{3/2})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1.5
+      kind: tilde
+    witness: ANDNotExactOne
+    note: Theorem 10 and Lemma 55; bounded degree certification is Ω(m^{3/2}/log²m), while rdeg=m, Q=Θ(m),
+      and QC=Θ(m).
+- id: recent-Q0cert-vs-QC-total
+  from: Q0cert
+  to: QC
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{Q}_0^{\mathrm{cert}}(f_m)=\widetilde\Omega(\mathrm{QC}(f_m)^{3/2})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1.5
+      kind: tilde
+    witness: ANDNotExactOne
+    note: Theorem 10 and Lemma 55; bounded degree certification is Ω(m^{3/2}/log²m), while rdeg=m, Q=Θ(m),
+      and QC=Θ(m).
+- id: recent-osdeg-vs-adeg-total
+  from: osdeg
+  to: adeg
+  setting: total
+  status: gap
+  lower:
+  - stmt: \overline{\mathrm{osdeg}}(f_m)=\widetilde\Omega(\widetilde{\deg}(f_m)^{3/2})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1.5
+      kind: tilde
+    witness: ANDNotExactOne
+    note: Theorem 10 and Lemma 55; bounded degree certification is Ω(m^{3/2}/log²m), while rdeg=m, Q=Θ(m),
+      and QC=Θ(m).
+- id: recent-QEcert-vs-Q-total
+  from: QEcert
+  to: Q
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f_m)=\widetilde\Omega(\mathrm{Q}(f_m)^{3/2})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1.5
+      kind: tilde
+    witness: ANDNotExactOne
+    note: Theorem 10 and Lemma 55; bounded degree certification is Ω(m^{3/2}/log²m), while rdeg=m, Q=Θ(m),
+      and QC=Θ(m).
+- id: recent-Q0cert-vs-Q-total
+  from: Q0cert
+  to: Q
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{Q}_0^{\mathrm{cert}}(f_m)=\widetilde\Omega(\mathrm{Q}(f_m)^{3/2})
+    refs:
+    - KLLPV26
+    conf: high
+    form:
+      exp: 1.5
+      kind: tilde
+    witness: ANDNotExactOne
+    note: Theorem 10 and Lemma 55; bounded degree certification is Ω(m^{3/2}/log²m), while rdeg=m, Q=Θ(m),
+      and QC=Θ(m).
+- id: recent-lambdacert-vs-lambda-partial
+  from: lambdacert
+  to: lambda
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \lambda^{\mathrm{cert}}(f)\le\lambda(f)
+    form:
+      exp: 1
+      kind: exact
+    refs:
+    - KLLPV26
+    conf: high
+    note: Restriction monotonicity; the exact certification identity is √s.
+- id: recent-R-vs-R1RP-partial
+  from: R
+  to: R1RP
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{R}(f)\le\mathrm{R}_{\mathrm{RP}}(f)
+    form:
+      exp: 1
+      kind: const
+    refs:
+    - AIK26
+    conf: high
+    note: Error-model inclusion; source notation R₁ means certain rejection. For expected-cost R₀, use
+      a constant-factor truncation.
+- id: recent-R1RP-vs-R0-partial
+  from: R1RP
+  to: R0
+  setting: partial
+  status: gap
+  upper:
+  - stmt: \mathrm{R}_{\mathrm{RP}}(f)=O(\mathrm{R}_0(f))
+    form:
+      exp: 1
+      kind: const
+    refs:
+    - AIK26
+    conf: high
+    note: Error-model inclusion; source notation R₁ means certain rejection. For expected-cost R₀, use
+      a constant-factor truncation.

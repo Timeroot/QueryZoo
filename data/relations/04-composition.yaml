@@ -23,13 +23,32 @@ relations:
       note: 'Folklore: run the outer algorithm and amplify each inner call to error $1/(3\mathrm{R}(f))$, then union bound. The $\log$ comes purely from amplification, which is why $\bar{\mathrm{R}}_\varepsilon$ and the $\varepsilon$-dependence of $\mathrm{R}$ matter so much here.'
       conf: high
   lower:
-    - stmt: '\text{FALSE in general: } \exists \text{ partial } f,g:\ \mathrm{R}(f\circ g) \ll \mathrm{R}(f)\,\mathrm{R}(g)'
+    - stmt: '\text{FALSE in general: } \exists \text{ partial } f,g:\ \mathrm{R}(f\circ g) = O\big(\mathrm{R}(f)^{2/3}\mathrm{R}(g)^{2/3}\log^{2/3}\mathrm{R}(f)\big)'
       refs: [BenDavidBlais20composition]
-      note: 'The randomized composition conjecture is **refuted** for partial functions. The gap is polynomial, although in the construction both sides are polylogarithmic in the input size of $f$.'
+      note: |
+        Theorem 1: the randomized composition conjecture is **refuted** for partial functions,
+        by a polynomial margin. Take $f = $ [[ApproxIndex]]$_k$ and $g = \mathrm{GapMaj}_k$;
+        then $\mathrm{R}(f) = \Theta(\sqrt{k\log k})$, $\mathrm{R}(g) = \Theta(k)$ and
+        $\mathrm{R}(f\circ g) = \Theta(k\log k)$, against a conjectured
+        $\tilde\Theta(k^{3/2})$. Note that both $\mathrm{R}(f)$ and $\mathrm{R}(g)$ are only
+        *logarithmic* in the input size $n = k + 2^k$ of $f$, which is exactly the loophole
+        [[open-composition-log]] leaves open.
       conf: high
     - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{noisyR}(f)\,\mathrm{R}(g)\big)'
       refs: [BenDavidBlais20composition]
-      note: 'Optimal *outer* composition theorem: if $\mathrm{R}(f\circ g^n)=\Omega(M(f)\mathrm{R}(g))$ for all $g$, then $M(f) = O(\mathrm{noisyR}(f))$.'
+      note: 'Theorem 3, the optimal *outer* composition theorem: by Lemma 6, if $\mathrm{R}(f\circ g^n)=\Omega(M(f)\mathrm{R}(g))$ for all $f,g$ then $M(f) = O(\mathrm{noisyR}(f))$ -- so no measure can do better. Holds even when $f$ is a relation. The proof of optimality is one line given the characterisation $\mathrm{noisyR}(f) = \Theta(\mathrm{R}(f\circ\mathrm{GapMaj}_n)/n)$: take $g = \mathrm{GapMaj}_n$.'
+      conf: high
+    - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{fbs}(f)\,\mathrm{R}(g)\big)'
+      refs: [BDGHMT20, BenDavidBlais20composition]
+      note: 'Proved independently and concurrently by [BDGHMT20]; it also follows from the $\mathrm{noisyR}$ theorem above together with $\mathrm{noisyR}(f) = \Omega(\mathrm{fbs}(f))$ (Lemma 38 of [BenDavidBlais20composition]) -- see the $\mathrm{fbs}\to\mathrm{noisyR}$ record. It strictly strengthens the sensitivity version below, since $\mathrm{fbs} \ge \mathrm{s}$.'
+      conf: high
+    - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{R}(f)\,\sqrt{\mathrm{R}(g)}\big)'
+      refs: [GLSS19]
+      note: 'Holds for **relational** outer $f$ and partial inner $g$ -- the strongest thing that survives the relational counterexample, which rules out the full $\mathrm{R}(f)\mathrm{R}(g)$ at that generality. It is the composition-theorem form of $\bar\chi(g) = \Omega(\sqrt{\mathrm{R}(g)})$.'
+      conf: high
+    - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{s}(f)\,\mathrm{R}(g)\big)'
+      refs: [GJPW18]
+      note: 'The generalisation of $\mathrm{R}(\mathrm{AND}_n\circ g) = \Omega(n\,\mathrm{R}(g))$. Subsumed by the $\mathrm{fbs}$ and $\mathrm{noisyR}$ versions, but it was the first outer composition theorem with a nontrivial outer measure.'
       conf: high
     - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{R}(f)\,\mathrm{LR}(g)\big)'
       refs: [BBGM22]
@@ -50,8 +69,19 @@ relations:
       $\mathrm{noisyR}(f) = o(\mathrm{R}(f))$, and no total $g$ is known with
       $\mathrm{RS}(g) = o(\mathrm{R}(g))$; if either stayed true in general the
       conjecture would follow for total functions.
-    * *Relations*: Sanyal's theorem already allows the outer object $f$ to be a
-      relation on $\{0,1\}^n$ [Sanyal24].
+    * *Relations*: **false**, and this was known first. [GLSS19] give relations
+      $f_n$ with $\mathrm{R}(f_n)=\Theta(\sqrt n)$ and partial functions $g_n$ with
+      $\mathrm{R}(g_n)=\Theta(n)$ but $\mathrm{R}(f_n\circ g_n)=\Theta(n) \ll n^{3/2}$;
+      the outer relation is [[AgreeString]] and the inner function is again
+      [[GapMaj]]. Sanyal's theorem nevertheless allows the outer object to be a
+      relation [Sanyal24], as does Theorem 3 above.
+
+    Both known counterexamples -- the relational one of [GLSS19] and the partial-function
+    one of [BenDavidBlais20composition] -- use $\mathrm{GapMaj}$ (or a close variant) as the
+    inner function, and both work for the same reason: the outer object only needs its bits
+    to bias $1/\sqrt m$, and buying bias $1/\sqrt m$ from a $\mathrm{GapMaj}_m$ gadget costs
+    $1$ query rather than $m$. In that sense $g=\mathrm{GapMaj}$ is the only interesting
+    inner function for this question.
 
     **Sufficient conditions for composition (all with arbitrary inner $g$).**
 
@@ -59,8 +89,80 @@ relations:
     * $f$ symmetric, or "weakly symmetric" in the sense of [CKMPSS23].
     * Inserting a cheap buffer works unconditionally:
       $\mathrm{R}(f\circ h\circ g)=\Omega(\mathrm{R}(f)\mathrm{R}(h)\mathrm{R}(g))$
-      whenever $\mathrm{D}(h)=\Theta(\log \mathrm{R}(g))$ [BenDavidKothari18].
-  see_also: [R, noisyR, LR, RS, chi, chibar, D_prod, Rbar, composition]
+      whenever $\mathrm{D}(h)=\Theta(\log \mathrm{R}(g))$ [BenDavidKothari18], and
+      likewise for $h$ a parity on $O(\log n)$ bits [AGJKLMSS17].
+
+    **Even a trivial outer function is not trivial.** Let $\mathrm{Triv}_n$ be the promise
+    problem on $\{0^n,1^n\}$, so $\mathrm{R}(\mathrm{Triv}_n) = 1$. That
+    $\mathrm{R}(\mathrm{Triv}_n\circ g) = \Omega(\mathrm{R}(g))$ is obvious -- feed every
+    copy the same input -- but the argument is not *distributional*: the hard distribution
+    it uses is not a hard distribution for $\mathrm{Triv}_n$ composed with one for $g$, and
+    all the composition theorems above are distributional. Getting the bound distributionally
+    is the **correlated copies problem**, solved by [BDGHMT20]; here it is the special case
+    $\mathrm{noisyR}(\mathrm{Triv}_n)=\Omega(1)$ of Lemma 37.
+
+    **Sibling results for other measures.** $\mathrm{D}(f\circ g)=\mathrm{D}(f)\mathrm{D}(g)$
+    [Savicky02, Tal13, Montanaro14], see [[comp-D]]; $\mathrm{Q}(f\circ g)=\Theta(\mathrm{Q}(f)\mathrm{Q}(g))$
+    [Reichardt11, LMRSS11]; $\mathrm{s}$, $\mathrm{bs}$ and $\mathrm{fbs}$ compose
+    [Tal13, GSS16]; conical juntas compose [GoosJayram16]; direct sum [[dirsum-R]]
+    [JainKlauckSantha10], direct product [[dirprod-R]] [Drucker12] and strong direct sum
+    [BlaisBrody19] for $\mathrm{R}$.
+
+    **The conjecture, as usually stated.** $\mathrm{R}(f\circ g) = \Omega(\mathrm{R}(f)\mathrm{R}(g))$
+    for all Boolean $f,g$ -- Conjecture 1 of [BDGHMT20], where it is recorded as *still open for
+    total functions* after the partial-function counterexample. Note the conjectured direction:
+    the upper bound with a $\log$ is folklore, so the content is the lower bound.
+  see_also: [R, noisyR, LR, RS, chi, chibar, D_prod, Rbar, composition, AgreeString, fbs, s, comp-D, dirsum-R, dirprod-R, direct-sum]
+
+- from: D
+  to: D
+  kind: composition
+  id: comp-D
+  setting: relation
+  status: settled
+  headline: '\mathrm{D}(f\circ g^n) = \mathrm{D}(f)\,\mathrm{D}(g)'
+  upper:
+    - stmt: '\mathrm{D}(f\circ g^n) \le \mathrm{D}(f)\,\mathrm{D}(g)'
+      note: 'The obvious algorithm: run an optimal tree for $f$ and answer each of its queries by running an optimal tree for $g$.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{D}(f\circ g^n) \ge \mathrm{D}(f)\,\mathrm{D}(g)'
+      refs: [Savicky02, Tal13, Montanaro14]
+      note: |
+        Three independent proofs: [Savicky02] (as a lemma towards $\mathrm{D}$ vs $\mathrm{UC}$),
+        [Tal13], and [Montanaro14]. Unlike the randomized case there is no log factor and no
+        counterexample -- deterministic query complexity composes on the nose.
+      conf: high
+    - stmt: '\mathrm{D}\big(g\circ(f^1,\dots,f^n)\big) = \mathrm{D}\big(\bar g,[\mathrm{D}(f^1),\dots,\mathrm{D}(f^n)]\big)'
+      refs: [Montanaro14]
+      note: |
+        **Theorem 2** of [Montanaro14], the general form, and the strongest statement the zoo
+        records here. The outer object $g \subseteq \{0,1\}^n\times Z$ may be a **relation**;
+        the inner objects $f^i \subseteq X^{m_i}\times\{0,1\}$ may be relations too, but must
+        be **Boolean-valued** and non-trivial. On the right, $\mathrm{D}(\bar g,[w_1,\dots,w_n])$
+        is *weighted* decision tree complexity -- the cheapest tree for $g$ when querying $y_i$
+        costs $w_i$ -- and $\bar g$ is $g$ with the constant inner objects substituted in.
+        Corollary 3 ($f^1=\dots=f^n$) is the displayed headline, Corollary 4 gives
+        $\mathrm{D}(f^{(k)}) = \mathrm{D}(f)^k$ for the $k$-fold iteration, and Corollary 5 is
+        the deterministic direct sum -- see the [[dirsum-D]] record.
+      conf: high
+  notes: |
+    **The inner alphabet has to be Boolean.** Figure 1 of [Montanaro14] exhibits
+    $f:\{0,1\}^2\to\{0,1,2\}$ and $g:\{0,1,2\}^2\to\{0,1,2\}$ with
+    $\mathrm{D}(f)=\mathrm{D}(g)=2$ but $\mathrm{D}(g\circ(f,f)) = 3 < 4$. The reason is the
+    one that makes composition theorems hard in general: the worst-case input for $f$ need not
+    produce a worst-case input for $g$, and with three possible inner answers the outer tree has
+    room to exploit that. An even cheaper illustration with a non-Boolean inner range: take
+    $f = \mathrm{id}:\{0,1\}^n\to\{0,1\}^n$ and $g(y)=y_1$, so $\mathrm{D}(f)=n$,
+    $\mathrm{D}(g)=1$, and $\mathrm{D}(g\circ f) = 1$.
+
+    Iterating gives cheap amplification of separations, which is what these corollaries are
+    mostly used for: applied to $\mathrm{NAE}_3$ it reproves the Nisan-Szegedy
+    $\mathrm{D}$ vs $\deg$ separation directly, without going through sensitivity.
+
+    Contrast with [[comp-R]]: for randomized complexity the same statement is *false* for
+    partial functions and false for relations, and open for total functions.
+  see_also: [D, Dna, dirsum-D, comp-R, comp-deg, composition, direct-sum, UC]
 
 - from: R
   to: Rbar
@@ -150,6 +252,170 @@ relations:
     $\mathrm{R}^{*}(f)=\Omega(\mathrm{Q}(f))$.
   see_also: [Q, Advpm, Rstar, comp-R]
 
+# =========================================== direct sum and direct product
+# f^{o+ k} is k independent copies of f, all of which must be answered.
+# "Direct sum": does that cost k times as much? "Direct product": if you
+# are given less than that, does the success probability collapse?
+- from: D
+  to: D
+  kind: composition
+  id: dirsum-D
+  setting: relation
+  status: settled
+  headline: '\mathrm{D}(f^{\otimes k}) = k\,\mathrm{D}(f)'
+  upper:
+    - stmt: '\mathrm{D}(f^{\otimes k}) \le k\,\mathrm{D}(f)'
+      note: 'Solve the copies one after another.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{D}(f^{\otimes k}) \ge k\,\mathrm{D}(f),\quad\text{and more generally } \mathrm{D}(f^1,\dots,f^k) = \sum_i \mathrm{D}(f^i)'
+      refs: [JainKlauckSantha10, Montanaro14]
+      note: |
+        Theorem 1 and Corollary 1 of [JainKlauckSantha10], for every relation $f$ and with no
+        loss at all -- one of the few statements in this zoo that is an exact identity. The
+        proof turns a $k$-output tree $T$ into $k$ single-output trees $T_i(v)$ by recursion on
+        the vertices of $T$, and shows $\mathrm{depth}(T) \ge \sum_i \mathrm{depth}(T_i)$.
+        Corollary 5 of [Montanaro14] is the same statement for Boolean-valued relations, as the
+        $g = \mathrm{id}$ case of the composition theorem; [JainKlauckSantha10] allow an
+        arbitrary output alphabet.
+      conf: high
+  notes: |
+    Earlier work dismissed this as obvious ("an easy exercise" [NRS94]; "quite uninteresting"
+    because queries do not span instances), and [JainKlauckSantha10] point out that it is not:
+    a single tree that must produce all $k$ outputs is *not* obviously decomposable into $k$
+    trees, and in the **distributional** setting the analogous tight statement is simply false
+    ([Shaltiel04], see [[dirprod-R]]). What [NRS94] actually proved is a direct product theorem
+    in the weaker "decision forest" model, where $k$ separate algorithms each produce one output.
+
+    The nondeterministic version is genuinely easy: certificate complexity is additive over
+    independent instances.
+  see_also: [D, comp-D, dirsum-R, dirprod-R, direct-sum, C]
+
+- from: R
+  to: R
+  kind: composition
+  id: dirsum-R
+  setting: relation
+  status: settled
+  headline: '\Omega\big(k\,\mathrm{R}(f)\big) \;\le\; \mathrm{R}(f^{\otimes k}) \;\le\; O\big(k\,\mathrm{R}(f)\log k\big),\ \text{both ends attained}'
+  upper:
+    - stmt: '\mathrm{R}(f^{\otimes k}) = O\big(k\,\mathrm{R}(f)\log k\big)'
+      note: 'Run each copy at error $1/(3k)$ and union bound. [FRPU94] shows the $\log k$ cannot be removed by *black-box* use of a bounded-error algorithm for $f$ -- the same obstruction that makes $\mathrm{N}_p(\mathrm{PARITY}_n)=\Theta(n\log n)$ -- and [BlaisBrody19] show it cannot be removed at all.'
+      refs: [FRPU94, Drucker12, BlaisBrody19]
+      conf: high
+    - stmt: '\exists f \text{ total}:\ \mathrm{R}(f^{\otimes k}) = \Theta\big(k\log k\cdot \mathrm{R}(f)\big)'
+      refs: [BlaisBrody19]
+      note: 'So the amplification $\log$ is real: solving $k$ independent copies can be *strictly* more than $k$ times as hard. The sharp statement is the strong direct sum $\bar{\mathrm{R}}_\varepsilon(f^{k}) = \Theta(k\,\bar{\mathrm{R}}_{\varepsilon/k}(f))$ -- see [[param-R-directsum]] -- which says the direct sum question for $\mathrm{R}$ is really a question about $\varepsilon$-dependence and expected cost.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}_\varepsilon(f^{\otimes k}) \ge \delta^2\,k\,\mathrm{R}_{\varepsilon''}(f),\qquad \varepsilon'' = \tfrac{\varepsilon}{1-\delta}+\delta'
+      refs: [JainKlauckSantha10]
+      note: |
+        Theorem 2, for every relation $f$ and every small constant $\delta>0$. At constant error
+        this is $\mathrm{R}(f^{\otimes k}) = \Omega(k\,\mathrm{R}(f))$, so the direct sum theorem
+        holds up to constants. The proof is the communication-complexity one: fix the coins
+        against $\mu^{\otimes k}$, note the expected query counts on the $k$ blocks sum to the
+        total, pick a cheap block, and embed a single instance into it.
+      conf: high
+  notes: |
+    Two losses are visible in the statement and neither is known to be necessary:
+    the $\delta^2$ factor and the additive $\delta$ in the error. [JainKlauckSantha10] note
+    that the $\delta^2$ loss **is** unavoidable in the *distributional* setting, by
+    [Shaltiel04]'s examples, but the worst-case question is open -- see [[open-direct-sum]].
+
+    Which end of the $\log k$ window a given $f$ sits at is decided entirely by its
+    $\varepsilon$-dependence, since the upper bound is really $k\,\mathrm{R}_{1/3k}(f)$: for
+    $\mathrm{OR}_n$, where error can only come from unqueried coordinates and
+    $\mathrm{R}_\varepsilon = \Theta(n)$ down to exponentially small $\varepsilon$, there is no
+    log; for the [BlaisBrody19] family, where $\bar{\mathrm{R}}_\varepsilon(f) = \Omega(\mathrm{R}(f)\log(1/\varepsilon))$,
+    the full $\log k$ is paid.
+  see_also: [R, Rbar, dirsum-D, dirprod-R, comp-R, direct-sum, open-direct-sum, param-R-directsum, Np, OR]
+
+- from: R
+  to: R
+  kind: composition
+  id: dirprod-R
+  setting: total
+  status: settled
+  headline: '\text{Solving } f^{\otimes k} \text{ with } \ll k\,\mathrm{R}(f) \text{ queries succeeds with probability } 2^{-\Omega(k)}'
+  upper:
+    - stmt: '\text{Any } \gamma^3\mathrm{R}(f)k/11 \text{-query algorithm computes } f^{\otimes k} \text{ correctly with probability} < (1/2+\gamma)^k'
+      refs: [Drucker12]
+      note: |
+        Theorem 1.2, for Boolean $f$ and $0<\gamma<1/4$. It replaced the earlier bound of
+        [KSdW07], whose query budget scaled as $\mathrm{bs}(f)k$ -- which can be as small as
+        $\mathrm{R}(f)^{1/2}k$, since $\mathrm{R}(f)^{1/3} \le \mathrm{bs}(f) \le \mathrm{R}(f)$
+        and a power-$2$ separation is known. Proving a DPT at the $\mathrm{R}(f)k$ scale was one
+        of the main open problems in classical query complexity.
+      conf: high
+    - stmt: '\mathrm{Suc}_{T,\mu}(f)\le 1-\varepsilon \;\Rightarrow\; \mathrm{Suc}_{\alpha\varepsilon Tk,\,\mu^{\otimes k}}(f^{\otimes k}) \le \big(2^{\alpha\varepsilon}(1-\varepsilon)\big)^k < (1-\varepsilon+0.84\,\alpha\varepsilon)^k'
+      refs: [Drucker12]
+      note: 'Theorem 1.1, the distributional statement everything else is derived from, for $0<\alpha\le 1$. The query budget must scale with $\varepsilon T k$ rather than $Tk$, and [Shaltiel04] shows that is essentially forced.'
+      conf: high
+  lower:
+    - stmt: '\text{Not with budget } Tk\text{: } \exists (f,\mu) \text{ with } \mathrm{Suc}_{T,\mu}(f) \le 1-\varepsilon \text{ but } \mathrm{Suc}_{\Theta(Tk),\,\mu^{\otimes k}}(f^{\otimes k}) \text{ large}'
+      refs: [Shaltiel04]
+      note: |
+        Shaltiel's examples: a distribution that is hard $1-\varepsilon$ of the time and trivial
+        the rest of the time. Given $k$ copies an algorithm can hunt for the easy ones, so the
+        success probability does not decay until the budget drops to $\Theta(\varepsilon Tk)$.
+        This is exactly the $\varepsilon$ in Drucker's bound, and Theorem 1.1 says small
+        $\varepsilon$ is the *only* obstruction.
+      conf: high
+  notes: |
+    Also in [Drucker12]: an **XOR lemma** (Theorem 1.3), bounding the advantage in computing
+    $f^{\oplus k}$, and a **threshold DPT** (Theorems 1.4, 6.3, 6.6) bounding the probability
+    that $\eta k$ of the $k$ instances come out right -- which decays exponentially once
+    $\eta > 1-\varepsilon+\alpha\varepsilon$, again essentially tight by Shaltiel's examples.
+    The threshold version is proved for **total relations**, not just Boolean functions, and
+    there is a matching DPT for decision tree *size* (Theorem 9.1), where the resource bound
+    grows as $T^{\alpha\varepsilon k}$ rather than linearly in $k$.
+
+    What is *not* known is what happens with a budget of $\alpha\,\mathrm{R}(f)k$ for
+    $\alpha \gg 1$: see [[open-direct-sum]]. Quantumly that regime was settled by [BNRdW07].
+  see_also: [R, Rbar, dirsum-R, dirprod-Q, direct-sum, open-direct-sum, bs]
+
+- from: Q
+  to: Q
+  kind: composition
+  id: dirprod-Q
+  setting: total
+  status: gap
+  headline: '\mathrm{Q}(f^{\otimes k}) = \tilde\Theta\big(k\,\mathrm{Q}(f)\big) \text{ for Boolean } f'
+  upper:
+    - stmt: '\mathrm{Q}(f^{\otimes k}) = O\big(k\,\mathrm{Q}(f)\log k\big)'
+      note: 'Same amplify-and-union-bound as the randomized case.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{Q}(f^{\otimes k}) = \tilde\Omega\big(k\,\mathrm{Q}(f)\big) \text{ for Boolean } f'
+      refs: [ACGT09, Reichardt11, JainKlauckSantha10]
+      note: |
+        Not proved directly: the general adversary bound has direct sum behaviour [ACGT09] (see
+        also Theorem 7.2 of the long version of [Reichardt11]), and $\mathrm{Adv}^{\pm}$ is tight
+        for $\mathrm{Q}$ up to a log factor on Boolean functions [Reichardt11]. Combining the two
+        gives a direct sum theorem up to that log, as observed by [JainKlauckSantha10]. Note the
+        adversary bound needs a Boolean "connection" function such as XOR, so the argument does
+        not reach relations.
+      conf: high
+    - stmt: '\text{DPT: any } \Omega(\mathrm{Q}(f)k)\text{-query quantum algorithm computes } f^{\otimes k} \text{ with probability } 2^{-\Omega(k)}'
+      refs: [LeeRoland13, KSdW07, Spalek08]
+      note: |
+        [LeeRoland13], for possibly non-Boolean $f$, with a threshold version for Boolean $f$;
+        it improves [KSdW07], whose budget scaled as $\sqrt{\mathrm{bs}(f)}k$, and the
+        multiplicative-adversary DPT of [Spalek08], whose budget scaled with that measure
+        instead. The quantum DPT
+        therefore arrived at the right scale *before* the classical one, and the two are
+        incomparable as statements about randomized algorithms: [Drucker12] allows a larger
+        query budget, [LeeRoland13] a larger class of algorithms.
+      conf: high
+  notes: |
+    A tight direct sum for $\mathrm{Q}$ -- without the log, and for relations -- is
+    open problem 2 of [JainKlauckSantha10]. This is the one place where the quantum
+    world is *less* clean than the classical one: $\mathrm{D}$ and $\mathrm{R}$ both
+    have exact or constant-factor direct sums for relations, while $\mathrm{Q}$ has
+    neither.
+  see_also: [Q, Advpm, comp-Q, dirsum-R, dirprod-R, direct-sum, open-direct-sum]
+
 # =========================================== plain measure comparisons
 - from: R
   to: RS
@@ -176,6 +442,40 @@ relations:
     composition conjecture for total functions.
   see_also: [RS, R, comp-R, open-RS-vs-R]
 
+# The partial-function half of the same cell. It is the *reason* the total
+# statement above has to say "total": sabotage complexity is blind to a promise
+# whose two sides are far apart in Hamming distance, because then every
+# sabotaged input is riddled with stars and finding one is free.
+- from: R
+  to: RS
+  setting: partial
+  status: fails
+  upper:
+    - stmt: '\mathrm{R}_\varepsilon(g) \ge \bar{\mathrm{R}}_\varepsilon(g) \ge (1-2\varepsilon)\,\mathrm{RS}(g)'
+      form: {exp: 1, kind: const, dir: reverse}
+      refs: [BenDavidKothari18]
+      note: 'Theorem 12 holds for partial $g$; only the converse needs totality.'
+      conf: high
+  lower:
+    - stmt: '\mathrm{R}(\mathrm{COL}_n) = \Theta(\sqrt n) \quad\text{against}\quad \mathrm{RS}(\mathrm{COL}_n) = \Theta(1)'
+      form: {kind: unbounded}
+      witness: Collision
+      refs: [BenDavidKothari18]
+      note: 'A one-to-one and a two-to-one table differ in $\ge n/2$ of the $n$ cells, so every sabotaged input has $\ge n/2$ stars and a single random query finds one. [BenDavidKothari18, Sec. 1.4] give this example in exactly this role.'
+      conf: high
+  notes: |
+    $\mathrm{R}$ is not bounded by any function of $\mathrm{RS}$ on partial
+    functions.  The general obstruction, in the authors' words, is that *any*
+    partial function all of whose domain inputs are far apart in Hamming
+    distance has low sabotage complexity, whatever its randomized complexity;
+    the collision problem is the clean instance.  Sabotage complexity is still
+    a valid lower bound on $\mathrm{R}$ for partial $g$, and the composition
+    theorem $\mathrm{R}(f\circ g^n) = \Omega(\mathrm{R}(f)\,\mathrm{RS}(g))$
+    still holds -- it is just a weak one off the promise, which is what
+    motivated $\chi$, $\bar\chi$ and $\mathrm{LR}$, each of which is
+    $\Omega(\sqrt{\mathrm{R}})$ for partial $g$ and so cannot collapse this way.
+  see_also: [RS, R, chibar, LR, Collision, comp-R, open-RS-vs-R]
+
 - from: RS
   to: prt
   setting: total
@@ -194,33 +494,35 @@ relations:
 - from: chibar
   to: RS
   setting: partial
-  status: open
+  status: fails
   upper:
     - stmt: '\bar\chi(g) = \Omega(\mathrm{RS}(g))'
       form: {exp: 1, kind: const, dir: reverse}
       refs: [GLSS19]
-      note: 'Max-conflict complexity dominates sabotage complexity for all partial $g$...'
+      note: 'Theorem 7: max-conflict complexity dominates sabotage complexity for all partial $g$. This is the direction that makes the [GLSS19] composition theorem subsume the [BenDavidKothari18] one.'
+      conf: high
+  lower:
+    - stmt: '\bar\chi(\mathrm{COL}_n) = \Omega(n^{1/4}) \quad\text{against}\quad \mathrm{RS}(\mathrm{COL}_n) = \Theta(1)'
+      form: {kind: unbounded}
+      witness: Collision
+      refs: [GLSS19, BenDavidKothari18]
+      note: 'Two published facts, one step apart. [GLSS19, Thm 6] give $\chi(g) = \Omega(\sqrt{\mathrm{R}_{1/3}(g)})$ for partial $g$, hence $\bar\chi \ge \chi = \Omega(\sqrt{\mathrm{R}})$; and [BenDavidKothari18, Sec. 1.4] observe $\mathrm{RS}(\mathrm{COL}_n) = O(1)$ against $\mathrm{R}(\mathrm{COL}_n) = \Theta(\sqrt n)$. So $\bar\chi = \Omega(n^{1/4})$ where $\mathrm{RS} = \Theta(1)$.'
       conf: high
   notes: |
-    **No separation is known in the other direction, in any setting.**
-    An earlier version of this page asserted that $\bar\chi$ is unbounded in
-    terms of $\mathrm{RS}$ and credited it to [GLSS19]; that is a
-    misattribution — GLSS19 prove only $\bar\chi = \Omega(\mathrm{RS})$, and use
-    it to *strengthen* the Ben-David–Kothari composition theorem, not to
-    separate the two.  The entry has been removed.
-
-    A plausible candidate family, not verified here: take a linear code
-    $C' \subseteq \mathbb{F}_2^n$ with distance and dual distance $\Omega(n)$,
-    an index-$2$ subcode $C$ whose extra dual check also has weight $\Omega(n)$,
-    and let $g = 0$ on $C$, $g = 1$ on $C' \setminus C$.  Every sabotaged input
-    has $\Omega(n)$ stars, so $\mathrm{RS}(g) = O(1)$, while $\Omega(n)$-wise
-    independence gives $\mathrm{R}(g) = \Omega(n)$.  Turning that into a
-    $\bar\chi$ lower bound needs a converse to $\bar\chi \le \mathrm{R}$, which
-    is exactly what is missing.
+    $\bar\chi$ is not bounded by any function of $\mathrm{RS}$ on partial
+    functions, and this is exactly why max-conflict complexity was worth
+    defining: it sits above $\mathrm{RS}$ *and*, unlike $\mathrm{RS}$, it stays
+    within a square of $\mathrm{R}$ off the promise.  Neither half of the
+    argument is stated as a separation in either source -- [GLSS19] prove the
+    two inequalities and use them to strengthen composition -- so the pairing
+    is assembled here rather than quoted.  The same witness separates
+    $\mathrm{LR}$ from $\mathrm{RS}$, by the same route
+    ($\mathrm{LR} \ge \bar\chi$).
 
     For **total** $g$ no separation is known between any of
-    $\mathrm{RS}$, $\bar\chi$, $\mathrm{LR}$ and $\mathrm{R}$.
-  see_also: [chibar, RS, LR, chi]
+    $\mathrm{RS}$, $\bar\chi$, $\mathrm{LR}$ and $\mathrm{R}$, and whether
+    $\mathrm{RS} = \Theta(\mathrm{R})$ there is [[open-RS-vs-R]].
+  see_also: [chibar, RS, LR, chi, R, Collision, open-RS-vs-R]
 
 - from: LR
   to: chibar
@@ -258,13 +560,176 @@ relations:
 - from: chi
   to: bs
   setting: total
-  status: settled
+  status: gap
   upper:
     - stmt: '\chi(g) = \Omega(\mathrm{bs}(g))'
       form: {exp: 1, kind: const, dir: reverse}
       refs: [Li18]
+      note: 'Theorem 1: $\chi(f) \ge (\mathrm{bs}(f)+1)/2$ for every non-constant total $f$, replacing the $\Omega(\sqrt{\mathrm{R}})$ floor the measure came with.'
       conf: high
-  see_also: [chi, bs]
+    - stmt: '\chi(g) \le \mathrm{bs}(g)^3'
+      form: {exp: 3, kind: const}
+      refs: [Li18, Nisan91]
+      note: |
+        Stated in the introduction of [Li18] as the ceiling its Theorem 1 is
+        pushing against: $\chi \le \mathrm{D}$ and $\mathrm{D} \le \mathrm{bs}^3$.
+        Nothing better is known, and nothing rules out $\chi = \Theta(\mathrm{bs})$.
+      conf: high
+  notes: |
+    So the cell runs from $1$ to $3$, and the width is inherited whole from
+    [[open-D-vs-bs]] -- no argument specific to conflict complexity has ever
+    been used on the upper side. [[open-chi-vs-C]] is the sharper question in
+    the same direction.
+  see_also: [chi, chibar, bs, D, C, open-chi-vs-C, open-D-vs-bs]
+
+- from: chi
+  to: D
+  setting: partial
+  status: settled
+  upper:
+    - stmt: '\chi(g) \le \mathrm{D}(g)'
+      form: {exp: 1, kind: exact}
+      refs: [Li18, Sanyal18]
+      note: |
+        Immediate from the definition -- "the random walk always stops if it
+        reaches a last query node" [Li18, Sec. 2] -- and the only upper bound on
+        $\chi$ anyone has proved directly. Everything else the zoo records above
+        $\chi$ arrives through $\chi \le \bar\chi \le \mathrm{LR} \le \mathrm{R}$.
+        Nothing in the argument uses totality.
+      conf: high
+  see_also: [chi, D, chibar, R]
+
+- from: chi
+  to: C
+  setting: total
+  status: gap
+  upper:
+    - stmt: '\chi(g) \le \mathrm{C}(g)^2'
+      form: {exp: 2, kind: const}
+      refs: [Li18]
+      note: 'Section 4: $\chi \le \mathrm{D} \le \mathrm{C}^2$. With Theorem 1 and $\mathrm{C}\le\mathrm{bs}^2$ this sandwiches $\chi$ as $\tfrac12(\sqrt{\mathrm{C}}+1) \le \chi \le \mathrm{C}^2$.'
+      conf: high
+  notes: |
+    Which end is right is [[open-chi-vs-C]], the question [Li18] closes with;
+    the same question is open for [[chibar]]. The recorded separation
+    $\chi = \Omega(\mathrm{C})$ is only a witness family ([[OR]], where both
+    are $\Theta(n)$), not the universal bound the question asks for.
+  see_also: [chi, C, bs, D, chibar, open-chi-vs-C]
+
+# =========================================== many samples of the same input
+- from: Corr
+  to: R
+  setting: partial
+  status: settled
+  headline: '\mathrm{Corr}(f) = \Theta\big(\mathrm{R}(f)\big)'
+  upper:
+    - stmt: '\mathrm{Corr}(f) \le \mathrm{R}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BDGHMT20]
+      note: 'Take $k = 1$: $\mathrm{Corr}_\varepsilon(f,D) \le \mathrm{D}_\varepsilon(f,D)$, and $\max_D \mathrm{D}_\varepsilon(f,D) = \mathrm{R}_\varepsilon(f)$ by Yao.'
+      conf: high
+    - stmt: '\mathrm{R}(f) = \Theta\big(\mathrm{Corr}(f)\big)'
+      form: {exp: 1, kind: theta, dir: reverse}
+      refs: [BDGHMT20, BenDavidBlais20minimax]
+      note: |
+        **Theorem 1**, for every (possibly partial) Boolean $f$: against the hardest input
+        distribution, unlimited correlated samples are worth nothing. The obstruction is the
+        [Shaltiel04] examples -- distributions with a small easy part, which many samples let you
+        hunt for -- and the proof builds hard distributions with no easy part, via *likelihood
+        boosters*: a decision tree that with probability $\ge 1-\delta$ multiplies the likelihood
+        ratio between $D_0^k$ and $D_1^k$ by at most $M$. [BenDavidBlais20minimax] reprove it
+        from their Shaltiel-free minimax theorems.
+      conf: high
+  notes: |
+    The measure is not interesting one distribution at a time -- there
+    $\mathrm{Corr}(f,D)$ can be $O(1)$ while $\mathrm{D}(f,D) = \Omega(n)$ -- so the whole
+    content is in the $\max_D$. That is also what makes it useful: the theorem is the
+    ingredient that upgrades $\mathrm{R}(f\circ g) = \Omega(\mathrm{bs}(f)\mathrm{R}(g))$ to
+    $\Omega(\mathrm{fbs}(f)\mathrm{R}(g))$, see [[comp-R]].
+  see_also: [Corr, Sel, R, Dmu, fbs, comp-R, direct-sum]
+
+- from: Sel
+  to: R
+  setting: partial
+  status: settled
+  headline: '\mathrm{Sel}(f) = \Theta\big(\mathrm{R}(f)\big)'
+  upper:
+    - stmt: '\mathrm{Sel}(f) \le \mathrm{R}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BDGHMT20]
+      note: '$1$-selection is just solving the instance you were given.'
+      conf: high
+    - stmt: '\mathrm{R}(f) = \Theta\big(\mathrm{Sel}(f)\big)'
+      form: {exp: 1, kind: theta, dir: reverse}
+      refs: [BDGHMT20]
+      note: 'Corollary 1, immediately from $\mathrm{Corr}(f,D) = O(\mathrm{Sel}(f,D))$ and $\mathrm{R} = O(\mathrm{Corr})$.'
+      conf: high
+  see_also: [Sel, Corr, R, comp-R]
+
+- from: Corr
+  to: Sel
+  setting: partial
+  status: settled
+  headline: '\text{Equal up to constants distribution-free, } \textbf{not} \text{ distribution by distribution}'
+  upper:
+    - stmt: '\mathrm{Corr}(f, D) = O\big(\mathrm{Sel}(f, D)\big) \text{ for every } (f,D)'
+      form: {exp: 1, kind: const}
+      refs: [BDGHMT20]
+      note: 'Theorem 2.1: a selection algorithm already tells you which side the samples came from, since it names an instance and its value.'
+      conf: high
+    - stmt: '\mathrm{Sel}(f) = \Theta\big(\mathrm{Corr}(f)\big)'
+      form: {exp: 1, kind: theta, dir: reverse}
+      refs: [BDGHMT20]
+      note: 'Only after maximising over $D$: both sides are $\Theta(\mathrm{R}(f))$. There is no pointwise version -- see below.'
+      conf: high
+  lower:
+    - stmt: '\exists (f, D):\ \mathrm{Sel}(f, D) = \Omega(n) \text{ while } \mathrm{Corr}(f, D) = O(1)'
+      refs: [BDGHMT20]
+      note: |
+        Theorem 2.2, so selection is *strictly* harder at a fixed distribution. Related to this,
+        selection admits no cheap error reduction (Theorem 2.3) while correlated samples do
+        (Fact 1). The two facts sit either side of the $\max_D$: pointwise the measures differ
+        by an unbounded factor, distribution-free they agree up to constants -- both being
+        $\Theta(\mathrm{R})$. This is a good illustration of how much work $\max_D$ does in the
+        definition of a distributional measure.
+      conf: high
+  see_also: [Corr, Sel, R, Dmu, direct-sum]
+
+- from: fbs
+  to: noisyR
+  setting: partial
+  status: settled
+  headline: '\mathrm{fbs}(f) = O\big(\mathrm{noisyR}(f)\big)'
+  upper:
+    - stmt: '\mathrm{fbs}(f) = O\big(\mathrm{noisyR}(f)\big)'
+      form: {exp: 1, kind: const}
+      refs: [BenDavidBlais20composition]
+      note: |
+        Lemma 38, for every (possibly partial) Boolean $f$. The ingredient is Lemma 37 in its
+        localised form: if $x$ and $y$ differ exactly on a block $B$ and the algorithm
+        separates them, then the cost it spends *inside $B$* is $\Omega(1)$. Fix an optimal
+        noisy algorithm and let $p_i$ be the expected cost it spends on coordinate $i$; then
+        $\sum_{i\in B} p_i = \Omega(1)$ for every sensitive block $B$, so $(p_i)$ is (a constant
+        multiple of) a feasible solution to the fractional block sensitivity LP at $x$, and
+        $\mathrm{fbs}(f) \le O(\sum_i p_i) = O(\mathrm{noisyR}(f))$.
+      conf: high
+  notes: |
+    The only general lower bound on $\mathrm{noisyR}$ that is known, and the reason
+    $\mathrm{R}(f\circ g) = \Omega(\mathrm{fbs}(f)\mathrm{R}(g))$ falls out of the
+    composition theorem. [BenDavidBlais20composition] expect the truth to be much
+    larger -- see [[open-noisyR-vs-R]].
+
+    Its main downstream consequence in this zoo is the *only* upper bound we have on
+    $\mathrm{R}$ in terms of $\mathrm{noisyR}$: chaining with
+    $\mathrm{R} \le \mathrm{R}_0 \le \mathrm{D} = O(\mathrm{fbs}^3)$ gives
+    $\mathrm{R}(f) = O(\mathrm{noisyR}(f)^3)$ for **total** $f$. That chain is
+    total-only at its first link, which is why the partial-function cell stays empty
+    and the exponential separation there is not a contradiction.
+
+    Lemma 37 itself ($\mathrm{noisyR}(f) = \Omega(1)$ for non-constant $f$) survives for
+    relations that have two inputs with disjoint allowed output sets, but
+    $\mathrm{fbs}$ is not defined for relations, so this record stops at partial.
+  see_also: [fbs, noisyR, R, D, comp-R, open-noisyR-vs-R]
 
 - from: noisyR
   to: R
@@ -278,7 +743,16 @@ relations:
       conf: high
     - stmt: '\mathrm{noisyR}(f) = \Theta\big(\mathrm{R}(f\circ \mathrm{GapMaj}_n)\,/\,\mathrm{R}(\mathrm{GapMaj}_n)\big)'
       refs: [BenDavidBlais20composition]
-      note: 'An exact characterisation, not just a bound.'
+      note: |
+        Theorem 4: an exact characterisation, not just a bound, with $n$ the input size of $f$
+        and $\mathrm{R}(\mathrm{GapMaj}_n)=\Theta(n)$. It holds for relations too, provided two
+        inputs have disjoint allowed output sets; and combined with Theorem 3 it gives
+        Corollary 5, $\mathrm{R}(f\circ g) = \Omega\big(\tfrac{\mathrm{R}(f\circ\mathrm{GapMaj}_n)}{\mathrm{R}(\mathrm{GapMaj}_n)}\mathrm{R}(g)\big)$
+        -- a composition theorem with no complexity measure in it at all.
+        The easy direction is Theorem 3; the hard direction needs the normal form of
+        Theorem 39, that an optimal noisy algorithm can be taken to use only biases
+        $1$ and $1/\sqrt n$, which are simulated by reading a whole $\mathrm{GapMaj}_n$
+        gadget and by reading one random bit of it respectively.
       conf: high
   lower:
     - stmt: '\mathrm{R}(f)=\Theta(n)\ \Rightarrow\ \mathrm{noisyR}(f)=\Theta(\mathrm{R}(f))'
@@ -319,13 +793,137 @@ relations:
     $\log k$ -- a *statistical* budget the query model has no way to spend, since its
     only move is to read a bit exactly.
 
-    **No upper bound on $\mathrm{R}$ in terms of $\mathrm{noisyR}$ is known** beyond the
-    trivial $\mathrm{R} \le n$; whether $\mathrm{R} = 2^{O(\mathrm{noisyR})}$ holds in
-    general seems to be open. For *total* functions the two are conjecturally equal:
-    no total $f$ with $\mathrm{noisyR}(f) = o(\mathrm{R}(f))$ is known, and if none
-    exists the randomized composition conjecture follows for total functions
-    ([[composition]]).
-  see_also: [noisyR, R, ApproxIndex, GapMaj, composition]
+    **No upper bound on $\mathrm{R}$ in terms of $\mathrm{noisyR}$ is known** for partial
+    $f$ beyond the trivial $\mathrm{R} \le n$; whether $\mathrm{R} = 2^{O(\mathrm{noisyR})}$
+    holds in general seems to be open. For *total* functions there is one, and only one:
+    $\mathrm{noisyR} = \Omega(\mathrm{fbs})$ (Lemma 38) chained with
+    $\mathrm{D} = O(\mathrm{fbs}^3)$ gives $\mathrm{R}(f) = O(\mathrm{noisyR}(f)^3)$ --
+    see the total-function cell, which the zoo derives rather than states. Conjecturally
+    the truth is $\mathrm{R} = \Theta(\mathrm{noisyR})$ for total $f$: no total $f$ with
+    $\mathrm{noisyR}(f) = o(\mathrm{R}(f))$ is known, and if none exists the randomized
+    composition conjecture follows for total functions ([[composition]]).
+
+    Non-adaptively the question is settled in the affirmative even for partial $f$:
+    $\mathrm{R}^{\mathrm{na}} = \Theta(\mathrm{noisyR}^{\mathrm{na}})$ [BenDavidBlais20composition, Thm. 8].
+  see_also: [noisyR, R, ApproxIndex, GapMaj, composition, fbs, noisyRna, open-noisyR-vs-R]
+
+- from: R
+  to: noisyR
+  setting: relation
+  status: fails
+  headline: '\mathrm{R} \text{ is unbounded in terms of } \mathrm{noisyR} \text{ for relations}'
+  lower:
+    - stmt: '\mathrm{noisyR}(\mathrm{AGREE}_n) = \Theta(1) \text{ while } \mathrm{R}(\mathrm{AGREE}_n) = \Theta(\sqrt n)'
+      form: {kind: unbounded}
+      witness: AgreeString
+      refs: [BenDavidBlais20composition, GLSS19]
+      conf: high
+  notes: |
+    The **relational barrier** of [BenDavidBlais20composition]. Since
+    $\mathrm{R}(f\circ g) = \Omega(\mathrm{noisyR}(f)\mathrm{R}(g))$ holds for relational
+    $f$ as well, any proof of $\mathrm{noisyR} = \tilde\Omega(\mathrm{R})$ must be a proof
+    that *notices* $f$ is a function -- otherwise it would apply to [[AgreeString]], where
+    $\mathrm{noisyR}=\Theta(1)$ and $\mathrm{R}=\Theta(\sqrt n)$. Equivalently: any measure
+    $M$ with $\mathrm{noisyR} = \Omega(M)$ is either function-specific or is $O(1)$ on this
+    family, and hence a poor lower bound on $\mathrm{R}$ for relations.
+
+    This is the barrier that [BenDavidBlais20composition] break in the non-adaptive
+    setting -- see $\mathrm{noisyR}^{\mathrm{na}}$ vs $\mathrm{R}^{\mathrm{na}}$ -- and it
+    is why doing so was worth a theorem.
+  see_also: [R, noisyR, AgreeString, noisyRna, Rna, open-noisyR-vs-R, comp-R]
+
+- from: noisyR
+  to: noisyRna
+  setting: relation
+  status: gap
+  upper:
+    - stmt: '\mathrm{noisyR}(f) \le \mathrm{noisyR}^{\mathrm{na}}(f)'
+      form: {exp: 1, kind: exact}
+      note: 'A non-adaptive schedule of biases is an adaptive algorithm that ignores its answers. Nothing about the output alphabet enters, so this holds for relations.'
+      conf: high
+  see_also: [noisyR, noisyRna, Rna, ADDR]
+
+- from: noisyRna
+  to: noisyR
+  setting: total
+  status: gap
+  headline: '\text{Adaptivity is worth an exponential in the noisy model too}'
+  lower:
+    - stmt: '\mathrm{noisyR}(\mathrm{ADDR}_k) = O(k) \text{ while } \mathrm{noisyR}^{\mathrm{na}}(\mathrm{ADDR}_k) = \Theta(2^k)'
+      form: {kind: exp}
+      witness: ADDR
+      refs: [BenDavidBlais20composition]
+      conf: high
+  notes: |
+    Same reason as in the query model: a non-adaptive schedule has to spread its bias
+    budget over the whole table, while an adaptive one reads the address first and then
+    spends everything on the one cell it needs. The non-adaptive value is Theorem 8 of
+    [BenDavidBlais20composition] applied to $\mathrm{R}^{\mathrm{na}}(\mathrm{ADDR}_k)=\Theta(2^k)$.
+
+    So the two ways of weakening $\mathrm{R}$ -- charge less for less information, or
+    forbid looking at the answers -- are not comparable, and combining them changes
+    nothing: $\mathrm{noisyR}^{\mathrm{na}} = \Theta(\mathrm{R}^{\mathrm{na}})$.
+  see_also: [noisyRna, noisyR, Rna, ADDR, Dna]
+
+- from: noisyRna
+  to: Rna
+  setting: partial
+  status: settled
+  headline: '\mathrm{noisyR}^{\mathrm{na}}(f) = \Theta\big(\mathrm{R}^{\mathrm{na}}(f)\big)'
+  upper:
+    - stmt: '\mathrm{noisyR}^{\mathrm{na}}(f) \le \mathrm{R}^{\mathrm{na}}(f)'
+      form: {exp: 1, kind: exact}
+      refs: [BenDavidBlais20composition]
+      note: 'Immediate: a real query is a noisy query at bias $1$, and the budget $\sum_i\gamma_i^2$ then counts queries.'
+      conf: high
+    - stmt: '\mathrm{R}^{\mathrm{na}}(f) = O\big(\mathrm{noisyR}^{\mathrm{na}}(f)\big)'
+      form: {exp: 1, kind: const, dir: reverse}
+      refs: [BenDavidBlais20composition, Samorodnitsky16, PolyanskiyWu17]
+      note: |
+        **Theorem 8**, for every (possibly *partial*) Boolean $f$: non-adaptively, buying
+        cheap bias buys nothing. The route is an information-theoretic exchange rate.
+        Samorodnitsky's inequality [Samorodnitsky16], in the form isolated by
+        [PolyanskiyWu17], says that a noisy copy of $X$ at bias $\rho$ carries at least as
+        much information about $f(X)$ as an *erasure* copy that survives with probability
+        $\rho^2$ -- and $\rho^2$ is exactly what the noisy model charges. Erasures are honest
+        queries, so a noisy algorithm of cost $c$ converts into a distribution over query
+        sets of expected size $O(c)$ that leaves as little entropy in $f(X)$; a non-adaptive
+        minimax lemma turns the distributional statement back into a worst-case algorithm,
+        and Fano / [HellmanRaviv70] turns the entropy bound into an error bound.
+      conf: high
+  notes: |
+    The non-adaptive shadow of [[open-noisyR-vs-R]], and the only case of it that is
+    settled. Adaptively the analogous statement is *false* for partial functions --
+    $\mathrm{R}$ can be exponentially larger than $\mathrm{noisyR}$ on
+    [[ApproxIndex]] -- so adaptivity is what lets an algorithm spend a statistical
+    budget the query model cannot match.
+
+    The theorem is also **false for relations** ([[AgreeString]]), which is unusual:
+    almost every argument in query complexity is indifferent to whether the output is
+    Boolean. The step that notices is the last one, from entropy to error probability.
+  see_also: [noisyRna, Rna, noisyR, R, AgreeString, ApproxIndex, open-noisyR-vs-R]
+
+- from: Rna
+  to: noisyRna
+  setting: relation
+  status: fails
+  headline: '\mathrm{R}^{\mathrm{na}} \text{ is unbounded in terms of } \mathrm{noisyR}^{\mathrm{na}} \text{ for relations}'
+  lower:
+    - stmt: '\mathrm{noisyR}^{\mathrm{na}}(\mathrm{AGREE}_n) = \Theta(1) \text{ while } \mathrm{R}^{\mathrm{na}}(\mathrm{AGREE}_n) = \Theta(\sqrt n)'
+      form: {kind: unbounded}
+      witness: AgreeString
+      refs: [BenDavidBlais20composition, GLSS19]
+      conf: high
+  notes: |
+    Theorem 8 holds for partial Boolean functions and fails here, so its proof has to
+    distinguish the two. Concretely: $\mathrm{AGREE}_n$ asks for a string agreeing with
+    $x$ on $n/2+\sqrt n$ coordinates, which $n$ noisy reads at bias $c/\sqrt n$ deliver
+    for total cost $c^2$, while any set of $o(\sqrt n)$ exact reads leaves the answer a
+    coin flip away from the promise.
+
+    The same family separates the *adaptive* pair $\mathrm{R}$ vs $\mathrm{noisyR}$ over
+    relations, which is the "relational barrier" to [[open-noisyR-vs-R]].
+  see_also: [Rna, noisyRna, AgreeString, R, noisyR, open-noisyR-vs-R]
 
 - from: Rstar
   to: Q

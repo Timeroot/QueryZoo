@@ -95,10 +95,6 @@ relations:
   to: fbs
   setting: partial
   status: fails
-  upper:
-    - stmt: '\mathrm{C}(f) \text{ is known to be unbounded in terms of } \mathrm{fbs}(f).'
-      form: {kind: none}
-      conf: high
   lower:
     - stmt: '\mathrm{fbs}(\mathrm{GapMaj}^{\delta}_n) \le 1/(2\delta),\ \ \mathrm{C}(\mathrm{GapMaj}^{\delta}_n) > n/2-\delta n'
       form: {kind: unbounded}

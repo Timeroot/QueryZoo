@@ -10,10 +10,55 @@
 #   status    : one-line "where things stand"
 #   best_known: list of {stmt, refs, note}
 #   why       : why anyone cares
+#   pairs     : optional [[M1, M2], ...] -- the matrix cells this problem is
+#               about, when the id is not itself `open-M1-vs-M2`. Both
+#               directions of each cell get the "named open problem" flag in
+#               the gap report. Without it, an `open-M1-vs-M2` id names its
+#               own cell and anything else names every pair among its
+#               see_also measures.
 #   refs / see_also
 # =====================================================================
 
 open_problems:
+
+- id: open-D-vs-R
+  title: "Is $\\mathrm{D}(f) = \\widetilde O(\\mathrm{R}(f)^2)$?"
+  order: 5
+  setting: total
+  statement: |
+    How much can randomness save a decision tree on a *total* function? Nisan's
+    simulation gives $\mathrm{D}(f)\le 27\,\mathrm{R}(f)^3$; the pointer
+    functions give a family with $\mathrm{D}=\widetilde\Omega(\mathrm{R}^2)$.
+    Nobody has closed either end since.
+  status: "Gap between exponents 2 and 3. Both neighbouring error models are settled at 2."
+  best_known:
+    - stmt: '\mathrm{D}(f) \le 27\,\mathrm{R}(f)^3'
+      refs: [Nisan91, BdW02]
+      note: |
+        Through the combinatorial core: $\mathrm{D}\le\mathrm{C}^1\mathrm{bs}\le\mathrm{bs}^3$
+        and $\mathrm{bs}\le 3\mathrm{R}$. Every factor of the cube is a step nobody
+        knows how to skip.
+    - stmt: '\mathrm{D}(f_n) = \widetilde\Omega\big(\mathrm{R}(f_n)^2\big)'
+      refs: [ABBLSS17]
+      witness: pointer
+      note: 'The best separation, and it costs polylogs. Before the pointer functions the record was the $\mathrm{D}=\Theta(\mathrm{R}_0^{1.33})$ of [[NANDtree]], which Saks and Wigderson conjectured to be optimal.'
+    - stmt: '\mathrm{D}(f) = O(\mathrm{R}_0(f)^2) \text{ and } \mathrm{D}(f) = O(\mathrm{R}^1(f)^2)'
+      refs: [Nisan91, ABBLSS17]
+      note: |
+        Both are tight up to polylogs, by the same pointer functions. So zero error
+        and one-sided error are *settled* at exponent 2, and two-sided bounded
+        error is the only one of the three left open -- which is why a quadratic
+        answer is the popular guess.
+  why: |
+    This is the headline cell of the classical corner, and it is the bottleneck
+    in several others: $\mathrm{D}$ vs $\mathrm{bs}$, $\mathrm{D}$ vs $\deg$ and
+    $\mathrm{R}$ vs $\mathrm{Q}$ all run through the same cubic-vs-quadratic
+    slack. It is also the cell that says what randomness is *worth* on a total
+    function: quadratic would mean a coin never buys more than the square root
+    of the work, which is exactly what the Las Vegas and one-sided cases
+    already say.
+  refs: [Nisan91, BdW02, ABBLSS17, SaksWigderson86]
+  see_also: [D, R, R0, R1, pointer, NANDtree, open-D-vs-bs, open-RS-vs-R]
 
 - id: open-D-vs-bs
   title: "Is $\\mathrm{D}(f) = O(\\mathrm{bs}(f)^2)$?"
@@ -38,25 +83,115 @@ open_problems:
   see_also: [D, bs, s, C, sensitivity-conjecture]
 
 - id: open-bs-vs-s
-  title: "Is $\\mathrm{bs}(f) = O(\\mathrm{s}(f)^2)$?"
+  title: What is the optimal exponent of $\mathrm{bs}$ versus $\mathrm{s}$?
   order: 20
   setting: total
-  statement: |
-    Huang's theorem gives $\deg\le\mathrm{s}^2$ and hence
-    $\mathrm{bs}\le 2\deg^2\le 2\mathrm{s}^4$. The best separation is quadratic.
-  status: "Gap between exponents 2 and 4."
+  statement: 'The proposed quadratic upper bound is false. [OpenAISensitivity26] first constructed total
+    functions with a fixed exponent strictly larger than two. The accepted public theorem [Prove2MeSensitivity26]
+    gives, for every $\varepsilon>0$ and arbitrarily large sensitivity,
+
+    $$\mathrm{bs}(f)\ge\mathrm{s}(f)^{\alpha-\varepsilon},\qquad \alpha=\frac{\log(14055^8)}{\log(3738277295413674)}=2.1308255793978239\ldots.$$
+
+    The universal upper bound remains $\mathrm{bs}\le2\deg^2\le2\mathrm{s}^4$. What is the optimal exponent
+    in this interval?'
+  status: Quadratic conjecture refuted; exponent gap [2.1308255793978239…, 4] (source checked October
+    22, 2026).
   best_known:
-    - stmt: '\mathrm{bs}(f) \le 2\deg(f)^2 \le 2\,\mathrm{s}(f)^4'
-      refs: [NS94, Huang19]
-    - stmt: '\mathrm{bs}(f) \ge \tfrac23 \mathrm{s}(f)^2 - \tfrac13\mathrm{s}(f)'
-      refs: [AmbainisSun11]
-      note: 'Improving Rubinstein''s $\mathrm{s}^2/2$.'
+  - stmt: \mathrm{bs}(f) \le 2\deg(f)^2 \le 2\,\mathrm{s}(f)^4
+    refs:
+    - NS94
+    - Huang19
+  - stmt: \forall\varepsilon>0,\ S\ge2,\ \exists f:\ \mathrm{s}(f)\ge S,\ \mathrm{bs}(f)\ge\mathrm{s}(f)^{\alpha-\varepsilon}
+    refs:
+    - Prove2MeSensitivity26
+    note: $\alpha=\log(14055^8)/\log(3738277295413674)$. The public theorem is marked Proved. No assertion
+      of a loss-free endpoint or a matching upper bound.
+  - stmt: \exists\alpha>2,\ (F_m):\ \mathrm{bs}(F_m,0)\ge\mathrm{s}(F_m)^\alpha,\quad \mathrm{bs}(F_m,0)\to\infty
+    refs:
+    - OpenAISensitivity26
+    note: Corollary 4.3 amplifies a fixed nested-tournament seed.
+  - stmt: \mathrm{bs}(f) \ge \tfrac23 \mathrm{s}(f)^2 - \tfrac13\mathrm{s}(f)
+    refs:
+    - AmbainisSun11
+    note: Improving Rubinstein's $\mathrm{s}^2/2$.
+  why: Huang settled polynomial boundedness, and the 2026 constructions rule out its quadratic strengthening.
+    Improving either endpoint remains open. Since $\mathrm{bs}\le\mathrm{fbs}=\Theta(\mathrm{RC})$ and
+    $\lambda\le\mathrm{s}$, the same family improves the lower exponents for fractional block sensitivity
+    and randomized certificates versus sensitivity, and block sensitivity versus spectral sensitivity.
+    The larger existing cubic separations of $\mathrm{D}$ and $\mathrm{C}$ from sensitivity are not improved
+    by this implication.
+  refs:
+  - Huang19
+  - AmbainisSun11
+  - Rubinstein95
+  - KenyonKutin04
+  - OpenAISensitivity26
+  - Prove2MeSensitivity26
+  see_also:
+  - bs
+  - s
+  - deg
+  - sensitivity-conjecture
+  - Rubinstein
+  - OpenAINestedTournament
+  - Prove2MeTournament
+  - fbs
+  - RC
+  - lambda
+
+- id: open-D-vs-s
+  title: "What is the exponent of $\\mathrm{D}$ versus $\\mathrm{s}$?"
+  order: 25
+  setting: total
+  statement: |
+    Huang's theorem is what makes this cell finite at all: $\deg\le\mathrm{s}^2$,
+    and Midrijanis' $\mathrm{D}\le\mathrm{bs}\cdot\deg\le2\deg^3$ then gives
+    $\mathrm{D}(f)\le 2\,\mathrm{s}(f)^6$. The widest separation anyone has
+    built is cubic. Nothing is known to rule out either end.
+  status: "Gap between exponents 3 and 6 -- the widest gap left in the total-function matrix."
+  best_known:
+    - stmt: '\mathrm{D}(f) \le \mathrm{bs}(f)\deg(f) \le 2\deg(f)^3 \le 2\,\mathrm{s}(f)^6'
+      refs: [Midrijanis04, NS94, Huang19]
+      note: |
+        Two steps, and the second one is tight: $\deg\le\mathrm{s}^2$ is matched by
+        [[ANDOR]], which has $\deg = n^2$ against $\mathrm{s}=n$. So this route cannot
+        do better than the square of whatever the truth is for $\mathrm{D}$ versus
+        $\deg$, and the cell is that open problem wearing a different hat.
+    - stmt: '\mathrm{D}(f_n) = \widetilde\Omega\big(\mathrm{s}(f_n)^3\big)'
+      refs: [BHT17]
+      witness: BHTfn
+      note: |
+        Desensitize a function with cheap *unambiguous* certificates -- triple every
+        bit and accept only $ppp$ for $p$ a $1$-certificate, which drives $\mathrm{s}_0$
+        down to $1$ without moving anything else -- then compose on the outside with a
+        function whose certificates are almost all ones. Sensitivity stays $\widetilde O(n)$
+        while $\mathrm{Q}$, and so $\mathrm{D}$, multiplies up to $\widetilde\Omega(n^3)$.
+    - stmt: '\mathrm{D}(f) = O(\deg(f)^2)\ \Longrightarrow\ \mathrm{D}(f) = O(\mathrm{s}(f)^4)'
+      refs: [CPS23]
+      note: 'Which is why $4$, not $3$, is the natural guess for the answer -- though no function is known that reaches it.'
+    - stmt: '\mathrm{D}(P) = O(\mathrm{s}(P)^2) \text{ for every graph property } P'
+      refs: [Turan84, CPS23]
+      note: |
+        Turán''s $\mathrm{s}(P) = \Omega(n)$ for non-trivial graph properties, against the
+        trivial $\mathrm{D}(P)\le\binom n2$. [CPS23] prove the matching $\mathrm{D}(P)=O(\deg(P)^2)$
+        and get quadratic bounds for two further classes: functions with a constant number
+        of alternations, and "zebra" functions, where every monotone path from $0^n$ to $1^n$
+        alternates equally often (this contains the symmetric and the monotone functions).
   why: |
-    This is what is left of the sensitivity conjecture after Huang. Also
-    $\mathrm{bs}_\ell(f)=O(\mathrm{s}(f)^\ell)$ [KenyonKutin04], so the
-    $\ell = 2$ case is known -- the difficulty is unbounded block size.
-  refs: [Huang19, AmbainisSun11, Rubinstein95, KenyonKutin04]
-  see_also: [bs, s, deg, sensitivity-conjecture, Rubinstein]
+    This is the cell every other row inherits: a bound in terms of $\mathrm{s}$
+    is almost always routed through $\deg$ or $\mathrm{bs}$, so the sixth power
+    reappears all over the $\mathrm{s}$ column. It is also the one place where
+    Huang's theorem is load-bearing -- before 2019 no polynomial bound existed
+    here at all.
+
+    A useful contrast is [[lambda]], the spectral sensitivity that Huang's proof
+    actually bounds. It obeys the same sixth-power ceiling, but its separation is
+    *quartic*, from the pointer functions: they have $\lambda=\widetilde O(n^{1/4})$
+    against $\mathrm{D}=\widetilde\Omega(n)$, while their sensitivity is
+    $\widetilde O(\sqrt n)$ and so gives only a quadratic gap. Sensitivity is the
+    harder measure to hold down, and [[BHTfn]] is the only construction that does.
+  refs: [Huang19, Midrijanis04, NS94, BHT17, CPS23, Turan84]
+  see_also: [D, s, deg, bs, lambda, BHTfn, ANDOR, sensitivity-conjecture, open-D-vs-deg, open-bs-vs-s]
 
 - id: open-D-vs-deg
   title: "Is $\\mathrm{D}(f) = O(\\deg(f)^2)$?"
@@ -81,6 +216,49 @@ open_problems:
     A positive answer would say the polynomial method loses at most a square.
   refs: [Midrijanis04, NisanSmolensky, BdW02, NS94]
   see_also: [D, deg, bs, adeg]
+
+- id: open-D-vs-QE
+  title: "Is $\\mathrm{D}(f) = O(\\mathrm{Q}_E(f)^2)$?"
+  order: 35
+  setting: total
+  statement: |
+    An exact quantum algorithm has to be right on every input, which is a strong
+    enough demand that no total function is known to gain more than a square by
+    it. Midrijanis' simulation gives $\mathrm{D}(f)=O(\mathrm{Q}_E(f)^3)$; the
+    pointer functions give a family with $\mathrm{D}=\widetilde\Omega(\mathrm{Q}_E^2)$.
+  status: "Gap between exponents 2 and 3."
+  best_known:
+    - stmt: '\mathrm{D}(f) \le 2\deg(f)^3 \le 16\,\mathrm{Q}_E(f)^3'
+      refs: [Midrijanis04, BBCMdW01]
+      note: |
+        Through the degree, using $\deg\le2\mathrm{Q}_E$: an exact algorithm making
+        $T$ queries writes the acceptance probability as a polynomial of degree
+        $2T$, and for an exact algorithm that polynomial *is* $f$. Midrijanis states
+        the cubic bound in this form; it superseded the $\mathrm{D}=O(\mathrm{Q}_E^4)$
+        of [BBCMdW01].
+    - stmt: '\mathrm{D}(f_n) = \widetilde\Omega\big(\mathrm{Q}_E(f_n)^2\big)'
+      refs: [ABBLSS17]
+      witness: pointer
+      note: 'The same family that gives the quadratic $\mathrm{D}$-vs-$\mathrm{R}_0$ separation: $\mathrm{D}=\widetilde\Omega(n)$ against $\mathrm{Q}_E=\widetilde O(\sqrt n)$, so exactness costs the pointer-chasing algorithm nothing.'
+    - stmt: '\mathrm{Q}_E(f) = O(\mathrm{D}(f)^{0.8675})'
+      refs: [Ambainis13]
+      witness: Ambainis13fn
+      note: 'Exponent $1.15$, and historically the hard part: the first proof that an exact quantum algorithm can beat a deterministic one by more than a constant at all.'
+    - stmt: '\mathrm{D}(f) = O(\deg(f)^2)\ \Longrightarrow\ \mathrm{D}(f) = O(\mathrm{Q}_E(f)^2)'
+      refs: [CPS23]
+      note: 'And that would be tight, by the pointer functions. So this cell closes the moment $\mathrm{D}$ versus $\deg$ does.'
+  why: |
+    $\mathrm{Q}_E$ sits between $\deg$ and $\mathrm{D}$, and this cell is pinned
+    on both sides by open problems: $\deg\le2\mathrm{Q}_E\le2\mathrm{D}$, with
+    [[open-QE-vs-deg]] asking whether the left inequality is tight and
+    [[open-D-vs-deg]] asking about the right. If $\mathrm{Q}_E=\Theta(\deg)$ then
+    this *is* the $\mathrm{D}$-vs-$\deg$ cell, and the two would close together;
+    both currently stand at $[2,3]$.
+
+    Where there is no room at all: for symmetric $f$, $\mathrm{Q}_E(f)=\Theta(n)$
+    [BdW02, Thm 21], so exactness costs the whole speedup.
+  refs: [Midrijanis04, ABBLSS17, Ambainis13, BBCMdW01, BdW02, CPS23]
+  see_also: [D, QE, deg, Q0, pointer, Ambainis13fn, open-QE-vs-deg, open-D-vs-deg]
 
 - id: open-QE-vs-deg
   title: "Is $\\mathrm{Q}_E(f) = O(\\deg(f))$?"
@@ -130,28 +308,146 @@ open_problems:
   refs: [ABKRT21, BansalSinha21, SSW21, ABK16, ABBLSS17]
   see_also: [R, Q, D, kForrelation, cheatsheet, cheat-sheets]
 
+- id: open-Advpm-vs-Adv
+  title: "How much do negative weights buy the adversary?"
+  order: 55
+  setting: total
+  statement: |
+    The positive adversary is the general one with its weights restricted to be
+    non-negative, so $\mathrm{Adv}\le\mathrm{Adv}^{\pm}$ for free, and
+    $\mathrm{Adv}^{\pm}=\Theta(\mathrm{Q})$ [Reichardt11]. The question is how far
+    below the quantum query complexity the positive version can fall on a
+    *total* function -- how much is lost by insisting on an adversary matrix
+    that is entrywise non-negative.
+  status: "Gap between exponents 2 and 6 on total functions. On partial functions the ratio is already known to be unbounded."
+  best_known:
+    - stmt: '\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}(f)) \le \mathrm{D}(f) \le \mathrm{bs}(f)^3 \le \mathrm{Adv}(f)^6'
+      refs: [Reichardt11, Nisan91, Ambainis02]
+      note: |
+        Nothing here is about adversaries except the two ends: the middle is the
+        ordinary classical chain, entered through $\mathrm{bs}\le\mathrm{Adv}^2$
+        [Ambainis02]. Every improvement to $\mathrm{D}$ versus $\mathrm{bs}$ lands
+        here doubled.
+    - stmt: '\mathrm{Adv}^{\pm}(f_n) = \widetilde\Omega\big(\mathrm{Adv}(f_n)^2\big)'
+      refs: [ABK16, SpalekSzegedy06, Zhang05]
+      witness: cheatsheet
+      note: |
+        The **certificate complexity barrier**, $\mathrm{Adv}\le\sqrt{\mathrm{C}^0\mathrm{C}^1}$,
+        applied to a function built to have cheap certificates and expensive quantum
+        complexity: $\mathrm{Q}=\widetilde\Theta(n)$ against $\mathrm{C}=\widetilde O(\sqrt n)$,
+        so $\mathrm{Adv}=\widetilde O(\sqrt n)$ whatever the truth about it is.
+    - stmt: '\mathrm{Adv}^{\pm}(g^{\circ d}) \ge \mathrm{Adv}(g^{\circ d})^{1.098}'
+      refs: [HLS07]
+      note: |
+        Smaller, but the only separation proved *between the two bounds themselves*
+        rather than through $\mathrm{Q}$. Take the monotone $g$ on six bits whose
+        minterms and maxterms are the Hamming-weight-three inputs of a function of
+        Kushilevitz''s, so $\mathrm{C}^0(g)=\mathrm{C}^1(g)=3$; a numerically found
+        negative-weight matrix gives $\mathrm{Adv}^{\pm}(g)\ge 2+3\sqrt5/5\approx3.341$,
+        both bounds compose, and the barrier caps $\mathrm{Adv}(g^{\circ d})$ at $3^d$.
+    - stmt: '\sqrt{\mathrm{fbs}(f)} \le \mathrm{Adv}(f) \le \sqrt{\mathrm{FC}^0(f)\,\mathrm{FC}^1(f)} \le \mathrm{fbs}(f)'
+      refs: [Ambainis02, KulkarniTal16]
+      note: |
+        The positive adversary is pinned within a square of fractional block
+        sensitivity, so this cell is a proxy for $\mathrm{Q}$ versus $\mathrm{fbs}$:
+        there $\mathrm{Q}=\widetilde\Omega(\mathrm{fbs}^2)$ is known (same witness) and
+        $\mathrm{Q}=\widetilde O(\mathrm{fbs}^2)$ would follow from
+        $\mathrm{D}=O(\mathrm{bs}^2)$ [CPS23], which would bring the ceiling here down
+        from $6$ to $4$.
+  why: |
+    $\mathrm{Adv}^{\pm}$ characterises quantum query complexity exactly, which
+    makes it useless as an *explanation*: knowing $\mathrm{Q}=\Theta(\mathrm{Adv}^{\pm})$
+    tells you nothing you did not already have to prove. $\mathrm{Adv}$ is the
+    version one can actually reason about, a weighting of input pairs with a
+    combinatorial feel, and the price of that is a barrier: it never exceeds
+    $\sqrt{\mathrm{C}^0\mathrm{C}^1}$, or even $\sqrt{\mathrm{FC}^0\mathrm{FC}^1}$
+    [KulkarniTal16]. This cell measures what the barrier costs.
+
+    The concrete thing that would move it: nobody has pinned $\mathrm{Adv}$ on the
+    cheat-sheet function. It lies between $\widetilde\Omega(n^{1/4})$, from
+    $\mathrm{fbs}\le\mathrm{Adv}^2$, and $\widetilde O(\sqrt n)$, from the barrier,
+    against $\mathrm{Adv}^{\pm}=\widetilde\Theta(n)$ -- so the exponent that family
+    witnesses is somewhere in $[2,4]$, and which end is right is a question about
+    one explicit function rather than about all of them.
+
+    On **partial** functions the answer is as bad as it can be, and is the reason
+    the negative-weight version was invented. For a promise problem whose $0$- and
+    $1$-inputs are all at relative Hamming distance $\ge\epsilon$, the positive
+    adversary cannot exceed $1/\epsilon$ -- the *property-testing barrier* -- so
+    [[Collision]], where $\epsilon=1/2$, has $\mathrm{Adv}=O(1)$ against
+    $\mathrm{Q}=\Theta(n^{1/3})$.
+  refs: [Reichardt11, HLS07, ABK16, SpalekSzegedy06, Zhang05, Ambainis02, KulkarniTal16, ABIKPS17, CPS23]
+  see_also: [Advpm, Adv, Q, fbs, MAdv, gamma2, cheatsheet, Collision, adversary-methods, open-D-vs-bs]
+
 - id: open-rdeg
-  title: "Is $\\mathrm{rdeg}(f) = \\deg(f)^{\\Omega(1)}$?"
+  title: "What is the exponent of $\\deg$ versus $\\mathrm{rdeg}$?"
   order: 60
   setting: total
   statement: |
-    Fortnow's question: is exact rational degree polynomially related to exact
-    polynomial degree for total Boolean functions?
-  status: "Open. Known for symmetric, unate, and read-once AC$^0$/TC$^0$ functions."
+    Fortnow's question -- is exact rational degree polynomially related to
+    exact polynomial degree for total Boolean functions? -- was answered
+    *yes* in 2026. What survives is the exponent: $\deg$ is somewhere between
+    $\mathrm{rdeg}^2$ and $\widetilde{\mathrm{rdeg}}^3$, and $\mathrm{D}$
+    between $\mathrm{rdeg}^2$ and $\mathrm{rdeg}^4$.
+  status: "Gap between exponents 2 and 3. The polynomial relation itself was open from 1994 until [KKWY26] in 2026."
   best_known:
+    - stmt: '\deg(f) = O\big(\mathrm{rdeg}(f)\deg_{\pm}(f)^2\log\mathrm{rdeg}(f)\big) = \widetilde O\big(\mathrm{rdeg}(f)^3\big)'
+      refs: [KKWY26]
+      note: |
+        Corollary 4 of [KKWY26]: the answer to Fortnow's question, and the
+        upper end of the surviving gap.
+    - stmt: '\mathrm{D}(f) \le 4\deg_{\pm}(f)^2\mathrm{rdeg}(f)^2 \le 16\,\mathrm{rdeg}(f)^4'
+      refs: [KKWY26]
+      note: |
+        Theorem 4, which is what every other cell of the rdeg column now
+        descends from. Its engine is *minimum* block sensitivity
+        $\min_x\mathrm{bs}_x(f) \le 2\deg_{\pm}(f)^2$ -- a measure with no prior
+        use in the literature, and one the zoo does not carry, since it is the
+        min rather than the max over inputs.
+    - stmt: '\deg(f_n) = \Omega\big(\mathrm{rdeg}(f_n)^2\big)'
+      refs: [IJKKKSWW23]
+      witness: ANDEH
+      note: |
+        The lower end. On $\wedge_n\circ\overline{\mathrm{EH}}_n$,
+        $\mathrm{rdeg}=\Theta(n)$ while $\deg=\Theta(n^2)$; the same function
+        gives the best separation anyone has of *any* measure from
+        $\mathrm{rdeg}$, namely $\widetilde{\deg} = \Omega(\mathrm{rdeg}^{3/2})$.
     - stmt: '\mathrm{rdeg}(f) = \Omega(\deg(f)) \text{ for symmetric } f'
       refs: [IJKKKSWW23]
+      note: 'Exponent $1$ on symmetric functions; the pre-2026 partial results, which are still the sharpest available on their classes.'
     - stmt: '\mathrm{rdeg}(f) = \Omega(\sqrt{\deg(f)}) \text{ for unate } f \text{ and for read-once } \mathsf{AC}^0/\mathsf{TC}^0'
       refs: [IJKKKSWW23]
     - stmt: '\mathrm{rdeg}(f) \ge n/2 - O(\sqrt n) \text{ for almost every } f'
       refs: [IJKKKSWW23]
   why: |
-    $\mathrm{rdeg}$ is the exact-error analogue of [[ardeg]], which
-    characterises post-selected quantum query complexity [MahadevdeWolf15].
-    A positive answer would add a new column to the classical lattice; the
-    partial-function version is already known to fail in both directions.
-  refs: [IJKKKSWW23, MahadevdeWolf15]
-  see_also: [rdeg, ardeg, deg, PostQ, sdeg]
+    $\mathrm{rdeg}$ is the exact-error analogue of [[ardeg]], and equals
+    exact post-selected quantum query complexity [MahadevdeWolf15]. A positive
+    answer adds a genuine new column to the classical lattice, and gives
+    $\mathsf{P} = (\mathsf{C}_{=}\mathsf{P}\cap\mathsf{co}\text{-}\mathsf{C}_{=}\mathsf{P})$
+    relative to generic oracles -- which is what made Fortnow ask. The
+    partial-function version fails in both directions, so this really is a
+    total-function phenomenon; see [[GapMaj]], where
+    $\mathrm{rdeg} = \Theta(n)$ against $\mathrm{Q} = \Theta(1)$.
+
+    Two cells are filed here. $\deg$ vs $\mathrm{rdeg}$ is Fortnow's own, and
+    sits in $[2,3]$. $\mathrm{D}$ vs $\mathrm{rdeg}$ sits in $[2,4]$ and is
+    harder to move: the trick that removes the $\log n$ from Theorem 8 for
+    $\deg$ and $\mathrm{s}$ is to restrict to a maximal monomial or a maximal
+    sensitive block, which shrinks the arity without raising $\mathrm{rdeg}$.
+    Doing the same for $\mathrm{D}$ would need decision-tree complexity to
+    condense onto $\mathrm{poly}(\mathrm{D})$ variables, which is open. And
+    $\mathrm{D} = O(\deg^3)$ is still the best bound by ordinary degree, so
+    $\mathrm{D} = O(\mathrm{rdeg}^3)$ would be at least as strong as
+    [[open-D-vs-deg]] on that route.
+
+    The rest of the column -- $\mathrm{R}$, $\mathrm{C}$, $\mathrm{bs}$,
+    $\mathrm{Q}$, $\mathrm{Q}_E$ and the others -- is no longer a separate
+    mystery; each is an exponent gap inherited from these two.
+  pairs:
+    - [deg, rdeg]
+    - [D, rdeg]
+  refs: [KKWY26, IJKKKSWW23, MahadevdeWolf15]
+  see_also: [rdeg, ardeg, deg, adeg, PostQ, sdeg, ANDEH, open-D-vs-deg]
 
 - id: open-RS-vs-R
   title: "Is $\\mathrm{RS}(f) = \\Theta(\\mathrm{R}(f))$ for total $f$?"
@@ -165,15 +461,91 @@ open_problems:
   best_known:
     - stmt: '\mathrm{RS}(f) \le \mathrm{R}(f) = O\big(\mathrm{RS}(f)^2\log \mathrm{RS}(f)\big)'
       refs: [BenDavidKothari18]
-    - stmt: '\exists \text{ partial } g:\ \bar\chi(g)/\mathrm{RS}(g) \text{ unbounded}'
-      refs: [GLSS19]
-      note: 'So $\mathrm{RS}$ is *not* $\Theta(\mathrm{R})$ for partial functions.'
+    - stmt: '\mathrm{RS}(\mathrm{COL}_n) = \Theta(1) \quad\text{against}\quad \mathrm{R}(\mathrm{COL}_n) = \Theta(\sqrt n)'
+      refs: [BenDavidKothari18]
+      note: 'So the answer is emphatically *no* for partial functions, and the question is a question about totality. The obstruction is general: any promise whose two sides are far apart in Hamming distance has $\mathrm{RS} = O(1)$, because every sabotaged input is then riddled with stars [BenDavidKothari18, Sec. 1.4]. The same witness puts $\bar\chi$ and $\mathrm{LR}$ unboundedly above $\mathrm{RS}$, since both are $\Omega(\sqrt{\mathrm{R}})$ even off the promise [GLSS19, Thm 6].'
   why: |
     A positive answer immediately proves the **randomized composition
     conjecture for total functions**, since
     $\mathrm{R}(f\circ g)=\Omega(\mathrm{R}(f)\mathrm{RS}(g))$.
   refs: [BenDavidKothari18, GLSS19, BBGM22]
   see_also: [RS, R, chibar, LR, composition, comp-R]
+
+- id: open-Dprod-vs-R
+  title: "Is $\\mathrm{R}(f)$ polynomially bounded by $\\mathrm{D}^{\\mathrm{prod}}(f)$ for total $f$?"
+  order: 71
+  setting: total
+  statement: |
+    Yao's minimax says $\mathrm{R}_\varepsilon(f)$ is the maximum of the distributional
+    complexity $\mathrm{D}^{\mu}_\varepsilon(f)$ over *all* input distributions. Restrict the
+    maximum to distributions in which the $n$ input bits are independent, and you get
+    $\mathrm{D}^{\mathrm{prod}}$. How much does that restriction cost?
+  status: "Open, and wide open: no bound $\\mathrm{R} \\le g(\\mathrm{D}^{\\mathrm{prod}})$ is known for any function $g$ whatsoever, not merely no polynomial one. The known separation is a single small polynomial."
+  best_known:
+    - stmt: '\mathrm{D}^{\mathrm{prod}}(f) \le \mathrm{R}(f)'
+      refs: [Yao77]
+      note: 'The trivial direction, and the only one that is known.'
+    - stmt: '\mathrm{D}^{\mathrm{prod}}(g_d) = O(N^{0.69789\ldots}) \text{ while } \mathrm{R}(g_d) = \Theta(N^{0.75384\ldots})'
+      refs: [Sanyal24, Santha95]
+      note: 'The balanced NAND tree on $N = 2^d$ leaves, a ratio of exponents of $1.08$. This is the only polynomial separation known.'
+    - stmt: '\mathrm{RS}(g) = \tilde\Omega\big(\mathrm{D}^{\mathrm{prod}}(g)\big)'
+      refs: [Sanyal24]
+      note: 'The best general handle, but it bounds $\mathrm{D}^{\mathrm{prod}}$ from above, so it is the wrong way round to close the cell -- and the NAND tree shows it is not tight.'
+  why: |
+    The motivation is composition. $\mathrm{R}(f \circ g^n) = \tilde\Omega(\mathrm{R}(f)\,
+    \mathrm{D}^{\mathrm{prod}}(g))$ [Sanyal24], so a positive answer here would come close to
+    the randomized composition conjecture from a direction independent of sabotage
+    complexity ([[open-RS-vs-R]]). It is also the cleanest quantitative form of a question
+    with a long history: how much of the hardness of a Boolean function lives in
+    correlations between its input bits, rather than in the bits themselves?
+
+    What makes the NAND tree separate is worth internalising, because it is not the usual
+    "product distributions are too weak" hand-wave. Saks and Wigderson's classic
+    $\Theta(\alpha^d)$ bound, $\alpha = (1+\sqrt{33})/4$, *is* proved against a product
+    distribution -- but at zero error. Under a product distribution the two subtrees at a
+    gate are independent, so an algorithm that knows $\mu$ can always recurse first on the
+    child likelier to evaluate to $0$ instead of on a random one, and that greedy choice
+    compounds over the depth: the recursion closes at
+    $\sqrt{\tfrac{2}{27}(17+7\sqrt7)} = 1.62207\ldots$ per level rather than $\alpha =
+    1.68614\ldots$. Against a correlated distribution the choice is not available. So the
+    separation is powered by independence itself, which suggests that any counterexample to
+    the polynomial relation will have to be deep rather than wide -- on the depth-$2$
+    [[MinskyPapert]] tree the same trick buys only a logarithmic factor.
+  pairs: [[R, D_prod], [D, D_prod]]
+  refs: [Sanyal24, Yao77, SaksWigderson86, Santha95, BenDavidKothari18]
+  see_also: [D_prod, R, RS, Dmu, NANDtree, MinskyPapert, open-RS-vs-R, composition]
+
+- id: open-chi-vs-C
+  title: "Is $\\chi(f) = \\Omega(\\mathrm{C}(f))$, or $\\chi(f) = O(\\mathrm{C}(f))$?"
+  order: 75
+  setting: total
+  statement: |
+    Conflict complexity is pinned between the square root of certificate
+    complexity and its square: $\tfrac12(\sqrt{\mathrm{C}(f)}+1) \le \chi(f) \le \mathrm{C}(f)^2$.
+    Li asks which side, if either, is the truth -- and notes that the answer
+    could be neither.
+  status: "Open. Posed in the discussion section of [Li18], for $\\chi$ and for $\\bar\\chi$ alike."
+  best_known:
+    - stmt: '\chi(f) \ge \tfrac12\big(\mathrm{bs}(f)+1\big)'
+      refs: [Li18]
+      note: 'Theorem 1, replacing the $\Omega(\sqrt{\mathrm{R}(f)})$ floor that came with the measure [Sanyal18].'
+    - stmt: '\chi(f) \le \mathrm{D}(f)'
+      refs: [Li18]
+      note: 'Immediate from the definition -- the random walk stops if it reaches a last query node -- and hence $\chi \le \mathrm{C}^2$ and $\chi \le \mathrm{bs}^3$.'
+    - stmt: '\chi(g) = \Omega\big(\sqrt{\mathrm{R}(g)}\big) \text{ for partial } g'
+      refs: [Sanyal18, AGJKLMSS17]
+  why: |
+    The two answers pull in opposite directions and both are worth having.
+    $\chi = \Omega(\mathrm{C})$ would upgrade the randomized composition
+    theorem to $\mathrm{R}(f\circ g^n) = \Omega(\mathrm{R}(f)\sqrt{\mathrm{D}(g)})$,
+    beating the $\sqrt{\mathrm{R}(g)}$ that all of these measures currently
+    share. $\chi = O(\mathrm{C})$ would go the other way: on
+    $\wedge_n\circ\vee_n$ it forces $\chi = O(n) = O(\sqrt{\mathrm{R}})$, so
+    $\chi$ would not compose perfectly and the square-root floor would be tight.
+    Either way it also moves [[chi]] against [[bs]], where the recorded gap runs
+    from $1$ to $3$ for want of anything sharper than $\chi\le\mathrm{D}\le\mathrm{bs}^3$.
+  refs: [Li18, Sanyal18, GLSS19, AGJKLMSS17]
+  see_also: [chi, chibar, C, bs, D, ANDOR, comp-R, open-RS-vs-R]
 
 - id: open-adeg-composition
   title: "Does approximate degree compose?"
@@ -260,7 +632,73 @@ open_problems:
     Composition is the basic tool for building hard functions out of easy
     ones; its failure for partial functions was a genuine surprise.
   refs: [BenDavidBlais20composition, BBGM22, CKMPSS23, BenDavidKothari18]
-  see_also: [comp-R, R, noisyR, LR, RS, composition, open-RS-vs-R]
+  see_also: [comp-R, R, noisyR, LR, RS, composition, open-RS-vs-R, open-composition-log, open-noisyR-vs-R]
+
+- id: open-composition-log
+  title: "Does randomized composition survive a $\\log n$ loss?"
+  order: 111
+  setting: partial
+  statement: |
+    **Conjecture 2 of [BenDavidBlais20composition].** For all partial Boolean $f$ and $g$,
+    $$\mathrm{R}(f\circ g) \;=\; \Omega\!\left(\frac{\mathrm{R}(f)\,\mathrm{R}(g)}{\log n}\right),$$
+    where $n$ is the input size of $f$ (*not* $\mathrm{R}(f)$).
+
+    This is what is left of the randomized composition conjecture after Theorem 1
+    refutes it. The refutation is not gentle -- the loss is
+    $\mathrm{R}(f)^{1/3}\mathrm{R}(g)^{1/3}$, a polynomial factor -- but in the
+    counterexample $\mathrm{R}(f)$ and $\mathrm{R}(g)$ are both only *logarithmic in
+    the input size of $f$*, because $f$ carries an array of length $2^m$. So a
+    $\log n$ slack absorbs it, and might absorb everything.
+  status: "Open. Equivalent to [[open-noisyR-vs-R]]."
+  best_known:
+    - stmt: '\mathrm{R}(f\circ g) = \Omega\big(\mathrm{noisyR}(f)\,\mathrm{R}(g)\big)'
+      refs: [BenDavidBlais20composition]
+      note: 'The conjecture is exactly this bound plus $\mathrm{noisyR}(f) = \Omega(\mathrm{R}(f)/\log n)$.'
+    - stmt: '\exists \text{ partial } f,g:\ \mathrm{R}(f\circ g) = O\big(\mathrm{R}(f)^{2/3}\mathrm{R}(g)^{2/3}\log^{2/3}\mathrm{R}(f)\big)'
+      refs: [BenDavidBlais20composition]
+      note: 'Theorem 1, the counterexample. It does not touch the conjecture above.'
+  why: |
+    Every application of composition the author of a lower bound actually wants --
+    amplifying a hard function by composing it with itself -- can afford a $\log n$.
+    A proof would restore the tool in essentially full strength; a refutation would
+    have to find hardness that is not merely hiding in a huge input.
+  refs: [BenDavidBlais20composition, GLSS19]
+  see_also: [comp-R, R, noisyR, ApproxIndex, GapMaj, open-R-composition, open-noisyR-vs-R]
+
+- id: open-noisyR-vs-R
+  title: "Is $\\mathrm{noisyR}(f) = \\Omega(\\mathrm{R}(f)/\\log n)$?"
+  order: 112
+  setting: partial
+  statement: |
+    **Conjecture 7 of [BenDavidBlais20composition]**, and equivalent to
+    [[open-composition-log]]: for every (possibly partial) Boolean $f$ on $n$ bits,
+    is buying cheap bias only a $\log n$ better than reading bits?
+
+    The equivalence runs through the two halves of the theory: Theorem 3
+    ($\mathrm{R}(f\circ g) = \Omega(\mathrm{noisyR}(f)\mathrm{R}(g))$) gives one
+    direction, and Lemma 6 (no measure beats $\mathrm{noisyR}$ in an outer
+    composition theorem), applied with $M(f) = \mathrm{R}(f)/\log n$, gives the other.
+  status: "Open. Known: $\\mathrm{noisyR} = \\Omega(\\mathrm{fbs})$, which is all."
+  best_known:
+    - stmt: '\mathrm{noisyR}(f) = \Omega(\mathrm{fbs}(f))'
+      refs: [BenDavidBlais20composition]
+      note: 'Lemma 38. For total $f$ this already gives $\mathrm{R}(f) = O(\mathrm{noisyR}(f)^3)$ via $\mathrm{D} = O(\mathrm{fbs}^3)$; for partial $f$ it gives nothing, since $\mathrm{R}$ is unbounded in terms of $\mathrm{fbs}$ there.'
+    - stmt: '\mathrm{R}(f) = 2^{\Omega(\mathrm{noisyR}(f))} \text{ for some partial } f'
+      refs: [BenDavidBlais20composition]
+      note: 'On [[ApproxIndex]]. Note $\log n = \Theta(\mathrm{R}(f))$ there, so this is consistent with the conjecture -- it is the same example as in Theorem 1, seen through $\mathrm{noisyR}$.'
+    - stmt: '\mathrm{noisyR}^{\mathrm{na}}(f) = \Theta(\mathrm{R}^{\mathrm{na}}(f))'
+      refs: [BenDavidBlais20composition]
+      note: 'Theorem 8: the non-adaptive version is true, with no $\log$ at all.'
+  why: |
+    **The relational barrier.** The conjecture is *false* for relations: on
+    [[AgreeString]], $\mathrm{noisyR} = \Theta(1)$ while $\mathrm{R} = \Theta(\sqrt n)$.
+    So any proof must use the fact that $f$ has Boolean output -- and essentially no
+    technique in query complexity does. The one proof that manages it is Theorem 8, in
+    the non-adaptive setting, where the Boolean-ness enters at the very last step
+    (turning conditional entropy into error probability, which has no relational
+    analogue). Whether that trick can be made adaptive is the question.
+  refs: [BenDavidBlais20composition, GLSS19, Samorodnitsky16, PolyanskiyWu17]
+  see_also: [noisyR, R, fbs, noisyRna, Rna, AgreeString, ApproxIndex, open-composition-log, open-R-composition]
 
 - id: open-Rstar
   title: "Is $\\mathrm{R}^{*}(f) = \\Theta(\\mathrm{R}(f))$?"
@@ -324,3 +762,86 @@ open_problems:
     the LP relaxation loses nothing beyond what rounding already costs.
   refs: [Aaronson08, Tal13, GSS16]
   see_also: [R0, D, fbs, RC, C, TRIBES, open-fbs-vs-bs]
+
+- id: open-direct-sum
+  title: "How hard is it to solve $k$ copies?"
+  order: 145
+  setting: relation
+  statement: |
+    Three related questions about $f^{\otimes k}$, all raised in the papers that
+    settled the easy parts.
+
+    1. **Worst-case direct sum, sharply.** [JainKlauckSantha10] prove
+       $\mathrm{R}_\varepsilon(f^{\otimes k}) \ge \delta^2 k\,\mathrm{R}_{\varepsilon/(1-\delta)+\delta}(f)$
+       for every relation $f$. The $\delta^2$ loss and the additive $\delta$ in the error are
+       known to be necessary in the *distributional* setting ([Shaltiel04]) -- is either
+       necessary in the worst case?
+    2. **Direct product above the threshold.** [Drucker12] gives a DPT with query budget
+       $\gamma^3\mathrm{R}(f)k/11$. What worst-case success probability is achievable with
+       $\alpha\,\mathrm{R}(f)k$ queries for $\alpha \gg 1$? Quantumly this was settled by
+       [BNRdW07]; classically it is open, and the interesting regime is exactly the one where
+       the $O(\mathrm{R}(f)k\log k)$ upper bound lives.
+    3. **A tight quantum direct sum.** Is $\mathrm{Q}(f^{\otimes k}) = \Theta(k\,\mathrm{Q}(f))$?
+       The known bound loses a log factor and holds only for Boolean functions, because it goes
+       through the adversary bound; [JainKlauckSantha10] ask for a direct proof, even for relations.
+  status: "Direct sum settled up to constants for $\\mathrm{D}$ (exactly) and $\\mathrm{R}$; the sharp constants, the large-budget direct product, and the quantum case are open."
+  best_known:
+    - stmt: '\mathrm{D}(f^{\otimes k}) = k\,\mathrm{D}(f) \text{ exactly, for every relation}'
+      refs: [JainKlauckSantha10]
+    - stmt: '\mathrm{R}_\varepsilon(f^{\otimes k}) \ge \delta^2 k\,\mathrm{R}_{\varepsilon''}(f)'
+      refs: [JainKlauckSantha10]
+    - stmt: '\bar{\mathrm{R}}_\varepsilon(f^{k}) = \Theta\big(k\,\bar{\mathrm{R}}_{\varepsilon/k}(f)\big)'
+      refs: [BlaisBrody19]
+      note: 'The sharp form, in expected cost; it implies a total $f$ with $\mathrm{R}(f^{\otimes k}) = \Theta(k\log k\,\mathrm{R}(f))$.'
+    - stmt: '\text{DPT at budget } \gamma^3\mathrm{R}(f)k/11 \text{, success } < (1/2+\gamma)^k'
+      refs: [Drucker12]
+    - stmt: '\text{Quantum DPT at budget } \Omega(\mathrm{Q}(f)k)'
+      refs: [LeeRoland13]
+  why: |
+    Direct sum is composition with a trivial outer function, so it is the floor of the
+    composition programme: anything we cannot prove here we certainly cannot prove for
+    [[comp-R]]. It is also the source of the $\log$ factors that make $\varepsilon$-dependence
+    and expected cost unavoidable topics -- see [[direct-sum]].
+  refs: [JainKlauckSantha10, Drucker12, Shaltiel04, BlaisBrody19, BNRdW07, LeeRoland13, FRPU94]
+  see_also: [dirsum-D, dirsum-R, dirprod-R, dirprod-Q, direct-sum, param-R-directsum, R, D, Q, comp-R]
+
+- id: open-QS-vs-Q
+  title: Do the quantum sabotage variants coincide, and how do they compare with Q?
+  order: 150
+  setting: total
+  pairs:
+  - - QSweak
+    - QSstr
+  - - QSweakind
+    - QSstrind
+  - - QSstrind
+    - Q
+  - - QSweak
+    - Q
+  statement: Can the strong index upper bound $\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}=O(\mathrm{Q}^{3/2})$
+    be made linear? Are weak and strong oracle access equivalent, and are decision and index output equivalent?
+    [CMP24] prove these equivalences classically, but leave them open quantumly. The certification collapses
+    in [KLLPV26] apply only after the certification transform.
+  status: Open. Strong decision costs O(Q); strong index costs O(Q^{3/2}); the total weak-model bound
+    is O(Q⁴).
+  best_known:
+  - stmt: \mathrm{QS}_{\mathrm{str}}(f)=O(\mathrm{Q}(f)),\quad \mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f)=O(\mathrm{Q}(f)^{3/2})
+    refs:
+    - CMP24
+    note: Lemma 1.1 and Theorem 1.2 also hold for partial functions.
+  - stmt: \mathrm{Q}(f)=\widetilde O(\mathrm{QS}(f)^6)
+    refs:
+    - CMP24
+    note: For every variant on total functions; equations (1)–(4).
+  refs:
+  - CMP24
+  - KLLPV26
+  see_also:
+  - QSweak
+  - QSstr
+  - QSweakind
+  - QSstrind
+  - Q
+  - QC
+  - quantum-sabotage
+  - certification

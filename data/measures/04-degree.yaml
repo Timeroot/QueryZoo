@@ -28,6 +28,7 @@ measures:
     - '$\deg(f)\le 2\,\mathrm{Q}_{\mathrm{E}}(f)$; $\deg(f)=n-O(n^{0.548})$ for all non-constant symmetric $f$.'
     - '$\mathrm{bs}(f)\le 2\deg(f)^2$ [Nisan-Szegedy].'
   refs: [NS94, Midrijanis04, Huang19, ABKRT21, vzGathenRoche97, BdW02]
+  related: [adeg, D, s, lambda, sdeg, deg2]
   see_also: [adeg, D, s, lambda, deg2, spar]
   confidence: high
 
@@ -69,6 +70,7 @@ measures:
     - 'Read-once formulas: $\widetilde{\deg}(f)=\Theta(\sqrt n)$ [ABKRT21, Thm 6].'
     - '$\lambda(f)=O(\widetilde{\deg}(f))$.'
   refs: [NS94, BBCMdW01, ABKRT21, Paturi92, BT22, KulkarniTal16]
+  related: [deg, Q, sdeg, ardeg, lambda, C]
   see_also: [deg, Q, sdeg, ardeg, lambda]
   confidence: high
 
@@ -89,6 +91,7 @@ measures:
     - '$\mathrm{sdeg}(\mathrm{ODD\text{-}MAX\text{-}BIT})=1$ while $\widetilde{\deg}=\Omega(n^{?})$: sign degree can be exponentially smaller.'
     - '$\mathrm{sdeg}$ characterises the query analogue of $\mathsf{PP}$ (unbounded-error).'
   refs: [BT22, MinskyPapert69]
+  related: [adeg, rdeg, deg, odeg]
   see_also: [adeg, rdeg, deg]
   confidence: medium
 
@@ -115,9 +118,11 @@ measures:
     - 'Unate $f$: $\mathrm{rdeg}(f)=\Omega(\sqrt{\deg(f)})$ (tight).'
     - 'Read-once $\mathsf{AC}^0$/$\mathsf{TC}^0$ formulas: $\mathrm{rdeg}(f)=\Omega(\sqrt{\deg(f)})$; with parity gates and depth $d$, $\Omega(\deg(f)^{1/2d})$.'
     - 'Almost every $f$ on $n$ variables has $\mathrm{rdeg}(f)\ge n/2-O(\sqrt n)$.'
-    - '**Open (Fortnow):** is $\mathrm{rdeg}(f)=\deg(f)^{\Omega(1)}$ for all total $f$? Every "?" in the rdeg column of the big matrix is this question.'
-  refs: [IJKKKSWW23, MahadevdeWolf15]
-  see_also: [ardeg, ndeg, PostQ, deg, C]
+    - '$\deg_{\pm}(f)\le 2\,\mathrm{rdeg}(f)$, tight on parity; and $\mathrm{rdeg}(f)=\Omega(\log n)$ for any $f$ depending on all $n$ variables, tight on [[ADDR]] [KKWY26].'
+    - '**Fortnow''s question, answered in 2026:** $\deg(f)=\widetilde O(\mathrm{rdeg}(f)^3)$ and $\mathrm{D}(f)\le16\,\mathrm{rdeg}(f)^4$ [KKWY26]. The rdeg column of the big matrix read "?" from 1994 until then; what is left is the exponent, see [[open-rdeg]].'
+  refs: [KKWY26, IJKKKSWW23, MahadevdeWolf15]
+  related: [ardeg, ndeg, PostQ, deg, C, sdeg]
+  see_also: [ardeg, ndeg, PostQ, deg, C, sdeg]
   confidence: high
 
 - id: ardeg
@@ -135,6 +140,7 @@ measures:
     - '$\mathrm{PostQ}_\varepsilon(f)=\Theta(\mathrm{rdeg}_\varepsilon(f))$ [MahadevdeWolf15].'
     - '$\mathrm{rdeg}_\varepsilon(f)\le\mathrm{rdeg}(f)$ and $\mathrm{rdeg}_\varepsilon(f)\le\widetilde{\deg}_\varepsilon(f)$.'
   refs: [MahadevdeWolf15, IJKKKSWW23]
+  related: [rdeg, PostQ, adeg, ndeg]
   see_also: [rdeg, PostQ, adeg]
   confidence: high
 
@@ -151,6 +157,7 @@ measures:
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
   facts: ['$\mathrm{ndeg}(f)\le\mathrm{C}^1(f)$.']
   refs: [deWolf03, IJKKKSWW23]
+  related: [NQ, rdeg, C1, C0]
   see_also: [NQ, rdeg, C1]
   confidence: high
 
@@ -170,6 +177,7 @@ measures:
     - 'A function of $\mathbb{F}_2$-degree $d$ is determined by, and can be computed from, structure of "$2^d$-flavoured" size; the tight relation between $\deg_2$ and $\mathrm{D}$ (and between $\deg_2$ and $\mathrm{s}$) is not settled here -- see the TODO.'
     - 'The mod-$p$ generalisation $\deg_p$ behaves similarly.'
   refs: [BdW02]
+  related: [deg, PDT, spar, degp]
   see_also: [deg, PDT, spar]
   confidence: low
   todo: 'Fill in the correct known relations for deg_2 vs D and vs s (Gopalan et al.; Bhrushundi et al.).'
@@ -184,6 +192,7 @@ measures:
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
   params: [{name: p, symbol: 'p', default: '2', description: 'prime modulus'}]
   refs: [BdW02]
+  related: [deg2, deg, PDT]
   see_also: [deg2, deg]
   confidence: low
 
@@ -206,7 +215,7 @@ measures:
   params: [{name: eps, symbol: '\varepsilon', default: '1/3'}]
   settings:
     total:   {defined: yes}
-    partial: {defined: yes}
+    partial: {defined: yes, note: 'The junta must satisfy $h(x) \le 1+\varepsilon$ at *every* $x \in \{0,1\}^n$, not only on the promise -- the same boundedness [[adeg]] imposes, and what a randomized algorithm hands over, since $h(x) = \Pr[\text{output } 1]$ is perfectly well defined off the promise. The reading that constrains $\mathrm{Dom}(f)$ alone gives a smaller measure and breaks $\widetilde{\deg} \le \mathrm{cjdeg}$: on $\oplus_3$ with the single input $110$ dropped from the promise, a width-2 junta stays within $1/3$ of $f$ on the seven remaining inputs -- by reaching $5/3$ at $110$ -- while $\widetilde{\deg} = 3$.'}
     relation: {defined: yes, note: 'The version used for total search problems in [BenDavidKundu24search].'}
   facts:
     - '$\widetilde{\deg}_\varepsilon(f) \le \mathrm{cjdeg}_\varepsilon(f)$ (drop non-negativity).'
@@ -214,6 +223,7 @@ measures:
     - '**Total search problems:** $\mathrm{Q}(S)$ can be exponentially larger than $\mathrm{cjdeg}(S)$ [BenDavidKundu24search]; previously not even a separation from $\mathrm{R}(S)$ was known.'
     - 'The dual object is a *conical junta* certificate, which is the LP-dual view of randomized query lower bounds (the "partition bound" family).'
   refs: [BenDavidKundu24search]
+  related: [adeg, Q, R, Adv, rprt]
   see_also: [adeg, Q, Adv, R]
   confidence: medium
 
@@ -248,5 +258,6 @@ measures:
     - '$\max\{\widetilde{\deg}_+(f), \widetilde{\deg}_+(\bar f)\}$ is *not* known to be $\Theta(\widetilde{\deg}(f))$; recovering a two-sided approximation from two one-sided ones loses.'
     - 'Used to prove $\widetilde{\deg}(\mathrm{AC}^0) = \Omega(n^{1-\delta})$ by composing one-sided dual witnesses [Sherstov14onesided, BunThaler17].'
   refs: [Sherstov14onesided, BunThaler17, BT22]
+  related: [adeg, sdeg, deg, ndeg, Q]
   see_also: [adeg, sdeg, deg, ndeg, Q]
   confidence: medium

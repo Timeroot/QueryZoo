@@ -33,8 +33,9 @@
 #          tilde     -- true up to unspecified polylog factors (O~ / Omega~)
 #          exp       -- 2^Theta(M2): exponentially related
 #          log       -- log(M2): logarithmically related
-#          none      -- provably no bound of any form (upper bullets)
-#          unbounded -- the family shows the ratio is unbounded (lower bullets)
+#          unbounded -- no bound at all: M1 is not O(M2^k) for any k.
+#                       Lower bullets only -- it is a statement about what
+#                       fails, and the witness family is the proof.
 #   dir:   reverse -- this bullet actually bounds `to` in terms of `from`.
 #          Records often park the reverse-direction fact next to the
 #          forward one; this flag files it under the reverse pair instead
@@ -77,10 +78,14 @@ relations:
       note: 'Quadratic; whether the truth is $2$ or $3$ is a long-standing open problem.'
       conf: high
   notes: |
-    The gap $[2,3]$ has been open since Nisan 1991. Note the constant $27$
-    is not believed to be optimal either; for **monotone** $f$,
-    $\mathrm{D}(f) = O(\mathrm{R}(f)^2)$ [BdW02, Cor. 6].
-  see_also: [R, D, pointer, monotone]
+    The gap $[2,3]$ has been open since Nisan 1991 -- see [[open-D-vs-R]]. Note
+    the constant $27$ is not believed to be optimal either; for **monotone**
+    $f$, $\mathrm{D}(f) = O(\mathrm{R}(f)^2)$ [BdW02, Cor. 6]. The two
+    neighbouring error models are *settled* at exponent $2$: $\mathrm{R}_0$ by
+    the cell below, and $\mathrm{R}^1$ by $\mathrm{D} = O((\mathrm{R}^1)^2)$
+    [Nisan91], tight on the same pointer functions. Bounded two-sided error is
+    the only one of the three still open.
+  see_also: [R, D, R1, pointer, monotone, open-D-vs-R]
 
 # ------------------------------------------------------ D vs R0 (total)
 - from: D
@@ -103,6 +108,34 @@ relations:
     quadratic upper bound. Historically this was the first cell where the
     "obvious" bound turned out to be tight.
   see_also: [R0, C, pointer]
+
+# ------------------------------------------------------ D vs R1 (total)
+- from: D
+  to: R1
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{D}(f) = O\big(\mathrm{R}^{1}(f)^2\big)'
+      form: {exp: 2, kind: const}
+      refs: [Nisan91, ABBLSS17]
+      note: |
+        Nisan's quadratic simulation of *one-sided* error, quoted in the
+        introduction of [ABBLSS17]. It is the one-sided analogue of
+        $\mathrm{D} = O(\mathrm{R}_0^2)$ and, unlike the two-sided
+        $\mathrm{D} \le 27\mathrm{R}^3$, it is known to be tight.
+      conf: high
+  lower:
+    - stmt: '\mathrm{D}(f_n) = \widetilde\Omega\big(\mathrm{R}^{1}(f_n)^2\big)'
+      form: {exp: 2, kind: tilde}
+      witness: pointer
+      refs: [ABBLSS17]
+      note: 'The variant $g_{m,m}$, whose $\widetilde O(\sqrt n)$ algorithm is one-sided [ABBLSS17, Thm 12].'
+      conf: high
+  notes: |
+    Settled up to $n^{o(1)}$. Worth reading against [[open-D-vs-R]]: allowing
+    error on *both* sides is the only thing that keeps the deterministic
+    simulation at a cube rather than a square.
+  see_also: [D, R1, R, R0, pointer, open-D-vs-R]
 
 # ----------------------------------------------------- R0 vs R (total)
 - from: R0
@@ -221,7 +254,7 @@ relations:
   notes: |
     The $[3,6]$ gap is the largest remaining gap in the whole total-function
     matrix, and it propagates: every row's $\mathrm{s}$ column inherits it.
-  see_also: [s, Huang19, sensitivity-conjecture]
+  see_also: [s, Huang19, sensitivity-conjecture, open-D-vs-s]
 
 # ----------------------------------------------------- C vs bs (total)
 - from: C
@@ -253,11 +286,11 @@ relations:
       refs: [Nisan91, NS94, Huang19]
       conf: high
   lower:
-    - stmt: '\mathrm{C}(f_n) = \widetilde\Omega(\mathrm{s}(f_n)^3)'
-      form: {exp: 3, kind: tilde}
-      refs: [BBGJK21]
-      witness: BBGJKfn
-      note: 'From the resolution of the Alon-Saks-Seymour-flavoured question about unambiguous DNFs.'
+    - stmt: '\mathrm{C}(f_n) = \Omega(\mathrm{s}(f_n)^3)'
+      form: {exp: 3, kind: const}
+      refs: [Pabbaraju26]
+      witness: PabbarajuCubicSensitivity
+      note: 'Corollary 1.3 and Appendix C remove the logarithmic loss in [BBGJK21].'
       conf: high
   see_also: [C, s, UC]
 
@@ -274,7 +307,7 @@ relations:
       conf: high
     - stmt: '\mathrm{bs}_\ell(f) = O(\mathrm{s}(f)^\ell)'
       refs: [KenyonKutin04]
-      note: '$\ell$-block sensitivity (blocks of size $\le \ell$); for $\ell = 2$ this is $O(\mathrm{s}^2)$, the conjectured truth for full $\mathrm{bs}$.'
+      note: '$\ell$-block sensitivity (blocks of size $\le \ell$); for $\ell = 2$ this is $O(\mathrm{s}^2)$; the analogous quadratic bound for unrestricted block size was refuted in 2026 [OpenAISensitivity26].'
       conf: high
   lower:
     - stmt: '\mathrm{bs}(f_n) \ge \tfrac12\,\mathrm{s}(f_n)^2'
@@ -286,13 +319,14 @@ relations:
     - stmt: '\mathrm{bs}(f_n) \ge \tfrac23\,\mathrm{s}(f_n)^2 - \tfrac13\,\mathrm{s}(f_n)'
       form: {exp: 2, kind: const}
       refs: [AmbainisSun11]
-      note: 'The best known constant.'
+      note: 'Record constant for the classical quadratic construction; superquadratic families are now known [OpenAISensitivity26, Prove2MeSensitivity26].'
       conf: high
   notes: |
-    **The sensitivity-vs-block-sensitivity question**: is
-    $\mathrm{bs}(f) = O(\mathrm{s}(f)^2)$? Everyone believes yes; the truth is
-    somewhere in $[2,4]$. This is what remains of the sensitivity conjecture
-    after Huang.
+    **The sensitivity-vs-block-sensitivity question** now has a superquadratic
+    lower bound. [OpenAISensitivity26] refutes every universal quadratic bound;
+    [Prove2MeSensitivity26] improves the lower endpoint to
+    $2.1308255793978239\ldots$. The quartic universal upper bound remains.
+    See [[open-bs-vs-s]] for the exact endpoint and its quantifiers.
   see_also: [s, bs, Rubinstein, open-bs-vs-s]
 
 # ------------------------------------------------- bs vs R, s vs R etc.
