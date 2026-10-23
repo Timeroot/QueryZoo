@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editing &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="index.html"
+         class="">Overview</a>
+      <a href="matrix.html"
+         class="">Matrix</a>
+      <a href="measures/index.html"
+         class="">Measures</a>
+      <a href="relations.html"
+         class="">Relations</a>
+      <a href="pair.html"
+         class="">Pairs</a>
+      <a href="functions/index.html"
+         class="">Functions</a>
+      <a href="concepts/index.html"
+         class="">Concepts</a>
+      <a href="open.html"
+         class="">Open</a>
+      <a href="refs.html"
+         class="">References</a>
+      <a href="editing.html"
+         class="on">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <h1 class="pagetitle">Editing the zoo</h1>
+  <p class="lede">All content is YAML under <code>data/</code>. Nothing factual lives in the
+  templates or in <code>build.py</code>. Edit a file, rebuild, reload.</p>
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card prose">
+        <h2>Build</h2>
+        <pre><code>python3 build.py --strict          # fails if any cross-reference is unresolved
+python3 build.py --serve 8000      # build then serve at http://localhost:8000/
+python3 -m http.server -d site 8000</code></pre>
+        <p><code>--strict</code> checks every citation key, every <code>see_also</code> id,
+        every <code>witness</code>, and every <code>[[wiki-link]]</code> against the union of
+        measure ids, function ids, concept ids, open-problem ids, relation ids, and reference
+        keys (including aliases). Use it before committing.</p>
+      </section>
+
+      <section class="card prose">
+        <h2>Where things live</h2>
+        <table class="listing">
+          <thead><tr><th>File</th><th>Holds</th></tr></thead>
+          <tbody>
+            <tr><td><code>data/site.yaml</code></td><td>title, navigation, the category list, the three settings, the status vocabulary, the matrix ladder</td></tr>
+            <tr><td><code>data/refs.yaml</code></td><td>bibliography &mdash; a flat map from citation key to entry</td></tr>
+            <tr><td><code>data/measures/*.yaml</code></td><td>one block per measure, under a top-level <code>measures:</code> list</td></tr>
+            <tr><td><code>data/functions/*.yaml</code></td><td>witness families, under <code>functions:</code></td></tr>
+            <tr><td><code>data/relations/*.yaml</code></td><td>the bounds, under <code>relations:</code> &mdash; this is the heart of the site</td></tr>
+            <tr><td><code>data/tables/*.yaml</code></td><td>the exponent matrix</td></tr>
+            <tr><td><code>data/concepts.yaml</code></td><td>prose pages</td></tr>
+            <tr><td><code>data/open_problems.yaml</code></td><td>open problems</td></tr>
+          </tbody>
+        </table>
+        <p>Files inside a directory are concatenated in filename order, so
+        <code>data/relations/08-whatever.yaml</code> is a perfectly good place for new material.</p>
+        <p>The <code>ladder:</code> list in <code>data/site.yaml</code> is the one piece of
+        ordering nobody derived: the hand-written rough sort of the measures by size behind the
+        <b>Ladder</b> scope on the <a href="matrix.html">matrix page</a>.
+        Entries are <code>{id: R, why: 'one terse line'}</code>, biggest first, and
+        the rule to keep is that if \(X \le Y\) for every total \(f\) then \(Y\) comes first;
+        everything else is judgement. Ids are checked like any other cross-reference, so a typo
+        fails the build. Leave out anything with no stable place, and keep one representative per
+        family of measures that are equal up to constants.</p>
+      </section>
+
+      <section class="card prose">
+        <h2>Adding a bound</h2>
+        <p>This is the common case. Append to any file in <code>data/relations/</code>:</p>
+<pre><code>relations:
+  - from: R              # the LHS measure id  (the matrix ROW)
+    to: Q                # the RHS measure id  (the matrix COLUMN)
+    setting: total       # total | partial | relation
+    status: gap          # settled | gap | open | fails
+    upper:
+      - stmt: '\mathrm{R}(f) = O\big(\mathrm{Q}(f)^4\big)'
+        form: {exp: 4, kind: const}    # machine-readable shadow of stmt
+        refs: [ABKRT21]
+        note: 'Via $\mathrm{R} \le \mathrm{D} = O(\mathrm{Q}^4)$.'
+        conf: high       # high | medium | low
+        tight: 'up to the exponent'
+    lower:
+      - stmt: '\mathrm{R}(f_n) = \tilde\Omega\big(\mathrm{Q}(f_n)^3\big)'
+        form: {exp: 3, kind: tilde}
+        witness: pointer # a function id from data/functions/
+        refs: [ABBLSS17]
+        conf: high
+    notes: |
+      Free markdown. Use $\LaTeX$ freely and [[wiki-links]] to any id.
+    see_also: [D, adeg, composition]</code></pre>
+        <p>Both <code>upper</code> and <code>lower</code> are optional. A bound is one bullet;
+        add as many as you like and they render in order, so put the strongest first.</p>
+        <p>Give the record an <code>id:</code> if it is about a phenomenon rather than the raw
+        pair (a composition theorem, an \(\varepsilon\)-dependence); it then gets a stable
+        anchor and appears on the <a href="relations.html">relations index</a>.
+        Optional extras: <code>headline</code>, <code>kind: composition</code>,
+        <code>param: eps</code>, <code>superseded_by: &lt;refkey&gt;</code>.</p>
+      </section>
+
+      <section class="card prose" id="derived">
+        <h2>The <code>form:</code> field, and what the build derives</h2>
+        <p>A <code>stmt</code> is LaTeX for a human. <code>form</code> is the same statement for
+        the build &mdash; the <em>only</em> field the engine reasons with. Without one, a bullet
+        still renders, it just does not take part in the matrix cells, the tightness chips or the
+        closure. With one:</p>
+<pre><code>form: {exp: 2, log: 1, kind: const}   # = O(M2^2 log M2)
+
+exp:     the exponent                       (default 1)
+log:     how many log factors               (default 0)
+kind:    exact    M1 &lt;= M2^exp, no hidden constant
+         const    O(...) or an explicit constant
+         theta    Theta(...): tight both ways -- also gives the converse edge
+         tilde    up to polylogs
+         exp      exponential, on either side  (M1 &lt;= 2^M2, or 2^Omega(M2) apart)
+         log      logarithmic, on either side
+         unbounded  no bound at all: M1 is not O(M2^k) for any k
+                    (lower side only -- it is a statement about what fails)
+dir:     reverse -- this bullet really bounds `to` in terms of `from`,
+         so file it under the reverse pair rather than claim it here
+inherit: false -- do NOT propagate to other settings (side conditions!)</code></pre>
+        <p>An <code>equivalent:</code> entry on a measure page takes the same field, with
+        <code>setting:</code> defaulting to <code>total</code>.</p>
+
+        <h3>What a cell then says</h3>
+        <p>A matrix cell is two exponents, <em>separation, upper</em>, each with a chip naming
+        how tight it is. The chips on the upper side are the ones above
+        (<code>=</code> for <code>exact</code>, \(\Theta\), \(\tilde O\), \(O\)); on the
+        separation side they read the other way (\(\ge\), \(\Theta\), \(\tilde\Omega\),
+        \(\Omega\)), because a separation is a family <em>attaining</em> the exponent.</p>
+        <ul class="tick">
+          <li><b>An <code>exact</code> upper met by an <code>exact</code> separation</b> at the
+          same exponent with no logs is the strongest state a pair can be in: not just
+          \(M_1 \le M_2\) but a family with \(M_1 = M_2\) on the nose. The build detects this
+          itself &mdash; you never mark it &mdash; and collapses the cell to a single
+          <code>=</code>, reading &ldquo;settled &mdash; with equality&rdquo;. Most of the
+          containment chains (\(\mathrm{RS} \le \mathrm{R} \le \mathrm{R}_0 \le \mathrm{D}
+          \le \mathrm{D}^{\mathrm{na}}\)) are settled this way by \(\mathrm{PARITY}_n\).</li>
+          <li><b>Non-polynomial pairs still get two entries.</b> An <code>exp</code> upper
+          beside an <code>exp</code> separation renders <code>exp, exp</code>: exponentially
+          bounded, and exponentially separated. \(\mathrm{D}^{\mathrm{na}}\) versus
+          \(\mathrm{D}\) is the model case &mdash;
+          \(\mathrm{D}^{\mathrm{na}} \le 2^{\mathrm{D}}-1\) always, with equality on
+          <a href="functions/TreeNav.html" class="xref function "><span class="tex">\(\mathrm{Nav}_k\)</span></a>. Such a cell is <em>settled</em>; it is not a gap.</li>
+          <li><b>Reserve the glyph.</b> \(\infty\) (<code>unbounded</code>) means a proved
+          impossibility, not an unfilled cell. An unfilled cell is <code>?</code>. Before
+          writing <code>unbounded</code>, check that the ratio really is unbounded &mdash;
+          usually because one measure can be held at \(O(1)\) while the other grows, though
+          among the normalized quantities it is the denominator collapsing that does it. If
+          instead the two are exponentially related, that is <code>exp</code>, and the honest
+          cell says so. The build rejects a record that claims no bound exists while another
+          bullet supplies one. There is no separate &ldquo;no bound of this form&rdquo; kind:
+          a bound that fails for every exponent is <code>unbounded</code>, and the
+          <code>stmt</code> says in words what shape of bound was ruled out.</li>
+        </ul>
+
+        <h3>The four derivation rules</h3>
+        <ul class="tick">
+          <li><b>Separations read off the recorded values.</b> A function page lists
+          \(M(f)\) for as many measures as anyone could find, and any two of those values
+          are a separation nobody had to write down: \(\mathrm{C}_{\min}(\mathrm{OR}_n)=1\)
+          against \(\mathrm{UC}(\mathrm{OR}_n)=n\) says that \(\mathrm{UC}\) is not bounded
+          by <em>any</em> function of \(\mathrm{C}_{\min}\). The build parses the LaTeX of
+          every value into a growth rate (<code>growth.py</code>) and compares each ordered
+          pair on each family, producing a polynomial exponent, a \(2^{\Omega(\cdot)}\), or
+          &ldquo;unbounded&rdquo;. Three things keep it honest: the numerator must be a
+          <em>lower</em> bound on the first measure and the denominator an <em>upper</em>
+          bound on the second (so an \(O(\cdot)\) value can never witness a separation);
+          a value the parser cannot pin down exactly is skipped, never guessed at; and
+          &ldquo;unbounded&rdquo; is claimed only when the denominator settles on a
+          positive constant, since a measure that tends to \(0\) can still be bounded
+          below by a function of itself. Families with two genuinely free parameters are
+          skipped unless a <code>scale:</code> block says which one is the asymptotic
+          parameter.</li>
+          <li><b>Transitive closure.</b> \(M_1 \le M_2^{p}\log^{a}M_2\) and
+          \(M_2 \le M_3^{q}\log^{b}M_3\) give \(M_1 = O(M_3^{pq}\log^{bp+a}M_3)\), up to four
+          steps. <code>exact</code> composed with <code>exact</code> stays exact,
+          <code>tilde</code> is contagious, and a cycle of exponent below 1 is reported as a data
+          error rather than rendered.</li>
+          <li><b>Separations pushed forward.</b> A family with \(M_1 \ge M_2^{p}\), plus a
+          universal \(M_3 = O(M_2^{r})\), separates \(M_1\) from \(M_3\) at exponent \(p/r\) on
+          that same family. The rule also runs on the other index: with a universal
+          \(M_1 = O(M_3^{r})\) the same family separates \(M_3\) from \(M_2\) at exponent
+          \(p/r\), because \(M_3 \ge M_1^{1/r}\) there. So a measure known to be
+          \(\Theta\) of another &mdash; \(\mathrm{Corr}\) and \(\mathrm{Sel}\) against
+          \(\mathrm{R}\), say &mdash; inherits its whole row of separations, not just its
+          column. &ldquo;Unbounded&rdquo; and \(2^{\Omega(\cdot)}\) verdicts are carried along
+          too; a \(\log\) separation is not, since a polynomial lift does not preserve it.</li>
+          <li><b>Setting inheritance.</b> Upper bounds travel from the general to the special
+          (relation &rarr; partial &rarr; total); separations travel the
+          other way (total &rarr; partial &rarr; relation), since a hard total function is a hard
+          partial function. Both are gated on the measure being defined in the target setting.
+          A bound with a side condition &mdash; &ldquo;for search problems with verifiable
+          outputs&rdquo; &mdash; must carry <code>inherit: false</code>, or it will quietly
+          become a false theorem about total functions.</li>
+        </ul>
+        <p>Everything derived is labelled as such wherever it appears, is dropped in favour of a
+        recorded statement of the same strength, and is never written back to the YAML. If a
+        derived bound looks wrong, the fix is in the data: read the derivation chain in the
+        tooltip, find the step that overstates, and correct or annotate that record.</p>
+      </section>
+
+      <section class="card prose" id="pairs">
+        <h2>Where a pair lives</h2>
+        <p>Pairs have no files. There are 94&times;94
+        ordered pairs and the build can say something about a good fraction of them, mostly by
+        derivation, so <a href="pair.html">one page</a> renders all of them:</p>
+<pre><code>pair.html?a=D&amp;b=R                 D versus R
+pair.html?a=D&amp;b=R#D__R__total     ... at a particular record
+pair.html?a=R&amp;b=R                 the diagonal: composition, parameters</code></pre>
+        <p>A record's anchor is its <code>id:</code>, which defaults to
+        <code>&lt;from&gt;__&lt;to&gt;__&lt;setting&gt;</code>. The page reads
+        <code>api/pair/&lt;row&gt;.json</code>, written by <code>build.py</code>: recorded
+        relations are pre-rendered HTML (the same Jinja macro this site uses everywhere else),
+        the derived layer is data. Nothing about a pair is authored in the JSON &mdash; edit the
+        relation record and rebuild.</p>
+      </section>
+
+      <section class="card prose">
+        <h2>Conventions worth keeping</h2>
+        <ul class="tick">
+          <li><b>Direction.</b> <code>from</code> is the quantity being bounded. An
+          <code>upper</code> entry on the pair \((M_1,M_2)\) is a statement
+          \(M_1 = O(g(M_2))\); a <code>lower</code> entry is a separation
+          \(M_1 = \Omega(g(M_2))\) on some family. Put the reverse direction in the reverse pair;
+          the two pages link to each other.</li>
+          <li><b>Keep the logs.</b> The whole point of the fine-grained layer is that
+          \(O(\mathrm{R}^2\log \mathrm{R})\) and \(\tilde O(\mathrm{R}^2)\) are different
+          statements. Write \(\tilde O\) only when the source does.</li>
+          <li><b>Say which setting.</b> A statement with no setting is a bug. If a bound is
+          known only for total functions, that is a <em>fact about the bound</em> and belongs
+          in the <code>total</code> record, with a <code>fails</code> record for
+          <code>partial</code> if there is a counterexample.</li>
+          <li><b>Bare-LaTeX fields.</b> <code>stmt:</code>, <code>headline:</code> and
+          <code>value:</code> hold LaTeX with no <code>$</code> delimiters &mdash; the templates
+          wrap them. Every other prose field is markdown, where you <em>do</em> write
+          <code>$&hellip;$</code>.</li>
+          <li><b>Confidence.</b> <code>conf: low</code> renders a visible <span class="conf low">?</span>.
+          Use it rather than deleting something you are unsure of, and pair it with
+          <code>todo:</code> saying what to check.</li>
+          <li><b><code>putative</code> is for arguments, not for missing citations.</b> A value
+          no paper states but that follows in a line &mdash; sandwiched between two recorded
+          values, a recorded \(\Theta\) relation applied once, a Fourier expansion read off
+          &mdash; is just a fact: give it a <code>note:</code> with the derivation and no badge.
+          Reserve <code>putative: true</code> for a genuine argument worked out for this
+          catalogue, the kind a reader should check before relying on it. The build refuses the
+          badge unless <code>note:</code> spells the argument out.</li>
+          <li><b>Witnesses are ids.</b> <code>witness: pointer</code>, not
+          &ldquo;the pointer function&rdquo;. If the function is not in the catalogue yet, add a
+          stub to <code>data/functions/</code> with just <code>id/name/short/refs</code>; the
+          page will show a &ldquo;definition not yet transcribed&rdquo; banner until someone
+          fills in <code>formal:</code>.</li>
+        </ul>
+      </section>
+
+      <section class="card prose">
+        <h2>Cross-references</h2>
+        <p>Anywhere in a markdown field you can write <code>[[D]]</code>, <code>[[pointer]]</code>,
+        <code>[[minimax]]</code>, <code>[[open-D-vs-bs]]</code>, or <code>[[Nisan91]]</code> and
+        it becomes a link with a sensible label; <code>[[D|the deterministic measure]]</code>
+        overrides the label. A bare <code>[Nisan91]</code> or <code>[BdW02, Cor. 1]</code> in
+        prose is auto-linked too, as long as the first token is a known citation key.</p>
+        <p>Ids are global and must be unique across measures, functions, concepts, open problems,
+        and named relations.</p>
+      </section>
+
+      <section class="card prose">
+        <h2>Adding a measure</h2>
+<pre><code>measures:
+  - id: Rbar
+    name: "Expected-cost randomized query complexity"
+    symbol: '\bar{\mathrm{R}}_\varepsilon(f)'
+    aliases: ["Las Vegas cost", "expected query complexity"]
+    category: randomized      # must be an id from site.yaml
+    order: 20                 # position within the category
+    short: "One line, shown in listings."
+    definition: |
+      Markdown + $\LaTeX$.
+    params:
+      - name: eps
+        symbol: '\varepsilon'
+        default: '1/3'
+        range: '[0, 1/2)'
+        description: "..."
+        dependence: |
+          Markdown block on how the measure moves with the parameter.
+    settings:
+      total:    {defined: true,  note: "..."}
+      partial:  {defined: true,  note: "..."}
+      relation: {defined: false, note: "why not"}
+    facts:
+      - '$\bar{\mathrm{R}} \le \mathrm{R}$ always.'
+    equivalent:
+      - measure: R
+        statement: 'Equal up to a constant for total $f$ ...'
+        form: {exp: 1, kind: theta}   # optional; see "form" above
+        setting: total
+        refs: [KulkarniTal16]
+    refs: [BdW02]
+    see_also: [R, cost-conventions]
+    confidence: high</code></pre>
+        <p>Adding it to the matrix is separate and optional: the exponents live in
+        <code>data/tables/total-exponents.yaml</code>, one cell per pair, and any exponent worked
+        out here rather than quoted is marked <code>own: true</code> plus an
+        <code>own_note</code> carrying the argument.</p>
+      </section>
+
+      <section class="card prose" id="scale">
+        <h2>Adding a function, and the <code>scale:</code> block</h2>
+        <p>A function's <code>values:</code> are not decoration: the build compares every pair of
+        them and turns the comparison into a separation (derivation rule 1 above). That only
+        works if it knows what the values are functions <em>of</em>.</p>
+<pre><code>functions:
+  - id: MinskyPapert
+    kind: total               # total | partial | relation
+    arity: '$N = m^3$ bits: $m$ blocks of $m^2$'
+    scale: {var: m, subs: {N: 'm^3'}}   # &larr; the asymptotic parameter, and
+    values:                             #   every other name in terms of it
+      - {measure: D,    value: 'N = m^3'}
+      - {measure: sdeg, value: '\Theta(m) = \Theta(N^{1/3})'}</code></pre>
+        <p>When every value is written in one variable, <code>scale:</code> can be left out and
+        the build infers it. Write one as soon as a family uses two names for the same parameter
+        (\(N\) and \(m\), \(N\) and \(d\)), and prefer the <em>smallest</em> of them as
+        <code>var</code>: with <code>var: d</code> and <code>subs: {N: '2^d'}</code> a value of
+        \(N^{0.753}\) stays exact, whereas the other direction would need \(2^{\log_2 N}\).
+        A family with two <em>genuinely</em> free parameters (\(\mathrm{THR}_k^n\),
+        \(k\)-distinctness) should have no <code>scale:</code>; the build skips it and says so in
+        the build report rather than picking one and inventing separations.</p>
+        <p>Values themselves are plain LaTeX. \(\Theta(\cdot)\) and a bare expression bound the
+        measure on both sides; \(O(\cdot)\) or \(\le\) only from above; \(\Omega(\cdot)\) or
+        \(\ge\) only from below &mdash; and the build respects that, so an \(O\) value will never
+        be used as the big side of a separation. Anything with a free \(\varepsilon\), a
+        <code>\text{if}</code> case split or an unresolved second parameter is skipped.</p>
+      </section>
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>Checklist for a new bound</h2>
+        <ul class="tick small">
+          <li>Read the source; do not paraphrase an abstract.</li>
+          <li>Note the theorem number in <code>note:</code>.</li>
+          <li>Check whether it is stated for total or all functions.</li>
+          <li>Keep log factors and \(\varepsilon\) dependence.</li>
+          <li>Name the witness, add a function stub if needed.</li>
+          <li>Run <code>python3 build.py --strict</code>.</li>
+        </ul>
+      </section>
+      <section class="card tight">
+        <h2>Gotchas</h2>
+        <ul class="tick small">
+          <li>YAML eats backslashes in double-quoted scalars. Use single quotes
+          (<code>'\mathrm{R}'</code>) or a block scalar (<code>|</code>) for LaTeX.</li>
+          <li><code>stmt:</code> is bare LaTeX &mdash; no <code>$</code>. Every other prose field
+          is markdown, where you <em>do</em> need <code>$</code>.</li>
+          <li>A <code>?</code> in a matrix cell must be quoted: <code>b: '?'</code>.</li>
+          <li>Duplicate ids are a build error, not a warning.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="static/app.js"></script>
+</body>
+</html>

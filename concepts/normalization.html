@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dimensionless quantities and how to normalize them &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="">Functions</a>
+      <a href="../concepts/index.html"
+         class="on">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../concepts/index.html">Concepts</a></div>
+  <header class="entryhead concept">
+    <div>
+      <h1>Dimensionless quantities and how to normalize them</h1>
+      <p class="lede">MaxInf, NS and Stab are probabilities, not query counts. Why they cannot appear in the matrix, and what ratio to use instead.</p>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="main-col">
+      <article class="card prose">
+        <p>Every measure in the exponent matrix answers the same question: <em>how many
+queries?</em> Each one grows with $n$, and a cell of the matrix asserts something
+of the form $\mathrm{M}_1 = O(\mathrm{M}_2^{\,b})$ -- a comparison that only
+means anything if both sides are on the same scale.</p>
+<p>Several natural Fourier quantities are not on that scale. <a href="../measures/MaxInf.html" class="xref measure "><span class="tex">\(\mathrm{MaxInf}(f)\)</span></a> is a
+probability. So is noise sensitivity <a href="../measures/NS.html" class="xref measure "><span class="tex">\(\mathrm{NS}_{\delta}(f)\)</span></a>. Noise stability <a href="../measures/Stab.html" class="xref measure "><span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span></a> is a
+correlation, and
+<a href="../measures/Var.html" class="xref measure "><span class="tex">\(\mathrm{Var}(f)\)</span></a> is a variance of a $\pm 1$ random variable. All of them live in a
+bounded interval no matter how large $n$ is. That has three consequences:</p>
+<ol>
+<li><strong>No exponent exists.</strong> A quantity that never exceeds $1$ cannot be
+polynomially related to one that grows like $n$, in either direction, for
+reasons of units alone. The cell is not &quot;open&quot;; it is meaningless.</li>
+<li><strong>The sign is often backwards.</strong> $\mathrm{MaxInf}$ and $\mathrm{NS}_\delta$
+tend to be <em>smaller</em> for harder functions, so even a qualitative reading of
+the row would mislead.</li>
+<li><strong>Bias dominates.</strong> $\mathrm{MaxInf}(\mathrm{OR}_n) = 2^{1-n}$ is tiny not
+because $\mathrm{OR}_n$ is easy -- it is evasive -- but because
+$\mathrm{OR}_n$ is nearly constant. Any statement about a lopsided function
+is really a statement about its bias.</li>
+</ol>
+<p>So the zoo keeps these quantities, with their own pages, definitions and
+relations, but hides them from the matrix. What goes into the matrix instead
+is a <strong>normalized</strong> version: a ratio of two dimensionless quantities, or an
+inverse of a rate, chosen so that the result is a query count.</p>
+<h3>Divide by the variance</h3>
+<p>$\mathrm{Var}(f) = 4p(1-p)$, where $p = \Pr[f = 1]$, is the natural unit of
+&quot;how much there is to lose&quot;. Every Fourier quantity above is measured against
+it, and dividing cancels the bias exactly. The zoo records one such ratio:
+$$\mathrm{osss}(f) \;=\; \frac{\mathrm{Var}(f)}{\mathrm{MaxInf}(f)} .$$
+This is a genuine query count -- it is between $1$ and $O(n/\log n)$, and the
+<strong>OSSS inequality</strong> says it lower-bounds the <em>average</em> depth of a decision
+tree for $f$, hence $\mathrm{R}_0(f)$ and $\mathrm{D}(f)$. See <a href="../measures/osss.html" class="xref measure "><span class="tex">\(\mathrm{osss}(f)\)</span></a>.</p>
+<h3>Invert a rate</h3>
+<p>When a dimensionless quantity comes with a free parameter, the query-scale
+content is <em>where the parameter has to be</em> for something to happen. For noise
+sensitivity, the critical rate $\delta^{*}$ at which $\mathrm{NS}_\delta$
+reaches a fixed fraction of its maximum gives
+$$\mathrm{nsr}(f) \;=\; 1/\delta^{*}(f),$$
+which is $\Theta(n)$ for $\oplus_n$ and $\Theta(1)$ for $\mathrm{MAJ}_n$.
+See <a href="../measures/nsr.html" class="xref measure "><span class="tex">\(\mathrm{nsr}(f)\)</span></a>.</p>
+<p>The other end of the same curve is also a query count: the slope of
+$\mathrm{NS}_\delta$ at $\delta = 0$ is the total influence $\mathrm{I}(f)$,
+which was already in the zoo as <a href="../measures/Inf.html" class="xref measure "><span class="tex">\(\mathrm{I}(f)\)</span></a> and satisfies
+$\mathrm{I}\le\mathrm{D}$. One dimensionless family thus yields two measures
+that point in opposite directions -- $\mathrm{I}$ is large when $f$ is
+fragile, $\mathrm{nsr}$ when it is robust.</p>
+<h3>What normalization does not fix</h3>
+<p>A normalized quantity inherits the weakness of its ingredients.
+$\mathrm{osss}$ is a <em>weak</em> lower bound: it is $1$ for $\oplus_n$ and
+$\Theta(1)$ for $\mathrm{OR}_n$, both of which have $\mathrm{D} = n$. Nor are
+the two normalizations comparable to each other -- $\oplus_n$ has
+$\mathrm{osss} = 1$ and $\mathrm{nsr} = \Theta(n)$, $\mathrm{MAJ}_n$ has
+$\mathrm{osss} = \Theta(\sqrt n)$ and $\mathrm{nsr} = \Theta(1)$. Putting a
+quantity on the query scale makes it comparable, not strong.</p>
+<p>Finally, the constants in a normalization are a convention. Any fixed
+fraction of the maximum defines $\delta^{*}$ up to a constant factor, so
+$\mathrm{nsr}$ is only meaningful up to $\Theta(\cdot)$; values are recorded
+that way.</p>
+
+      </article>
+    </div>
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/osss.html" class="xref measure "><span class="tex">\(\mathrm{osss}(f)\)</span></a></li><li><a href="../measures/nsr.html" class="xref measure "><span class="tex">\(\mathrm{nsr}(f)\)</span></a></li><li><a href="../measures/Var.html" class="xref measure "><span class="tex">\(\mathrm{Var}(f)\)</span></a></li><li><a href="../measures/MaxInf.html" class="xref measure "><span class="tex">\(\mathrm{MaxInf}(f)\)</span></a></li><li><a href="../measures/NS.html" class="xref measure "><span class="tex">\(\mathrm{NS}_{\delta}(f)\)</span></a></li><li><a href="../measures/Stab.html" class="xref measure "><span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span></a></li><li><a href="../measures/Inf.html" class="xref measure "><span class="tex">\(\mathrm{I}(f)\)</span></a></li><li><a href="../concepts/reading-the-tables.html" class="xref concept ">How to read this zoo</a></li></ul>
+      </section>
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#OSSS05" class="xref ref ">[OSSS05]</a> <span class="dim">Every decision tree has an influential variable</span></li>
+            <li><a href="../refs.html#KKL88" class="xref ref ">[KKL88]</a> <span class="dim">The influence of variables on Boolean functions</span></li>
+            <li><a href="../refs.html#ODonnell14" class="xref ref ">[ODonnell14]</a> <span class="dim">Analysis of Boolean Functions</span></li>
+        </ul>
+      </section>
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/concepts.yaml</code> &mdash; id <code>normalization</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

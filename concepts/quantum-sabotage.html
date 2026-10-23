@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quantum sabotage: four variants &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="">Functions</a>
+      <a href="../concepts/index.html"
+         class="on">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../concepts/index.html">Concepts</a></div>
+  <header class="entryhead concept">
+    <div>
+      <h1>Quantum sabotage: four variants</h1>
+      <p class="lede">Separate the available oracle information from the requested output.</p>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="main-col">
+      <article class="card prose">
+        <p>For a partial Boolean function $f:D\to\{0,1\}$, choose opposite-output inputs $x,y$.
+A sabotaged input agrees with their common bits and replaces every differing bit by
+the same symbol $\ast$ or $\dagger$. The quantum algorithm must either distinguish
+the symbols or output a sabotaged coordinate [<a href="../refs.html#CMP24" class="xref ref ">CMP24</a>, Section 3].</p>
+<table>
+<thead>
+<tr>
+  <th>Oracle</th>
+  <th>Distinguish $\ast$ / $\dagger$</th>
+  <th>Find a sabotaged index</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Only the sabotaged string $z$</td>
+  <td><a href="../measures/QSweak.html" class="xref measure "><span class="tex">\(\mathrm{QS}_{\mathrm{weak}}(f)\)</span></a></td>
+  <td><a href="../measures/QSweakind.html" class="xref measure "><span class="tex">\(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(f)\)</span></a></td>
+</tr>
+<tr>
+  <td>Triples $(x_i,y_i,z_i)$</td>
+  <td><a href="../measures/QSstr.html" class="xref measure "><span class="tex">\(\mathrm{QS}_{\mathrm{str}}(f)\)</span></a></td>
+  <td><a href="../measures/QSstrind.html" class="xref measure "><span class="tex">\(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f)\)</span></a></td>
+</tr>
+</tbody>
+</table>
+<p>These four distinctions disappear up to constant factors for randomized sabotage
+<a href="../measures/RS.html" class="xref measure "><span class="tex">\(\mathrm{RS}(f)\)</span></a>. Quantumly, their equivalence is open. The proved inclusions are
+$\mathrm{QS}_{\mathrm{str}}=O(\mathrm{QS}_{\mathrm{weak}})$,
+$\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}=O(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}})$,
+and decision costs at most index-finding plus one query in each oracle model.
+All four are $O(\mathrm{RS})$ and $O(\sqrt n)$.</p>
+<p>For partial as well as total functions,
+$\mathrm{QS}_{\mathrm{str}}=O(\mathrm{Q})$ and
+$\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}=O(\mathrm{Q}^{3/2})$
+[<a href="../refs.html#CMP24" class="xref ref ">CMP24</a>, Lemma 1.1 and Theorem 1.2]. The general weak-model upper bound in terms
+of $\mathrm{Q}$ is only stated here for total functions, via
+$\mathrm{QS}_{\mathrm{weak}},\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}=O(\mathrm{R})=O(\mathrm{Q}^4)$.</p>
+<p>The common lower bound is $\Omega(\sqrt{\mathrm{fbs}})=\Omega(\mathrm{QC})$.
+[<a href="../refs.html#CMP24" class="xref ref ">CMP24</a>] state its theorem for total functions; [<a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a>, proof of Theorem 4(v)]
+explicitly verify that the proof also covers partial functions. Grover meets this
+bound for AND, OR, PARITY and MAJORITY. It is not always tight: on <a href="../functions/ADDR.html" class="xref function "><span class="tex">\(\mathrm{ADDR}_k\)</span></a>,
+all four sabotage variants are $\Theta(n)$ and $\mathrm{fbs}=n+1$.
+For total functions the paper gives the converse polynomial relation
+$\mathrm{Q}=\widetilde O(\mathrm{QS}^6)$ for each variant.</p>
+<p>Applying the <a href="../concepts/certification.html" class="xref concept ">Operational certification complexity</a> transform collapses <strong>all four</strong> variants to
+$\Theta(\mathrm{QC})$ [<a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a>, Theorem 4]. This does not establish equivalence
+of the original measures. See <a href="../open.html#open-QS-vs-Q" class="xref open ">Do the quantum sabotage variants coincide, and how do they compare with Q?</a>.</p>
+
+      </article>
+    </div>
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/QSweak.html" class="xref measure "><span class="tex">\(\mathrm{QS}_{\mathrm{weak}}(f)\)</span></a></li><li><a href="../measures/QSstr.html" class="xref measure "><span class="tex">\(\mathrm{QS}_{\mathrm{str}}(f)\)</span></a></li><li><a href="../measures/QSweakind.html" class="xref measure "><span class="tex">\(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(f)\)</span></a></li><li><a href="../measures/QSstrind.html" class="xref measure "><span class="tex">\(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f)\)</span></a></li><li><a href="../measures/RS.html" class="xref measure "><span class="tex">\(\mathrm{RS}(f)\)</span></a></li><li><a href="../measures/QC.html" class="xref measure "><span class="tex">\(\mathrm{QC}(f)\)</span></a></li><li><a href="../functions/ADDR.html" class="xref function "><span class="tex">\(\mathrm{ADDR}_k\)</span></a></li><li><a href="../concepts/certification.html" class="xref concept ">Operational certification complexity</a></li><li><a href="../open.html#open-QS-vs-Q" class="xref open ">Do the quantum sabotage variants coincide, and how do they compare with Q?</a></li></ul>
+      </section>
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#CMP24" class="xref ref ">[CMP24]</a> <span class="dim">Quantum Sabotage Complexity</span></li>
+            <li><a href="../refs.html#KLLPV26" class="xref ref ">[KLLPV26]</a> <span class="dim">Certification complexity of Boolean functions</span></li>
+        </ul>
+      </section>
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/concepts.yaml</code> &mdash; id <code>quantum-sabotage</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

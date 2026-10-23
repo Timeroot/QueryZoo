@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pabbaraju’s certificate–sensitivity separator &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#total">Total functions</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">PabbarajuCubicSensitivity</div>
+    <div>
+      <h1>Pabbaraju’s certificate–sensitivity separator</h1>
+      <p class="lede">Log-free $\mathrm{C}=\Omega(\mathrm{s}^3)$.</p>
+      <p class="aliases">
+        <span class="kindtag k-total">total</span>
+        <span class="grouptag g-separating-total">separating-total</span>
+      </p>
+    </div>
+  </header>
+
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>Apply the sensitivity-reducing transformation of [<a href="../refs.html#BHT17" class="xref ref ">BHT17</a>] and the construction in Appendix C of [<a href="../refs.html#Pabbaraju26" class="xref ref ">Pabbaraju26</a>] to the optimal one-sided unambiguous-DNF separator <a href="../functions/PabbarajuDNF.html" class="xref function ">Pabbaraju’s optimal unambiguous DNF</a>. Corollary 1.3 gives $\mathrm{C}\ge\Omega(\mathrm{s}^3)$ without the logarithmic loss in the earlier construction. The full definition is in that appendix.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Formal definition</h2>
+        <p>Let $f$ be <a href="../functions/PabbarajuDNF.html" class="xref function ">Pabbaraju’s optimal unambiguous DNF</a> and $u=\mathrm{UC}^1(f)=\Theta(n)$.
+Let $f'(x,y,z)$ accept iff $f(x)=f(y)=f(z)=1$ and all three inputs satisfy
+the same unique DNF term. Define
+$$F_n=\mathrm{OR}_{3u}\circ f'.$$
+Appendix C of [<a href="../refs.html#Pabbaraju26" class="xref ref ">Pabbaraju26</a>] proves $\mathrm{s}(F_n)\le3u$ and
+$\mathrm{C}^0(F_n)=3u\mathrm{C}^0(f')\ge3u\mathrm{C}^0(f)=\Omega(u^3)$.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                  <a href="../measures/s.html">Sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(O(n)\)</span></td>
+              <td class="short">Appendix C: s(F)≤3u, u=Θ(n).
+<span class="refs"><a href="../refs.html#Pabbaraju26" class="xref ref ">Pabbaraju26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                  <a href="../measures/C.html">Certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(n^3)\)</span></td>
+              <td class="short">Appendix C: C⁰(F)≥3u C⁰(f)=Ω(n³).
+<span class="refs"><a href="../refs.html#Pabbaraju26" class="xref ref ">Pabbaraju26</a></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+
+
+      <section class="card">
+        <h2>Cited as a witness by</h2>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=C&amp;b=s#C__s__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}(f_n) = \Omega(\mathrm{s}(f_n)^3)\)</span></div>
+<div class="refs"><a href="../refs.html#Pabbaraju26" class="xref ref ">Pabbaraju26</a></div>          </li>
+        </ul>
+      </section>
+
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#Pabbaraju26" class="xref ref ">[Pabbaraju26]</a> <span class="dim">Optimal Unambiguous DNFs and Alon-Saks-Seymour</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/C.html" class="xref measure "><span class="tex">\(\mathrm{C}(f)\)</span></a></li><li><a href="../measures/s.html" class="xref measure "><span class="tex">\(\mathrm{s}(f)\)</span></a></li><li><a href="../functions/PabbarajuDNF.html" class="xref function ">Pabbaraju’s optimal unambiguous DNF</a></li><li><a href="../functions/BHTfn.html" class="xref function "><span class="tex">\(f_{\mathrm{BHT}}\)</span></a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/07-recent-separations.yaml</code> &mdash; id <code>PabbarajuCubicSensitivity</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The sensitivity conjecture (now Huang&#39;s theorem) &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="">Functions</a>
+      <a href="../concepts/index.html"
+         class="on">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../concepts/index.html">Concepts</a></div>
+  <header class="entryhead concept">
+    <div>
+      <h1>The sensitivity conjecture (now Huang&#39;s theorem)</h1>
+      <p class="lede">s, bs, C, deg, D are all polynomially related for total functions. Resolved in 2019; the exact exponents are still open.</p>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="main-col">
+      <article class="card prose">
+        <p>For decades it was open whether sensitivity $\mathrm{s}(f)$ -- the most
+local measure in the zoo -- is polynomially related to the rest.
+[<a href="../refs.html#Nisan91" class="xref ref ">Nisan91</a>] and [<a href="../refs.html#NS94" class="xref ref ">NS94</a>] showed everything else is polynomially related:
+$$\mathrm{s} \le \mathrm{bs} \le \mathrm{C} \le \mathrm{s}\cdot\mathrm{bs},\qquad
+\mathrm{bs}\le 2\deg^2,\qquad \mathrm{D}\le 2\deg^4 .$$
+The missing link was $\deg$ vs $\mathrm{s}$.</p>
+<p><strong>Huang's theorem (2019):</strong> $\deg(f) \le \mathrm{s}(f)^2$.</p>
+<p>The proof is two pages: a signed adjacency matrix of the hypercube whose
+eigenvalues are $\pm\sqrt n$, plus Cauchy interlacing, gives that every
+induced subgraph of $Q_n$ on more than $2^{n-1}$ vertices has maximum
+degree $\ge\sqrt n$. [<a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a>] later gave the spectral refinement
+$\deg(f)\le\lambda(f)^2$ with $\lambda\le\mathrm{s}$, which is where
+<a href="../measures/lambda.html" class="xref measure "><span class="tex">\(\lambda(f)\)</span></a> comes from.</p>
+<h3>What is still open</h3>
+<p>The exponents. Currently
+$$\mathrm{bs}(f) \le 2\deg(f)^2 \le 2\mathrm{s}(f)^4.$$
+The quadratic strengthening was refuted by [<a href="../refs.html#OpenAISensitivity26" class="xref ref ">OpenAISensitivity26</a>]. The latest
+public campaign theorem [<a href="../refs.html#Prove2MeSensitivity26" class="xref ref ">Prove2MeSensitivity26</a>] gives
+$\mathrm{bs}\ge\mathrm{s}^{\alpha-\varepsilon}$ for every $\varepsilon&gt;0$ and
+arbitrarily large sensitivity, where
+$\alpha=\log(14055^8)/\log(3738277295413674)=2.1308255793978239\ldots$.
+The quartic universal upper bound remains. See <a href="../open.html#open-bs-vs-s" class="xref open ">What is the optimal exponent of … versus …?</a>.</p>
+
+      </article>
+    </div>
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/s.html" class="xref measure "><span class="tex">\(\mathrm{s}(f)\)</span></a></li><li><a href="../measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a></li><li><a href="../measures/C.html" class="xref measure "><span class="tex">\(\mathrm{C}(f)\)</span></a></li><li><a href="../measures/deg.html" class="xref measure "><span class="tex">\(\deg(f)\)</span></a></li><li><a href="../measures/lambda.html" class="xref measure "><span class="tex">\(\lambda(f)\)</span></a></li><li><a href="../measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a></li><li><a href="../open.html#open-bs-vs-s" class="xref open ">What is the optimal exponent of … versus …?</a></li><li><a href="../functions/Rubinstein.html" class="xref function "><span class="tex">\(f_{\mathrm{Rub}}\)</span></a></li><li><a href="../functions/OpenAINestedTournament.html" class="xref function ">OpenAI’s nested tournament sensitivity separator</a></li><li><a href="../functions/Prove2MeTournament.html" class="xref function ">Prove2Me’s refined tournament sensitivity family</a></li></ul>
+      </section>
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#Huang19" class="xref ref ">[Huang19]</a> <span class="dim">Induced subgraphs of hypercubes and a proof of the Sensitivity Conjecture</span></li>
+            <li><a href="../refs.html#Nisan91" class="xref ref ">[Nisan91]</a> <span class="dim">CREW PRAMs and Decision Trees</span></li>
+            <li><a href="../refs.html#NS94" class="xref ref ">[NS94]</a> <span class="dim">On the degree of Boolean functions as real polynomials</span></li>
+            <li><a href="../refs.html#ABKRT21" class="xref ref ">[ABKRT21]</a> <span class="dim">Degree vs. Approximate Degree and Quantum Implications of Huang&#39;s Sensitivity Theorem</span></li>
+            <li><a href="../refs.html#Rubinstein95" class="xref ref ">[Rubinstein95]</a> <span class="dim">Sensitivity vs. block sensitivity of Boolean functions</span></li>
+            <li><a href="../refs.html#AmbainisSun11" class="xref ref ">[AmbainisSun11]</a> <span class="dim">New separation between s(f) and bs(f)</span></li>
+            <li><a href="../refs.html#HKP11" class="xref ref ">[HKP11]</a> <span class="dim">Variations on the Sensitivity Conjecture</span></li>
+            <li><a href="../refs.html#OpenAISensitivity26" class="xref ref ">[OpenAISensitivity26]</a> <span class="dim">A superquadratic separation between sensitivity and block sensitivity</span></li>
+            <li><a href="../refs.html#Prove2MeSensitivity26" class="xref ref ">[Prove2MeSensitivity26]</a> <span class="dim">Block Sensitivity vs. Sensitivity: exact exponent log(14055^8)/log(3738277295413674)</span></li>
+        </ul>
+      </section>
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/concepts.yaml</code> &mdash; id <code>sensitivity-conjecture</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

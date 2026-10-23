@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direct sum and direct product &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="">Functions</a>
+      <a href="../concepts/index.html"
+         class="on">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../concepts/index.html">Concepts</a></div>
+  <header class="entryhead concept">
+    <div>
+      <h1>Direct sum and direct product</h1>
+      <p class="lede">k independent copies of f: does it cost k times as much (direct sum), and does a smaller budget make you fail on almost all of them (direct product)?</p>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="main-col">
+      <article class="card prose">
+        <p>Write $f^{\otimes k}$ for the problem of solving $k$ independent instances of $f$ and
+reporting all $k$ answers. Two questions, easily confused:</p>
+<ul>
+<li><strong>Direct sum</strong>: is $\mathrm{M}(f^{\otimes k}) \approx k\,\mathrm{M}(f)$?</li>
+<li><strong>Direct product</strong> (DPT): with a budget well below $k\,\mathrm{M}(f)$, does the
+probability of getting <em>all</em> $k$ right decay like $2^{-\Omega(k)}$?</li>
+</ul>
+<p>A direct product theorem is much stronger, and it is where the subtleties live. The
+intermediate statements have names too: a <strong>threshold DPT</strong> bounds the chance of getting
+$\eta k$ of them right, and an <strong>XOR lemma</strong> bounds the advantage in computing
+$\bigoplus_i f(x^i)$.</p>
+<h3>Scoreboard</h3>
+<table>
+<thead>
+<tr>
+  <th>measure</th>
+  <th>direct sum</th>
+  <th>direct product</th>
+  <th>reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>$\mathrm{D}$</td>
+  <td><strong>exactly</strong> $k\,\mathrm{D}(f)$, for relations</td>
+  <td>--</td>
+  <td>[<a href="../refs.html#JainKlauckSantha10" class="xref ref ">JainKlauckSantha10</a>, <a href="../refs.html#Montanaro14" class="xref ref ">Montanaro14</a>]</td>
+</tr>
+<tr>
+  <td>$\mathrm{C}$</td>
+  <td>additive, easy</td>
+  <td>--</td>
+  <td>folklore</td>
+</tr>
+<tr>
+  <td>$\mathrm{R}$</td>
+  <td>$\Theta(k\,\mathrm{R}(f))$ up to a $\log k$ that is sometimes needed</td>
+  <td>yes, at budget $\gamma^3\mathrm{R}(f)k/11$</td>
+  <td>[<a href="../refs.html#JainKlauckSantha10" class="xref ref ">JainKlauckSantha10</a>, <a href="../refs.html#BlaisBrody19" class="xref ref ">BlaisBrody19</a>, <a href="../refs.html#Drucker12" class="xref ref ">Drucker12</a>]</td>
+</tr>
+<tr>
+  <td>$\bar{\mathrm{R}}$</td>
+  <td><strong>exactly</strong> $\Theta(k\,\bar{\mathrm{R}}_{\varepsilon/k}(f))$</td>
+  <td>--</td>
+  <td>[<a href="../refs.html#BlaisBrody19" class="xref ref ">BlaisBrody19</a>]</td>
+</tr>
+<tr>
+  <td>$\mathrm{Q}$</td>
+  <td>$\tilde\Theta(k\,\mathrm{Q}(f))$, Boolean only</td>
+  <td>yes, at budget $\Omega(\mathrm{Q}(f)k)$</td>
+  <td>[<a href="../refs.html#ACGT09" class="xref ref ">ACGT09</a>, <a href="../refs.html#Reichardt11" class="xref ref ">Reichardt11</a>, <a href="../refs.html#LeeRoland13" class="xref ref ">LeeRoland13</a>]</td>
+</tr>
+</tbody>
+</table>
+<h3>Shaltiel's examples</h3>
+<p>Everything here has to dodge one construction [<a href="../refs.html#Shaltiel04" class="xref ref ">Shaltiel04</a>]. Take a distribution that is
+hard with probability $1-\varepsilon$ and trivial with probability $\varepsilon$. One
+instance is hard on average; but among $k$ instances the algorithm can go hunting for the
+easy ones, and it finds about $\varepsilon k$ of them cheaply. So the success probability
+does <strong>not</strong> collapse until the budget drops below $\Theta(\varepsilon T k)$ -- a factor
+$\varepsilon$ below the naive $Tk$. [<a href="../refs.html#Drucker12" class="xref ref ">Drucker12</a>] shows this is the <em>only</em> obstruction: his
+bounds match it, and they are stated with exactly that $\alpha\varepsilon Tk$ budget.</p>
+<p>The same examples are why direct sum theorems are stated distribution-free. Relative to a
+fixed distribution the tight statements are false, and this is the shared root of three
+things in this zoo: the $\delta^2$ loss in the randomized direct sum <a href="../pair.html?a=R&b=R#dirsum-R" class="xref relation ">dirsum-R</a>, the
+difficulty of the randomized composition conjecture <a href="../pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a>, and the invention of the
+<a href="../measures/Corr.html" class="xref measure "><span class="tex">\(\mathrm{Corr}_{\varepsilon}(f)\)</span></a> and <a href="../measures/Sel.html" class="xref measure "><span class="tex">\(\mathrm{Sel}_{\varepsilon}(f)\)</span></a> measures, whose whole content is that maximising over the
+distribution removes the loophole.</p>
+<h3>Why the $\log k$ is real</h3>
+<p>Solving $k$ copies by amplifying to error $1/3k$ each costs $O(k\,\mathrm{R}(f)\log k)$, and
+[<a href="../refs.html#BlaisBrody19" class="xref ref ">BlaisBrody19</a>] exhibit a total $f$ where that is optimal. The clean statement is a strong
+direct sum in the <em>expected-cost</em> measure,
+$\bar{\mathrm{R}}_\varepsilon(f^{k}) = \Theta(k\,\bar{\mathrm{R}}_{\varepsilon/k}(f))$
+<a href="../pair.html?a=R&b=R#param-R-directsum" class="xref relation ">param-R-directsum</a>, which makes visible that the direct sum question for $\mathrm{R}$ is
+a question about $\varepsilon$-dependence in disguise. Compare <a href="../pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a>, where the same
+$\log$ appears in the composition upper bound for the same reason.</p>
+<h3>Relation to composition</h3>
+<p>Direct sum is composition with the outer function being the identity, so it is the easiest
+case -- and it is <em>still</em> not trivial for $\mathrm{R}$, and <em>still</em> open for $\mathrm{Q}$
+without a log. That is a fair summary of how hard composition is.</p>
+
+      </article>
+    </div>
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../pair.html?a=D&b=D#dirsum-D" class="xref relation ">dirsum-D</a></li><li><a href="../pair.html?a=R&b=R#dirsum-R" class="xref relation ">dirsum-R</a></li><li><a href="../pair.html?a=R&b=R#dirprod-R" class="xref relation ">dirprod-R</a></li><li><a href="../pair.html?a=Q&b=Q#dirprod-Q" class="xref relation ">dirprod-Q</a></li><li><a href="../pair.html?a=D&b=D#comp-D" class="xref relation ">comp-D</a></li><li><a href="../pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a></li><li><a href="../measures/Corr.html" class="xref measure "><span class="tex">\(\mathrm{Corr}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/Sel.html" class="xref measure "><span class="tex">\(\mathrm{Sel}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/Rbar.html" class="xref measure "><span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a></li><li><a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a></li><li><a href="../open.html#open-direct-sum" class="xref open ">How hard is it to solve … copies?</a></li><li><a href="../pair.html?a=R&b=R#param-R-directsum" class="xref relation ">param-R-directsum</a></li><li><a href="../concepts/composition.html" class="xref concept ">Composition</a></li></ul>
+      </section>
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#JainKlauckSantha10" class="xref ref ">[JainKlauckSantha10]</a> <span class="dim">Optimal direct sum results for deterministic and randomized decision tree complexity</span></li>
+            <li><a href="../refs.html#Drucker12" class="xref ref ">[Drucker12]</a> <span class="dim">Improved direct product theorems for randomized query complexity</span></li>
+            <li><a href="../refs.html#Shaltiel04" class="xref ref ">[Shaltiel04]</a> <span class="dim">Towards proving strong direct product theorems</span></li>
+            <li><a href="../refs.html#BlaisBrody19" class="xref ref ">[BlaisBrody19]</a> <span class="dim">Optimal Separation and Strong Direct Sum for Randomized Query Complexity</span></li>
+            <li><a href="../refs.html#Montanaro14" class="xref ref ">[Montanaro14]</a> <span class="dim">A composition theorem for decision tree complexity</span></li>
+            <li><a href="../refs.html#KSdW07" class="xref ref ">[KSdW07]</a> <span class="dim">Quantum and classical strong direct product theorems and optimal time-space tradeoffs</span></li>
+            <li><a href="../refs.html#LeeRoland13" class="xref ref ">[LeeRoland13]</a> <span class="dim">A strong direct product theorem for quantum query complexity</span></li>
+            <li><a href="../refs.html#NRS94" class="xref ref ">[NRS94]</a> <span class="dim">Products and help bits in decision trees</span></li>
+            <li><a href="../refs.html#ACGT09" class="xref ref ">[ACGT09]</a> <span class="dim">The quantum query complexity of certification</span></li>
+            <li><a href="../refs.html#BDGHMT20" class="xref ref ">[BDGHMT20]</a> <span class="dim">The Power of Many Samples in Query Complexity</span></li>
+        </ul>
+      </section>
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/concepts.yaml</code> &mdash; id <code>direct-sum</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

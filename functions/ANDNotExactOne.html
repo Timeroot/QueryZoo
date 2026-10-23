@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AND of complemented EXACT-ONE functions &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#total">Total functions</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">ANDNotExactOne</div>
+    <div>
+      <h1>AND of complemented EXACT-ONE functions</h1>
+      <p class="lede">New quantum-certification lower bounds separate $\mathrm{Q}_0$ from both $\mathrm{Q}$ and rational degree.</p>
+      <p class="aliases">
+        <span class="kindtag k-total">total</span>
+        <span class="grouptag g-separating-total">separating-total</span>
+<span class="tag">arity: $m^2$ bits</span>      </p>
+    </div>
+  </header>
+
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>Partition $m^2$ bits into $m$ blocks of length $m$. Accept iff no block has Hamming weight exactly one.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Formal definition</h2>
+        <p>$f_m=\mathrm{AND}_m\circ(\neg\mathrm{EXACT}_{1,m})$</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/rdeg.html" title="Rational degree">
+    <span class="tex">\(\mathrm{rdeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rdeg.html">Rational degree</a>
+              </td>
+              <td class="val"><span class="tex">\(m\)</span></td>
+              <td class="short">Theorem 10.
+<span class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/degcert.html" title="Bounded degree certification complexity">
+    <span class="tex">\(\overline{\deg}^{\mathrm{cert}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/degcert.html">Bounded degree certification complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(m^{3/2}/\log^2 m)\)</span></td>
+              <td class="short">Theorem 10 proof: Ω(√(m³/log⁴m)).
+<span class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q0.html">Zero-error (Las Vegas) quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\)</span></td>
+              <td class="short">Theorem 10 and Lemma 55.
+<span class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q.html">Bounded-error quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m)\)</span></td>
+              <td class="short">Lemma 55 gives O(m). At the all-zero input, all m² single-bit flips reject, so bs=m² and Q=Ω(√bs).
+<span class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs.html">Block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(m^2\)</span></td>
+              <td class="short">All m² bits are sensitive at zero; the arity is the matching ceiling.
+<span class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                  <a href="../measures/s.html">Sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(m^2\)</span></td>
+              <td class="short">Every single-bit flip at zero creates an EXACT-ONE block.
+<span class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                  <a href="../measures/C.html">Certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(m^2\)</span></td>
+              <td class="short">At zero every bit is sensitive; C≥s and C≤m².
+<span class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/fbs.html">Fractional block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(m^2\)</span></td>
+              <td class="short">Squeezed between bs and C.
+<span class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QC.html" title="Quantum certificate complexity">
+    <span class="tex">\(\mathrm{QC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QC.html">Quantum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m)\)</span></td>
+              <td class="short">QC=Θ(√fbs).
+<span class="refs"><a href="../refs.html#Aaronson08" class="xref ref ">Aaronson08</a> <a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QEcert.html" title="Exact quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QEcert.html">Exact quantum certification complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\)</span></td>
+              <td class="short">2QEcert≥degcert and QEcert=O(Q₀).
+<span class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q0cert.html" title="Zero-error quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{0}^{\mathrm{cert}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q0cert.html">Zero-error quantum certification complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\)</span></td>
+              <td class="short">Theorem 5 and the QEcert bounds.
+<span class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/osdeg.html" title="One-sided-error bounded polynomial degree">
+    <span class="tex">\(\overline{\mathrm{osdeg}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/osdeg.html">One-sided-error bounded polynomial degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\)</span></td>
+              <td class="short">degcert=O(osdeg) and osdeg=O(Q₀).
+<span class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Separations its values prove <span class="dim">— computed, not recorded</span></h2>
+        <p class="dim small">Read straight off the table above by comparing two values: no
+        relation record states these, and where one does and says more, the record wins and the
+        pair is not listed here. 16 in total,
+        strongest first.</p>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-quantum" href="../measures/QEcert.html" title="Exact quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/rdeg.html" title="Rational degree">
+    <span class="tex">\(\mathrm{rdeg}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=QEcert&amp;b=rdeg">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f_n) = \Omega\big(\mathrm{rdeg}(f_n)^{1.5}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f) = \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\) against \(\mathrm{rdeg}(f) = m\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=s&amp;b=Q0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{s}(f_n) = \Omega\big(\mathrm{Q}_{0}(f_n)^{1.3333}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{s}(f) = m^2\) against \(\mathrm{Q}_{0}(f) = \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q0cert.html" title="Zero-error quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{0}^{\mathrm{cert}}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=bs&amp;b=Q0cert">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{bs}(f_n) = \Omega\big(\mathrm{Q}_{0}^{\mathrm{cert}}(f_n)^{1.3333}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{bs}(f) = m^2\) against \(\mathrm{Q}_{0}^{\mathrm{cert}}(f) = \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-quantum" href="../measures/Q0cert.html" title="Zero-error quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{0}^{\mathrm{cert}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/rdeg.html" title="Rational degree">
+    <span class="tex">\(\mathrm{rdeg}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Q0cert&amp;b=rdeg">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{Q}_{0}^{\mathrm{cert}}(f_n) = \Omega\big(\mathrm{rdeg}(f_n)^{1.5}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{Q}_{0}^{\mathrm{cert}}(f) = \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\) against \(\mathrm{rdeg}(f) = m\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/QEcert.html" title="Exact quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=s&amp;b=QEcert">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{s}(f_n) = \Omega\big(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f_n)^{1.3333}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{s}(f) = m^2\) against \(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f) = \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=bs&amp;b=Q0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{bs}(f_n) = \Omega\big(\mathrm{Q}_{0}(f_n)^{1.3333}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{bs}(f) = m^2\) against \(\mathrm{Q}_{0}(f) = \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-degree" href="../measures/degcert.html" title="Bounded degree certification complexity">
+    <span class="tex">\(\overline{\deg}^{\mathrm{cert}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/rdeg.html" title="Rational degree">
+    <span class="tex">\(\mathrm{rdeg}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=degcert&amp;b=rdeg">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\overline{\deg}^{\mathrm{cert}}(f_n) = \Omega\big(\mathrm{rdeg}(f_n)^{1.5}\big)\)</span></div>
+            <div class="refs dim">from \(\overline{\deg}^{\mathrm{cert}}(f) = \Omega(m^{3/2}/\log^2 m)\) against \(\mathrm{rdeg}(f) = m\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q0cert.html" title="Zero-error quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{0}^{\mathrm{cert}}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=s&amp;b=Q0cert">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{s}(f_n) = \Omega\big(\mathrm{Q}_{0}^{\mathrm{cert}}(f_n)^{1.3333}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{s}(f) = m^2\) against \(\mathrm{Q}_{0}^{\mathrm{cert}}(f) = \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/QEcert.html" title="Exact quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=bs&amp;b=QEcert">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{bs}(f_n) = \Omega\big(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f_n)^{1.3333}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{bs}(f) = m^2\) against \(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f) = \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=fbs&amp;b=Q0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{fbs}(f_n) = \Omega\big(\mathrm{Q}_{0}(f_n)^{1.3333}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{fbs}(f) = m^2\) against \(\mathrm{Q}_{0}(f) = \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-degree" href="../measures/osdeg.html" title="One-sided-error bounded polynomial degree">
+    <span class="tex">\(\overline{\mathrm{osdeg}}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/rdeg.html" title="Rational degree">
+    <span class="tex">\(\mathrm{rdeg}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=osdeg&amp;b=rdeg">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\overline{\mathrm{osdeg}}_{\varepsilon}(f_n) = \Omega\big(\mathrm{rdeg}(f_n)^{1.5}\big)\)</span></div>
+            <div class="refs dim">from \(\overline{\mathrm{osdeg}}_{\varepsilon}(f) = \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\) against \(\mathrm{rdeg}(f) = m\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/QEcert.html" title="Exact quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=fbs&amp;b=QEcert">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{fbs}(f_n) = \Omega\big(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f_n)^{1.3333}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{fbs}(f) = m^2\) against \(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f) = \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-quantum" href="../measures/QC.html" title="Quantum certificate complexity">
+    <span class="tex">\(\mathrm{QC}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=QC&amp;b=Q0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{QC}(f_n) = \Omega\big(\mathrm{Q}_{0}(f_n)^{0.6667}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{QC}(f) = \Theta(m)\) against \(\mathrm{Q}_{0}(f) = \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q0cert.html" title="Zero-error quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{0}^{\mathrm{cert}}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=fbs&amp;b=Q0cert">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{fbs}(f_n) = \Omega\big(\mathrm{Q}_{0}^{\mathrm{cert}}(f_n)^{1.3333}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{fbs}(f) = m^2\) against \(\mathrm{Q}_{0}^{\mathrm{cert}}(f) = \Omega(m^{3/2}/\log^2 m),\ O(m^{3/2})\)</div>
+          </li>
+        </ul>
+        <p class="dim small">&hellip; and 2 more, all of them visible
+        in the <a href="../matrix.html">matrix</a> (widen it to all measures) and on the
+        pair pages.</p>
+      </section>
+
+
+      <section class="card">
+        <h2>Cited as a witness by</h2>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-degree" href="../measures/degcert.html" title="Bounded degree certification complexity">
+    <span class="tex">\(\overline{\deg}^{\mathrm{cert}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/rdeg.html" title="Rational degree">
+    <span class="tex">\(\mathrm{rdeg}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=degcert&amp;b=rdeg#recent-degcert-vs-rdeg-total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\overline{\deg}^{\mathrm{cert}}(f_m)=\widetilde\Omega(\mathrm{rdeg}(f_m)^{3/2})\)</span></div>
+<div class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-quantum" href="../measures/QEcert.html" title="Exact quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/QC.html" title="Quantum certificate complexity">
+    <span class="tex">\(\mathrm{QC}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=QEcert&amp;b=QC#recent-QEcert-vs-QC-total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f_m)=\widetilde\Omega(\mathrm{QC}(f_m)^{3/2})\)</span></div>
+<div class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-quantum" href="../measures/Q0cert.html" title="Zero-error quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{0}^{\mathrm{cert}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/QC.html" title="Quantum certificate complexity">
+    <span class="tex">\(\mathrm{QC}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=Q0cert&amp;b=QC#recent-Q0cert-vs-QC-total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{Q}_0^{\mathrm{cert}}(f_m)=\widetilde\Omega(\mathrm{QC}(f_m)^{3/2})\)</span></div>
+<div class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-degree" href="../measures/osdeg.html" title="One-sided-error bounded polynomial degree">
+    <span class="tex">\(\overline{\mathrm{osdeg}}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=osdeg&amp;b=adeg#recent-osdeg-vs-adeg-total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\overline{\mathrm{osdeg}}(f_m)=\widetilde\Omega(\widetilde{\deg}(f_m)^{3/2})\)</span></div>
+<div class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-quantum" href="../measures/QEcert.html" title="Exact quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=QEcert&amp;b=Q#recent-QEcert-vs-Q-total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f_m)=\widetilde\Omega(\mathrm{Q}(f_m)^{3/2})\)</span></div>
+<div class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-quantum" href="../measures/Q0cert.html" title="Zero-error quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{0}^{\mathrm{cert}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=Q0cert&amp;b=Q#recent-Q0cert-vs-Q-total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{Q}_0^{\mathrm{cert}}(f_m)=\widetilde\Omega(\mathrm{Q}(f_m)^{3/2})\)</span></div>
+<div class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></div>          </li>
+        </ul>
+      </section>
+
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#KLLPV26" class="xref ref ">[KLLPV26]</a> <span class="dim">Certification complexity of Boolean functions</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/degcert.html" class="xref measure "><span class="tex">\(\overline{\deg}^{\mathrm{cert}}(f)\)</span></a></li><li><a href="../measures/rdeg.html" class="xref measure "><span class="tex">\(\mathrm{rdeg}(f)\)</span></a></li><li><a href="../measures/QEcert.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)\)</span></a></li><li><a href="../measures/Q0cert.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{0}^{\mathrm{cert}}(f)\)</span></a></li><li><a href="../measures/Q0.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{0}(f)\)</span></a></li><li><a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/osdeg.html" class="xref measure "><span class="tex">\(\overline{\mathrm{osdeg}}_{\varepsilon}(f)\)</span></a></li><li><a href="../concepts/certification.html" class="xref concept ">Operational certification complexity</a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/07-recent-separations.yaml</code> &mdash; id <code>ANDNotExactOne</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

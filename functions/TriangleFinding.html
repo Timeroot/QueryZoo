@@ -1,0 +1,1242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Triangle finding &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#total">Total functions</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">\(\mathrm{TRI}_m\)</div>
+    <div>
+      <h1>Triangle finding</h1>
+      <p class="lede">The flagship open problem of quantum query complexity: $\Omega(m)$ against $O(m^{5/4})$, stuck for twenty years.</p>
+      <p class="aliases">
+        <span class="kindtag k-total">total</span>
+        <span class="grouptag g-quantum">quantum</span>
+<span class="tag">arity: the adjacency matrix of a graph on $m$ vertices: $n = \binom m2 = \Theta(m^2)$ bits</span>      </p>
+    </div>
+  </header>
+
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>Does the input graph contain a copy of $K_3$? One query reveals one entry of the
+adjacency matrix. Detection and finding have the same complexity up to constants
+here, since the problem carries no promise [<a href="../refs.html#CGP26" class="xref ref ">CGP26</a>, Lem. 3.4].</p>
+<p>Values below are stated in the number of <em>vertices</em> $m$, as the literature does;
+in the zoo's convention $n = \binom m2$ input variables, so $m = \Theta(\sqrt n)$.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Formal definition</h2>
+        <p>$$\mathrm{TRI}_m(x) \;=\; \bigvee_{u&lt;v&lt;w}\ x_{uv} \wedge x_{vw} \wedge x_{uw}.$$</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q.html">Bounded-error quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(m),\ O(m^{5/4})\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">Open. Best upper bound $O(m^{5/4})$ with no log factors [<a href="../refs.html#CLM20" class="xref ref ">CLM20</a>], after $\tilde O(m^{5/4})$ by combinatorial arguments [<a href="../refs.html#LeGall14" class="xref ref ">LeGall14</a>, Thm. 1.1]. The ladder: $O(m^{3/2})$ by Grover, $\tilde O(m^{13/10})$ [<a href="../refs.html#MSS07" class="xref ref ">MSS07</a>, Thm. 4], $O(m^{35/27})$ [<a href="../refs.html#Belovs12span" class="xref ref ">Belovs12span</a>, Thm. 8], $O(m^{9/7})$ [<a href="../refs.html#LMS13" class="xref ref ">LMS13</a>, Thm. 7], also $\tilde O(m^{9/7})$ by nested quantum walks [<a href="../refs.html#JKM13" class="xref ref ">JKM13</a>]. The only lower bound is the trivial $\Omega(m)$ from a Grover search embedded in one bipartite block [<a href="../refs.html#CGP26" class="xref ref ">CGP26</a>, Lem. 3.3(3)]. Still open as of August 2026.
+<span class="refs"><a href="../refs.html#CLM20" class="xref ref ">CLM20</a> <a href="../refs.html#LeGall14" class="xref ref ">LeGall14</a> <a href="../refs.html#LMS13" class="xref ref ">LMS13</a> <a href="../refs.html#Belovs12span" class="xref ref ">Belovs12span</a> <a href="../refs.html#MSS07" class="xref ref ">MSS07</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R.html">Bounded-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">[<a href="../refs.html#CGP26" class="xref ref ">CGP26</a>, Lem. 3.3(3)] proves $\mathrm{R} = \Theta(m^2)$ for every subgraph-containment problem whose pattern keeps an edge after pinning, by embedding classical search over the $\binom m2$ pairs. Often asserted without citation, e.g. [<a href="../refs.html#LeGall14" class="xref ref ">LeGall14</a>, §1].
+<span class="refs"><a href="../refs.html#CGP26" class="xref ref ">CGP26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D.html">Deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\binom m2 = n\)</span></td>
+              <td class="short">Evasive for every $m$: containing $K_k$ is elusive for all $2 \le k \le m$ [<a href="../refs.html#Bollobas76" class="xref ref ">Bollobas76</a>]. (Kahn-Saks-Sturtevant gives evasiveness of monotone properties only for prime-power $m$; Chakrabarti-Khot-Shi handle general patterns only along an arithmetic progression.)
+<span class="refs"><a href="../refs.html#Bollobas76" class="xref ref ">Bollobas76</a> <a href="../refs.html#CKS02" class="xref ref ">CKS02</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/C1.html">1-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(3\)</span></td>
+              <td class="short">Name the three edges. This is the whole difficulty: with $N$ variables and $1$-certificates of size $K$, no positive-weight adversary can prove more than $\Omega(\sqrt{NK})$ [<a href="../refs.html#MSS07" class="xref ref ">MSS07</a>, §1], which for $N = m^2$, $K = 3$ is exactly the $\Omega(m)$ already on record.
+<span class="refs"><a href="../refs.html#MSS07" class="xref ref ">MSS07</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/C0.html">0-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\binom m2 = n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">The complete bipartite graph $K_{\lceil m/2\rceil,\lfloor m/2\rfloor}$ is a <em>maximal</em> triangle-free graph, so any unfixed pair could be set to $1$ and create a triangle; a $0$-certificate must fix every variable.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                  <a href="../measures/s.html">Sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">On that same $K_{m/2,m/2}$ all $2\binom{\lfloor m/2\rfloor}{2} = \Theta(m^2)$ non-edges are sensitive, and $\mathrm{s} \le \binom m2$. Note the asymmetry: on a $1$-input with a single triangle and nothing else, $\mathrm{s} = 3$, so it is $\mathrm{s}^0$ that carries the maximum.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs.html">Block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{s} \le \mathrm{bs} \le \mathrm{C} \le \binom m2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/fbs.html">Fractional block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{s}(f) \le \mathrm{fbs}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/RC.html" title="Randomized certificate complexity">
+    <span class="tex">\(\mathrm{RC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/RC.html">Randomized certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{s}(f) \le \mathrm{RC}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/FC.html" title="Fractional certificate complexity">
+    <span class="tex">\(\mathrm{FC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/FC.html">Fractional certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{s}(f) \le \mathrm{FC}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rbar.html">Expected-cost randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{s}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+
+                  <a href="../measures/chi.html">Conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{s}(f) \le \chi(g) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/chibar.html" title="Max-conflict complexity">
+    <span class="tex">\(\bar{\chi}(f)\)</span>
+  </a>
+
+                  <a href="../measures/chibar.html">Max-conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{s}(f) \le \bar{\chi}(g) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/LR.html" title="Linearised randomized complexity">
+    <span class="tex">\(\mathrm{LR}(f)\)</span>
+  </a>
+
+                  <a href="../measures/LR.html">Linearised randomized complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{s}(f) \le \mathrm{LR}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/Rstar.html" title="Asymptotic composition rate">
+    <span class="tex">\(\mathrm{R}^{*}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rstar.html">Asymptotic composition rate</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{bs}(f) \le \mathrm{R}^{*}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CA.html" title="Classical adversary bound">
+    <span class="tex">\(\mathrm{CA}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CA.html">Classical adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{s}(f) \le \mathrm{CA}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGpub.html" title="Certificate game complexity (public coin)">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGpub.html">Certificate game complexity (public coin)</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{s}(f) \le \mathrm{CG}^{\mathrm{pub}}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/prt.html" title="Partition bound">
+    <span class="tex">\(\mathrm{prt}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/prt.html">Partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{s}(f) \le \mathrm{prt}_{\varepsilon}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/rprt.html" title="Relaxed partition bound">
+    <span class="tex">\(\overline{\mathrm{prt}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rprt.html">Relaxed partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">Sandwiched: $\mathrm{s}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{R}_{\varepsilon}(f)$, with both ends $\Theta(m^2) = \Theta(n)$ here. The lower end is the zoo's own observation that the [<a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a>] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                  <a href="../measures/C.html">Certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\binom m2 = n\)</span></td>
+              <td class="short">$\mathrm{C} = \max(\mathrm{C}^0,\mathrm{C}^1) = \max(\binom m2, 3)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s1.html" title="1-sensitivity">
+    <span class="tex">\(\mathrm{s}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/s1.html">1-sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(3\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Sharp, and the whole story of this problem in one line. If two edges $e \ne f$ are both sensitive at a $1$-input then deleting either kills <em>every</em> triangle, so every triangle contains both; four sensitive edges are impossible and three must be a single triangle. Attained by a graph with exactly one triangle. Compare $\mathrm{s}^0 = \Theta(m^2)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs1.html" title="1-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs1.html">1-block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(3\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Same argument as $\mathrm{s}^1$: every sensitive block must delete an edge of every triangle, so disjoint blocks inject into the $3$ edges of any one triangle.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s0.html" title="0-sensitivity">
+    <span class="tex">\(\mathrm{s}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/s0.html">0-sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">The maximum in the $\mathrm{s}$ entry is attained at the $0$-input $K_{\lceil m/2\rceil,\lfloor m/2\rfloor}$, so it is the $0$-side that carries it.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs0.html" title="0-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs0.html">0-block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{s}^0 \le \mathrm{bs}^0 \le \binom m2$, with $\mathrm{s}^0 = \Theta(m^2)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Cmin.html">Minimum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(3\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">A $1$-certificate is a triangle and cannot be smaller; every $0$-input costs $\binom m2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/EC.html" title="Expectational certificate complexity">
+    <span class="tex">\(\mathrm{EC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/EC.html">Expectational certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Squeezed between $\mathrm{fbs} = \Theta(m^2)$ and $\mathrm{C} = \binom m2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/UC.html" title="Unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/UC.html">Unambiguous certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\binom m2 = n\)</span></td>
+              <td class="short">Squeezed between $\mathrm{C} = \binom m2$ and $\mathrm{D} = \binom m2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/SP.html" title="Subcube partition complexity">
+    <span class="tex">\(\mathrm{SP}(f)\)</span>
+  </a>
+
+                  <a href="../measures/SP.html">Subcube partition complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\binom m2 = n\)</span></td>
+              <td class="short">Squeezed between $\mathrm{C} = \binom m2$ and $\mathrm{D} = \binom m2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dna.html">Non-adaptive deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\binom m2 = n\)</span></td>
+              <td class="short">Every edge is relevant, so a non-adaptive deterministic algorithm reads the whole adjacency matrix -- which costs nothing extra, since the property is evasive.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rna.html">Non-adaptive randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched between $\mathrm{R} = \Theta(m^2)$ and $\mathrm{D}^{\mathrm{na}} = \binom m2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dmu.html">Distributional query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">By Yao, $\max_\mu \mathrm{D}^\mu_\varepsilon = \mathrm{R}_\varepsilon = \Theta(m^2)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R0.html">Zero-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m^2)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R1.html">One-sided-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with both ends $\Theta(m^2)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CG.html" title="Certificate game complexity (private coin)">
+    <span class="tex">\(\mathrm{CG}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CG.html">Certificate game complexity (private coin)</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">Pinned by $\mathrm{R}_0 \le \mathrm{CG} \le \mathrm{C}^0\mathrm{C}^1$ [<a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a>]: a $1$-certificate is a single triangle, so $\mathrm{C}^1 = 3$ and the product is $\binom m2 \cdot 3 = \Theta(m^2)$, matching $\mathrm{R}_0 = \Theta(m^2)$ from below. Consistent with $\mathrm{Adv}^2 = \Theta(m^2)$. The lopsided certificate sizes are what make this one of the rare cases where $\mathrm{CG}$ stays at the arity; the old note justified it by the false $\mathrm{CG} \le \mathrm{D}$.
+<span class="refs"><a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Adv.html" title="Positive-weights adversary bound">
+    <span class="tex">\(\mathrm{Adv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Adv.html">Positive-weights adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Pinned exactly, and it is the barrier in the $\mathrm{C}^1$ note made into a value. Upper: $\mathrm{Adv}(f) \le \sqrt{\mathrm{C}^0\mathrm{C}^1} = \sqrt{3\binom m2} = O(m)$. Lower: restrict to $K_{\lceil m/2\rceil,\lfloor m/2\rfloor}$ with the $2\binom{\lfloor m/2\rfloor}{2} = \Theta(m^2)$ within-side pairs left free; adding any one of them closes a triangle, so the restriction <em>is</em> $\mathrm{OR}$ on $\Theta(m^2)$ variables, and $\mathrm{Adv}$ is monotone under restriction, giving $\mathrm{Adv} \ge \mathrm{Adv}(\mathrm{OR}_{\Theta(m^2)}) = \Omega(m)$. So the positive-weights adversary is stuck at the trivial bound for a structural reason, and any improvement on $\Omega(m)$ needs negative weights or a different method entirely.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                  <a href="../measures/lambda.html">Spectral sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Squeezed: $\sqrt{\mathrm{s}(f)} \le \lambda(f) \le \mathrm{Adv}(f)$, with $\mathrm{s} = \Theta(m^2)$ and $\mathrm{Adv} = \Theta(m)$. Spectral sensitivity is therefore a <em>tight</em> certificate that the positive adversary cannot go past $m$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QC.html" title="Quantum certificate complexity">
+    <span class="tex">\(\mathrm{QC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QC.html">Quantum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m)\)</span></td>
+              <td class="short">$\mathrm{QC}(f) = \Theta(\sqrt{\mathrm{FC}(f)})$, and $\mathrm{FC} = \Theta(m^2)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/adeg.html">Approximate degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(m),\ O(m^{5/4})\)</span></td>
+              <td class="short">Open, and open in exactly the same window as $\mathrm{Q}$. Upper: $\widetilde{\deg} \le 2\mathrm{Q} = O(m^{5/4})$ by the polynomial method applied to [<a href="../refs.html#CLM20" class="xref ref ">CLM20</a>]. Lower: $\widetilde{\deg} = \Omega(\sqrt{\mathrm{bs}}) = \Omega(m)$ by Nisan-Szegedy, which is all that is known -- the Bun-Kothari-Thaler machinery that settled $\widetilde{\deg}$ for <a href="../functions/Surjectivity.html" class="xref function "><span class="tex">\(\mathrm{SURJ}_{N,R}\)</span></a> and pushed <a href="../functions/KDistinctness.html" class="xref function "><span class="tex">\(\mathrm{DIST}^k_n\)</span></a> has not been made to say anything here. Exact $\deg$ is left blank on purpose: the top Fourier coefficient $\sum_x(-1)^{|x|}\mathrm{TRI}_m(x)$ is nonzero for $3 \le m \le 7$ -- it is $-1, 3, -4, -3, -61$ -- but it is tiny compared with $2^{\binom m2}$ and nothing rules out its vanishing at larger $m$, so $\deg = \binom m2$ stays a conjecture.
+<span class="refs"><a href="../refs.html#CLM20" class="xref ref ">CLM20</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/gamma2.html" title="Approximate gamma_2 norm">
+    <span class="tex">\(\gamma_2^{\alpha}(f)\)</span>
+  </a>
+
+                  <a href="../measures/gamma2.html">Approximate gamma_2 norm</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(m),\ O(m^{5/4})\)</span></td>
+              <td class="short">The approximate $\gamma_2$ norm equals $\mathrm{Adv}^{\pm}$ up to constants (<a href="../measures/gamma2.html" class="xref measure "><span class="tex">\(\gamma_2^{\alpha}(f)\)</span></a> vs <a href="../measures/Advpm.html" class="xref measure "><span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span></a>), so it inherits the open window too.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGstar.html" title="Quantum certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{*}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGstar.html">Quantum certificate game complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, <a href="../measures/CGpub.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span></a> vs <a href="../measures/CGns.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span></a>), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin <a href="../measures/CG.html" class="xref measure "><span class="tex">\(\mathrm{CG}(f)\)</span></a> can be larger.
+<span class="refs"><a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGns.html" title="Non-signaling certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGns.html">Non-signaling certificate game complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2) = \Theta(n)\)</span></td>
+              <td class="short">All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, <a href="../measures/CGpub.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span></a> vs <a href="../measures/CGns.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span></a>), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin <a href="../measures/CG.html" class="xref measure "><span class="tex">\(\mathrm{CG}(f)\)</span></a> can be larger.
+<span class="refs"><a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Advpm.html" title="General (negative-weights) adversary bound">
+    <span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Advpm.html">General (negative-weights) adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(m),\ O(m^{5/4})\)</span></td>
+              <td class="short">$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ (<a href="../measures/Advpm.html" class="xref measure "><span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span></a> vs <a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>), so the general adversary inherits the open window verbatim: computing $\mathrm{Adv}^{\pm}(\mathrm{TRI}_m)$ <em>is</em> the triangle problem.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/MAdv.html" title="Multiplicative adversary">
+    <span class="tex">\(\mathrm{MAdv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MAdv.html">Multiplicative adversary</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(m),\ O(m^{5/4})\)</span></td>
+              <td class="short">Squeezed between $\mathrm{Adv}^{\pm}$, which the multiplicative adversary dominates, and $\mathrm{Q}$, which it lies below -- and those two have the same open window here. So the strengthening from additive to multiplicative buys nothing on the triangle problem either: any improvement would be an improvement to $\mathrm{Q}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/robustQ.html">Robust quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(m),\ O(m^{5/4}\log m)\)</span></td>
+              <td class="short">Between $\mathrm{Q}$ and $O(\mathrm{Q}\log \mathrm{Q})$ (<a href="../measures/robustQ.html" class="xref measure "><span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span></a> vs <a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>), so the window is the $\mathrm{Q}$ window plus a log. Noise is not where the difficulty lies.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Np.html">Noisy decision tree complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\tilde\Theta(m^2)\)</span></td>
+              <td class="short">Between $\mathrm{R} = \Theta(m^2)$ and $O(\mathrm{R}\log \mathrm{R}) = O(m^2\log m)$ (<a href="../measures/Np.html" class="xref measure "><span class="tex">\(\mathrm{N}_{p}(f)\)</span></a> vs <a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>). Classically the problem is already maximally hard, so noise costs only a log.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Inf.html" title="Total influence (L2 influence)">
+    <span class="tex">\(\mathrm{I}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Inf.html">Total influence (L2 influence)</a>
+              </td>
+              <td class="val"><span class="tex">\(2^{-\Theta(m^2)}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Exponentially small, because a uniform graph has a triangle with probability $1 - 2^{-\Theta(m^2)}$: the number of triangle-free graphs on $m$ vertices is $2^{(1/4+o(1))m^2}$ against $2^{\binom m2}$ in all. Write $q = \Pr[\mathrm{TRI}_m = 0]$. Upper: an edge is pivotal only if deleting it destroys every triangle, in particular only on graphs whose $\mathrm{TRI}$ value is $0$ after the flip, so $\mathrm{Inf}_e \le 2q$ and $\mathrm{I} \le 2\binom m2 q = 2^{-\Theta(m^2)}$. Lower: Poincare, $\mathrm{I} \ge \mathrm{Var} = \Theta(q)$. So on the uniform measure the triangle problem is invisible, which is why every lower bound for it argues against a planted distribution instead.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Inf1.html" title="Total L1 influence">
+    <span class="tex">\(\mathrm{I}^{1}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Inf1.html">Total L1 influence</a>
+              </td>
+              <td class="val"><span class="tex">\(2^{-\Theta(m^2)}\)</span></td>
+              <td class="short">For Boolean-valued $f$ the $L_1$ and $L_2$ influences coincide (<a href="../measures/Inf1.html" class="xref measure "><span class="tex">\(\mathrm{I}^{1}(f)\)</span></a>), so this is the $\mathrm{I}(f)$ row verbatim.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/MaxInf.html" title="Maximum influence">
+    <span class="tex">\(\mathrm{MaxInf}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MaxInf.html">Maximum influence</a>
+              </td>
+              <td class="val"><span class="tex">\(2^{-\Theta(m^2)}\)</span></td>
+              <td class="short">Exactly $\mathrm{I}(f)/\binom m2$: $\mathrm{TRI}_m$ is edge-transitive, so every coordinate has the same influence. The $\binom m2$ is swallowed by the exponent.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Var.html" title="Variance">
+    <span class="tex">\(\mathrm{Var}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Var.html">Variance</a>
+              </td>
+              <td class="val"><span class="tex">\(2^{-\Theta(m^2)}\)</span></td>
+              <td class="short">From $\mathrm{Var} = 2\,\mathrm{NS}_{1/2}$ and the <a href="../measures/NS.html" class="xref measure "><span class="tex">\(\mathrm{NS}_{\delta}(f)\)</span></a> entry: a uniform graph contains a triangle with probability $1-2^{-\Theta(m^2)}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
+  </a>
+
+                  <a href="../measures/RS.html">Sabotage complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Upper: $\mathrm{RS}\le\mathrm{R}=\Theta(m^2)$ [<a href="../refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a>]. Lower: start from the complete bipartite graph $K_{m/2,m/2}$, which is triangle-free, and note that adding any one of the $2\binom{m/2}2=\Theta(m^2)$ missing intra-side edges creates a triangle, since two vertices on the same side always share a neighbour. Starring any one of those edges sabotages the input, so finding a $\ast$ is finding a marked coordinate among $\Theta(m^2)$.
+<span class="refs"><a href="../refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/noisyR.html" title="Noisy randomized query complexity">
+    <span class="tex">\(\mathrm{noisyR}(f)\)</span>
+  </a>
+
+                  <a href="../measures/noisyR.html">Noisy randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2)\)</span></td>
+              <td class="short">$\mathrm{noisyR}\le\mathrm{R}$ [<a href="../refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a>], and $\mathrm{R}=\Theta(m^2)=\Theta(\text{arity})$ forces $\mathrm{noisyR}=\Theta(\mathrm{R})$ [<a href="../refs.html#CKMPSS23" class="xref ref ">CKMPSS23</a>].
+<span class="refs"><a href="../refs.html#CKMPSS23" class="xref ref ">CKMPSS23</a> <a href="../refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_prod.html" title="Product-distribution distributional complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_prod.html">Product-distribution distributional complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Upper: $\mathrm{D}^{\mathrm{prod}}\le\mathrm{R}=\Theta(m^2)$. Lower: the Erdos-Renyi measure $G(m,c/m)$ is a product distribution on the edge slots, and $c$ can be chosen so that a triangle exists with probability $1/2$. A tree of depth $\varepsilon m^2$ leaves a pair set that still spans $(1-3\varepsilon)\binom m3$ triples, each independently present with probability $c^3/m^3$, so conditioned on any transcript the posterior probability of a triangle in the unread part stays bounded away from $0$ and $1$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/deg2.html" title="Mod-2 degree">
+    <span class="tex">\(\deg_2(f)\)</span>
+  </a>
+
+                  <a href="../measures/deg2.html">Mod-2 degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Set every edge at vertex $1$ to $1$ and leave the rest free: the graph then has a triangle exactly when some edge survives among the other $m-1$ vertices, so the restriction is $\mathrm{OR}_t$ with $t=\binom{m-1}2$. Over $\mathbb{F}_2$, $\mathrm{OR}_t=1+\prod_i(1+x_i)$ has degree $t$, and mod-$2$ degree never increases under restriction; the ceiling is $\binom m2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/degp.html" title="Mod-p degree">
+    <span class="tex">\(\deg_p(f)\)</span>
+  </a>
+
+                  <a href="../measures/degp.html">Mod-p degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Same restriction as <a href="../measures/deg2.html" class="xref measure "><span class="tex">\(\deg_2(f)\)</span></a>: $\mathrm{OR}_t=1-\prod_i(1-x_i)$ has $\mathbb{F}_p$-degree $t=\binom{m-1}2$, and $\deg_p\le\deg\le\binom m2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/PDT.html" title="Parity decision tree complexity">
+    <span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span>
+  </a>
+
+                  <a href="../measures/PDT.html">Parity decision tree complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2)\)</span></td>
+              <td class="short">$\deg_2\le\mathrm{D}^{\oplus}\le\mathrm{D}$: a depth-$t$ parity tree writes $f$ as a sum of products of at most $t$ affine forms over $\mathbb{F}_2$. With $\deg_2=\Theta(m^2)$ and $\mathrm{D}=\binom m2$ the two ends meet.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Fdim.html" title="Fourier dimension">
+    <span class="tex">\(\dim_{\mathbb{F}_2}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Fdim.html">Fourier dimension</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2)\)</span></td>
+              <td class="short">$\mathrm{D}^{\oplus}\le\dim_{\mathbb{F}_2}(f)\le\binom m2$ (<a href="../measures/Fdim.html" class="xref measure "><span class="tex">\(\dim_{\mathbb{F}_2}(f)\)</span></a> vs <a href="../measures/PDT.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span></a>), and $\mathrm{D}^{\oplus}=\Theta(m^2)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/spar.html" title="Fourier sparsity">
+    <span class="tex">\(\mathrm{spar}(f)\)</span>
+  </a>
+
+                  <a href="../measures/spar.html">Fourier sparsity</a>
+              </td>
+              <td class="val"><span class="tex">\(2^{\Theta(m^2)}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Sparsity does not increase under restriction, and the restriction of <a href="../measures/deg2.html" class="xref measure "><span class="tex">\(\deg_2(f)\)</span></a> is $\mathrm{OR}_t$ with $t=\binom{m-1}2$, whose $\pm1$ form $1-2\prod_i(1-x_i)$ has all $2^t$ Fourier coefficients nonzero. The ceiling is $2^{\binom m2}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/L1.html" title="Spectral norm">
+    <span class="tex">\(\hat{L}_1(f)\)</span>
+  </a>
+
+                  <a href="../measures/L1.html">Spectral norm</a>
+              </td>
+              <td class="val"><span class="tex">\(2^{\Omega(m)}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Restrict to $m/3$ vertex-disjoint triangles with all other edges set to $0$: the restriction is $\mathrm{OR}_{m/3}\circ\mathrm{AND}_3$, the blocks are disjoint so $\hat L_1$ multiplies, and $\hat L_1(\prod_i(1-\mathrm{AND}_3))=(2-2^{-2})^{m/3}$; with $\hat L_1(1-2P)\ge2\hat L_1(P)-1$ this gives $2^{\Omega(m)}$. Restriction can only decrease $\hat L_1$, and the ceiling is $2^{\mathrm{D}}=2^{\binom m2}$ (<a href="../measures/L1.html" class="xref measure "><span class="tex">\(\hat{L}_1(f)\)</span></a> vs <a href="../measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a>).
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/NS.html" title="Noise sensitivity">
+    <span class="tex">\(\mathrm{NS}_{\delta}(f)\)</span>
+  </a>
+
+                  <a href="../measures/NS.html">Noise sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(2^{-\Theta(m^2)}\)</span></td>
+              <td class="short">$\delta\,\mathrm{MaxInf}\le\mathrm{NS}_\delta\le\delta\,\mathrm{Inf}$, and both recorded influence values are $2^{-\Theta(m^2)}$: a uniformly random graph contains a triangle with overwhelming probability, so resampling a $\delta$-fraction of the edges almost never changes the answer.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Stab.html" title="Noise stability">
+    <span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Stab.html">Noise stability</a>
+              </td>
+              <td class="val"><span class="tex">\(1 - 2^{-\Theta(m^2)}\)</span></td>
+              <td class="short">$\mathrm{Stab}_\rho=1-2\,\mathrm{NS}_\delta$ at $\rho=1-2\delta$, and $\mathrm{NS}_\delta=2^{-\Theta(m^2)}$. Triangle-freeness is a vanishingly rare event, so the function is nearly constant and nearly perfectly stable.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/ndeg.html" title="Nondeterministic degree">
+    <span class="tex">\(\mathrm{ndeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/ndeg.html">Nondeterministic degree</a>
+              </td>
+              <td class="val"><span class="tex">\(3\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Upper: $\sum_{\{a,b,c\}}x_{ab}x_{bc}x_{ca}$ is a sum of non-negative terms, positive exactly on the graphs with a triangle, so $\mathrm{ndeg}\le\mathrm{C}^1=3$. Lower: fix one triple free and every other edge to $0$; a multilinear polynomial in three variables vanishing on the other seven points must be a multiple of $x_1x_2x_3$, and nondeterministic degree does not increase under restriction.
+<span class="refs"><a href="../refs.html#deWolf03" class="xref ref ">deWolf03</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/NQ.html" title="Nondeterministic quantum query complexity">
+    <span class="tex">\(\mathrm{NQ}(f)\)</span>
+  </a>
+
+                  <a href="../measures/NQ.html">Nondeterministic quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(2\)</span></td>
+              <td class="short">$\mathrm{NQ}=\lceil\mathrm{ndeg}/2\rceil$ [<a href="../refs.html#deWolf03" class="xref ref ">deWolf03</a>] and $\mathrm{ndeg}=3$. Two queries suffice for a nondeterministic quantum verifier even though $\mathrm{Q}=\Omega(m)$.
+<span class="refs"><a href="../refs.html#deWolf03" class="xref ref ">deWolf03</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/rdeg.html" title="Rational degree">
+    <span class="tex">\(\mathrm{rdeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rdeg.html">Rational degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">$\mathrm{rdeg}=\max\{\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f)\}\le\mathrm{C}=\binom m2$. The complement side is the expensive one: on the restriction of <a href="../measures/deg2.html" class="xref measure "><span class="tex">\(\deg_2(f)\)</span></a> the complement is $\mathrm{NOR}_t$ with $t=\binom{m-1}2$, and a polynomial nonzero exactly at $0^t$ is a multiple of $\prod_i(1-x_i)$, so $\mathrm{ndeg}(\bar f)\ge\binom{m-1}2$.
+<span class="refs"><a href="../refs.html#deWolf03" class="xref ref ">deWolf03</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/UCmin.html" title="Minimum unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/UCmin.html">Minimum unambiguous certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(m^2)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">$\mathrm{UC}^0\ge\mathrm{C}^0=\binom m2$, so the question is the $1$-side. For the input consisting of a single triangle $T$, any certificate must fix a triangle to $1$ and can only fix edges of $T$, so its $1$-part is exactly $T$. For two distinct triangles $T$ and $U$ the graph $T\cup U$ then lies in both certificates unless one of them fixes an edge of the other to $0$; orienting each such pair, some triangle beats at least half the others, and since each edge lies in $m-2$ triangles its $0$-set has size $\Omega(m^2)$. Hence $\mathrm{UC}^1=\Theta(m^2)$ too, and the ceiling is $\mathrm{UC}=\binom m2$.
+<span class="refs"><a href="../refs.html#BHT17" class="xref ref ">BHT17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/cjdeg.html">Conical junta degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(m),\ O(m^2)\)</span></td>
+              <td class="short">$\widetilde{\deg}_\varepsilon\le\mathrm{cjdeg}_\varepsilon\le\mathrm{R}_\varepsilon$ (<a href="../measures/cjdeg.html" class="xref measure "><span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span></a> vs <a href="../measures/adeg.html" class="xref measure "><span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span></a>, <a href="../measures/cjdeg.html" class="xref measure "><span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span></a> vs <a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>), with $\widetilde{\deg}=\Omega(m)$ and $\mathrm{R}=\Theta(m^2)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/ardeg.html" title="Approximate rational degree">
+    <span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/ardeg.html">Approximate rational degree</a>
+              </td>
+              <td class="val"><span class="tex">\(O(m^{5/4})\)</span></td>
+              <td class="short">$\mathrm{rdeg}_\varepsilon\le\widetilde{\deg}_\varepsilon=O(m^{5/4})$ (<a href="../measures/ardeg.html" class="xref measure "><span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span></a> vs <a href="../measures/adeg.html" class="xref measure "><span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span></a>). The $\mathrm{sdeg}\le\mathrm{rdeg}_{1/3}$ route gives no lower bound here, since no sign-degree bound is recorded for triangle finding.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/PostQ.html" title="Post-selected quantum query complexity">
+    <span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/PostQ.html">Post-selected quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(O(m^{5/4})\)</span></td>
+              <td class="short">$\mathrm{PostQ}_\varepsilon=\Theta(\mathrm{rdeg}_\varepsilon)$ [<a href="../refs.html#MahadevdeWolf15" class="xref ref ">MahadevdeWolf15</a>]; see <a href="../measures/ardeg.html" class="xref measure "><span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span></a>. Post-selection is in particular at least as strong as the $O(m^{5/4})$ quantum walk.
+<span class="refs"><a href="../refs.html#MahadevdeWolf15" class="xref ref ">MahadevdeWolf15</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_size.html">Decision tree size</a>
+              </td>
+              <td class="val"><span class="tex">\(2^{\Theta(m^2)}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Every $0$-input needs all $\binom m2$ edges read, since $\mathrm{C}^0=\binom m2$, so distinct triangle-free graphs end at distinct leaves. The $2^{m^2/4}$ bipartite graphs on a fixed balanced vertex split are all triangle-free, so $\mathrm{DTsize}\ge2^{m^2/4}$; the ceiling is $2^{\binom m2}$.
+</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Separations its values prove <span class="dim">— computed, not recorded</span></h2>
+        <p class="dim small">Read straight off the table above by comparing two values: no
+        relation record states these, and where one does and says more, the record wins and the
+        pair is not listed here. 12 in total.</p>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/PDT.html" title="Parity decision tree complexity">
+    <span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/Stab.html" title="Noise stability">
+    <span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=PDT&amp;b=Stab">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\oplus}(f_n) \to \infty \ \text{ while } \ \mathrm{Stab}_{\rho}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\oplus}(f) = \Theta(m^2)\) against \(\mathrm{Stab}_{\rho}(f) = 1 - 2^{-\Theta(m^2)}\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Np&amp;b=C1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{N}_{p}(f_n) \to \infty \ \text{ while } \ \mathrm{C}^1(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{N}_{p}(f) = \tilde\Theta(m^2)\) against \(\mathrm{C}^1(f) = 3\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-degree" href="../measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/NQ.html" title="Nondeterministic quantum query complexity">
+    <span class="tex">\(\mathrm{NQ}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=cjdeg&amp;b=NQ">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f_n) \to \infty \ \text{ while } \ \mathrm{NQ}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{cjdeg}_{\varepsilon}(f) = \Omega(m),\ O(m^2)\) against \(\mathrm{NQ}(f) = 2\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-fourier" href="../measures/L1.html" title="Spectral norm">
+    <span class="tex">\(\hat{L}_1(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s1.html" title="1-sensitivity">
+    <span class="tex">\(\mathrm{s}^1(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=L1&amp;b=s1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\hat{L}_1(f_n) \to \infty \ \text{ while } \ \mathrm{s}^1(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\hat{L}_1(f) = 2^{\Omega(m)}\) against \(\mathrm{s}^1(f) = 3\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-adversary" href="../measures/CG.html" title="Certificate game complexity (private coin)">
+    <span class="tex">\(\mathrm{CG}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=D_size&amp;b=CG">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{DTsize}(f_n) = 2^{\Omega(\mathrm{CG}(f_n))}\)</span></div>
+            <div class="refs dim">from \(\mathrm{DTsize}(f) = 2^{\Theta(m^2)}\) against \(\mathrm{CG}(f) = \Theta(m^2) = \Theta(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/NQ.html" title="Nondeterministic quantum query complexity">
+    <span class="tex">\(\mathrm{NQ}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Np&amp;b=NQ">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{N}_{p}(f_n) \to \infty \ \text{ while } \ \mathrm{NQ}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{N}_{p}(f) = \tilde\Theta(m^2)\) against \(\mathrm{NQ}(f) = 2\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-degree" href="../measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=cjdeg&amp;b=C1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f_n) \to \infty \ \text{ while } \ \mathrm{C}^1(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{cjdeg}_{\varepsilon}(f) = \Omega(m),\ O(m^2)\) against \(\mathrm{C}^1(f) = 3\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-fourier" href="../measures/L1.html" title="Spectral norm">
+    <span class="tex">\(\hat{L}_1(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/bs1.html" title="1-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^1(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=L1&amp;b=bs1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\hat{L}_1(f_n) \to \infty \ \text{ while } \ \mathrm{bs}^1(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\hat{L}_1(f) = 2^{\Omega(m)}\) against \(\mathrm{bs}^1(f) = 3\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-fourier" href="../measures/Fdim.html" title="Fourier dimension">
+    <span class="tex">\(\dim_{\mathbb{F}_2}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/Stab.html" title="Noise stability">
+    <span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Fdim&amp;b=Stab">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\dim_{\mathbb{F}_2}(f_n) \to \infty \ \text{ while } \ \mathrm{Stab}_{\rho}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\dim_{\mathbb{F}_2}(f) = \Theta(m^2)\) against \(\mathrm{Stab}_{\rho}(f) = 1 - 2^{-\Theta(m^2)}\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-fourier" href="../measures/L1.html" title="Spectral norm">
+    <span class="tex">\(\hat{L}_1(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=L1&amp;b=C1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\hat{L}_1(f_n) \to \infty \ \text{ while } \ \mathrm{C}^1(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\hat{L}_1(f) = 2^{\Omega(m)}\) against \(\mathrm{C}^1(f) = 3\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-fourier" href="../measures/L1.html" title="Spectral norm">
+    <span class="tex">\(\hat{L}_1(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/NQ.html" title="Nondeterministic quantum query complexity">
+    <span class="tex">\(\mathrm{NQ}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=L1&amp;b=NQ">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\hat{L}_1(f_n) \to \infty \ \text{ while } \ \mathrm{NQ}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\hat{L}_1(f) = 2^{\Omega(m)}\) against \(\mathrm{NQ}(f) = 2\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-fourier" href="../measures/L1.html" title="Spectral norm">
+    <span class="tex">\(\hat{L}_1(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/ndeg.html" title="Nondeterministic degree">
+    <span class="tex">\(\mathrm{ndeg}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=L1&amp;b=ndeg">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\hat{L}_1(f_n) \to \infty \ \text{ while } \ \mathrm{ndeg}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\hat{L}_1(f) = 2^{\Omega(m)}\) against \(\mathrm{ndeg}(f) = 3\)</div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Separations it witnesses</h2>
+        <ul class="witlist">
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=R&amp;b=Q">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">A candidate for a large gap that nobody can pin down: $\mathrm{R} = \Theta(m^2)$ against a $\mathrm{Q}$ known only to lie in $[\Omega(m), O(m^{5/4})]$, so the true exponent of $\mathrm{R}$ vs $\mathrm{Q}$ here is somewhere in $[8/5, 2]$.</div>
+          </li>
+        </ul>
+      </section>
+
+
+      <section class="card">
+        <h2>Notes</h2>
+        <p>Two barriers are worth knowing. The certificate-complexity barrier above caps the
+positive-weight adversary at $\Omega(m)$. And [<a href="../refs.html#BalodisIraids15" class="xref ref ">BalodisIraids15</a>] show
+$\mathrm{Q}(\mathrm{TRI}_m) = \Omega(\sqrt m \cdot \mathrm{Q}(\mathrm{GC}_m))$ for
+graph collision, so any super-Grover bound for graph collision -- itself stuck at
+the trivial bound -- would immediately break the triangle barrier.</p>
+<p>A restricted-model lower bound often misquoted as an unconditional one:
+[<a href="../refs.html#BelovsRosmanis14" class="xref ref ">BelovsRosmanis14</a>, Prop. 13] gives $\Omega(m^{9/7}/\sqrt{\log m})$ for the
+<em>non-adaptive learning graph</em> complexity of the triangle certificate structure,
+and unconditionally only for the edge-weighted triangle-sum problem. Le Gall's
+$\tilde O(m^{5/4})$ therefore separates adaptive from non-adaptive learning
+graphs rather than contradicting anything.</p>
+
+      </section>
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#CLM20" class="xref ref ">[CLM20]</a> <span class="dim">Extended learning graphs for triangle finding</span></li>
+            <li><a href="../refs.html#LeGall14" class="xref ref ">[LeGall14]</a> <span class="dim">Improved quantum algorithm for triangle finding via combinatorial arguments</span></li>
+            <li><a href="../refs.html#LMS13" class="xref ref ">[LMS13]</a> <span class="dim">Improved quantum query algorithms for triangle finding and associativity testing</span></li>
+            <li><a href="../refs.html#JKM13" class="xref ref ">[JKM13]</a> <span class="dim">Nested quantum walks with quantum data structures</span></li>
+            <li><a href="../refs.html#Belovs12span" class="xref ref ">[Belovs12span]</a> <span class="dim">Span programs for functions with constant-sized 1-certificates</span></li>
+            <li><a href="../refs.html#MSS07" class="xref ref ">[MSS07]</a> <span class="dim">Quantum algorithms for the triangle problem</span></li>
+            <li><a href="../refs.html#CGP26" class="xref ref ">[CGP26]</a> <span class="dim">Quantum algorithms for path and cycle containment problems</span></li>
+            <li><a href="../refs.html#Bollobas76" class="xref ref ">[Bollobas76]</a> <span class="dim">Complete subgraphs are elusive</span></li>
+            <li><a href="../refs.html#CKS02" class="xref ref ">[CKS02]</a> <span class="dim">Evasiveness of subgraph containment and related properties</span></li>
+            <li><a href="../refs.html#BelovsRosmanis14" class="xref ref ">[BelovsRosmanis14]</a> <span class="dim">On the power of non-adaptive learning graphs</span></li>
+            <li><a href="../refs.html#BalodisIraids15" class="xref ref ">[BalodisIraids15]</a> <span class="dim">Quantum lower bound for graph collision implies lower bound for triangle detection</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/Advpm.html" class="xref measure "><span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span></a></li><li><a href="../measures/C1.html" class="xref measure "><span class="tex">\(\mathrm{C}^1(f)\)</span></a></li><li><a href="../functions/GroverSearch.html" class="xref function "><span class="tex">\(\mathrm{SEARCH}_n\)</span></a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/05-more.yaml</code> &mdash; id <code>TriangleFinding</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

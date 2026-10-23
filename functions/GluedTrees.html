@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welded trees &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#relation">Relations</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">\(\mathrm{WT}_n\)</div>
+    <div>
+      <h1>Welded trees</h1>
+      <p class="lede">The quantum-walk speedup: $\mathrm{Q} = \Theta(n)$ against $\mathrm{R} = \mathrm{D} = \tilde\Theta(2^{n/2})$ -- exponential in the tree height, but only $\tilde\Theta(\sqrt{N})$ in the vertex count.</p>
+      <p class="aliases">
+        <span class="kindtag k-relation">relation</span>
+        <span class="grouptag g-relational">relational</span>
+<span class="tag">arity: a $9$-edge-coloured adjacency oracle on $2^{2n}$ possible vertex names, for a graph with $2^{n+2}-2$ vertices</span>&mdash; also: <code>glued trees</code>, <code>conjoined trees</code>, <code>graph traversal problem</code>      </p>
+    </div>
+  </header>
+
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>Two complete binary trees of height $n$ are joined leaf-to-leaf by a random cycle
+alternating between the two leaf sets. Each vertex gets a uniformly random $2n$-bit
+<em>name</em>, so names are exponentially sparse in the $2^{2n}$ name space, and the
+oracle maps (name, colour) to the name of the neighbour across the edge of that
+colour, or to $1^{2n}$ if there is none. Given the name of the ENTRANCE, output the
+name of the EXIT. The random $9$-colouring is chosen precisely so that it tells a
+classical algorithm nothing.</p>
+<p>This is a <em>relation</em> with a unique valid answer, and the oracle is not a Boolean
+decision tree: costs below are in oracle calls, and Boolean queries would cost an
+extra $O(n)$ factor.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Formal definition</h2>
+        <p>$S = \{(\mathcal{O}_{G,\pi,c},\ \pi(\mathrm{EXIT}))\}$ over welded trees $G$ of height $n$, injective namings $\pi: V \hookrightarrow \{0,1\}^{2n}$ with $\pi(\mathrm{ENTRANCE})$ fixed, and proper $9$-edge-colourings $c$.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q.html">Bounded-error quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Upper: [<a href="../refs.html#JefferyZur25" class="xref ref ">JefferyZur25</a>, §5], a multidimensional (electric-network) quantum walk, $O(n)$ queries and $O(n^2)$ time; [<a href="../refs.html#Belovs24welded" class="xref ref ">Belovs24welded</a>] reproves it in a page. The 2003 continuous-time walk is <em>not</em> an $O(n)$-query algorithm: simulating $e^{-iHt}$ for $t = O(n^4)$ costs $O(t^2)$ queries, so [<a href="../refs.html#CCDFGS03" class="xref ref ">CCDFGS03</a>] as stated is $O(n^{8.5})$ queries, brought to $O(n^{2.5}\log^2 n)$ by [<a href="../refs.html#AtiaChakraborty21" class="xref ref ">AtiaChakraborty21</a>]. Lower, $\Omega(n)$: nobody states this as a theorem, but it is the light-cone argument -- names are random $2n$-bit strings in a space of size $2^{2n}$, so with probability $1 - 2^{-\Omega(n)}$ an algorithm never guesses a name it has not been handed, and after $t$ queries everything it has seen lies within distance $t$ of the ENTRANCE, which is $2n+2$ away from the EXIT; BBBV makes the hybrid argument quantum. [<a href="../refs.html#Belovs24welded" class="xref ref ">Belovs24welded</a>] calls the linear upper bound optimal, which presupposes it. The $\Theta$ is therefore only as good as that folklore argument, hence the medium confidence.
+<span class="refs"><a href="../refs.html#JefferyZur25" class="xref ref ">JefferyZur25</a> <a href="../refs.html#Belovs24welded" class="xref ref ">Belovs24welded</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QE.html">Exact quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(O(n^{1.5}\log n)\)</span></td>
+              <td class="short">[<a href="../refs.html#LiLiLuo24" class="xref ref ">LiLiLuo24</a>, §5, Alg. 2]: run the plain coined quantum walk for a classically precomputable number of steps, then exact amplitude amplification. Zero error -- one of very few exponential $\mathrm{Q}_E$-vs-$\mathrm{R}$ separations known. Their bounded-error Alg. 1 uses $O(n^2\log n)$ queries.
+<span class="refs"><a href="../refs.html#LiLiLuo24" class="xref ref ">LiLiLuo24</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D.html">Deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\tilde\Theta(2^{n/2})\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">Upper $O(n\,2^{n/2})$: Shalev Ben-David, reported in [<a href="../refs.html#AaronsonAmbainis18" class="xref ref ">AaronsonAmbainis18</a>, fn. 5] as $O(\sqrt N\log N)$ with $N = 2^n$ ($O(\sqrt N \log^2 N)$ with Boolean queries), and written out in full as [<a href="../refs.html#Liu17thesis" class="xref ref ">Liu17thesis</a>, §4.3, Alg. 5] -- breadth-first search the top $\lceil n/2\rceil$ levels, cross using short probe-trees to tell &quot;up&quot; from &quot;down&quot;, then search the last $\lfloor n/2\rfloor$ levels. Lower: $\mathrm{D} \ge \mathrm{R} = \Omega(2^{n/2}/n)$. So randomness buys essentially nothing here: $\mathrm{D}$ and $\mathrm{R}$ agree to within $n^2$.
+<span class="refs"><a href="../refs.html#AaronsonAmbainis18" class="xref ref ">AaronsonAmbainis18</a> <a href="../refs.html#Liu17thesis" class="xref ref ">Liu17thesis</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R.html">Bounded-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\tilde\Theta(2^{n/2})\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">The window is $[\Omega(2^{n/2}/n),\ O(n\,2^{n/2})]$, so the exponent is pinned and only the polynomial factor is open. Lower: [<a href="../refs.html#Liu17thesis" class="xref ref ">Liu17thesis</a>, Cor. 25], for the easier task of finding either the EXIT or any cycle; [<a href="../refs.html#AaronsonAmbainis18" class="xref ref ">AaronsonAmbainis18</a>, fn. 5] asserts $\Omega(\sqrt N)$ for constant success probability. Refereed but weaker: $\Omega(2^{n/6})$ [<a href="../refs.html#CCDFGS03" class="xref ref ">CCDFGS03</a>, Thm. 9] and $\Omega(2^{n/3})$ [<a href="../refs.html#FennerZhang03" class="xref ref ">FennerZhang03</a>, Thm. 1.2], both in the exponentially-small-success regime. Upper: from $\mathrm{R} \le \mathrm{D}$. Medium confidence: the strong lower bound lives in a thesis and a footnote.
+<span class="refs"><a href="../refs.html#Liu17thesis" class="xref ref ">Liu17thesis</a> <a href="../refs.html#AaronsonAmbainis18" class="xref ref ">AaronsonAmbainis18</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q0.html">Zero-error (Las Vegas) quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(n),\ O(n^{1.5}\log n)\)</span></td>
+              <td class="short">Sandwiched between $\mathrm{Q} = \Theta(n)$ and $\mathrm{Q}_{\mathrm{E}} = O(n^{1.5}\log n)$; closing it is the second of the two open questions in the notes below.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Advpm.html" title="General (negative-weights) adversary bound">
+    <span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Advpm.html">General (negative-weights) adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">$\mathrm{Adv}^{\pm}$ characterises $\mathrm{Q}$ up to constants (<a href="../measures/Advpm.html" class="xref measure "><span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span></a> vs <a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>), and $\mathrm{Q} = \Theta(n)$ here. Medium confidence on two counts: the characterisation is proved for state conversion rather than for search relations in general, and the $\Omega(n)$ side of $\mathrm{Q}$ is itself folklore.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R0.html">Zero-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\tilde\Theta(2^{n/2})\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{R}_{\varepsilon} \le \tfrac32\mathrm{R}_0$ and $\mathrm{R}_0 \le \mathrm{D}$, and both ends are $\tilde\Theta(2^{n/2})$. The classical algorithm never gains from being allowed to err: it finds the EXIT by walking to it.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rbar.html">Expected-cost randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\tilde\Theta(2^{n/2})\)</span></td>
+              <td class="short">$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ (<a href="../measures/Rbar.html" class="xref measure "><span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span></a> vs <a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>), and $\mathrm{R}_{\varepsilon} = \tilde\Theta(2^{n/2})$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dmu.html">Distributional query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\tilde\Theta(2^{n/2})\)</span></td>
+              <td class="short">By Yao, $\max_\mu \mathrm{D}^\mu_\varepsilon = \mathrm{R}_\varepsilon = \tilde\Theta(2^{n/2})$; the maximising $\mu$ is the uniform distribution over welded trees, namings and colourings, which is exactly what the lower-bound proofs use.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dna.html">Non-adaptive deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(4^n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Adaptivity is not a convenience here, it is the whole problem: $\mathrm{D}^{\mathrm{na}}/\mathrm{D} = \tilde\Theta(2^{3n/2})$. A non-adaptive algorithm must fix its query names in advance knowing only $\pi(\mathrm{ENTRANCE})$, and the $2^{n+2}-2$ real names are a $2^{-n+2}$ fraction of the $2^{2n}$ name space. Upper: query all $9\cdot 2^{2n}$ (name, colour) pairs and reconstruct the graph. Lower: let $S$ be the set of names queried. The transcript reveals $\pi(\mathrm{EXIT})$ only if $\mathrm{EXIT}$ or one of its $\le 3$ neighbours lies in $S$; if not, and if some name outside $S$ is unused, swapping $\pi(\mathrm{EXIT})$ with that name leaves the transcript unchanged and the required output different. So $|S| \ge 2^{2n} - 2^{n+2} - 1$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                  <a href="../measures/C.html">Certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Nine queries certify the answer, and this is the cleanest statement of what the welded-trees speedup does <em>not</em> give you. Certificate: query $(y,c)$ for all nine colours $c$ at $y = \pi(\mathrm{EXIT})$. The answers show $y$ has exactly two neighbours. In the welded-trees graph only the two roots have degree $2$; every other vertex has degree $3$, and a name that is not a vertex answers $1^{2n}$ nine times. Since $\pi(\mathrm{ENTRANCE})$ is fixed and known and differs from $y$, every legal instance consistent with those nine cells has $\pi(\mathrm{EXIT}) = y$. So $\mathrm{C} \le 9$ while $\mathrm{D} = \tilde\Theta(2^{n/2})$: verifying the exit is free, finding it is not.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/cbs.html" title="Critical block sensitivity">
+    <span class="tex">\(\mathrm{cbs}(S)\)</span>
+  </a>
+
+                  <a href="../measures/cbs.html">Critical block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Contrast <a href="../functions/TseitinExpander.html" class="xref function "><span class="tex">\(\mathrm{Ts}(G)\)</span></a>, where $\mathrm{cbs} = \Theta(n)$. Every input is critical -- the valid answer $\pi(\mathrm{EXIT})$ is unique -- so the solution function $s$ is forced and $\mathrm{cbs} = \max_x \mathrm{bs}(s,x)$. Let $B$ be a block whose flip changes the answer, and put $y = \pi(\mathrm{EXIT})$. In the modified instance $y$ is not the exit, so $y$ is either a degree-$3$ vertex or not a vertex at all; either way one of the nine cells $(y,c)$ has changed, so $B$ meets $\{(y,c)\}_{c=1}^{9}$. Disjoint blocks therefore number at most nine. At least one exists (rename the exit), so $\mathrm{cbs} = \Theta(1)$ -- which is the witness behind the recorded fact that $\mathrm{D}$ is unbounded in terms of $\mathrm{cbs}$ (<a href="../measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a> vs <a href="../measures/cbs.html" class="xref measure "><span class="tex">\(\mathrm{cbs}(S)\)</span></a>).
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rna.html">Non-adaptive randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(4^n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Randomness does not help the non-adaptive algorithm either, so $\mathrm{R}^{\mathrm{na}}/\mathrm{R} = \tilde\Theta(2^{3n/2})$ as well. Upper: $\mathrm{R}^{\mathrm{na}} \le \mathrm{D}^{\mathrm{na}} = \Theta(4^n)$. Lower: let the algorithm draw a random name set $S$, $|S| = t$. Since $\pi$ is a uniformly random injection with only $\pi(\mathrm{ENTRANCE})$ pinned, the exit and its two neighbours land in $S$ with probability at most $3t/(2^{2n}-1)$; conditioned on missing all three, the transcript is independent of which unqueried unused name carries the exit, and there are $2^{2n} - t - 2^{n+2}$ candidates. So the success probability is at most $3t/(2^{2n}-1) + o(1)$, and $t = \Omega(4^n)$ is needed for $2/3$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+
+                  <a href="../measures/psD.html">Pseudo-deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\tilde\Theta(2^{n/2})\)</span></td>
+              <td class="short">Squeezed by $\mathrm{R} \le \mathrm{psD} \le \mathrm{D}$ (<a href="../measures/psD.html" class="xref measure "><span class="tex">\(\mathrm{psD}(S)\)</span></a> vs <a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>), and here $\mathrm{R}$ and $\mathrm{D}$ already agree to within $n^2$. Pseudo-determinism costs nothing because the answer is unique to begin with: there is only one solution function, so the canonical-answer requirement is vacuous.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Np.html">Noisy decision tree complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\tilde\Theta(2^{n/2})\)</span></td>
+              <td class="short">At least $\mathrm{R} = \Omega(2^{n/2}/n)$, at most $O(\mathrm{R}\log \mathrm{R}) = O(2^{n/2}n^2)$ (<a href="../measures/Np.html" class="xref measure "><span class="tex">\(\mathrm{N}_{p}(f)\)</span></a> vs <a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>). Noise costs only a factor $\mathrm{poly}(n)$, which is invisible at this scale.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/robustQ.html">Robust quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(n),\ O(n\log n)\)</span></td>
+              <td class="short">Squeezed by $\mathrm{Q} \le \mathrm{Q}^{\mathrm{rob}} = O(\mathrm{Q}\log \mathrm{Q})$ (<a href="../measures/robustQ.html" class="xref measure "><span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span></a> vs <a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>) around $\mathrm{Q} = \Theta(n)$. So the exponential separation from $\mathrm{R}$ survives noisy oracles intact -- unusually, since the quantum walk's advantage is an interference effect.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/gamma2.html" title="Approximate gamma_2 norm">
+    <span class="tex">\(\gamma_2^{\alpha}(f)\)</span>
+  </a>
+
+                  <a href="../measures/gamma2.html">Approximate gamma_2 norm</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">The approximate $\gamma_2$ norm and $\mathrm{Adv}^{\pm}$ agree up to constants (<a href="../measures/gamma2.html" class="xref measure "><span class="tex">\(\gamma_2^{\alpha}(f)\)</span></a> vs <a href="../measures/Advpm.html" class="xref measure "><span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span></a>), and $\mathrm{Adv}^{\pm} = \Theta(n)$ here. Medium confidence for the same two reasons as the $\mathrm{Adv}^{\pm}$ row: $\gamma_2$ is only partially defined on relations, and the $\Omega(n)$ side of $\mathrm{Q}$ is folklore.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/MAdv.html" title="Multiplicative adversary">
+    <span class="tex">\(\mathrm{MAdv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MAdv.html">Multiplicative adversary</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">Between $\mathrm{Adv}^{\pm} = \Theta(n)$ (the multiplicative adversary is at least as strong) and $\mathrm{Q} = \Theta(n)$ (every adversary bound is a lower bound on $\mathrm{Q}$). Same medium-confidence caveats as the $\mathrm{Adv}^{\pm}$ and $\gamma_2$ rows.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Cmin.html">Minimum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">$1\le\mathrm{C}_{\min}\le\mathrm{C}=\Theta(1)$: nine queries exhibit the EXIT vertex and certify it at every input, so the cheapest input is no cheaper than a constant.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Adv.html" title="Positive-weights adversary bound">
+    <span class="tex">\(\mathrm{Adv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Adv.html">Positive-weights adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(O(n)\)</span></td>
+              <td class="short">$\mathrm{Adv}\le\mathrm{Adv}^{\pm}=\Theta(n)$ (<a href="../measures/Adv.html" class="xref measure "><span class="tex">\(\mathrm{Adv}(f)\)</span></a> vs <a href="../measures/Advpm.html" class="xref measure "><span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span></a>). The positive-weight bound cannot be much smaller than $\mathrm{Q}=\Theta(n)$ here either, but no matching lower bound is recorded: the certificate structure is trivial ($\mathrm{C}=\Theta(1)$), which is exactly the regime where the positive adversary is weak.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/prt.html" title="Partition bound">
+    <span class="tex">\(\mathrm{prt}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/prt.html">Partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(2^{n/2})\)</span></td>
+              <td class="short">$\mathrm{prt}_\varepsilon\le2\,\mathrm{R}_\varepsilon$ [<a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a>], a bound stated for relations, and $\mathrm{R}=\tilde\Theta(2^{n/2})$. The usual lower bound $\mathrm{prt}\ge\widetilde{\deg}$ is unavailable: approximate degree is not defined for a relation.
+<span class="refs"><a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/rprt.html" title="Relaxed partition bound">
+    <span class="tex">\(\overline{\mathrm{prt}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rprt.html">Relaxed partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(2^{n/2})\)</span></td>
+              <td class="short">$\overline{\mathrm{prt}}_\varepsilon\le\mathrm{prt}_\varepsilon\le2\,\mathrm{R}_\varepsilon=\widetilde O(2^{n/2})$ [<a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a>].
+<span class="refs"><a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/cjdeg.html">Conical junta degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(2^{n/2})\)</span></td>
+              <td class="short">$\mathrm{cjdeg}_\varepsilon\le\mathrm{R}_\varepsilon=\widetilde O(2^{n/2})$ (<a href="../measures/cjdeg.html" class="xref measure "><span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span></a> vs <a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>, relation setting).
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/PostQ.html" title="Post-selected quantum query complexity">
+    <span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/PostQ.html">Post-selected quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(O(n)\)</span></td>
+              <td class="short">Post-selection can only help, so $\mathrm{PostQ}\le\mathrm{Q}=\Theta(n)$. Whether it helps at all here is open; the quantum walk already runs in linear time.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_size.html">Decision tree size</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(4^n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Answer counting. Each leaf of a tree is labelled with a single vertex name, and for every one of the $2^{2n}$ names there is a legal instance whose EXIT carries that name, so instances with different EXIT names must reach different leaves. Hence $\mathrm{DTsize}\ge2^{2n}=4^n$ -- the same $\Theta(4^n)$ that makes the non-adaptive complexity trivial.
+</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Separations its values prove <span class="dim">— computed, not recorded</span></h2>
+        <p class="dim small">Read straight off the table above by comparing two values: no
+        relation record states these, and where one does and says more, the record wins and the
+        pair is not listed here. 32 in total,
+        strongest first.</p>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Dmu&amp;b=C">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f_n) \to \infty \ \text{ while } \ \mathrm{C}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\mu}_{\varepsilon}(f) = \tilde\Theta(2^{n/2})\) against \(\mathrm{C}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Rbar&amp;b=Cmin">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f_n) \to \infty \ \text{ while } \ \mathrm{C}_{\min}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\bar{\mathrm{R}}_{\varepsilon}(f) = \tilde\Theta(2^{n/2})\) against \(\mathrm{C}_{\min}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/cbs.html" title="Critical block sensitivity">
+    <span class="tex">\(\mathrm{cbs}(S)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Q&amp;b=cbs">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{Q}_{\varepsilon}(f_n) \to \infty \ \text{ while } \ \mathrm{cbs}(S)(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{Q}_{\varepsilon}(f) = \Theta(n)\) against \(\mathrm{cbs}(S) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Dna&amp;b=D">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\mathrm{na}}(f_n) = \widetilde\Omega\big(\mathrm{D}(f_n)^{4}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\mathrm{na}}(f) = \Theta(4^n)\) against \(\mathrm{D}(f) = \tilde\Theta(2^{n/2})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Rna&amp;b=R">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}^{\mathrm{na}}(f_n) = \widetilde\Omega\big(\mathrm{R}_{\varepsilon}(f_n)^{4}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{R}^{\mathrm{na}}(f) = \Theta(4^n)\) against \(\mathrm{R}_{\varepsilon}(f) = \tilde\Theta(2^{n/2})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Dmu&amp;b=Cmin">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f_n) \to \infty \ \text{ while } \ \mathrm{C}_{\min}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\mu}_{\varepsilon}(f) = \tilde\Theta(2^{n/2})\) against \(\mathrm{C}_{\min}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=R&amp;b=C">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}_{\varepsilon}(f_n) \to \infty \ \text{ while } \ \mathrm{C}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{R}_{\varepsilon}(f) = \tilde\Theta(2^{n/2})\) against \(\mathrm{C}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-quantum" href="../measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/cbs.html" title="Critical block sensitivity">
+    <span class="tex">\(\mathrm{cbs}(S)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=robustQ&amp;b=cbs">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f_n) \to \infty \ \text{ while } \ \mathrm{cbs}(S)(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{Q}^{\mathrm{rob}}(f) = \Omega(n),\ O(n\log n)\) against \(\mathrm{cbs}(S) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Dna&amp;b=psD">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\mathrm{na}}(f_n) = \widetilde\Omega\big(\mathrm{psD}(S)(f_n)^{4}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\mathrm{na}}(f) = \Theta(4^n)\) against \(\mathrm{psD}(S) = \tilde\Theta(2^{n/2})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Rna&amp;b=D">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}^{\mathrm{na}}(f_n) = \widetilde\Omega\big(\mathrm{D}(f_n)^{4}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{R}^{\mathrm{na}}(f) = \Theta(4^n)\) against \(\mathrm{D}(f) = \tilde\Theta(2^{n/2})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/cbs.html" title="Critical block sensitivity">
+    <span class="tex">\(\mathrm{cbs}(S)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Dmu&amp;b=cbs">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f_n) \to \infty \ \text{ while } \ \mathrm{cbs}(S)(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\mu}_{\varepsilon}(f) = \tilde\Theta(2^{n/2})\) against \(\mathrm{cbs}(S) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Rbar&amp;b=C">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f_n) \to \infty \ \text{ while } \ \mathrm{C}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\bar{\mathrm{R}}_{\varepsilon}(f) = \tilde\Theta(2^{n/2})\) against \(\mathrm{C}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=R0&amp;b=Cmin">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}_{0}(f_n) \to \infty \ \text{ while } \ \mathrm{C}_{\min}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{R}_{0}(f) = \tilde\Theta(2^{n/2})\) against \(\mathrm{C}_{\min}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Rna&amp;b=Np">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}^{\mathrm{na}}(f_n) = \widetilde\Omega\big(\mathrm{N}_{p}(f_n)^{4}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{R}^{\mathrm{na}}(f) = \Theta(4^n)\) against \(\mathrm{N}_{p}(f) = \tilde\Theta(2^{n/2})\)</div>
+          </li>
+        </ul>
+        <p class="dim small">&hellip; and 18 more, all of them visible
+        in the <a href="../matrix.html">matrix</a> (widen it to all measures) and on the
+        pair pages.</p>
+      </section>
+
+      <section class="card">
+        <h2>Separations it witnesses</h2>
+        <ul class="witlist">
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=R&amp;b=Q">pair &rarr;</a>
+  <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+            </div>
+            <div class="stmt">Exponential in the tree height: $\mathrm{Q} = \Theta(n)$ against $\mathrm{R} = \tilde\Theta(2^{n/2})$. In the vertex count $N = 2^n$ that reads $\mathrm{Q} = \Theta(\log N)$ vs $\mathrm{R} = \tilde\Theta(\sqrt N)$ -- the same shape as Simon, and <em>not</em> a $2^{\Omega(N)}$ separation.</div>
+<div class="refs"><a href="../refs.html#CCDFGS03" class="xref ref ">CCDFGS03</a> <a href="../refs.html#FennerZhang03" class="xref ref ">FennerZhang03</a> <a href="../refs.html#JefferyZur25" class="xref ref ">JefferyZur25</a> <a href="../refs.html#Liu17thesis" class="xref ref ">Liu17thesis</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=R&amp;b=QE">pair &rarr;</a>
+  <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+            </div>
+            <div class="stmt">The separation survives at zero error: $\mathrm{Q}_E = O(n^{1.5}\log n)$ against $\mathrm{R} = \tilde\Theta(2^{n/2})$.</div>
+<div class="refs"><a href="../refs.html#LiLiLuo24" class="xref ref ">LiLiLuo24</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=D&amp;b=R">pair &rarr;</a>
+  <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+            </div>
+            <div class="stmt"><strong>Not</strong> a separation, and that is the point: $\mathrm{D} = O(n2^{n/2})$ while $\mathrm{R} = \Omega(2^{n/2}/n)$, so randomness is worth at most a factor $n^2$ here.</div>
+<div class="refs"><a href="../refs.html#AaronsonAmbainis18" class="xref ref ">AaronsonAmbainis18</a> <a href="../refs.html#Liu17thesis" class="xref ref ">Liu17thesis</a></div>          </li>
+        </ul>
+      </section>
+
+
+      <section class="card">
+        <h2>Notes</h2>
+        <p>The speedup produces no certificate. [<a href="../refs.html#ChildsCoudronGilani23" class="xref ref ">ChildsCoudronGilani23</a>] show that the
+<em>path-finding</em> version -- output an ENTRANCE-to-EXIT path rather than just the EXIT
+name -- cannot be solved efficiently by any quantum algorithm that only ever
+queries names inside a connected subgraph containing the ENTRANCE. The walk
+necessarily forgets how it got there.</p>
+<p>The advantage also lives entirely in the labelled adjacency-list presentation:
+symmetric graph properties admit at most polynomial quantum speedups
+(Ben-David, Childs, Gilyen, Kretschmer, Podder, Wang, FOCS 2020).</p>
+<p>Open: whether $\mathrm{R} = \Theta(2^{n/2})$ with no $n$ factor (the window is
+$[\Omega(2^{n/2}/n), O(n2^{n/2})]$), and whether $\mathrm{Q}_E$ can be brought down
+to $O(n)$.</p>
+
+      </section>
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#CCDFGS03" class="xref ref ">[CCDFGS03]</a> <span class="dim">Exponential algorithmic speedup by a quantum walk</span></li>
+            <li><a href="../refs.html#FennerZhang03" class="xref ref ">[FennerZhang03]</a> <span class="dim">A note on the classical lower bound for a hybrid quantum-classical algorithm</span></li>
+            <li><a href="../refs.html#Liu17thesis" class="xref ref ">[Liu17thesis]</a> <span class="dim">Some upper and lower bounds regarding query complexity</span></li>
+            <li><a href="../refs.html#JefferyZur25" class="xref ref ">[JefferyZur25]</a> <span class="dim">Multidimensional quantum walks, with application to k-distinctness</span></li>
+            <li><a href="../refs.html#LiLiLuo24" class="xref ref ">[LiLiLuo24]</a> <span class="dim">Recovering the original simplicity: succinct and exact quantum algorithm for the welded tree problem</span></li>
+            <li><a href="../refs.html#Belovs24welded" class="xref ref ">[Belovs24welded]</a> <span class="dim">Global phase helps in quantum search: yet another look at the welded tree problem</span></li>
+            <li><a href="../refs.html#ChildsCoudronGilani23" class="xref ref ">[ChildsCoudronGilani23]</a> <span class="dim">Quantum algorithms and the power of forgetting</span></li>
+            <li><a href="../refs.html#AaronsonAmbainis18" class="xref ref ">[AaronsonAmbainis18]</a> <span class="dim">Forrelation: A Problem That Optimally Separates Quantum from Classical Computing</span></li>
+            <li><a href="../refs.html#AtiaChakraborty21" class="xref ref ">[AtiaChakraborty21]</a> <span class="dim">Improved upper bounds for the hitting times of quantum walks</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../functions/Simon.html" class="xref function "><span class="tex">\(\mathrm{SIMON}_n\)</span></a></li><li><a href="../functions/YamakawaZhandry.html" class="xref function "><span class="tex">\(S_{\mathrm{YZ}}\)</span></a></li><li><a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/QE.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span></a></li><li><a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/05-more.yaml</code> &mdash; id <code>GluedTrees</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,2314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fourier sparsity &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="on">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../measures/index.html">Measures</a> &rsaquo;
+    <a href="../measures/index.html#fourier">Fourier-analytic</a></div>
+
+  <header class="entryhead cat-fourier">
+    <div class="bigsym">\(\mathrm{spar}(f)\)</div>
+    <div>
+      <h1>Fourier sparsity</h1>
+      <p class="lede">Number of nonzero Fourier coefficients.</p>
+      <p class="aliases">also written:
+<code>\|\hat f\|_0</code>, <code>number of nonzero Fourier coefficients</code>      </p>
+    </div>
+  </header>
+
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Definition</h2>
+        <p>$\mathrm{spar}(f)=|\{S : \hat f(S)\ne 0\}|$.</p>
+
+      </section>
+
+
+
+      <section class="card">
+        <h2>Basic facts</h2>
+        <ul class="facts">
+<li>$\mathrm{D}^{\oplus}(f)=O(\sqrt{\mathrm{spar}(f)}\log \mathrm{spar}(f))$; whether $\mathrm{poly}\log \mathrm{spar}$ suffices is the query analogue of the log-rank conjecture.</li><li>$\deg_2(f)\le\log_2(\mathrm{spar}(f)+1)$. The real degree is <strong>not</strong> bounded by sparsity: $\oplus_n$ has $\deg = n$ and $\mathrm{spar} = 1$.</li><li>$\mathrm{spar}(f)\le 4^{\mathrm{D}^{\oplus}(f)}$.</li>        </ul>
+      </section>
+
+
+      <section class="card">
+        <h2>Relations to other measures</h2>
+        <p class="dim">A row shows what the zoo knows about the two ordered pairs involving
+        \(\mathrm{spar}(f)\). &ldquo;\(\mathrm{spar}(f)\) in terms of it&rdquo; is the pair with
+        \(\mathrm{spar}(f)\) on the left (the matrix row); the other column is the reverse.
+        Each cell gives, per setting, the exponent range
+        <span class="exp"><span class="a">a</span><span class="comma">,</span><span class="b">b</span></span>
+        of the best bounds known &mdash; \(\mathrm{M_1} = \Omega(\mathrm{M_2}^{a})\) below and
+        \(\mathrm{M_1} = O(\mathrm{M_2}^{b})\) above, so \(a = b\) means settled &mdash;
+        or a glyph where no polynomial bound exists at all. These are derived, not
+        just read off the exponent table, so they are present for pairs the table
+        does not cover. A cell with no entry for a setting is one where the zoo has
+        nothing at that setting, and a &mdash; one where the ordered pair is empty
+        in all three; <span class="norec">derived</span> marks a direction with no
+        hand-written relation record behind it, which is the common case and not a hole.</p>
+        <table class="listing nbrs">
+          <thead>
+            <tr>
+              <th>Other measure</th>
+              <th>\(\mathrm{spar}(f)\) in terms of it</th>
+              <th>It in terms of \(\mathrm{spar}(f)\)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="nm">  <a class="chip cat-fourier" href="../measures/L1.html" title="Spectral norm">
+    <span class="tex">\(\hat{L}_1(f)\)</span>
+  </a>
+
+                <a href="../measures/L1.html">Spectral norm</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=L1">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=L1&amp;b=spar">
+      <span class="nbtok" title="Total functions: separation only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-deterministic" href="../measures/PDT.html" title="Parity decision tree complexity">
+    <span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span>
+  </a>
+
+                <a href="../measures/PDT.html">Parity decision tree complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=PDT">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=PDT&amp;b=spar">
+      <span class="nbtok" title="Total functions: log-type only &middot; recorded relation is Gap">
+        <span class="minipill st-gap">total</span
+        ><span class="exp"><span class="a">log</span><span class="comma">,</span><span class="b">0.5</span></span>      </span>
+    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-fourier" href="../measures/Fdim.html" title="Fourier dimension">
+    <span class="tex">\(\dim_{\mathbb{F}_2}(f)\)</span>
+  </a>
+
+                <a href="../measures/Fdim.html">Fourier dimension</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Fdim">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Fdim&amp;b=spar">
+      <span class="nbtok" title="Total functions: separation only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">0.5</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
+    <span class="tex">\(\deg(f)\)</span>
+  </a>
+
+                <a href="../measures/deg.html">Exact degree</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=deg">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=deg&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists &middot; recorded relation is No bound exists">
+        <span class="minipill st-fails">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/deg2.html" title="Mod-2 degree">
+    <span class="tex">\(\deg_2(f)\)</span>
+  </a>
+
+                <a href="../measures/deg2.html">Mod-2 degree</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=deg2">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=deg2&amp;b=spar">
+      <span class="nbtok" title="Total functions: log-type only &middot; recorded relation is Settled">
+        <span class="minipill st-settled">total</span
+        ><span class="exp"><span class="a">log</span><span class="comma">,</span><span class="b">log</span></span>      </span>
+    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+          </tbody>
+          <tbody class="nbrs-rest" hidden>
+            <tr>
+              <td class="nm">  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+
+                <a href="../measures/D.html">Deterministic query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=D">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=D&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                <a href="../measures/Dna.html">Non-adaptive deterministic query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Dna">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Dna&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+
+                <a href="../measures/D_size.html">Decision tree size</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=D_size">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=D_size&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+
+                <a href="../measures/rank.html">Decision tree rank</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=rank">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=rank&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-deterministic" href="../measures/D_prod.html" title="Product-distribution distributional complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f)\)</span>
+  </a>
+
+                <a href="../measures/D_prod.html">Product-distribution distributional complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=D_prod">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=D_prod&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/Dmu.html">Distributional query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Dmu">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Dmu&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/R.html">Bounded-error randomized query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=R">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=R&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/Rbar.html">Expected-cost randomized query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Rbar">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Rbar&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                <a href="../measures/Rna.html">Non-adaptive randomized query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Rna">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Rna&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                <a href="../measures/R0.html">Zero-error randomized query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=R0">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=R0&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+
+                <a href="../measures/R1.html">One-sided-error randomized query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=R1">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=R1&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-randomized" href="../measures/R1RP.html" title="One-sided randomized queries with certain rejection">
+    <span class="tex">\(\mathrm{R}_{\mathrm{RP}}(f)\)</span>
+  </a>
+
+                <a href="../measures/R1RP.html">One-sided randomized queries with certain rejection</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=R1RP">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=R1RP&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+
+                <a href="../measures/psD.html">Pseudo-deterministic query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=psD">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=psD&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+
+                <a href="../measures/Np.html">Noisy decision tree complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Np">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Np&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/Q.html">Bounded-error quantum query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Q">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Q&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+
+                <a href="../measures/QE.html">Exact quantum query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=QE">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=QE&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                <a href="../measures/Q0.html">Zero-error (Las Vegas) quantum query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Q0">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Q0&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-quantum" href="../measures/PostQ.html" title="Post-selected quantum query complexity">
+    <span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/PostQ.html">Post-selected quantum query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=PostQ">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=PostQ&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-quantum" href="../measures/QC.html" title="Quantum certificate complexity">
+    <span class="tex">\(\mathrm{QC}(f)\)</span>
+  </a>
+
+                <a href="../measures/QC.html">Quantum certificate complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=QC">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=QC&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-quantum" href="../measures/NQ.html" title="Nondeterministic quantum query complexity">
+    <span class="tex">\(\mathrm{NQ}(f)\)</span>
+  </a>
+
+                <a href="../measures/NQ.html">Nondeterministic quantum query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=NQ">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=NQ&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-quantum" href="../measures/QSweak.html" title="Weak quantum sabotage complexity">
+    <span class="tex">\(\mathrm{QS}_{\mathrm{weak}}(f)\)</span>
+  </a>
+
+                <a href="../measures/QSweak.html">Weak quantum sabotage complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=QSweak">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=QSweak&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-quantum" href="../measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+
+                <a href="../measures/robustQ.html">Robust quantum query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=robustQ">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=robustQ&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-quantum" href="../measures/QSstr.html" title="Strong quantum sabotage complexity">
+    <span class="tex">\(\mathrm{QS}_{\mathrm{str}}(f)\)</span>
+  </a>
+
+                <a href="../measures/QSstr.html">Strong quantum sabotage complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=QSstr">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=QSstr&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-quantum" href="../measures/QSweakind.html" title="Weak quantum sabotage index complexity">
+    <span class="tex">\(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(f)\)</span>
+  </a>
+
+                <a href="../measures/QSweakind.html">Weak quantum sabotage index complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=QSweakind">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=QSweakind&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-quantum" href="../measures/QSstrind.html" title="Strong quantum sabotage index complexity">
+    <span class="tex">\(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f)\)</span>
+  </a>
+
+                <a href="../measures/QSstrind.html">Strong quantum sabotage index complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=QSstrind">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=QSstrind&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-quantum" href="../measures/QEcert.html" title="Exact quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)\)</span>
+  </a>
+
+                <a href="../measures/QEcert.html">Exact quantum certification complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=QEcert">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=QEcert&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-quantum" href="../measures/Q0cert.html" title="Zero-error quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{0}^{\mathrm{cert}}(f)\)</span>
+  </a>
+
+                <a href="../measures/Q0cert.html">Zero-error quantum certification complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Q0cert">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Q0cert&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/adeg.html">Approximate degree</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=adeg">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=adeg&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/odeg.html" title="One-sided approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{+}(f)\)</span>
+  </a>
+
+                <a href="../measures/odeg.html">One-sided approximate degree</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=odeg">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=odeg&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/sdeg.html" title="Sign degree">
+    <span class="tex">\(\mathrm{sdeg}(f)\)</span>
+  </a>
+
+                <a href="../measures/sdeg.html">Sign degree</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=sdeg">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=sdeg&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/rdeg.html" title="Rational degree">
+    <span class="tex">\(\mathrm{rdeg}(f)\)</span>
+  </a>
+
+                <a href="../measures/rdeg.html">Rational degree</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=rdeg">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=rdeg&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/ardeg.html" title="Approximate rational degree">
+    <span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/ardeg.html">Approximate rational degree</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=ardeg">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=ardeg&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/ndeg.html" title="Nondeterministic degree">
+    <span class="tex">\(\mathrm{ndeg}(f)\)</span>
+  </a>
+
+                <a href="../measures/ndeg.html">Nondeterministic degree</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=ndeg">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=ndeg&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/degp.html" title="Mod-p degree">
+    <span class="tex">\(\deg_p(f)\)</span>
+  </a>
+
+                <a href="../measures/degp.html">Mod-p degree</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=degp">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=degp&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists &middot; recorded relation is No bound exists">
+        <span class="minipill st-fails">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/cjdeg.html">Conical junta degree</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=cjdeg">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=cjdeg&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/bdeg.html" title="Exact bounded polynomial degree">
+    <span class="tex">\(\overline{\deg}(f)\)</span>
+  </a>
+
+                <a href="../measures/bdeg.html">Exact bounded polynomial degree</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=bdeg">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=bdeg&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/degcert.html" title="Bounded degree certification complexity">
+    <span class="tex">\(\overline{\deg}^{\mathrm{cert}}(f)\)</span>
+  </a>
+
+                <a href="../measures/degcert.html">Bounded degree certification complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=degcert">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=degcert&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/osdeg0.html" title="Bounded polynomial degree with error on 0-inputs">
+    <span class="tex">\(\overline{\mathrm{osdeg}}^{\,0}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/osdeg0.html">Bounded polynomial degree with error on 0-inputs</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=osdeg0">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=osdeg0&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/osdeg1.html" title="Bounded polynomial degree with error on 1-inputs">
+    <span class="tex">\(\overline{\mathrm{osdeg}}^{\,1}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/osdeg1.html">Bounded polynomial degree with error on 1-inputs</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=osdeg1">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=osdeg1&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-degree" href="../measures/osdeg.html" title="One-sided-error bounded polynomial degree">
+    <span class="tex">\(\overline{\mathrm{osdeg}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/osdeg.html">One-sided-error bounded polynomial degree</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=osdeg">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=osdeg&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <a href="../measures/s.html">Sensitivity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=s">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=s&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/s0.html" title="0-sensitivity">
+    <span class="tex">\(\mathrm{s}^0(f)\)</span>
+  </a>
+
+                <a href="../measures/s0.html">0-sensitivity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=s0">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=s0&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/s1.html" title="1-sensitivity">
+    <span class="tex">\(\mathrm{s}^1(f)\)</span>
+  </a>
+
+                <a href="../measures/s1.html">1-sensitivity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=s1">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=s1&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+
+                <a href="../measures/bs.html">Block sensitivity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=bs">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=bs&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/bs0.html" title="0-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^0(f)\)</span>
+  </a>
+
+                <a href="../measures/bs0.html">0-block sensitivity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=bs0">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=bs0&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/bs1.html" title="1-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^1(f)\)</span>
+  </a>
+
+                <a href="../measures/bs1.html">1-block sensitivity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=bs1">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=bs1&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+
+                <a href="../measures/fbs.html">Fractional block sensitivity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=fbs">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=fbs&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/FC.html" title="Fractional certificate complexity">
+    <span class="tex">\(\mathrm{FC}(f)\)</span>
+  </a>
+
+                <a href="../measures/FC.html">Fractional certificate complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=FC">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=FC&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/cbs.html" title="Critical block sensitivity">
+    <span class="tex">\(\mathrm{cbs}(S)\)</span>
+  </a>
+
+                <a href="../measures/cbs.html">Critical block sensitivity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=cbs">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=cbs&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                <a href="../measures/lambda.html">Spectral sensitivity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=lambda">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=lambda&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                <a href="../measures/C.html">Certificate complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=C">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=C&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+
+                <a href="../measures/C0.html">0-certificate complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=C0">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=C0&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                <a href="../measures/C1.html">1-certificate complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=C1">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=C1&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                <a href="../measures/Cmin.html">Minimum certificate complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Cmin">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Cmin&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/UC.html" title="Unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}(f)\)</span>
+  </a>
+
+                <a href="../measures/UC.html">Unambiguous certificate complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=UC">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=UC&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/UCmin.html" title="Minimum unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}_{\min}(f)\)</span>
+  </a>
+
+                <a href="../measures/UCmin.html">Minimum unambiguous certificate complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=UCmin">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=UCmin&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/SP.html" title="Subcube partition complexity">
+    <span class="tex">\(\mathrm{SP}(f)\)</span>
+  </a>
+
+                <a href="../measures/SP.html">Subcube partition complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=SP">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=SP&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/lambdacert.html" title="Spectral sensitivity certification">
+    <span class="tex">\(\lambda^{\mathrm{cert}}(f)\)</span>
+  </a>
+
+                <a href="../measures/lambdacert.html">Spectral sensitivity certification</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=lambdacert">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=lambdacert&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/RC.html" title="Randomized certificate complexity">
+    <span class="tex">\(\mathrm{RC}(f)\)</span>
+  </a>
+
+                <a href="../measures/RC.html">Randomized certificate complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=RC">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=RC&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-combinatorial" href="../measures/EC.html" title="Expectational certificate complexity">
+    <span class="tex">\(\mathrm{EC}(f)\)</span>
+  </a>
+
+                <a href="../measures/EC.html">Expectational certificate complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=EC">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=EC&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-fourier" href="../measures/Var.html" title="Variance">
+    <span class="tex">\(\mathrm{Var}(f)\)</span>
+  </a>
+
+                <a href="../measures/Var.html">Variance</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Var">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Var&amp;b=spar">
+<span class="dim nothing" title="Nothing is on record for this ordered pair in any setting, and nothing follows from the closure. For a normalized quantity on the left that is not an oversight but the definition -- a number in [0,1] is never large in terms of anything.">&mdash;</span><span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-fourier" href="../measures/Inf.html" title="Total influence (L2 influence)">
+    <span class="tex">\(\mathrm{I}(f)\)</span>
+  </a>
+
+                <a href="../measures/Inf.html">Total influence (L2 influence)</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Inf">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Inf&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-fourier" href="../measures/Inf1.html" title="Total L1 influence">
+    <span class="tex">\(\mathrm{I}^{1}(f)\)</span>
+  </a>
+
+                <a href="../measures/Inf1.html">Total L1 influence</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Inf1">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Inf1&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-fourier" href="../measures/MaxInf.html" title="Maximum influence">
+    <span class="tex">\(\mathrm{MaxInf}(f)\)</span>
+  </a>
+
+                <a href="../measures/MaxInf.html">Maximum influence</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=MaxInf">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=MaxInf&amp;b=spar">
+<span class="dim nothing" title="Nothing is on record for this ordered pair in any setting, and nothing follows from the closure. For a normalized quantity on the left that is not an oversight but the definition -- a number in [0,1] is never large in terms of anything.">&mdash;</span><span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-fourier" href="../measures/osss.html" title="OSSS number">
+    <span class="tex">\(\mathrm{osss}(f)\)</span>
+  </a>
+
+                <a href="../measures/osss.html">OSSS number</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=osss">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=osss&amp;b=spar">
+      <span class="nbtok" title="Total functions: settled &middot; recorded relation is Gap">
+        <span class="minipill st-gap">total</span
+        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">1</span></span>      </span>
+    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-fourier" href="../measures/NS.html" title="Noise sensitivity">
+    <span class="tex">\(\mathrm{NS}_{\delta}(f)\)</span>
+  </a>
+
+                <a href="../measures/NS.html">Noise sensitivity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=NS">
+      <span class="nbtok" title="Total functions: no bound exists &middot; recorded relation is No bound exists">
+        <span class="minipill st-fails">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=NS&amp;b=spar">
+<span class="dim nothing" title="Nothing is on record for this ordered pair in any setting, and nothing follows from the closure. For a normalized quantity on the left that is not an oversight but the definition -- a number in [0,1] is never large in terms of anything.">&mdash;</span><span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-fourier" href="../measures/Stab.html" title="Noise stability">
+    <span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span>
+  </a>
+
+                <a href="../measures/Stab.html">Noise stability</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Stab">
+      <span class="nbtok" title="Total functions: no bound exists &middot; recorded relation is No bound exists">
+        <span class="minipill st-fails">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Stab&amp;b=spar">
+<span class="dim nothing" title="Nothing is on record for this ordered pair in any setting, and nothing follows from the closure. For a normalized quantity on the left that is not an oversight but the definition -- a number in [0,1] is never large in terms of anything.">&mdash;</span><span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-fourier" href="../measures/nsr.html" title="Noise robustness">
+    <span class="tex">\(\mathrm{nsr}(f)\)</span>
+  </a>
+
+                <a href="../measures/nsr.html">Noise robustness</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=nsr">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=nsr&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-adversary" href="../measures/CA.html" title="Classical adversary bound">
+    <span class="tex">\(\mathrm{CA}(f)\)</span>
+  </a>
+
+                <a href="../measures/CA.html">Classical adversary bound</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=CA">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=CA&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-adversary" href="../measures/Adv.html" title="Positive-weights adversary bound">
+    <span class="tex">\(\mathrm{Adv}(f)\)</span>
+  </a>
+
+                <a href="../measures/Adv.html">Positive-weights adversary bound</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Adv">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Adv&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-adversary" href="../measures/CG.html" title="Certificate game complexity (private coin)">
+    <span class="tex">\(\mathrm{CG}(f)\)</span>
+  </a>
+
+                <a href="../measures/CG.html">Certificate game complexity (private coin)</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=CG">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=CG&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-adversary" href="../measures/CGpub.html" title="Certificate game complexity (public coin)">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span>
+  </a>
+
+                <a href="../measures/CGpub.html">Certificate game complexity (public coin)</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=CGpub">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=CGpub&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-adversary" href="../measures/CGstar.html" title="Quantum certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{*}(f)\)</span>
+  </a>
+
+                <a href="../measures/CGstar.html">Quantum certificate game complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=CGstar">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=CGstar&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-adversary" href="../measures/CGns.html" title="Non-signaling certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span>
+  </a>
+
+                <a href="../measures/CGns.html">Non-signaling certificate game complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=CGns">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=CGns&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-adversary" href="../measures/Advpm.html" title="General (negative-weights) adversary bound">
+    <span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span>
+  </a>
+
+                <a href="../measures/Advpm.html">General (negative-weights) adversary bound</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Advpm">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Advpm&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-adversary" href="../measures/gamma2.html" title="Approximate gamma_2 norm">
+    <span class="tex">\(\gamma_2^{\alpha}(f)\)</span>
+  </a>
+
+                <a href="../measures/gamma2.html">Approximate gamma_2 norm</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=gamma2">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=gamma2&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-adversary" href="../measures/MAdv.html" title="Multiplicative adversary">
+    <span class="tex">\(\mathrm{MAdv}(f)\)</span>
+  </a>
+
+                <a href="../measures/MAdv.html">Multiplicative adversary</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=MAdv">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=MAdv&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-adversary" href="../measures/prt.html" title="Partition bound">
+    <span class="tex">\(\mathrm{prt}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/prt.html">Partition bound</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=prt">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=prt&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-adversary" href="../measures/rprt.html" title="Relaxed partition bound">
+    <span class="tex">\(\overline{\mathrm{prt}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/rprt.html">Relaxed partition bound</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=rprt">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=rprt&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-composition" href="../measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
+  </a>
+
+                <a href="../measures/RS.html">Sabotage complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=RS">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=RS&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+
+                <a href="../measures/chi.html">Conflict complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=chi">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=chi&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-composition" href="../measures/chibar.html" title="Max-conflict complexity">
+    <span class="tex">\(\bar{\chi}(f)\)</span>
+  </a>
+
+                <a href="../measures/chibar.html">Max-conflict complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=chibar">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=chibar&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-composition" href="../measures/LR.html" title="Linearised randomized complexity">
+    <span class="tex">\(\mathrm{LR}(f)\)</span>
+  </a>
+
+                <a href="../measures/LR.html">Linearised randomized complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=LR">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=LR&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-composition" href="../measures/noisyR.html" title="Noisy randomized query complexity">
+    <span class="tex">\(\mathrm{noisyR}(f)\)</span>
+  </a>
+
+                <a href="../measures/noisyR.html">Noisy randomized query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=noisyR">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=noisyR&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-composition" href="../measures/noisyRna.html" title="Non-adaptive noisy randomized query complexity">
+    <span class="tex">\(\mathrm{noisyR}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                <a href="../measures/noisyRna.html">Non-adaptive noisy randomized query complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=noisyRna">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=noisyRna&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-composition" href="../measures/Corr.html" title="Correlated samples complexity">
+    <span class="tex">\(\mathrm{Corr}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/Corr.html">Correlated samples complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Corr">
+      <span class="nbtok" title="Total functions: separation only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">2.64</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Corr&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-composition" href="../measures/Sel.html" title="Selection complexity">
+    <span class="tex">\(\mathrm{Sel}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a href="../measures/Sel.html">Selection complexity</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Sel">
+      <span class="nbtok" title="Total functions: separation only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">2.64</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Sel&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+            <tr>
+              <td class="nm">  <a class="chip cat-composition" href="../measures/Rstar.html" title="Asymptotic composition rate">
+    <span class="tex">\(\mathrm{R}^{*}(f)\)</span>
+  </a>
+
+                <a href="../measures/Rstar.html">Asymptotic composition rate</a></td>
+              <td>  <a class="pairlink" href="../pair.html?a=spar&amp;b=Rstar">
+      <span class="nbtok" title="Total functions: exponential only">
+        <span class="minipill">total</span
+        ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+              <td>  <a class="pairlink" href="../pair.html?a=Rstar&amp;b=spar">
+      <span class="nbtok" title="Total functions: no bound exists">
+        <span class="minipill">total</span
+        ><span class="glyph g-unbounded">∞</span>      </span>
+<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+  </a>
+</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="nbrs-more">
+          <button type="button" class="unfold" data-nbrs-toggle
+                  data-few="Show most relevant only"
+                  data-all="Show all 93 measures">Show all 93 measures</button>
+          <span class="dim">The 5 above are this entry&rsquo;s hand-picked neighbours; the
+          other 88 are everything else in the zoo, by category.</span>
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Known values</h2>
+        <table class="listing values">
+          <thead><tr><th>Function</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm"><a href="../functions/OR.html">OR</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(2^n\)</span></td>
+              <td class="short">In the $\pm1$ encoding $(-1)^{\mathrm{OR}(x)} = -1 + 2^{1-n}\prod_i(1+\chi_i)$, so every one of the $2^n$ characters has a nonzero coefficient.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/AND.html">AND</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(2^n\)</span></td>
+              <td class="short">$(-1)^{\mathrm{AND}(x)} = 1 - 2^{1-n}\prod_i(1-\chi_i)$: every character appears.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/PARITY.html">PARITY</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(1\)</span></td>
+              <td class="short">
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/MAJ.html">MAJORITY</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(2^{n-1}\)</span></td>
+              <td class="short">MAJ is odd, so only odd-size sets can appear, and the standard formula for $\widehat{\mathrm{MAJ}}(S)$ is nonzero for every one of them.
+<span class="refs"><a href="../refs.html#ODonnell14" class="xref ref ">ODonnell14</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/EH.html">EXACT-HALF</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(2^{n-1}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Exactly. Using $\binom ns K_k(s) = \binom nk K_s(k)$ and $K_s(n/2) = [z^s](1-z)^{n/2}(1+z)^{n/2} = [z^s](1-z^2)^{n/2}$, the Fourier coefficient at a set of size $s$ is $\widehat{\mathrm{EH}}(S) = 2^{-n}\binom{n}{n/2}(-1)^{s/2}\binom{n/2}{s/2}\big/\binom ns$ for even $s$, and $0$ for odd $s$. So every even-size set carries a nonzero coefficient and no odd one does -- consistent with the recorded $\mathrm{Fdim} = n-1$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/OMB.html">ODD-MAX-BIT</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(\Theta(2^n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">At least $2^{n-1}$, since every one of the $2^{n-1}$ sets containing coordinate $1$ carries the nonzero coefficient $\pm2^{-(n-1)}$ (see the <a href="../measures/PDT.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span></a> line); at most $2^n$ trivially.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/ADDR.html">ADDRESS / multiplexer</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(4^k\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">In the $\pm 1$ basis each of the $2^k$ terms $\mathbb{1}[\mathrm{addr}=a]\,y_a$ expands into $2^k$ monomials of coefficient $\pm 2^{-k}$, and the $y_a$ factor keeps the supports of different $a$ disjoint. Consistent with the recorded $\mathrm{L}_1 = 4^k \cdot 2^{-k} = 2^k$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/TreeNav.html">Binary tree navigation</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(4^{k-1}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">From the recursion $\mathrm{Nav}_k = \tfrac{L+R}{2} + x_0\tfrac{L-R}{2}$ in the $\pm1$ encoding, where $L$ and $R$ are $\mathrm{Nav}_{k-1}$ on disjoint variable sets and each is balanced (no constant term). The four groups of monomials have pairwise disjoint supports, so $\mathrm{spar}(k) = 4\,\mathrm{spar}(k-1)$ with $\mathrm{spar}(1) = 1$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/TRIBES.html">TRIBES</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(\Theta(2^n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Full support, or one short of it. Write $\mathrm{Tribes} = 1 - \prod_{j=1}^{s}(1-A_j)$ with $A_j = \prod_{i \in T_j}x_i = 2^{-w}\prod_{i \in T_j}(1-\chi_i)$. The tribes are on disjoint variables, so the Fourier coefficient of $\chi_S$ in the product factorises over $j$, the factor being $1-2^{-w}$ when $S \cap T_j = \emptyset$ and $-(-1)^{|S \cap T_j|}2^{-w}$ otherwise -- never zero. So every nonempty $S$ carries a nonzero coefficient. The empty set is the only possible exception: in the $\pm1$ encoding $\hat g(\emptyset) = 2(1-2^{-w})^{s}-1$, which vanishes exactly when the function is perfectly balanced. Maximal sparsity, in contrast with the $2^{n-1}$ of <a href="../functions/MAJ.html" class="xref function "><span class="tex">\(\mathrm{MAJ}_n\)</span></a> and <a href="../functions/EH.html" class="xref function "><span class="tex">\(\mathrm{EH}_n\)</span></a>, which are forced down by a symmetry.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/ANDOR.html">AND-OR tree (depth 2)</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(2^N = 2^{n^2}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Full Fourier support: the closed form in the <a href="../measures/L1.html" class="xref measure "><span class="tex">\(\hat{L}_1(f)\)</span></a> note is nonzero for every $T$ (including $\hat f(\emptyset) = 1 - 2(1-2^{-n})^n$, which vanishes only at the degenerate $n=1$). Sparsity is therefore no better than the trivial bound even though $\mathrm{C} = \sqrt N$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/NANDtree.html">NAND tree (balanced AND-OR formula)</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(2^{N}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Full Fourier support. Every coefficient is a product of the factors in the <a href="../measures/L1.html" class="xref measure "><span class="tex">\(\hat{L}_1(f)\)</span></a> recursion, none of which vanishes because $\Pr[f_j = 1] \notin \{0,1\}$ at every level; brute force confirms $2^N$ nonzero coefficients for $d \le 4$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/RMAJ3.html">Recursive MAJORITY-of-3</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(2^{\Theta(N)}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">The same factorisation as for <a href="../measures/L1.html" class="xref measure "><span class="tex">\(\hat{L}_1(f)\)</span></a>, now counting terms instead of adding them: $\mathrm{spar}(f\circ g^n) = \sum_{A \in \mathrm{supp}\widehat f} \mathrm{spar}(g)^{|A|}$, since every Fourier coefficient of the composition is a single product and nothing cancels. Here $\mathrm{spar}(d) = 3\,\mathrm{spar}(d-1) + \mathrm{spar}(d-1)^3$ from $\mathrm{spar}(0)=1$: $4, 76, 439204, \dots$, so $\log_2\mathrm{spar} = \Theta(3^{\,d}) = \Theta(N)$. (Checked exhaustively at $d = 2$.)
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/Kushilevitz.html">Kushilevitz&#39;s function (iterated)</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(2^{\Theta(N^{0.6131})}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">The same factorisation as for <a href="../measures/L1.html" class="xref measure "><span class="tex">\(\hat{L}_1(f)\)</span></a>, counting terms instead of adding them: $\mathrm{spar}(f\circ g^n) = \sum_{A\in\mathrm{supp}\widehat f}\mathrm{spar}(g)^{|A|}$. With the ten triples and six singletons of $\widehat K$ this is $\mathrm{spar}(k) = 6\,\mathrm{spar}(k-1) + 10\,\mathrm{spar}(k-1)^3$ from $\mathrm{spar}(0)=1$: $16, 41056, 6.9\cdot10^{14},\dots$, so $\log_2 \mathrm{spar} = \Theta(3^k) = \Theta(N^{\log_6 3})$. Sparsity is therefore governed by the <em>degree</em>, not by $N$: $K^{\circ k}$ has only $2^{N^{0.62}}$ of the $2^N$ possible coefficients, matching $\widehat L_1$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/Rubinstein.html">Rubinstein&#39;s function</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(\Theta(2^N)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Near-maximal. Sparsity multiplies over the disjoint blocks, and the gadget misses only the $S$ that split exactly half of the $n/2$ pairs: $\hat g(S) = 2^{-n}\sum_j(-1)^{|S\cap\{2j-1,2j\}|}$ vanishes iff exactly $n/4$ pairs are split, so $\mathrm{spar}(g) = 2^n - \binom{n/2}{n/4}2^{n/2}$ for $n/2$ even and $2^n$ otherwise. Hence $\mathrm{spar}(f) = \mathrm{spar}(g)^n = (1-o(1))2^N$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/ANDEH.html">AND composed with NOT-EXACT-HALF</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(2^{N-\sqrt N}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Sparsity is multiplicative over disjoint blocks, and the gadget has exactly $2^{n-1}$ nonzero coefficients: $\hat g(S)$ is $2^{-n}$ times a Krawtchouk value $K_{n/2}(|S|)$, which vanishes for every odd $|S|$ (complementation fixes the middle slice) and is nonzero for every even $|S|$ (checked for $n \le 18$). So $\mathrm{spar}(f) = (2^{n-1})^n = 2^{N-\sqrt N}$, near-maximal.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/Surjectivity.html">Surjectivity</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(2^{\Theta(n)}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Sparsity never increases under restriction, since the Fourier support of a restriction is a projection of the original support. On the restriction of the <a href="../measures/deg2.html" class="xref measure "><span class="tex">\(\deg_2(f)\)</span></a> entry, $\pm1$-valued $f=1-2\prod_i(1-\mathrm{AND}_{\log_2 R})$: the blocks are disjoint, every one of the $2^{\log_2 R}$ coefficients of $1-\mathrm{AND}$ is nonzero, and coefficients multiply, so the product has $2^{(R+1)\log_2 R}=2^{\Theta(n)}$ nonzero coefficients. The ceiling is $2^n$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/TriangleFinding.html">Triangle finding</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(2^{\Theta(m^2)}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Sparsity does not increase under restriction, and the restriction of <a href="../measures/deg2.html" class="xref measure "><span class="tex">\(\deg_2(f)\)</span></a> is $\mathrm{OR}_t$ with $t=\binom{m-1}2$, whose $\pm1$ form $1-2\prod_i(1-x_i)$ has all $2^t$ Fourier coefficients nonzero. The ceiling is $2^{\binom m2}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/IP.html">Inner product mod 2</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(2^n\)</span></td>
+              <td class="short">Bent: no Fourier coefficient vanishes. This is the maximum possible, and with <a href="../functions/PARITY.html" class="xref function "><span class="tex">\(\oplus_n\)</span></a> (where $\mathrm{spar} = 1$) it brackets the range.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/MinskyPapert.html">Minsky-Papert one-in-a-box</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(2^{N} = 2^{m^3}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Full: <em>no</em> Fourier coefficient vanishes. The boxes are disjoint, so $\hat f(S) = \prod_j \hat g_j(S_j)$ where $g_j$ is the box $\mathrm{OR}_{m^2}$, and every coefficient of $\mathrm{OR}_k$ is nonzero ($1-2^{-k}$ on the empty set, $-2^{-k}$ elsewhere). Together with $\mathrm{L}_1 = \Theta(2^{m})$ this puts MP at the <em>opposite</em> corner from <a href="../functions/SINK.html" class="xref function "><span class="tex">\(\mathrm{SINK}_m\)</span></a>: maximal sparsity, tiny spectral norm.
+</td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/SINK.html">Sink of a tournament</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(m2^{m-1} - m^2 + 1 = \Theta(m2^{m})\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">A set $S$ has $\hat F(S) \ne 0$ iff $|S| \ge 2$ and $S$ lies inside some star (each star has $2^{m-1}-m$ such subsets, and no two stars share one), plus the empty set. Singletons cancel exactly: the edge $uv$ appears in the star at $v$ with the opposite sign to the star at $u$. Verified exhaustively for $m = 3,4,5$ (the empty coefficient also vanishes at $m = 4$, where $\mathrm{SINK}_4$ happens to be balanced, so the count is one lower there). Note $\log_2\mathrm{spar} = \Theta(m) = \Theta(\mathrm{D})$ while $\mathrm{L}_1 = O(m)$ -- sparse <em>and</em> of small spectral norm.
+</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>Defined for</h2>
+        <ul class="settinglist">
+            <li class="yes">
+              <b>Total functions</b>
+              <span class="verdict">yes</span>
+            </li>
+            <li class="no">
+              <b>Partial functions</b>
+              <span class="verdict">no</span>
+            </li>
+            <li class="no">
+              <b>Relations</b>
+              <span class="verdict">no</span>
+            </li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>Open problems</h2>
+        <ul class="linklist">
+          <li><a href="../open.html#open-log-rank">Parity decision trees vs Fourier sparsity (query log-rank)</a></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist">
+<li><a href="../measures/L1.html" class="xref measure "><span class="tex">\(\hat{L}_1(f)\)</span></a></li><li><a href="../measures/PDT.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span></a></li><li><a href="../measures/Fdim.html" class="xref measure "><span class="tex">\(\dim_{\mathbb{F}_2}(f)\)</span></a></li><li><a href="../measures/deg.html" class="xref measure "><span class="tex">\(\deg(f)\)</span></a></li>        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#TsangWongXieZhang13" class="xref ref ">[TsangWongXieZhang13]</a> <span class="dim">Fourier sparsity, spectral norm, and the log-rank conjecture</span></li>
+            <li><a href="../refs.html#Sanyal19" class="xref ref ">[Sanyal19]</a> <span class="dim">Fourier sparsity and dimension</span></li>
+            <li><a href="../refs.html#GopalanEtAl16" class="xref ref ">[GopalanEtAl16]</a> <span class="dim">Testing Fourier dimensionality and sparsity</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/measures/05-fourier.yaml</code> &mdash; id <code>spar</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

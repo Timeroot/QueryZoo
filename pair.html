@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Any pair &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="index.html"
+         class="">Overview</a>
+      <a href="matrix.html"
+         class="">Matrix</a>
+      <a href="measures/index.html"
+         class="">Measures</a>
+      <a href="relations.html"
+         class="on">Relations</a>
+      <a href="pair.html"
+         class="">Pairs</a>
+      <a href="functions/index.html"
+         class="">Functions</a>
+      <a href="concepts/index.html"
+         class="">Concepts</a>
+      <a href="open.html"
+         class="">Open</a>
+      <a href="refs.html"
+         class="">References</a>
+      <a href="editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap pairapp">
+  <div class="crumbs"><a href="relations.html">Relations</a> &rsaquo;
+    <span id="crumb">pair</span></div>
+
+  <form class="pairpick" id="pairpick" onsubmit="return false">
+    <label>row <span class="dim">&mdash; the measure being bounded</span>
+      <select id="pick-a">
+        <optgroup label="Deterministic">
+          <option value="D">D &mdash; Deterministic query complexity</option>
+          <option value="Dna">Dna &mdash; Non-adaptive deterministic query complexity</option>
+          <option value="D_size">D_size &mdash; Decision tree size</option>
+          <option value="rank">rank &mdash; Decision tree rank</option>
+          <option value="PDT">PDT &mdash; Parity decision tree complexity</option>
+          <option value="D_prod">D_prod &mdash; Product-distribution distributional complexity</option>
+          <option value="Dmu">Dmu &mdash; Distributional query complexity</option>
+        </optgroup>
+        <optgroup label="Randomized">
+          <option value="R">R &mdash; Bounded-error randomized query complexity</option>
+          <option value="Rbar">Rbar &mdash; Expected-cost randomized query complexity</option>
+          <option value="Rna">Rna &mdash; Non-adaptive randomized query complexity</option>
+          <option value="R0">R0 &mdash; Zero-error randomized query complexity</option>
+          <option value="R1">R1 &mdash; One-sided-error randomized query complexity</option>
+          <option value="R1RP">R1RP &mdash; One-sided randomized queries with certain rejection</option>
+          <option value="psD">psD &mdash; Pseudo-deterministic query complexity</option>
+          <option value="Np">Np &mdash; Noisy decision tree complexity</option>
+        </optgroup>
+        <optgroup label="Quantum">
+          <option value="Q">Q &mdash; Bounded-error quantum query complexity</option>
+          <option value="QE">QE &mdash; Exact quantum query complexity</option>
+          <option value="Q0">Q0 &mdash; Zero-error (Las Vegas) quantum query complexity</option>
+          <option value="PostQ">PostQ &mdash; Post-selected quantum query complexity</option>
+          <option value="QC">QC &mdash; Quantum certificate complexity</option>
+          <option value="NQ">NQ &mdash; Nondeterministic quantum query complexity</option>
+          <option value="QSweak">QSweak &mdash; Weak quantum sabotage complexity</option>
+          <option value="robustQ">robustQ &mdash; Robust quantum query complexity</option>
+          <option value="QSstr">QSstr &mdash; Strong quantum sabotage complexity</option>
+          <option value="QSweakind">QSweakind &mdash; Weak quantum sabotage index complexity</option>
+          <option value="QSstrind">QSstrind &mdash; Strong quantum sabotage index complexity</option>
+          <option value="QEcert">QEcert &mdash; Exact quantum certification complexity</option>
+          <option value="Q0cert">Q0cert &mdash; Zero-error quantum certification complexity</option>
+        </optgroup>
+        <optgroup label="Polynomial degree">
+          <option value="deg">deg &mdash; Exact degree</option>
+          <option value="adeg">adeg &mdash; Approximate degree</option>
+          <option value="odeg">odeg &mdash; One-sided approximate degree</option>
+          <option value="sdeg">sdeg &mdash; Sign degree</option>
+          <option value="rdeg">rdeg &mdash; Rational degree</option>
+          <option value="ardeg">ardeg &mdash; Approximate rational degree</option>
+          <option value="ndeg">ndeg &mdash; Nondeterministic degree</option>
+          <option value="deg2">deg2 &mdash; Mod-2 degree</option>
+          <option value="degp">degp &mdash; Mod-p degree</option>
+          <option value="cjdeg">cjdeg &mdash; Conical junta degree</option>
+          <option value="bdeg">bdeg &mdash; Exact bounded polynomial degree</option>
+          <option value="degcert">degcert &mdash; Bounded degree certification complexity</option>
+          <option value="osdeg0">osdeg0 &mdash; Bounded polynomial degree with error on 0-inputs</option>
+          <option value="osdeg1">osdeg1 &mdash; Bounded polynomial degree with error on 1-inputs</option>
+          <option value="osdeg">osdeg &mdash; One-sided-error bounded polynomial degree</option>
+        </optgroup>
+        <optgroup label="Combinatorial">
+          <option value="s">s &mdash; Sensitivity</option>
+          <option value="s0">s0 &mdash; 0-sensitivity</option>
+          <option value="s1">s1 &mdash; 1-sensitivity</option>
+          <option value="bs">bs &mdash; Block sensitivity</option>
+          <option value="bs0">bs0 &mdash; 0-block sensitivity</option>
+          <option value="bs1">bs1 &mdash; 1-block sensitivity</option>
+          <option value="fbs">fbs &mdash; Fractional block sensitivity</option>
+          <option value="FC">FC &mdash; Fractional certificate complexity</option>
+          <option value="cbs">cbs &mdash; Critical block sensitivity</option>
+          <option value="lambda">lambda &mdash; Spectral sensitivity</option>
+          <option value="C">C &mdash; Certificate complexity</option>
+          <option value="C0">C0 &mdash; 0-certificate complexity</option>
+          <option value="C1">C1 &mdash; 1-certificate complexity</option>
+          <option value="Cmin">Cmin &mdash; Minimum certificate complexity</option>
+          <option value="UC">UC &mdash; Unambiguous certificate complexity</option>
+          <option value="UCmin">UCmin &mdash; Minimum unambiguous certificate complexity</option>
+          <option value="SP">SP &mdash; Subcube partition complexity</option>
+          <option value="lambdacert">lambdacert &mdash; Spectral sensitivity certification</option>
+          <option value="RC">RC &mdash; Randomized certificate complexity</option>
+          <option value="EC">EC &mdash; Expectational certificate complexity</option>
+        </optgroup>
+        <optgroup label="Fourier-analytic">
+          <option value="Var">Var &mdash; Variance</option>
+          <option value="Inf">Inf &mdash; Total influence (L2 influence)</option>
+          <option value="Inf1">Inf1 &mdash; Total L1 influence</option>
+          <option value="MaxInf">MaxInf &mdash; Maximum influence</option>
+          <option value="osss">osss &mdash; OSSS number</option>
+          <option value="NS">NS &mdash; Noise sensitivity</option>
+          <option value="Stab">Stab &mdash; Noise stability</option>
+          <option value="nsr">nsr &mdash; Noise robustness</option>
+          <option value="L1">L1 &mdash; Spectral norm</option>
+          <option value="spar">spar &mdash; Fourier sparsity</option>
+          <option value="Fdim">Fdim &mdash; Fourier dimension</option>
+        </optgroup>
+        <optgroup label="Adversary &amp; games">
+          <option value="CA">CA &mdash; Classical adversary bound</option>
+          <option value="Adv">Adv &mdash; Positive-weights adversary bound</option>
+          <option value="CG">CG &mdash; Certificate game complexity (private coin)</option>
+          <option value="CGpub">CGpub &mdash; Certificate game complexity (public coin)</option>
+          <option value="CGstar">CGstar &mdash; Quantum certificate game complexity</option>
+          <option value="CGns">CGns &mdash; Non-signaling certificate game complexity</option>
+          <option value="Advpm">Advpm &mdash; General (negative-weights) adversary bound</option>
+          <option value="gamma2">gamma2 &mdash; Approximate gamma_2 norm</option>
+          <option value="MAdv">MAdv &mdash; Multiplicative adversary</option>
+          <option value="prt">prt &mdash; Partition bound</option>
+          <option value="rprt">rprt &mdash; Relaxed partition bound</option>
+        </optgroup>
+        <optgroup label="Composition-theoretic">
+          <option value="RS">RS &mdash; Sabotage complexity</option>
+          <option value="chi">chi &mdash; Conflict complexity</option>
+          <option value="chibar">chibar &mdash; Max-conflict complexity</option>
+          <option value="LR">LR &mdash; Linearised randomized complexity</option>
+          <option value="noisyR">noisyR &mdash; Noisy randomized query complexity</option>
+          <option value="noisyRna">noisyRna &mdash; Non-adaptive noisy randomized query complexity</option>
+          <option value="Corr">Corr &mdash; Correlated samples complexity</option>
+          <option value="Sel">Sel &mdash; Selection complexity</option>
+          <option value="Rstar">Rstar &mdash; Asymptotic composition rate</option>
+        </optgroup>
+      </select>
+    </label>
+    <span class="vs">vs</span>
+    <label>column <span class="dim">&mdash; what it is bounded by</span>
+      <select id="pick-b">
+        <optgroup label="Deterministic">
+          <option value="D">D &mdash; Deterministic query complexity</option>
+          <option value="Dna">Dna &mdash; Non-adaptive deterministic query complexity</option>
+          <option value="D_size">D_size &mdash; Decision tree size</option>
+          <option value="rank">rank &mdash; Decision tree rank</option>
+          <option value="PDT">PDT &mdash; Parity decision tree complexity</option>
+          <option value="D_prod">D_prod &mdash; Product-distribution distributional complexity</option>
+          <option value="Dmu">Dmu &mdash; Distributional query complexity</option>
+        </optgroup>
+        <optgroup label="Randomized">
+          <option value="R">R &mdash; Bounded-error randomized query complexity</option>
+          <option value="Rbar">Rbar &mdash; Expected-cost randomized query complexity</option>
+          <option value="Rna">Rna &mdash; Non-adaptive randomized query complexity</option>
+          <option value="R0">R0 &mdash; Zero-error randomized query complexity</option>
+          <option value="R1">R1 &mdash; One-sided-error randomized query complexity</option>
+          <option value="R1RP">R1RP &mdash; One-sided randomized queries with certain rejection</option>
+          <option value="psD">psD &mdash; Pseudo-deterministic query complexity</option>
+          <option value="Np">Np &mdash; Noisy decision tree complexity</option>
+        </optgroup>
+        <optgroup label="Quantum">
+          <option value="Q">Q &mdash; Bounded-error quantum query complexity</option>
+          <option value="QE">QE &mdash; Exact quantum query complexity</option>
+          <option value="Q0">Q0 &mdash; Zero-error (Las Vegas) quantum query complexity</option>
+          <option value="PostQ">PostQ &mdash; Post-selected quantum query complexity</option>
+          <option value="QC">QC &mdash; Quantum certificate complexity</option>
+          <option value="NQ">NQ &mdash; Nondeterministic quantum query complexity</option>
+          <option value="QSweak">QSweak &mdash; Weak quantum sabotage complexity</option>
+          <option value="robustQ">robustQ &mdash; Robust quantum query complexity</option>
+          <option value="QSstr">QSstr &mdash; Strong quantum sabotage complexity</option>
+          <option value="QSweakind">QSweakind &mdash; Weak quantum sabotage index complexity</option>
+          <option value="QSstrind">QSstrind &mdash; Strong quantum sabotage index complexity</option>
+          <option value="QEcert">QEcert &mdash; Exact quantum certification complexity</option>
+          <option value="Q0cert">Q0cert &mdash; Zero-error quantum certification complexity</option>
+        </optgroup>
+        <optgroup label="Polynomial degree">
+          <option value="deg">deg &mdash; Exact degree</option>
+          <option value="adeg">adeg &mdash; Approximate degree</option>
+          <option value="odeg">odeg &mdash; One-sided approximate degree</option>
+          <option value="sdeg">sdeg &mdash; Sign degree</option>
+          <option value="rdeg">rdeg &mdash; Rational degree</option>
+          <option value="ardeg">ardeg &mdash; Approximate rational degree</option>
+          <option value="ndeg">ndeg &mdash; Nondeterministic degree</option>
+          <option value="deg2">deg2 &mdash; Mod-2 degree</option>
+          <option value="degp">degp &mdash; Mod-p degree</option>
+          <option value="cjdeg">cjdeg &mdash; Conical junta degree</option>
+          <option value="bdeg">bdeg &mdash; Exact bounded polynomial degree</option>
+          <option value="degcert">degcert &mdash; Bounded degree certification complexity</option>
+          <option value="osdeg0">osdeg0 &mdash; Bounded polynomial degree with error on 0-inputs</option>
+          <option value="osdeg1">osdeg1 &mdash; Bounded polynomial degree with error on 1-inputs</option>
+          <option value="osdeg">osdeg &mdash; One-sided-error bounded polynomial degree</option>
+        </optgroup>
+        <optgroup label="Combinatorial">
+          <option value="s">s &mdash; Sensitivity</option>
+          <option value="s0">s0 &mdash; 0-sensitivity</option>
+          <option value="s1">s1 &mdash; 1-sensitivity</option>
+          <option value="bs">bs &mdash; Block sensitivity</option>
+          <option value="bs0">bs0 &mdash; 0-block sensitivity</option>
+          <option value="bs1">bs1 &mdash; 1-block sensitivity</option>
+          <option value="fbs">fbs &mdash; Fractional block sensitivity</option>
+          <option value="FC">FC &mdash; Fractional certificate complexity</option>
+          <option value="cbs">cbs &mdash; Critical block sensitivity</option>
+          <option value="lambda">lambda &mdash; Spectral sensitivity</option>
+          <option value="C">C &mdash; Certificate complexity</option>
+          <option value="C0">C0 &mdash; 0-certificate complexity</option>
+          <option value="C1">C1 &mdash; 1-certificate complexity</option>
+          <option value="Cmin">Cmin &mdash; Minimum certificate complexity</option>
+          <option value="UC">UC &mdash; Unambiguous certificate complexity</option>
+          <option value="UCmin">UCmin &mdash; Minimum unambiguous certificate complexity</option>
+          <option value="SP">SP &mdash; Subcube partition complexity</option>
+          <option value="lambdacert">lambdacert &mdash; Spectral sensitivity certification</option>
+          <option value="RC">RC &mdash; Randomized certificate complexity</option>
+          <option value="EC">EC &mdash; Expectational certificate complexity</option>
+        </optgroup>
+        <optgroup label="Fourier-analytic">
+          <option value="Var">Var &mdash; Variance</option>
+          <option value="Inf">Inf &mdash; Total influence (L2 influence)</option>
+          <option value="Inf1">Inf1 &mdash; Total L1 influence</option>
+          <option value="MaxInf">MaxInf &mdash; Maximum influence</option>
+          <option value="osss">osss &mdash; OSSS number</option>
+          <option value="NS">NS &mdash; Noise sensitivity</option>
+          <option value="Stab">Stab &mdash; Noise stability</option>
+          <option value="nsr">nsr &mdash; Noise robustness</option>
+          <option value="L1">L1 &mdash; Spectral norm</option>
+          <option value="spar">spar &mdash; Fourier sparsity</option>
+          <option value="Fdim">Fdim &mdash; Fourier dimension</option>
+        </optgroup>
+        <optgroup label="Adversary &amp; games">
+          <option value="CA">CA &mdash; Classical adversary bound</option>
+          <option value="Adv">Adv &mdash; Positive-weights adversary bound</option>
+          <option value="CG">CG &mdash; Certificate game complexity (private coin)</option>
+          <option value="CGpub">CGpub &mdash; Certificate game complexity (public coin)</option>
+          <option value="CGstar">CGstar &mdash; Quantum certificate game complexity</option>
+          <option value="CGns">CGns &mdash; Non-signaling certificate game complexity</option>
+          <option value="Advpm">Advpm &mdash; General (negative-weights) adversary bound</option>
+          <option value="gamma2">gamma2 &mdash; Approximate gamma_2 norm</option>
+          <option value="MAdv">MAdv &mdash; Multiplicative adversary</option>
+          <option value="prt">prt &mdash; Partition bound</option>
+          <option value="rprt">rprt &mdash; Relaxed partition bound</option>
+        </optgroup>
+        <optgroup label="Composition-theoretic">
+          <option value="RS">RS &mdash; Sabotage complexity</option>
+          <option value="chi">chi &mdash; Conflict complexity</option>
+          <option value="chibar">chibar &mdash; Max-conflict complexity</option>
+          <option value="LR">LR &mdash; Linearised randomized complexity</option>
+          <option value="noisyR">noisyR &mdash; Noisy randomized query complexity</option>
+          <option value="noisyRna">noisyRna &mdash; Non-adaptive noisy randomized query complexity</option>
+          <option value="Corr">Corr &mdash; Correlated samples complexity</option>
+          <option value="Sel">Sel &mdash; Selection complexity</option>
+          <option value="Rstar">Rstar &mdash; Asymptotic composition rate</option>
+        </optgroup>
+      </select>
+    </label>
+    <button type="button" class="btn ghost" id="swap" title="swap the two measures">&#8646; swap</button>
+  </form>
+
+  <div id="pairview" aria-live="polite">
+    <p class="dim loading">Loading&hellip;</p>
+  </div>
+
+  <noscript>
+    <div class="banner">This page assembles itself in the browser from
+      <code>api/pair/&lt;measure&gt;.json</code>, because there are
+      94&times;94 ordered pairs and
+      most of what can be said about them is computed rather than written down.
+      Without JavaScript, the <a href="relations.html">relations index</a> and the
+      <a href="matrix.html">matrix</a> still list everything that <em>is</em>
+      written down, and each measure page carries its own bounds.</div>
+  </noscript>
+</div>
+<script src="static/pair.js"></script>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="static/app.js"></script>
+</body>
+</html>

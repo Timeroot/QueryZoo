@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pabbaraju’s optimal unambiguous DNF &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#total">Total functions</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">PabbarajuDNF</div>
+    <div>
+      <h1>Pabbaraju’s optimal unambiguous DNF</h1>
+      <p class="lede">$\mathrm{C}^0=\Omega(n^2)$ and $\mathrm{UC}^1=O(n)$, without logarithmic losses.</p>
+      <p class="aliases">
+        <span class="kindtag k-total">total</span>
+        <span class="grouptag g-separating-total">separating-total</span>
+<span class="tag">arity: $n^2$ bits</span>      </p>
+    </div>
+  </header>
+
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>The unambiguous DNF of Theorem 1 on $n$ blocks of $n$ bits. Terms select a block and a half-sized positive set, and signed set-pair systems specify the cross-block negative literals (Section 3). Every term has width $O(n)$, distinct terms are incompatible, and the all-zero input needs $\Omega(n^2)$ bits to certify rejection.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Formal definition</h2>
+        <p>Fix disjoint blocks $B_1,\ldots,B_n$ of size $n$ and $k=\lfloor n/2\rfloor$.
+For every unordered pair $\{i,j\}$ choose bijections
+$\pi_i^{ij}:B_i\to[n]$, $\pi_j^{ij}:B_j\to[n]$ with
+$\sum_{j\ne i}\min_{u\in S}\pi_i^{ij}(u)=O(n)$ uniformly over $i$ and $k$-subsets $S\subseteq B_i$;
+[<a href="../refs.html#Pabbaraju26" class="xref ref ">Pabbaraju26</a>, Section 3] proves such choices exist.
+Put $a_{ij}(S)=\min_{u\in S}\pi_i^{ij}(u)$ and
+$A_{ij}(S)=\{v\in B_j:\pi_j^{ij}(v)\le a_{ij}(S)\}$.
+$$f_n(x)=\bigvee_{i,\,S\subseteq B_i,\,|S|=k}
+\left(\bigwedge_{u\in S}x_u\right)
+\left(\bigwedge_{v\in(B_i\setminus S)\cup\bigcup_{j\ne i}A_{ij}(S)}\neg x_v\right).$$</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/C0.html">0-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(n^2)\)</span></td>
+              <td class="short">Theorem 1.
+<span class="refs"><a href="../refs.html#Pabbaraju26" class="xref ref ">Pabbaraju26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                  <a href="../measures/C.html">Certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n^2)\)</span></td>
+              <td class="short">C≥C₀ and C≤n².
+<span class="refs"><a href="../refs.html#Pabbaraju26" class="xref ref ">Pabbaraju26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/UCmin.html" title="Minimum unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/UCmin.html">Minimum unambiguous certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(O(n)\)</span></td>
+              <td class="short">Theorem 1 gives UC¹=O(n).
+<span class="refs"><a href="../refs.html#Pabbaraju26" class="xref ref ">Pabbaraju26</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
+    <span class="tex">\(\deg(f)\)</span>
+  </a>
+
+                  <a href="../measures/deg.html">Exact degree</a>
+              </td>
+              <td class="val"><span class="tex">\(O(n)\)</span></td>
+              <td class="short">Corollary 1.2: exact representation by the sum of disjoint term indicators.
+<span class="refs"><a href="../refs.html#Pabbaraju26" class="xref ref ">Pabbaraju26</a></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+
+
+      <section class="card">
+        <h2>Cited as a witness by</h2>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
+    <span class="tex">\(\deg(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=C&amp;b=deg#recent-C-vs-deg-total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}(f_n)=\Omega(\deg(f_n)^2)\)</span></div>
+<div class="refs"><a href="../refs.html#Pabbaraju26" class="xref ref ">Pabbaraju26</a></div>          </li>
+        </ul>
+      </section>
+
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#Pabbaraju26" class="xref ref ">[Pabbaraju26]</a> <span class="dim">Optimal Unambiguous DNFs and Alon-Saks-Seymour</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/C0.html" class="xref measure "><span class="tex">\(\mathrm{C}^0(f)\)</span></a></li><li><a href="../measures/C.html" class="xref measure "><span class="tex">\(\mathrm{C}(f)\)</span></a></li><li><a href="../measures/UCmin.html" class="xref measure "><span class="tex">\(\mathrm{UC}_{\min}(f)\)</span></a></li><li><a href="../measures/deg.html" class="xref measure "><span class="tex">\(\deg(f)\)</span></a></li><li><a href="../functions/PabbarajuQuartic.html" class="xref function ">Pabbaraju’s quartic approximate-degree function</a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/07-recent-separations.yaml</code> &mdash; id <code>PabbarajuDNF</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Local search on the grid &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#relation">Relations</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">\(\mathrm{LS}([k]^d)\)</div>
+    <div>
+      <h1>Local search on the grid</h1>
+      <p class="lede">Tight at $\Theta(k^{d/2})$ randomized for $d\ge4$ and $\Theta(k^{d/3})$ quantum for $d\ge6$; the low dimensions took another decade, and $d=4$ quantum is still open.</p>
+      <p class="aliases">
+        <span class="kindtag k-relation">relation</span>
+        <span class="grouptag g-relational">relational</span>
+<span class="tag">arity: a table $f:[k]^d \to \mathbb{Z}$, so $N = k^d$ cells; $d$ is constant</span>      </p>
+    </div>
+  </header>
+
+  <div class="banner warn">
+    <b>Definition not yet transcribed.</b> This page gives a pointer and an informal description
+    only; the exact mathematical definition still needs to be written into
+    <code>data/functions/05-more.yaml</code> under <code>formal:</code>. Follow the references below.
+  </div>
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>As <a href="../functions/LocalSearchCube.html" class="xref function "><span class="tex">\(\mathrm{LS}(\{0,1\}^n)\)</span></a>, on the $d$-dimensional grid with nearest-neighbour edges, so $\Delta = 2d$.</p>
+
+      </section>
+
+
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R.html">Bounded-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(k^{d/2})\ (d \ge 4)\)</span></td>
+              <td class="short">[<a href="../refs.html#Zhang09localsearch" class="xref ref ">Zhang09localsearch</a>, Thm. 3], matching Aldous' $O(\sqrt{N\Delta}) = O(k^{d/2})$. The two small dimensions cost a log: $\mathrm{R} = \tilde\Theta(k^{3/2})$ at $d = 3$, from $\Omega((k^3/\log k)^{1/2})$ [<a href="../refs.html#Zhang09localsearch" class="xref ref ">Zhang09localsearch</a>, Thm. 3]; and $\mathrm{R} = \tilde\Theta(k)$ at $d = 2$, from $\Omega(k^{1-\delta})$ for every constant $\delta &gt; 0$ [<a href="../refs.html#SunYao09" class="xref ref ">SunYao09</a>] via Sarkozy-Szemeredi, against Aldous' $O(k)$ -- [<a href="../refs.html#Zhang09localsearch" class="xref ref ">Zhang09localsearch</a>] had reached only $\Omega(k^{2/3})$ there.
+<span class="refs"><a href="../refs.html#Zhang09localsearch" class="xref ref ">Zhang09localsearch</a> <a href="../refs.html#Aldous83" class="xref ref ">Aldous83</a> <a href="../refs.html#SunYao09" class="xref ref ">SunYao09</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q.html">Bounded-error quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(k^{d/3})\ (d \ge 6)\)</span></td>
+              <td class="short">[<a href="../refs.html#Zhang09localsearch" class="xref ref ">Zhang09localsearch</a>, Thm. 3], matching Aaronson's $O(N^{1/3}\Delta^{1/6}) = O(k^{d/3})$. Below $d = 6$ the picture degrades one dimension at a time: $\tilde\Theta(k^{5/3})$ at $d = 5$, from $\Omega((k^5/\log k)^{1/3})$ [<a href="../refs.html#Zhang09localsearch" class="xref ref ">Zhang09localsearch</a>, Thm. 3]; a genuine polynomial gap $\Omega(k^{6/5})$ to $O(k^{4/3})$ at $d = 4$, the one cell of the table still open; $\tilde\Theta(k)$ at $d = 3$, from $\Omega(k^{1-\delta})$ [<a href="../refs.html#SunYao09" class="xref ref ">SunYao09</a>] against $O(k)$; and $\tilde\Theta(\sqrt k)$ at $d = 2$, from $\Omega(k^{1/2-\delta})$ [<a href="../refs.html#SunYao09" class="xref ref ">SunYao09</a>] against $O(\sqrt k\log\log k)$ [<a href="../refs.html#Verhoeven06" class="xref ref ">Verhoeven06</a>] via graph genus (also $O(\sqrt k(\log\log k)^{1.5})$ [<a href="../refs.html#Zhang09localsearch" class="xref ref ">Zhang09localsearch</a>, Thm. 5]).
+<span class="refs"><a href="../refs.html#Zhang09localsearch" class="xref ref ">Zhang09localsearch</a> <a href="../refs.html#Aaronson06" class="xref ref ">Aaronson06</a> <a href="../refs.html#SunYao09" class="xref ref ">SunYao09</a> <a href="../refs.html#Verhoeven06" class="xref ref ">Verhoeven06</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D.html">Deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(k^{d-1})\)</span></td>
+              <td class="short">Not merely $\tilde\Theta$: the deterministic case was settled before the randomized one. Upper $O(k^{d-1})$ by the divide-and-conquer of Llewellyn-Tovey-Trick: query the $(d-1)$-dimensional middle slab together with the boundary of the current region, take the smallest value seen, and recurse into whichever half contains a strictly smaller neighbour of it -- the region halves each round, so the slab costs form a geometric series. Matching $\Omega(k^{d-1})$ lower bounds are due to [<a href="../refs.html#LlewellynTovey93" class="xref ref ">LlewellynTovey93</a>] and, independently, to Althofer and Koschnick (1993). The generic $\mathrm{D} = O(\log N\,(\Delta + s))$ of [<a href="../refs.html#SanthaSzegedy09" class="xref ref ">SanthaSzegedy09</a>, Thm. 2] with separation number $s([k]^d) = \Theta(k^{d-1})$ recovers the upper bound only up to the $\log$.
+<span class="refs"><a href="../refs.html#LTT89" class="xref ref ">LTT89</a> <a href="../refs.html#LlewellynTovey93" class="xref ref ">LlewellynTovey93</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R0.html">Zero-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(k^{d/2})\ (d \ge 4)\)</span></td>
+              <td class="short">A candidate local minimum is verified with $\Delta = 2d = O(1)$ further queries, so $\mathrm{R}_0 = O(\mathrm{R} + d)$; with $d$ constant this is $\Theta(k^{d/2})$. Same remark as on <a href="../functions/LocalSearchCube.html" class="xref function "><span class="tex">\(\mathrm{LS}(\{0,1\}^n)\)</span></a>.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q0.html">Zero-error (Las Vegas) quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(k^{d/3})\ (d \ge 6)\)</span></td>
+              <td class="short">Same verification argument: $\mathrm{Q}_0 = O(\mathrm{Q} + d)$, and $d$ is constant. Zero error is free here for the same reason it is free classically.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rbar.html">Expected-cost randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(k^{d/2})\ (d \ge 4)\)</span></td>
+              <td class="short">$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ (<a href="../measures/Rbar.html" class="xref measure "><span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span></a> vs <a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>).
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dmu.html">Distributional query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(k^{d/2})\ (d \ge 4)\)</span></td>
+              <td class="short">By Yao, $\max_\mu \mathrm{D}^\mu_\varepsilon = \mathrm{R}_\varepsilon$; [<a href="../refs.html#Zhang09localsearch" class="xref ref ">Zhang09localsearch</a>, Thm. 3] argues against an explicit random-walk distribution, so the bound is a $\mathrm{D}^\mu$ bound already.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Advpm.html" title="General (negative-weights) adversary bound">
+    <span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Advpm.html">General (negative-weights) adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(k^{d/3})\ (d \ge 6)\)</span></td>
+              <td class="short">$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ (<a href="../measures/Advpm.html" class="xref measure "><span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span></a> vs <a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>). In the open dimension $d = 4$ the general adversary inherits the window $[\Omega(k^{6/5}), O(k^{4/3})]$ verbatim.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dna.html">Non-adaptive deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(k^d = N\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Every cell, for every $d \ge 1$, so non-adaptivity is catastrophic already at $d = 2$ where $\mathrm{D} = \Theta(k)$. If the fixed query set $S$ omits the cell $u$, let $f$ agree on $S$ with the $\ell_1$ distance to $u$: when $f(u) = 0$ the unique local minimum is $u$, and when $f(u)$ is huge the local minima are exactly the neighbours of $u$. Same transcript, different required output.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                  <a href="../measures/C.html">Certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(2d+1 = \Theta(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">A local minimum is certified by its own value and those of its $\le 2d$ neighbours, and no smaller set will do -- omit a neighbour and it can be completed to a strictly smaller value. With $d$ constant this is $\Theta(1)$ against $\mathrm{D} = \Theta(k^{d-1})$, an unbounded $\mathrm{D}$-vs-$\mathrm{C}$ gap on a total search problem. Compare <a href="../functions/LocalSearchCube.html" class="xref function "><span class="tex">\(\mathrm{LS}(\{0,1\}^n)\)</span></a>, where the same argument gives $n+1$ because the degree grows.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rna.html">Non-adaptive randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(k^d)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Every cell, even with randomness, so $\mathrm{R}^{\mathrm{na}} = \Theta(\mathrm{D}^{\mathrm{na}}) = \Theta(N)$. Randomise the <a href="../measures/Dna.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span></a> construction: draw $u$ uniformly from $[k]^d$, let $f$ be the $\ell_1$ distance to $u$ off $u$, and set $f(u) \in \{0, 2dk\}$ by a fair coin. The two completions have disjoint solution sets and agree everywhere but $u$, so a fixed query set of size $t$ succeeds with probability at most $t/k^d + 1/2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+
+                  <a href="../measures/psD.html">Pseudo-deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(k^{d/2}),\ O(k^{d-1})\ (d \ge 4)\)</span></td>
+              <td class="short">Only the generic $\mathrm{R} \le \mathrm{psD} \le \mathrm{D}$ (<a href="../measures/psD.html" class="xref measure "><span class="tex">\(\mathrm{psD}(S)\)</span></a> vs <a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>). The window is a factor $k^{d/2-1}$ wide, and unlike <a href="../functions/LocalSearchCube.html" class="xref function "><span class="tex">\(\mathrm{LS}(\{0,1\}^n)\)</span></a> it stays wide for every fixed $d \ge 4$, so the grid is the cleaner family to ask the pseudo-deterministic question on: is there a canonical local minimum findable in $\tilde O(k^{d/2})$ randomized queries?
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Np.html">Noisy decision tree complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\tilde\Theta(k^{d/2})\ (d \ge 4)\)</span></td>
+              <td class="short">Between $\mathrm{R} = \Theta(k^{d/2})$ and $O(\mathrm{R}\log \mathrm{R}) = O(k^{d/2}\log k)$ (<a href="../measures/Np.html" class="xref measure "><span class="tex">\(\mathrm{N}_{p}(f)\)</span></a> vs <a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>).
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/robustQ.html">Robust quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\tilde\Theta(k^{d/3})\ (d \ge 6)\)</span></td>
+              <td class="short">Between $\mathrm{Q} = \Theta(k^{d/3})$ and $O(\mathrm{Q}\log \mathrm{Q}) = O(k^{d/3}\log k)$ (<a href="../measures/robustQ.html" class="xref measure "><span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span></a> vs <a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>).
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/gamma2.html" title="Approximate gamma_2 norm">
+    <span class="tex">\(\gamma_2^{\alpha}(f)\)</span>
+  </a>
+
+                  <a href="../measures/gamma2.html">Approximate gamma_2 norm</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(k^{d/3})\ (d \ge 6)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">Equal to $\mathrm{Adv}^{\pm}$ up to constants (<a href="../measures/gamma2.html" class="xref measure "><span class="tex">\(\gamma_2^{\alpha}(f)\)</span></a> vs <a href="../measures/Advpm.html" class="xref measure "><span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span></a>). Medium confidence only because $\gamma_2$ is listed as partially defined on relations.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/MAdv.html" title="Multiplicative adversary">
+    <span class="tex">\(\mathrm{MAdv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MAdv.html">Multiplicative adversary</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(k^{d/3})\ (d \ge 6)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">Squeezed between $\mathrm{Adv}^{\pm} = \Theta(k^{d/3})$, which it dominates, and $\mathrm{Q} = \Theta(k^{d/3})$, which it is below. Same definedness caveat as $\gamma_2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Cmin.html">Minimum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Between $d+1$ and $\mathrm{C}=2d+1$: a corner cell has only $d$ neighbours to check, an interior cell has $2d$, and $d$ is a constant.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Adv.html" title="Positive-weights adversary bound">
+    <span class="tex">\(\mathrm{Adv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Adv.html">Positive-weights adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(O(k^{d/3})\ (d \ge 6)\)</span></td>
+              <td class="short">$\mathrm{Adv}\le\mathrm{Adv}^{\pm}=\Theta(k^{d/3})$ (<a href="../measures/Adv.html" class="xref measure "><span class="tex">\(\mathrm{Adv}(f)\)</span></a> vs <a href="../measures/Advpm.html" class="xref measure "><span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span></a>). As on <a href="../functions/LocalSearchCube.html" class="xref function "><span class="tex">\(\mathrm{LS}(\{0,1\}^n)\)</span></a>, the known lower bound is a relational adversary argument rather than a positive-weight quantum one.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QE.html">Exact quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(k^{d/3}),\ O(k^{d-1})\ (d \ge 6)\)</span></td>
+              <td class="short">$\mathrm{Q}\le\mathrm{Q}_0\le\mathrm{Q}_{\mathrm{E}}\le\mathrm{D}$, with $\mathrm{Q}=\Theta(k^{d/3})$ and $\mathrm{D}=\Theta(k^{d-1})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/PostQ.html" title="Post-selected quantum query complexity">
+    <span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/PostQ.html">Post-selected quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(O(k^{d/3})\ (d \ge 6)\)</span></td>
+              <td class="short">Post-selection can only help, so $\mathrm{PostQ}\le\mathrm{Q}=\Theta(k^{d/3})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/prt.html" title="Partition bound">
+    <span class="tex">\(\mathrm{prt}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/prt.html">Partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(O(k^{d/2})\ (d \ge 4)\)</span></td>
+              <td class="short">$\mathrm{prt}_\varepsilon\le2\,\mathrm{R}_\varepsilon$ [<a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a>] in the relation setting, and $\mathrm{R}=\Theta(k^{d/2})$ for $d\ge4$.
+<span class="refs"><a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/rprt.html" title="Relaxed partition bound">
+    <span class="tex">\(\overline{\mathrm{prt}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rprt.html">Relaxed partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(O(k^{d/2})\ (d \ge 4)\)</span></td>
+              <td class="short">$\overline{\mathrm{prt}}_\varepsilon\le\mathrm{prt}_\varepsilon\le2\,\mathrm{R}_\varepsilon$ [<a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a>].
+<span class="refs"><a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/cjdeg.html">Conical junta degree</a>
+              </td>
+              <td class="val"><span class="tex">\(O(k^{d/2})\ (d \ge 4)\)</span></td>
+              <td class="short">$\mathrm{cjdeg}_\varepsilon\le\mathrm{R}_\varepsilon$ (<a href="../measures/cjdeg.html" class="xref measure "><span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span></a> vs <a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>, relation setting).
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_size.html">Decision tree size</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(k^d)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Answer counting: for every cell $v$ the table $f(x)=\|x-v\|_1$ has $v$ as its unique local minimum, so all $N=k^d$ cells force distinct leaves.
+</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+
+
+
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#Zhang09localsearch" class="xref ref ">[Zhang09localsearch]</a> <span class="dim">Tight bounds for randomized and quantum local search</span></li>
+            <li><a href="../refs.html#SunYao09" class="xref ref ">[SunYao09]</a> <span class="dim">On the quantum query complexity of local search in two and three dimensions</span></li>
+            <li><a href="../refs.html#Aaronson06" class="xref ref ">[Aaronson06]</a> <span class="dim">Lower bounds for local search by quantum arguments</span></li>
+            <li><a href="../refs.html#Verhoeven06" class="xref ref ">[Verhoeven06]</a> <span class="dim">Enhanced algorithms for local search</span></li>
+            <li><a href="../refs.html#SanthaSzegedy09" class="xref ref ">[SanthaSzegedy09]</a> <span class="dim">Quantum and classical query complexities of local search are polynomially related</span></li>
+            <li><a href="../refs.html#LTT89" class="xref ref ">[LTT89]</a> <span class="dim">Local optimization on graphs</span></li>
+            <li><a href="../refs.html#LlewellynTovey93" class="xref ref ">[LlewellynTovey93]</a> <span class="dim">Dividing and conquering the square</span></li>
+            <li><a href="../refs.html#Aldous83" class="xref ref ">[Aldous83]</a> <span class="dim">Minimization algorithms and random walk on the d-cube</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../functions/LocalSearchCube.html" class="xref function "><span class="tex">\(\mathrm{LS}(\{0,1\}^n)\)</span></a></li><li><a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/05-more.yaml</code> &mdash; id <code>LocalSearchGrid</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

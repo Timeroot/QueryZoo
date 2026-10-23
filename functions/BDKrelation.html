@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ben-David-Kundu total search problems &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#relation">Relations</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">\(\mathrm{AndOr}_{\mathcal{H},t}\)</div>
+    <div>
+      <h1>Ben-David-Kundu total search problems</h1>
+      <p class="lede">A <em>total</em> search problem with $\mathrm{Q} = \Omega(\sqrt n\log^4 n)$ but conical junta degree $O(\log^7 n)$ -- exponential, and against a measure usually <em>larger</em> than $\mathrm{R}$.</p>
+      <p class="aliases">
+        <span class="kindtag k-relation">relation</span>
+        <span class="grouptag g-relational">relational</span>
+<span class="tag">arity: $t\,n^2\log(n/2)$ bits, in $t$ blocks of $n^2\log(n/2)$; the separating setting is $t = \log^5 n$</span>&mdash; also: <code>shifted AND-OR search problem</code>, <code>query TFNP separations</code>      </p>
+    </div>
+  </header>
+
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>Start from $\mathrm{AndOr}_n$: an $\mathrm{OR}$ of size $n^2$ of $\mathrm{AND}$s of
+size $\log(n/2)$, viewed as the <em>search</em> problem &quot;given a $1$-input, output the
+index of an all-$1$ block&quot;. This is a promise problem -- an input with no all-$1$
+block has no valid output.</p>
+<p>Totality is bought by shifting. Fix a family $\mathcal{H}$ of $\log^2 n$-wise
+independent functions and take $t$ independent copies $x^1,\dots,x^t$; a valid
+output is a tuple $(i_1,\dots,i_t)$ together with a shift $h \in \mathcal{H}$ such
+that $i_\ell$ solves $\mathrm{AndOr}_n(x^\ell \oplus h)$ for every $\ell$. For
+$t = \mathrm{polylog}(n)$ some shift always works, so the problem is total: it lives
+in the query analogue of $\mathrm{TFNP}$, with certificates of only
+$t\log(n/2)$ bits.</p>
+<p>The two &quot;tricks&quot; of the paper are a translation of a partial function into a total
+search problem and a translation back. Composing them turns <em>unbounded</em> degree
+measures (where separations are easy) into <em>bounded</em> ones (where they are hard),
+which is how the separations below are manufactured.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Formal definition</h2>
+        <p>Blocks: $x^\ell \in \{0,1\}^{n^2\log(n/2)}$ split into $n^2$ blocks of
+$\log(n/2)$ bits; $\mathrm{AndOr}_n(x) = \{i : x_{ij} = 1 \text{ for all } j\}$.
+Valid outputs of $\mathrm{AndOr}_{\mathcal{H},t}$ on $(x^1,\dots,x^t)$:
+$$\big\{(i_1,\dots,i_t) \;:\; \exists\, h \in \mathcal{H} \text{ with }
+  i_\ell \in \mathrm{AndOr}_n(x^\ell \oplus h) \text{ for all } \ell \in [t]\big\}.$$
+All values below are at $t = \log^5 n$.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/adeg.html">Approximate degree</a>
+              </td>
+              <td class="val"><span class="tex">\(O(\log^7 n)\)</span></td>
+              <td class="short">Theorem 31: $\widetilde{\deg} = O(t\log^2 n)$, here $O(\log^7 n)$. The witnessing system of polynomials is built from the <em>unbounded</em> degree-$\log(n/2)$ system $p_i(x) = \tfrac{1}{3n}\prod_j x_{ij}$ for $\mathrm{AndOr}_n$, error-reduced to $1/\sqrt n$ at degree $O(\log^2 n)$ and then made bounded by the shift.
+<span class="refs"><a href="../refs.html#BenDavidKundu24search" class="xref ref ">BenDavidKundu24search</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/cjdeg.html">Conical junta degree</a>
+              </td>
+              <td class="val"><span class="tex">\(O(\log^7 n)\)</span></td>
+              <td class="short">Corollary 32: the same polynomials are conical juntas, so the <em>two-sided bounded non-negative</em> degree $\widetilde{\deg}^+_2$ is also $O(t\log^2 n) = O(\log^7 n)$. This is the strong form of the result: $\mathrm{cjdeg}$ is normally at least $\mathrm{R}$, and even an $\mathrm{R}$-vs-$\mathrm{cjdeg}$ separation for a total search problem was open.
+<span class="refs"><a href="../refs.html#BenDavidKundu24search" class="xref ref ">BenDavidKundu24search</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q.html">Bounded-error quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">Theorem 39: at $t = \log^5 n$, any quantum algorithm making $o(\sqrt n \log^4 n)$ queries succeeds with probability only $2^{-\Omega(\log^4 n)}$ against the uniform distribution. The core is the $\Omega(t\sqrt n/\log\log n)$ direct-sum bound for $t$ copies of $\mathrm{AndOr}_n$ at exponentially small success, and a union bound over the $2^{2\log^3 n\log\log(n/2)}$ shifts.
+<span class="refs"><a href="../refs.html#BenDavidKundu24search" class="xref ref ">BenDavidKundu24search</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Advpm.html" title="General (negative-weights) adversary bound">
+    <span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Advpm.html">General (negative-weights) adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">$\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q})$, so the negative-weight adversary is $\widetilde\Omega(\sqrt n)$ here while $\widetilde{\deg} = O(\log^7 n)$: for search problems the adversary bound is exponentially stronger than the polynomial method.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R.html">Bounded-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">At least $\mathrm{Q} = \widetilde\Omega(\sqrt n)$; no better classical lower bound is claimed, and the trivial ceiling is the input length $t n^2\log(n/2)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rbar.html">Expected-cost randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$ (<a href="../measures/Rbar.html" class="xref measure "><span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span></a> vs <a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>).
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R0.html">Zero-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">At least $\mathrm{R}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D.html">Deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">At least $\mathrm{R}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dna.html">Non-adaptive deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">At least $\mathrm{D}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rna.html">Non-adaptive randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">At least $\mathrm{R}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+
+                  <a href="../measures/psD.html">Pseudo-deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">At least $\mathrm{R}$, since $\mathrm{R} \le \mathrm{psD}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_size.html">Decision tree size</a>
+              </td>
+              <td class="val"><span class="tex">\(2^{\widetilde\Omega(\sqrt n)}\)</span><span class="conf low" title="Low confidence: transcribed from memory or a secondary source; verify before relying on it.">?</span>
+  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">A tree of depth $d$ has more than $d$ leaves, so this only says $\mathrm{DTsize} &gt; \mathrm{D}$; the exponential form follows because every leaf must force a valid output, and $\mathrm{C} = O(\log^6 n)$ certificates cannot be reached in fewer than $\mathrm{D}$ queries on the hard inputs.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                  <a href="../measures/C.html">Certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(O(\log^6 n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">A valid output is a tuple $(i_1,\dots,i_t)$ of all-$1$ blocks, and exhibiting the $t\log(n/2) = O(\log^6 n)$ bits of those blocks certifies it. Membership in query $\mathrm{TFNP}$ is exactly the requirement that certificates be polylogarithmic in the input size, and it is what makes the $\mathrm{Q} = \widetilde\Omega(\sqrt n)$ lower bound interesting.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/C1.html">1-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(O(\log^6 n)\)</span></td>
+              <td class="short">The problem is <em>total</em>: every input has a valid output, so there is no &quot;no&quot; side and $\mathrm{C}^1 = \mathrm{C} = O(\log^6 n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Cmin.html">Minimum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\log^6 n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Unusually, the min and the max coincide. Any certificate must name an output $(i_1,\dots,i_t)$ and a shift, and to know that $i_\ell$ is an all-$1$ block of $x^\ell \oplus h$ one must have read all $\log(n/2)$ bits of that block, for every $\ell$. So $\mathrm{C}_x \ge t\log(n/2)$ on <em>every</em> input, matching the upper bound of the <a href="../measures/C.html" class="xref measure "><span class="tex">\(\mathrm{C}(f)\)</span></a> entry.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_prod.html" title="Product-distribution distributional complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_prod.html">Product-distribution distributional complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">The hard distribution of [<a href="../refs.html#BenDavidKundu24search" class="xref ref ">BenDavidKundu24search</a>, Thm 39] is the <em>uniform</em> distribution on $t$ independent blocks, which is a product distribution, and a deterministic tree is in particular a quantum algorithm. So the restriction to product distributions costs nothing here: $\mathrm{D}^{\mathrm{prod}} = \widetilde\Omega(\sqrt n)$, and combined with $\mathrm{RS}(g) = \widetilde\Omega(\mathrm{D}^{\mathrm{prod}}(g))$ this makes the problem hard to use as an <em>inner</em> function in a composition.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dmu.html">Distributional query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">By Yao, $\max_\mu \mathrm{D}^\mu = \mathrm{R} = \widetilde\Omega(\sqrt n)$; the uniform distribution already achieves it -- see <a href="../measures/D_prod.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f)\)</span></a>.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QE.html">Exact quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">At least $\mathrm{Q}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q0.html">Zero-error (Las Vegas) quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">At least $\mathrm{Q}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/robustQ.html">Robust quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">At least $\mathrm{Q}$: noisy oracles cannot be cheaper than exact ones.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Np.html">Noisy decision tree complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">At least $\mathrm{R}$: setting the noise rate to $0$ recovers the ordinary model.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/MAdv.html" title="Multiplicative adversary">
+    <span class="tex">\(\mathrm{MAdv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MAdv.html">Multiplicative adversary</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{Adv}^{\pm} \le \mathrm{MAdv} \le \mathrm{Q}$, and the recorded $\mathrm{Adv}^{\pm}$ is already $\widetilde\Omega(\sqrt n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/gamma2.html" title="Approximate gamma_2 norm">
+    <span class="tex">\(\gamma_2^{\alpha}(f)\)</span>
+  </a>
+
+                  <a href="../measures/gamma2.html">Approximate gamma_2 norm</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">$\gamma_2 = \Theta(\mathrm{Adv}^{\pm}) = \widetilde\Omega(\sqrt n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R1.html">One-sided-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">Squeezed from below by $\mathrm{R} \le \mathrm{R}^1$, with $\mathrm{R} = \widetilde\Omega(\sqrt n)$; above, $\mathrm{R}^1 \le \mathrm{R}_0$. The relational reading of one-sided error is available here because the search problem is total and its outputs are self-certifying.
+</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <section class="card">
+        <h2>Separations it witnesses</h2>
+        <ul class="witlist">
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=Q&amp;b=adeg">pair &rarr;</a>
+  <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+            </div>
+            <div class="stmt">For a <strong>total</strong> search problem in query $\mathrm{TFNP}$: at $t = \log^5 n$, $\widetilde{\deg}(\mathrm{AndOr}_{\mathcal{H},t}) = O(t\log^2 n) = O(\mathrm{polylog}\,n)$ while $\mathrm{Q} = \Omega(\sqrt n\log^4 n)$, i.e. $\mathrm{Q} = 2^{\widetilde\Omega(\widetilde{\deg}^{1/7})}$ -- exponential. Translating back gives a partial function with $\widetilde{\deg} = O(\mathrm{polylog}\,n)$ and $\mathrm{Q} = \widetilde\Omega(n^{1/6})$ on inputs of length $2^{\mathrm{polylog}\,n}$, a second proof of [<a href="../refs.html#AmbainisBelovs23" class="xref ref ">AmbainisBelovs23</a>].</div>
+<div class="refs"><a href="../refs.html#BenDavidKundu24search" class="xref ref ">BenDavidKundu24search</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=Q&amp;b=cjdeg">pair &rarr;</a>
+  <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+            </div>
+            <div class="stmt">The same problem, with the upper bound strengthened to the <em>larger</em> two-sided bounded non-negative degree: $\widetilde{\deg}^+_2 = O(t\log^2 n) = O(\mathrm{polylog}\,n)$ against $\mathrm{Q} = \Omega(\sqrt n\log^4 n)$. Since $\mathrm{cjdeg}$ normally sits above $\mathrm{R} \ge \mathrm{Q}$, this also gives the first $\mathrm{R}$-vs-$\mathrm{cjdeg}$ separation for a total search problem, and for a partial function.</div>
+<div class="refs"><a href="../refs.html#BenDavidKundu24search" class="xref ref ">BenDavidKundu24search</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-adversary" href="../measures/Adv.html" title="Positive-weights adversary bound">
+    <span class="tex">\(\mathrm{Adv}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=adeg&amp;b=Adv">pair &rarr;</a>
+  <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+            </div>
+            <div class="stmt">A different and simpler total search problem: the <em>pigeonhole</em> problem $\mathrm{PH}_n$ -- given $n$ blocks holding symbols from an alphabet of size $n/2$, find two equal blocks. Reduction from the collision lower bound gives $\widetilde{\deg}(\mathrm{PH}_n) = \Omega(n^{1/3})$, while an explicit feasible solution $m_x(i) = 2/n$ gives $\mathrm{CA}(\mathrm{PH}_n) \le 2\log(n/2) = O(\log n)$. Since $\mathrm{CA}$ dominates $\mathrm{Adv}$, $\mathrm{fbs}$, $\mathrm{bs}$ and $\mathrm{fcbs}/2$, <em>every</em> block-sensitivity and adversary method is $O(\log n)$ here: the polynomial method is exponentially stronger than the positive adversary on search problems, the reverse of the usual situation.</div>
+<div class="refs"><a href="../refs.html#BenDavidKundu24search" class="xref ref ">BenDavidKundu24search</a></div>          </li>
+        </ul>
+      </section>
+
+
+      <section class="card">
+        <h2>Notes</h2>
+        <p>Two translations drive everything. Trick 1 turns a partial function into a total
+search problem by hiding the promise behind a shift; Trick 2 turns a search problem
+back into a partial function using an array of &quot;queried cells&quot;. Applying both in turn
+converts <em>unbounded</em> degree measures into <em>bounded</em> ones, which is why separations
+that are trivial for unbounded degree become exponential separations for
+approximate degree and conical junta degree.</p>
+<p>Lifted with a constant-size inner gadget, the same construction gives an exponential
+separation between quantum information cost and the relaxed partition bound in
+communication complexity -- previously open even for randomized communication
+complexity against $\mathrm{relprt}$.</p>
+
+      </section>
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#BenDavidKundu24search" class="xref ref ">[BenDavidKundu24search]</a> <span class="dim">Separations in query complexity for total search problems</span></li>
+            <li><a href="../refs.html#AmbainisBelovs23" class="xref ref ">[AmbainisBelovs23]</a> <span class="dim">An exponential separation between quantum query complexity and the polynomial degree</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/cjdeg.html" class="xref measure "><span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/adeg.html" class="xref measure "><span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/Adv.html" class="xref measure "><span class="tex">\(\mathrm{Adv}(f)\)</span></a></li><li><a href="../measures/CA.html" class="xref measure "><span class="tex">\(\mathrm{CA}(f)\)</span></a></li><li><a href="../functions/AmbainisBelovsFn.html" class="xref function "><span class="tex">\(\mathrm{TSAT}_n\)</span></a></li><li><a href="../measures/psD.html" class="xref measure "><span class="tex">\(\mathrm{psD}(S)\)</span></a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/04-partial-and-relations.yaml</code> &mdash; id <code>BDKrelation</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

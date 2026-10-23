@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The adversary methods &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="">Functions</a>
+      <a href="../concepts/index.html"
+         class="on">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../concepts/index.html">Concepts</a></div>
+  <header class="entryhead concept">
+    <div>
+      <h1>The adversary methods</h1>
+      <p class="lede">From Ambainis' 2000 lower bound to the SDP that exactly characterises quantum query complexity.</p>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="main-col">
+      <article class="card prose">
+        <h3>Positive weights -- <a href="../measures/Adv.html" class="xref measure "><span class="tex">\(\mathrm{Adv}(f)\)</span></a></h3>
+<p>Ambainis' original method, in the form
+$\mathrm{Adv}(f)=\max_{\Gamma\ge 0}\|\Gamma\|/\max_i\|\Gamma\circ D_i\|$.
+Špalek-Szegedy showed the spectral, weighted, Kolmogorov-complexity and
+minimax formulations all coincide [<a href="../refs.html#SpalekSzegedy06" class="xref ref ">SpalekSzegedy06</a>].</p>
+<p><strong>Barrier:</strong> $\mathrm{Adv}(f)\le\sqrt{\mathrm{C}^0(f)\mathrm{C}^1(f)}$
+[<a href="../refs.html#SpalekSzegedy06" class="xref ref ">SpalekSzegedy06</a>, <a href="../refs.html#Zhang05" class="xref ref ">Zhang05</a>], strengthened to
+$\sqrt{\mathrm{RC}^0(f)\mathrm{RC}^1(f)}$ [<a href="../refs.html#KulkarniTal16" class="xref ref ">KulkarniTal16</a>]. So the positive
+adversary is useless for <a href="../functions/ElementDistinctness.html" class="xref function "><span class="tex">\(\mathrm{ED}_n\)</span></a>, where $\mathrm{C}=2$ but
+$\mathrm{Q}=\Theta(n^{2/3})$.</p>
+<h3>Negative weights -- <a href="../measures/Advpm.html" class="xref measure "><span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span></a></h3>
+<p>Dropping the non-negativity constraint gives $\mathrm{Adv}^{\pm}$, which
+<strong>exactly characterises</strong> quantum query complexity:
+$\mathrm{Q}(f)=\Theta(\mathrm{Adv}^{\pm}(f))$ [<a href="../refs.html#HLS07" class="xref ref ">HLS07</a>, <a href="../refs.html#Reichardt11" class="xref ref ">Reichardt11</a>, <a href="../refs.html#LMRSS11" class="xref ref ">LMRSS11</a>],
+for total functions, partial functions, and state conversion. It is an SDP,
+hence computable in principle, and it composes perfectly.</p>
+<h3>Classical analogues</h3>
+<p><a href="../measures/CA.html" class="xref measure "><span class="tex">\(\mathrm{CA}(f)\)</span></a>, the classical adversary bound, and the certificate-game family
+<a href="../measures/CG.html" class="xref measure "><span class="tex">\(\mathrm{CG}(f)\)</span></a> / <a href="../measures/CGpub.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span></a> / <a href="../measures/CGstar.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{*}(f)\)</span></a> / <a href="../measures/CGns.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span></a> [<a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a>]. All classical
+adversary methods are equivalent for total functions [<a href="../refs.html#ABIKPS17" class="xref ref ">ABIKPS17</a>]. Two
+pleasant identities from the certificate-game paper: the single-bit
+public-coin game is $\Theta(\mathrm{s}(f))$, and the single-bit private-coin
+game is $\lambda(f)^2$.</p>
+<p>The private-coin game is the odd one out and worth a warning, because it
+breaks the habit every other row of the zoo trains you into. Three of the
+four variants collapse to $\mathrm{CA}$; $\mathrm{CG}$ does not. It sits
+<em>above</em> $\mathrm{R}_0$, not below it, and the $\lambda^2$ identity above
+generalises to $\mathrm{CG}(f)=\Omega(\mathrm{Adv}(f)^2)$ -- which means
+$\mathrm{CG}$ is <strong>not</strong> bounded by $\mathrm{D}$ and can exceed the number
+of variables outright. Parity is the clean example:
+$\mathrm{CG}(\oplus_n)=\Theta(n^2)$, squeezed between $\mathrm{Adv}^2=n^2$
+below and $\mathrm{C}^0\mathrm{C}^1=n^2$ above.</p>
+<h3>Spectral sensitivity -- <a href="../measures/lambda.html" class="xref measure "><span class="tex">\(\lambda(f)\)</span></a></h3>
+<p>$\lambda(f)$, the spectral norm of the sensitivity graph, is the simplest
+quantity below $\mathrm{Adv}$: $\lambda\le\mathrm{Adv}\le\mathrm{Adv}^{\pm}=\Theta(\mathrm{Q})$,
+and $\sqrt{\mathrm{s}}\le\lambda\le\mathrm{s}$ [<a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a>].</p>
+
+      </article>
+    </div>
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/Adv.html" class="xref measure "><span class="tex">\(\mathrm{Adv}(f)\)</span></a></li><li><a href="../measures/Advpm.html" class="xref measure "><span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span></a></li><li><a href="../measures/lambda.html" class="xref measure "><span class="tex">\(\lambda(f)\)</span></a></li><li><a href="../measures/CA.html" class="xref measure "><span class="tex">\(\mathrm{CA}(f)\)</span></a></li><li><a href="../measures/CG.html" class="xref measure "><span class="tex">\(\mathrm{CG}(f)\)</span></a></li><li><a href="../measures/CGpub.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span></a></li><li><a href="../measures/CGstar.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{*}(f)\)</span></a></li><li><a href="../measures/CGns.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span></a></li><li><a href="../measures/MAdv.html" class="xref measure "><span class="tex">\(\mathrm{MAdv}(f)\)</span></a></li><li><a href="../measures/gamma2.html" class="xref measure "><span class="tex">\(\gamma_2^{\alpha}(f)\)</span></a></li><li><a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a></li></ul>
+      </section>
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#Ambainis02" class="xref ref ">[Ambainis02]</a> <span class="dim">Quantum lower bounds by quantum arguments</span></li>
+            <li><a href="../refs.html#SpalekSzegedy06" class="xref ref ">[SpalekSzegedy06]</a> <span class="dim">All quantum adversary methods are equivalent</span></li>
+            <li><a href="../refs.html#Zhang05" class="xref ref ">[Zhang05]</a> <span class="dim">On the power of Ambainis lower bounds</span></li>
+            <li><a href="../refs.html#HLS07" class="xref ref ">[HLS07]</a> <span class="dim">Negative weights make adversaries stronger</span></li>
+            <li><a href="../refs.html#Reichardt11" class="xref ref ">[Reichardt11]</a> <span class="dim">Reflections for quantum query algorithms</span></li>
+            <li><a href="../refs.html#LMRSS11" class="xref ref ">[LMRSS11]</a> <span class="dim">Quantum query complexity of state conversion</span></li>
+            <li><a href="../refs.html#ABKRT21" class="xref ref ">[ABKRT21]</a> <span class="dim">Degree vs. Approximate Degree and Quantum Implications of Huang&#39;s Sensitivity Theorem</span></li>
+            <li><a href="../refs.html#CGLMSG23" class="xref ref ">[CGLMSG23]</a> <span class="dim">Certificate Games (and Consequences for the Classical Adversary Bound)</span></li>
+            <li><a href="../refs.html#ABIKPS17" class="xref ref ">[ABIKPS17]</a> <span class="dim">All Classical Adversary Methods are Equivalent for Total Functions</span></li>
+            <li><a href="../refs.html#KulkarniTal16" class="xref ref ">[KulkarniTal16]</a> <span class="dim">On Fractional Block Sensitivity</span></li>
+        </ul>
+      </section>
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/concepts.yaml</code> &mdash; id <code>adversary-methods</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

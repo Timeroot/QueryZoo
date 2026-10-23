@@ -1,0 +1,1428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ODD-MAX-BIT &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#total">Total functions</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">\(\mathrm{OMB}_n\)</div>
+    <div>
+      <h1>ODD-MAX-BIT</h1>
+      <p class="lede">Sign degree $1$, deterministic complexity $n$: the extreme sdeg separation.</p>
+      <p class="aliases">
+        <span class="kindtag k-total">total</span>
+        <span class="grouptag g-basic">basic</span>
+<span class="tag">arity: $n$ bits</span>      </p>
+    </div>
+  </header>
+
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>$\mathrm{OMB}_n(x) = 1$ iff the largest index $i$ with $x_i = 1$ is odd
+(and $\mathrm{OMB}_n(0^n)=0$).</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Formal definition</h2>
+        <p>$$\mathrm{OMB}_n(x) = \mathrm{sign}\Big(\sum_{i=1}^n (-1)^{i+1}\, 2^{\,n-i}\, x_i\Big)_{+}$$
+i.e. it is the linear threshold function with exponentially decreasing weights;
+the highest-index $1$ dominates all lower-index terms.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/sdeg.html" title="Sign degree">
+    <span class="tex">\(\mathrm{sdeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/sdeg.html">Sign degree</a>
+              </td>
+              <td class="val"><span class="tex">\(1\)</span></td>
+              <td class="short">It is a linear threshold function -- but every representation needs exponentially large weights.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D.html">Deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span></td>
+              <td class="short">
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R.html">Bounded-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/noisyR.html" title="Noisy randomized query complexity">
+    <span class="tex">\(\mathrm{noisyR}(f)\)</span>
+  </a>
+
+                  <a href="../measures/noisyR.html">Noisy randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">From $\mathrm{R}(f) = \Theta(n) \Rightarrow \mathrm{noisyR}(f) = \Theta(\mathrm{R}(f))$ [<a href="../refs.html#CKMPSS23" class="xref ref ">CKMPSS23</a>] -- see the <a href="../measures/noisyR.html" class="xref measure "><span class="tex">\(\mathrm{noisyR}(f)\)</span></a> vs <a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a> record. At the top of the range there is no room for fractional queries to help.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dna.html">Non-adaptive deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span></td>
+              <td class="short">
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                  <a href="../measures/s.html">Sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\lfloor n/2 \rfloor + 1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Coordinates below the highest $1$ are never sensitive, so at an input whose highest $1$ is at position $i$ only position $i$ and the opposite-parity positions above it can be sensitive: $\mathrm{s}(x) \le 1 + \lceil (n-i)/2\rceil$. The bound is met at $x=e_1$, where $\{1\}\cup\{j&gt;1 : j \text{ even}\}$ is sensitive.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rna.html">Non-adaptive randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{\mathrm{na}}(f) \le \mathrm{D}^{\mathrm{na}}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}^{\mathrm{na}}(f) = n$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rbar.html">Expected-cost randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R0.html">Zero-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}_{0}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R1.html">One-sided-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                  <a href="../measures/C.html">Certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\lfloor n/2 \rfloor + 1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">A certificate need not pin the highest $1$ -- it only has to force the answer. If the highest $1$ of $x$ is at position $i$, it is enough to fix $x_i = 1$ and to zero out the <em>opposite-parity</em> positions above $i$: $1 + |\{j &gt; i : j \not\equiv i\}|$ coordinates, maximised at $i = 1$ giving $\lfloor n/2\rfloor + 1$. That also matches $\mathrm{bs} = \lfloor n/2\rfloor+1 \le \mathrm{C}$, so the bound is tight. (Verified exhaustively for $n \le 12$.)
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/C0.html">0-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\lceil n/2 \rceil\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Attained at $0^n$, where zeroing the $\lceil n/2\rceil$ odd positions already forces the answer $0$ -- and at any $0$-input whose highest $1$ sits at position $2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/C1.html">1-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\lfloor n/2 \rfloor + 1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Attained at $e_1$: fix $x_1 = 1$ and zero the $\lfloor n/2\rfloor$ even positions above it.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Cmin.html">Minimum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">At $x = e_n$, reading $x_n = 1$ already decides (the answer is the parity of $n$). Certificate complexity varies by a factor of $\Theta(n)$ across inputs.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs.html">Block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\lfloor n/2 \rfloor + 1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Equal to $\mathrm{s}$, so blocks buy nothing. A sensitive block at $x$ either contains the current highest $1$ (at most one such block can be disjoint from the others) or has its own maximum above it, of parity opposite to $i$ -- and distinct disjoint blocks need distinct maxima. That caps the count at $1+\lceil (n-i)/2\rceil$, the same bound as for $\mathrm{s}$, and $x=e_1$ attains it.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/fbs.html">Fractional block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\lfloor n/2 \rfloor + 1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">The same argument survives the fractional relaxation: charge each block to its maximum index, and the load constraint at that coordinate caps the total weight per admissible maximum at $1$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
+    <span class="tex">\(\deg(f)\)</span>
+  </a>
+
+                  <a href="../measures/deg.html">Exact degree</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Writing $\mathrm{OMB} = \sum_{i \text{ odd}} x_i\prod_{j&gt;i}(1-x_j)$, the monomial $x_1x_2\cdots x_n$ can only come from the $i=1$ term, with coefficient $(-1)^{n-1} \ne 0$. So $\deg = n$ against $\mathrm{sdeg} = 1$ -- the maximum possible separation between exact and sign degree.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/deg2.html" title="Mod-2 degree">
+    <span class="tex">\(\deg_2(f)\)</span>
+  </a>
+
+                  <a href="../measures/deg2.html">Mod-2 degree</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">The same expansion over $\mathbb{F}_2$, with the same top monomial and coefficient $1$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q.html">Bounded-error quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Upper: quantum maximum-finding [<a href="../refs.html#DurrHoyer96" class="xref ref ">DurrHoyer96</a>] locates the highest $1$ in $O(\sqrt n)$ queries; its parity is the answer. Lower: setting all even-indexed bits to $0$ restricts $\mathrm{OMB}$ to $\mathrm{OR}$ on the odd ones, so $\mathrm{Q} \ge \mathrm{Q}(\mathrm{OR}_{\lceil n/2\rceil}) = \Omega(\sqrt n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/adeg.html">Approximate degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span></td>
+              <td class="short">Squeezed: $\mathrm{bs} = O(\widetilde{\deg}^2)$ gives $\widetilde{\deg} = \Omega(\sqrt n)$, and $\widetilde{\deg} \le 2\mathrm{Q} = O(\sqrt n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QE.html">Exact quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Squeezed between $\deg/2 = n/2$ and $\mathrm{D} = n$. So $\mathrm{OMB}$ has a full quadratic exact-vs-bounded-error quantum gap.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q0.html">Zero-error (Las Vegas) quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Between $\mathrm{rdeg}/2 = \Theta(n)$ and $\mathrm{D} = n$. Note it is $\mathrm{rdeg}$, not $\deg$, that floors $\mathrm{Q}_0$ -- see <a href="../measures/Q0.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{0}(f)\)</span></a>; both are $\Theta(n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_size.html">Decision tree size</a>
+              </td>
+              <td class="val"><span class="tex">\(n+1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Query $x_n, x_{n-1}, \dots$ and stop at the first $1$: a path with $n$ branchings, hence $n+1$ leaves. The all-zero input forces a root-to-leaf path of length $n$, so no smaller tree exists.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s0.html" title="0-sensitivity">
+    <span class="tex">\(\mathrm{s}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/s0.html">0-sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\lceil n/2 \rceil\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Attained at $0^n$: flipping position $j$ makes $j$ the highest $1$, which flips the answer exactly for the $\lceil n/2\rceil$ odd $j$. (Verified exhaustively for $n \le 12$.)
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s1.html" title="1-sensitivity">
+    <span class="tex">\(\mathrm{s}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/s1.html">1-sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\lfloor n/2 \rfloor + 1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Attained at $e_1$: the $\lfloor n/2 \rfloor$ even positions above, plus position $1$ itself. This is the value recorded as $\mathrm{s}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs0.html" title="0-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs0.html">0-block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\lceil n/2 \rceil\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Equal to $\mathrm{s}^0$: blocks buy nothing on either side, by the maximum-index charging argument used for $\mathrm{bs}$. (Verified exhaustively for $n \le 12$.)
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs1.html" title="1-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs1.html">1-block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\lfloor n/2 \rfloor + 1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Equal to $\mathrm{s}^1$, and to $\mathrm{bs}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/FC.html" title="Fractional certificate complexity">
+    <span class="tex">\(\mathrm{FC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/FC.html">Fractional certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\lfloor n/2 \rfloor + 1\)</span></td>
+              <td class="short">$\mathrm{FC}(f) = \mathrm{fbs}(f)$ exactly, by LP duality.
+<span class="refs"><a href="../refs.html#Tal13" class="xref ref ">Tal13</a> <a href="../refs.html#KulkarniTal16" class="xref ref ">KulkarniTal16</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/EC.html" title="Expectational certificate complexity">
+    <span class="tex">\(\mathrm{EC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/EC.html">Expectational certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\lfloor n/2 \rfloor + 1\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{fbs}(f) \le \mathrm{EC}(f) \le \mathrm{C}(f)$, with both ends $\lfloor n/2\rfloor+1$ here.
+<span class="refs"><a href="../refs.html#GJKKLSSV17" class="xref ref ">GJKKLSSV17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/RC.html" title="Randomized certificate complexity">
+    <span class="tex">\(\mathrm{RC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/RC.html">Randomized certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">$\mathrm{RC}(f) = \Theta(\mathrm{fbs}(f))$ for every $f$, and $\mathrm{fbs}(f) = \lfloor n/2\rfloor+1$ here.
+<span class="refs"><a href="../refs.html#Aaronson08" class="xref ref ">Aaronson08</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CA.html" title="Classical adversary bound">
+    <span class="tex">\(\mathrm{CA}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CA.html">Classical adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">$\mathrm{CA}(f) = \Theta(\mathrm{fbs}(f))$ for total $f$ (<a href="../measures/CA.html" class="xref measure "><span class="tex">\(\mathrm{CA}(f)\)</span></a> vs <a href="../measures/fbs.html" class="xref measure "><span class="tex">\(\mathrm{fbs}(f)\)</span></a>), and $\mathrm{fbs}(f) = \lfloor n/2\rfloor+1$ here.
+<span class="refs"><a href="../refs.html#ABIKPS17" class="xref ref ">ABIKPS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGpub.html" title="Certificate game complexity (public coin)">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGpub.html">Certificate game complexity (public coin)</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">$\mathrm{CG}^{\mathrm{pub}}(f) = \Theta(\mathrm{CA}(f))$ for every $f$, and $\mathrm{CA}(f) = \Theta(n)$ here.
+<span class="refs"><a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGstar.html" title="Quantum certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{*}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGstar.html">Quantum certificate game complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, <a href="../measures/CGpub.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span></a> vs <a href="../measures/CGns.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span></a>), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin <a href="../measures/CG.html" class="xref measure "><span class="tex">\(\mathrm{CG}(f)\)</span></a> can be larger. Note $\mathrm{CG}^{*} = \Theta(n)$ against $\mathrm{Q} = \Theta(\sqrt n)$: another instance of the entangled certificate game <em>not</em> being bounded by quantum query complexity.
+<span class="refs"><a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGns.html" title="Non-signaling certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGns.html">Non-signaling certificate game complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, <a href="../measures/CGpub.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span></a> vs <a href="../measures/CGns.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span></a>), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin <a href="../measures/CG.html" class="xref measure "><span class="tex">\(\mathrm{CG}(f)\)</span></a> can be larger.
+<span class="refs"><a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CG.html" title="Certificate game complexity (private coin)">
+    <span class="tex">\(\mathrm{CG}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CG.html">Certificate game complexity (private coin)</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(n),\ O(n^2)\)</span></td>
+              <td class="short">From below $\mathrm{R}_0 = \Theta(n)$ and $\mathrm{Adv}^2 = \Theta(n)$; from above $\mathrm{C}^0\mathrm{C}^1 = \Theta(n^2)$ [<a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a>]. The two ends do not meet and nothing in the zoo closes the gap, so the cell is recorded as a range rather than as the old (unjustified) $\Theta(n)$, which rested on the false inequality $\mathrm{CG} \le \mathrm{D}$.
+<span class="refs"><a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
+  </a>
+
+                  <a href="../measures/RS.html">Sabotage complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{CA}(f) \le \mathrm{RS}(f) \le \mathrm{R}(f)$, with both ends $\Theta(n)$ here.
+<span class="refs"><a href="../refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+
+                  <a href="../measures/chi.html">Conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\chi(f) = \Omega(\mathrm{bs}(f))$ and $\chi(f) = O(\mathrm{R}(f))$, with both ends $\Theta(n)$ here.
+<span class="refs"><a href="../refs.html#Li18" class="xref ref ">Li18</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/chibar.html" title="Max-conflict complexity">
+    <span class="tex">\(\bar{\chi}(f)\)</span>
+  </a>
+
+                  <a href="../measures/chibar.html">Max-conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{RS}(f) = O(\bar{\chi}(f))$ and $\bar{\chi}(f) = O(\mathrm{R}(f))$, with both ends $\Theta(n)$ here.
+<span class="refs"><a href="../refs.html#GLSS19" class="xref ref ">GLSS19</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/LR.html" title="Linearised randomized complexity">
+    <span class="tex">\(\mathrm{LR}(f)\)</span>
+  </a>
+
+                  <a href="../measures/LR.html">Linearised randomized complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\bar{\chi}(f) = O(\mathrm{LR}(f)) \le \mathrm{R}(f)$, with both ends $\Theta(n)$ here.
+<span class="refs"><a href="../refs.html#BBGM22" class="xref ref ">BBGM22</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/Rstar.html" title="Asymptotic composition rate">
+    <span class="tex">\(\mathrm{R}^{*}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rstar.html">Asymptotic composition rate</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{LR}(f) = O(\mathrm{R}^{*}(f)) \le \mathrm{R}(f)$, with both ends $\Theta(n)$ here.
+<span class="refs"><a href="../refs.html#BBGM22" class="xref ref ">BBGM22</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/prt.html" title="Partition bound">
+    <span class="tex">\(\mathrm{prt}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/prt.html">Partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{s}(f) \le \mathrm{prt}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/rprt.html" title="Relaxed partition bound">
+    <span class="tex">\(\overline{\mathrm{prt}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rprt.html">Relaxed partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">Sandwiched: $\mathrm{s}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with both ends $\Theta(n)$ here. The lower end is the zoo's own observation that the [<a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a>] techniques survive the relaxation of the completeness constraint (see the $\mathrm{RC}\to\overline{\mathrm{prt}}$ record); the upper end is unconditional.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QC.html" title="Quantum certificate complexity">
+    <span class="tex">\(\mathrm{QC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QC.html">Quantum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span></td>
+              <td class="short">$\mathrm{QC}(f) = \Theta(\sqrt{\mathrm{RC}(f)})$ for every $f$, and $\mathrm{RC}(f) = \Theta(n)$ here.
+<span class="refs"><a href="../refs.html#Aaronson08" class="xref ref ">Aaronson08</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                  <a href="../measures/lambda.html">Spectral sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span></td>
+              <td class="short">Sandwiched: $\sqrt{\mathrm{s}(f)} \le \lambda(f) = O(\mathrm{Q}_{\varepsilon}(f))$, with $\mathrm{s}(f) = \lfloor n/2\rfloor+1$ and $\mathrm{Q}_{\varepsilon}(f) = \Theta(\sqrt n)$ here. So <a href="../functions/OMB.html" class="xref function "><span class="tex">\(\mathrm{OMB}_n\)</span></a> joins <a href="../functions/OR.html" class="xref function "><span class="tex">\(\mathrm{OR}_n\)</span></a> as a family where Huang's $\mathrm{s} \le \lambda^2$ is tight.
+<span class="refs"><a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Advpm.html" title="General (negative-weights) adversary bound">
+    <span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Advpm.html">General (negative-weights) adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span></td>
+              <td class="short">$\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ (<a href="../measures/Advpm.html" class="xref measure "><span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span></a> vs <a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(\sqrt n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Adv.html" title="Positive-weights adversary bound">
+    <span class="tex">\(\mathrm{Adv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Adv.html">Positive-weights adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span></td>
+              <td class="short">Sandwiched: $\lambda(f) \le \mathrm{Adv}(f) \le \mathrm{Adv}^{\pm}(f)$, with both ends $\Theta(\sqrt n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/gamma2.html" title="Approximate gamma_2 norm">
+    <span class="tex">\(\gamma_2^{\alpha}(f)\)</span>
+  </a>
+
+                  <a href="../measures/gamma2.html">Approximate gamma_2 norm</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span></td>
+              <td class="short">$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ (<a href="../measures/gamma2.html" class="xref measure "><span class="tex">\(\gamma_2^{\alpha}(f)\)</span></a> vs <a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(\sqrt n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/MAdv.html" title="Multiplicative adversary">
+    <span class="tex">\(\mathrm{MAdv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MAdv.html">Multiplicative adversary</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{Adv}^{\pm}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with both ends $\Theta(\sqrt n)$ here.
+<span class="refs"><a href="../refs.html#Spalek08" class="xref ref ">Spalek08</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rank.html">Decision tree rank</a>
+              </td>
+              <td class="val"><span class="tex">\(1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">The optimal tree is a caterpillar: query $x_n$, then $x_{n-1}$, and so on, stopping at the first $1$ -- whose index immediately gives the answer. Every internal node therefore has a leaf child, so the rank is $1$ (and it cannot be $0$, as $\mathrm{OMB}$ is not constant). Against $\mathrm{D} = n$ this is the maximum possible rank-vs-depth gap, matching <a href="../functions/OR.html" class="xref function "><span class="tex">\(\mathrm{OR}_n\)</span></a>. It also explains $\mathrm{DTsize} = n+1$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Inf.html" title="Total influence (L2 influence)">
+    <span class="tex">\(\mathrm{I}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Inf.html">Total influence (L2 influence)</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Coordinate $i$ is pivotal only when every bit above it is $0$, which costs $2^{-(n-i)}$; conditioned on that, flipping $x_i$ moves the maximum to the highest $1$ below $i$, whose index has the opposite parity with probability $\tfrac12+\tfrac18+\tfrac1{32}+\cdots = \tfrac23$. Summing the geometric series, $\mathrm{I}(\mathrm{OMB}_n) \to 4/3$. So $\mathrm{OMB}$ is a <em>balanced</em> function of total influence $O(1)$ and $\mathrm{D} = n$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Inf1.html" title="Total L1 influence">
+    <span class="tex">\(\mathrm{I}^{1}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Inf1.html">Total L1 influence</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Boolean-valued, so equal to $\mathrm{I}(f)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/MaxInf.html" title="Maximum influence">
+    <span class="tex">\(\mathrm{MaxInf}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MaxInf.html">Maximum influence</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">The top bit $x_n$ is the most influential and carries essentially all of the influence: it is pivotal exactly when the highest $1$ below it has the opposite parity, probability $\to 2/3$. Influence is concentrated on one coordinate -- the exact opposite of the <a href="../functions/TRIBES.html" class="xref function "><span class="tex">\(\mathrm{Tribes}_{w,s}\)</span></a> shape.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Var.html" title="Variance">
+    <span class="tex">\(\mathrm{Var}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Var.html">Variance</a>
+              </td>
+              <td class="val"><span class="tex">\(8/9 + o(1)\)</span></td>
+              <td class="short">From $\mathrm{Var} = 1-\mathrm{Stab}_0$ and the <a href="../measures/Stab.html" class="xref measure "><span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span></a> entry, which gives $\mathrm{Stab}_0 = 1/9$. So $\mathrm{OMB}$ is balanced only in the weak sense: two independent inputs still agree $5/9$ of the time.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/osss.html" title="OSSS number">
+    <span class="tex">\(\mathrm{osss}(f)\)</span>
+  </a>
+
+                  <a href="../measures/osss.html">OSSS number</a>
+              </td>
+              <td class="val"><span class="tex">\(4/3 + o(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">$\mathrm{Var} \to 8/9$ over $\mathrm{MaxInf} \to 2/3$. Constant against $\mathrm{D} = n$, because a single coordinate -- the top bit -- carries almost all of the influence. The <a href="../functions/TRIBES.html" class="xref function "><span class="tex">\(\mathrm{Tribes}_{w,s}\)</span></a>-shaped functions are where OSSS is strong; this is the opposite extreme.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/nsr.html" title="Noise robustness">
+    <span class="tex">\(\mathrm{nsr}(f)\)</span>
+  </a>
+
+                  <a href="../measures/nsr.html">Noise robustness</a>
+              </td>
+              <td class="val"><span class="tex">\(5 + o(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Solving $\mathrm{NS}_\delta = \tfrac{4\delta}{3(1+\delta)} = \mathrm{Var}/4 = 2/9$ gives $\delta^{*} = 1/5$ exactly, in the $n\to\infty$ limit. One of the few functions here whose critical noise rate is a constant that can be written down.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/degp.html" title="Mod-p degree">
+    <span class="tex">\(\deg_p(f)\)</span>
+  </a>
+
+                  <a href="../measures/degp.html">Mod-p degree</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">For <strong>every</strong> prime $p$. The expansion $\mathrm{OMB} = \sum_{i \text{ odd}} x_i\prod_{j&gt;i}(1-x_j)$ has the top monomial $x_1\cdots x_n$ only from the $i=1$ term, with coefficient $(-1)^{n-1}$, which is nonzero in every characteristic. So small characteristic buys nothing, exactly as for <a href="../functions/OR.html" class="xref function "><span class="tex">\(\mathrm{OR}_n\)</span></a>.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/UC.html" title="Unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/UC.html">Unambiguous certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{C}(f) \le \mathrm{UC}(f) \le \mathrm{D}(f)$, with $\mathrm{C}(f) = \lfloor n/2\rfloor+1$ and $\mathrm{D}(f) = n$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/UCmin.html" title="Minimum unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/UCmin.html">Minimum unambiguous certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Squeezed: $\mathrm{fbs}(f) \le 2\,\mathrm{UC}_{\min}(f)-1$ [<a href="../refs.html#BHT17" class="xref ref ">BHT17</a>] forces $\mathrm{UC}_{\min} \ge \tfrac12(\lfloor n/2\rfloor+2) = \Omega(n)$, and $\mathrm{UC}_{\min} \le \mathrm{UC} = \Theta(n)$. Note the contrast with $\mathrm{C}_{\min} = 1$: the <em>one-sided</em> unambiguous measure is not a minimum over inputs and does not collapse.
+<span class="refs"><a href="../refs.html#BHT17" class="xref ref ">BHT17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/SP.html" title="Subcube partition complexity">
+    <span class="tex">\(\mathrm{SP}(f)\)</span>
+  </a>
+
+                  <a href="../measures/SP.html">Subcube partition complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{C}(f) \le \mathrm{SP}(f) \le \mathrm{D}(f)$, with $\mathrm{C}(f) = \lfloor n/2\rfloor+1$ and $\mathrm{D}(f) = n$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/PDT.html" title="Parity decision tree complexity">
+    <span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span>
+  </a>
+
+                  <a href="../measures/PDT.html">Parity decision tree complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">At most $\mathrm{D} = n$. For the lower bound, take the $\pm1$-valued $g = 1-2\mathrm{OMB}$: in the expansion $\mathrm{OMB} = \sum_{i \text{ odd}} x_i\prod_{j&gt;i}(1-x_j)$ only the $i=1$ term involves $x_1$, so it alone determines $\hat g(S)$ for every $S \ni 1$, and each such coefficient is exactly $\pm 2^{-(n-1)}$. The granularity is therefore exactly $n-1$, and the bound $\mathrm{D}^{\oplus} \ge \mathrm{gran}+1$ of [<a href="../refs.html#ChistopolskayaPodolskii18" class="xref ref ">ChistopolskayaPodolskii18</a>] gives $n$. So parity queries buy nothing, even though $\mathrm{sdeg} = 1$.
+<span class="refs"><a href="../refs.html#ChistopolskayaPodolskii18" class="xref ref ">ChistopolskayaPodolskii18</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Fdim.html" title="Fourier dimension">
+    <span class="tex">\(\dim_{\mathbb{F}_2}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Fdim.html">Fourier dimension</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Full. By the computation on the <a href="../measures/PDT.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span></a> line, $\hat g(S) = \pm2^{-(n-1)} \ne 0$ for <em>every</em> $S$ containing the coordinate $1$; in particular $\{1\}$ and $\{1,j\}$ are in the support, and their $\mathbb{F}_2$-sum is $\{j\}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/spar.html" title="Fourier sparsity">
+    <span class="tex">\(\mathrm{spar}(f)\)</span>
+  </a>
+
+                  <a href="../measures/spar.html">Fourier sparsity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(2^n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">At least $2^{n-1}$, since every one of the $2^{n-1}$ sets containing coordinate $1$ carries the nonzero coefficient $\pm2^{-(n-1)}$ (see the <a href="../measures/PDT.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span></a> line); at most $2^n$ trivially.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_prod.html" title="Product-distribution distributional complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_prod.html">Product-distribution distributional complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Take the product distribution with each bit $1$ independently with probability $c/n$ for a suitable constant $c$. Run a depth-$m$ deterministic tree and follow the path on which every answer is $0$: it is reached with probability $\approx e^{-cm/n}$, and conditioned on it the highest $1$ lies among the $n-m$ unread coordinates, where its index is odd with probability $\tfrac12(1-e^{-c(n-m)/n})$ -- bounded away from $0$ and $1$. For $m \le 0.1n$ the product of the two exceeds $1/3$, so $\mathrm{D}^{\mathrm{prod}} = \Omega(n)$, matching $\mathrm{D} = n$. Unlike its randomized <em>expected</em> cost, which is $O(1)$ under this distribution, the worst-case depth stays linear.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/L1.html" title="Spectral norm">
+    <span class="tex">\(\hat{L}_1(f)\)</span>
+  </a>
+
+                  <a href="../measures/L1.html">Spectral norm</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Exactly. The $2^{-(n-i+1)}$-weighted subcubes $B_i = \{x_i=1,\ x_j=0\ \forall j&gt;i\}$ for odd $i$ partition $\mathrm{OMB}^{-1}(1)$, and $\mathbb{1}_{B_i} = 2^{-(n-i+1)}(1-\chi_i)\prod_{j&gt;i}(1+\chi_j)$. Summing, a set $S$ with $\min S = t$ gets $\widehat{\mathrm{OMB}}(S) = \sum_{i \text{ odd},\, i \le t} 2^{i-n-1} - 2\cdot[t \text{ odd}]\,2^{t-n-1}$, whose absolute value is $\tfrac23 2^{t-n-1}(1+o(1))$ for either parity of $t$. There are $2^{n-t}$ sets with $\min S = t$, so each $t$ contributes $\tfrac13$ and $\hat L_1 = \tfrac{2n}{3}(1+o(1))$ in the $\pm1$ encoding. Linear, not exponential -- $\mathrm{OMB}$ is a sum of only $n/2$ subcube indicators, so it sits with <a href="../functions/OR.html" class="xref function "><span class="tex">\(\mathrm{OR}_n\)</span></a> rather than with <a href="../functions/MAJ.html" class="xref function "><span class="tex">\(\mathrm{MAJ}_n\)</span></a> on the spectral-norm scale, despite having full degree.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/cjdeg.html">Conical junta degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Upper: $\mathrm{cjdeg}_{\varepsilon}(f) \le \mathrm{D}(f) = n$. Lower: setting every even position to $0$ leaves $\vee_{\lceil n/2\rceil}$ on the odd positions, and a conical junta restricts to a conical junta of no larger width, so $\mathrm{cjdeg} = \Omega(n)$ by the <a href="../functions/OR.html" class="xref function "><span class="tex">\(\mathrm{OR}_n\)</span></a> line. Non-negativity therefore costs a quadratic blow-up over $\widetilde{\deg}_{\varepsilon} = \Theta(\sqrt n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/robustQ.html">Robust quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(\sqrt n),\ O(n)\)</span></td>
+              <td class="short">Lower: $\mathrm{Q}^{\mathrm{rob}} \ge \mathrm{Q} = \Theta(\sqrt n)$. Upper: the universal $O(n)$ bound of [<a href="../refs.html#BNRdW05" class="xref ref ">BNRdW05</a>] for recovering all $n$ noisy bits. Whether the $\sqrt n$ algorithm survives noise is the interesting question and is not settled here.
+<span class="refs"><a href="../refs.html#BNRdW05" class="xref ref ">BNRdW05</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Np.html">Noisy decision tree complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(n),\ O(n\log n)\)</span></td>
+              <td class="short">Lower: $\mathrm{N}_p \ge \mathrm{R} = \Theta(n)$. Upper: repeat each query $O(\log n)$ times. The influence-based lower bound of the <a href="../measures/Np.html" class="xref measure "><span class="tex">\(\mathrm{N}_{p}(f)\)</span></a> record gives nothing here, since $\mathrm{I}(\mathrm{OMB}) = \Theta(1)$ -- so unlike <a href="../functions/PARITY.html" class="xref function "><span class="tex">\(\oplus_n\)</span></a> or <a href="../functions/ADDR.html" class="xref function "><span class="tex">\(\mathrm{ADDR}_k\)</span></a> there is no evidence that the log factor is needed.
+<span class="refs"><a href="../refs.html#FRPU94" class="xref ref ">FRPU94</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/ndeg.html" title="Nondeterministic degree">
+    <span class="tex">\(\mathrm{ndeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/ndeg.html">Nondeterministic degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\lfloor n/2 \rfloor + 1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Exactly. Upper: $\mathrm{ndeg} \le \mathrm{C}^1 = \lfloor n/2\rfloor + 1$ (the <a href="../measures/C1.html" class="xref measure "><span class="tex">\(\mathrm{C}^1(f)\)</span></a> line). Lower: set every odd position $\ge 3$ to $0$ and leave $x_1$ together with the $\lfloor n/2\rfloor$ even positions free; the restriction is $1$ iff $x_1 = 1$ and all even positions are $0$, an $\mathrm{AND}$ on $\lfloor n/2\rfloor+1$ variables with some of them negated. Nondeterministic degree cannot increase under restriction or under negating variables, and $\mathrm{ndeg}(\wedge_m) = m$ (the <a href="../functions/AND.html" class="xref function "><span class="tex">\(\mathrm{AND}_n\)</span></a> line). Exhaustive computation of the minimal witnessing degree for $n \le 9$ agrees.
+<span class="refs"><a href="../refs.html#deWolf03" class="xref ref ">deWolf03</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/rdeg.html" title="Rational degree">
+    <span class="tex">\(\mathrm{rdeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rdeg.html">Rational degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\lfloor n/2 \rfloor + 1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Exactly, from $\mathrm{rdeg}(f) = \max\{\mathrm{ndeg}(f),\ \mathrm{ndeg}(\bar f)\}$. The line above gives $\mathrm{ndeg}(f) = \lfloor n/2\rfloor+1$. For the complement, $\mathrm{ndeg}(\bar f) \le \mathrm{C}^0 = \lceil n/2\rceil$, and setting all even positions to $0$ leaves $\bar f$ equal to the $\mathrm{AND}$ of the negations of the $\lceil n/2 \rceil$ odd variables, so $\mathrm{ndeg}(\bar f) = \lceil n/2\rceil$. The maximum is $\lfloor n/2\rfloor+1$, meeting the general bound $\mathrm{rdeg} \le \mathrm{C}$ recorded on the <a href="../measures/C.html" class="xref measure "><span class="tex">\(\mathrm{C}(f)\)</span></a> line.
+<span class="refs"><a href="../refs.html#deWolf03" class="xref ref ">deWolf03</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/NQ.html" title="Nondeterministic quantum query complexity">
+    <span class="tex">\(\mathrm{NQ}(f)\)</span>
+  </a>
+
+                  <a href="../measures/NQ.html">Nondeterministic quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\lceil (\lfloor n/2 \rfloor + 1)/2 \rceil\)</span></td>
+              <td class="short">Exactly, from $\mathrm{NQ}(f) = \lceil\mathrm{ndeg}(f)/2\rceil$ [<a href="../refs.html#deWolf00" class="xref ref ">deWolf00</a>] and the <a href="../measures/ndeg.html" class="xref measure "><span class="tex">\(\mathrm{ndeg}(f)\)</span></a> line. So $\mathrm{NQ} = \Theta(n)$ while $\mathrm{Q} = \Theta(\sqrt n)$: nondeterminism is quadratically <em>worse</em> than bounded error here, the same phenomenon as at <a href="../functions/AND.html" class="xref function "><span class="tex">\(\mathrm{AND}_n\)</span></a>.
+<span class="refs"><a href="../refs.html#deWolf00" class="xref ref ">deWolf00</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/odeg.html" title="One-sided approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{+}(f)\)</span>
+  </a>
+
+                  <a href="../measures/odeg.html">One-sided approximate degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Upper: $\widetilde{\deg}_+ \le \widetilde{\deg} = \Theta(\sqrt n)$. Lower: one-sided approximate degree does not increase under restriction or under negating variables, and the restriction used on the <a href="../measures/ndeg.html" class="xref measure "><span class="tex">\(\mathrm{ndeg}(f)\)</span></a> line turns OMB into an $\mathrm{AND}$ on $\lfloor n/2\rfloor+1$ variables, for which $\widetilde{\deg}_+ = \Theta(\sqrt n)$ (the <a href="../functions/AND.html" class="xref function "><span class="tex">\(\mathrm{AND}_n\)</span></a> line). So the one-sided relaxation buys nothing, even though $\mathrm{sdeg}(\mathrm{OMB}) = 1$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/ardeg.html" title="Approximate rational degree">
+    <span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/ardeg.html">Approximate rational degree</a>
+              </td>
+              <td class="val"><span class="tex">\(1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Degree $1$ suffices, as for <a href="../functions/OR.html" class="xref function "><span class="tex">\(\mathrm{OR}_n\)</span></a>. Take $N(x) = \sum_{i \text{ odd}} 10^i x_i$ and $D(x) = 1 + \sum_i 10^i x_i$, both of degree $1$, and let $h$ be the highest position with $x_h = 1$ (with $h=0$ for $x = 0^n$, where $N/D = 0$). Then $10^h \le D \le 1 + \tfrac{10}{9}(10^h-1) &lt; 1.112\cdot 10^h$. If $h$ is odd then $10^h \le N \le \tfrac{100}{99}10^h$, so $N/D \ge 0.899$; if $h$ is even then $N \le \tfrac{100}{99}10^{h-1}$, so $N/D \le 0.102$. Hence $|N/D - \mathrm{OMB}| \le 0.102$ everywhere, for every $n$ (the true maximum is $0.092$). Compare $\widetilde{\deg} = \Theta(\sqrt n)$ and $\mathrm{D} = n$.
+<span class="refs"><a href="../refs.html#MahadevdeWolf15" class="xref ref ">MahadevdeWolf15</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/PostQ.html" title="Post-selected quantum query complexity">
+    <span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/PostQ.html">Post-selected quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">$\mathrm{PostQ}_{\varepsilon}(f) = \Theta(\mathrm{rdeg}_{\varepsilon}(f))$ [<a href="../refs.html#MahadevdeWolf15" class="xref ref ">MahadevdeWolf15</a>], and $\mathrm{rdeg}_{\varepsilon} = 1$ on the <a href="../measures/ardeg.html" class="xref measure "><span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span></a> line. Postselection collapses OMB entirely, against $\mathrm{Q} = \Theta(\sqrt n)$ and $\mathrm{D} = n$ -- the largest gap in this file after <a href="../functions/EH.html" class="xref function "><span class="tex">\(\mathrm{EH}_n\)</span></a>.
+<span class="refs"><a href="../refs.html#MahadevdeWolf15" class="xref ref ">MahadevdeWolf15</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/NS.html" title="Noise sensitivity">
+    <span class="tex">\(\mathrm{NS}_{\delta}(f)\)</span>
+  </a>
+
+                  <a href="../measures/NS.html">Noise sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\tfrac{4\delta}{3(1+\delta)} + o(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">For every fixed $\delta$, as $n \to \infty$. Scan positions from the top: at each one the pair $(x_i,y_i)$ is $(0,0)$ with probability $(1-\delta)/2$, so conditioned on the first position $k$ where it is not, the pair is $(1,1)$ with probability $\tfrac{1-\delta}{1+\delta}$ -- both highest ones are then at $k$ and the answers agree -- and is $(1,0)$ or $(0,1)$ with probability $\tfrac{2\delta}{1+\delta}$. In the latter case one highest one is at $k$ and the other is the highest one of a fresh uniform string below $k$, whose position has parity opposite to $k$ with probability $\tfrac12+\tfrac18+\cdots = \tfrac23$. Multiplying gives $\tfrac{2\delta}{1+\delta}\cdot\tfrac23$. So OMB is noise-stable in the sense that $\mathrm{NS}_\delta \to 0$ with $\delta$, uniformly in $n$, unlike <a href="../functions/PARITY.html" class="xref function "><span class="tex">\(\oplus_n\)</span></a> or <a href="../functions/TRIBES.html" class="xref function "><span class="tex">\(\mathrm{Tribes}_{w,s}\)</span></a>.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Stab.html" title="Noise stability">
+    <span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Stab.html">Noise stability</a>
+              </td>
+              <td class="val"><span class="tex">\(1 - \tfrac{8(1-\rho)}{3(3-\rho)} + o(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">From $\mathrm{Stab}_\rho = 1 - 2\,\mathrm{NS}_{(1-\rho)/2}$ and the <a href="../measures/NS.html" class="xref measure "><span class="tex">\(\mathrm{NS}_{\delta}(f)\)</span></a> line. It is $1/9$ at $\rho = 0$, so two independent uniform inputs still give correlated answers -- the highest-one statistic is dominated by the top few coordinates.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dmu.html">Distributional query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Yao's minimax: $\max_\mu \mathrm{D}^{\mu}_{1/3}(f) = \mathrm{R}_{1/3}(f) = \Theta(n)$; the <a href="../measures/D_prod.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f)\)</span></a> line exhibits a product distribution attaining it.
+<span class="refs"><a href="../refs.html#Yao77" class="xref ref ">Yao77</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/cbs.html" title="Critical block sensitivity">
+    <span class="tex">\(\mathrm{cbs}(S)\)</span>
+  </a>
+
+                  <a href="../measures/cbs.html">Critical block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\lfloor n/2 \rfloor + 1\)</span></td>
+              <td class="short">Degenerate for Boolean functions: every input is critical and the only solution function is $f$ itself, so $\mathrm{cbs}(f) = \mathrm{bs}(f)$, recorded on the <a href="../measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a> line.
+<span class="refs"><a href="../refs.html#GoosPitassi14" class="xref ref ">GoosPitassi14</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+
+                  <a href="../measures/psD.html">Pseudo-deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Degenerate for Boolean functions: there is a single correct output, so the canonical answer is forced and $\mathrm{psD}(f) = \Theta(\mathrm{R}(f))$ $= \Theta(n)$.
+<span class="refs"><a href="../refs.html#CDM23" class="xref ref ">CDM23</a></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Separations its values prove <span class="dim">— computed, not recorded</span></h2>
+        <p class="dim small">Read straight off the table above by comparing two values: no
+        relation record states these, and where one does and says more, the record wins and the
+        pair is not listed here. 150 in total,
+        strongest first.</p>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/Inf.html" title="Total influence (L2 influence)">
+    <span class="tex">\(\mathrm{I}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=D&amp;b=Inf">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) \to \infty \ \text{ while } \ \mathrm{I}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}(f) = n\) against \(\mathrm{I}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/Inf1.html" title="Total L1 influence">
+    <span class="tex">\(\mathrm{I}^{1}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=D_size&amp;b=Inf1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{DTsize}(f_n) \to \infty \ \text{ while } \ \mathrm{I}^{1}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{DTsize}(f) = n+1\) against \(\mathrm{I}^{1}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/PDT.html" title="Parity decision tree complexity">
+    <span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/nsr.html" title="Noise robustness">
+    <span class="tex">\(\mathrm{nsr}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=PDT&amp;b=nsr">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\oplus}(f_n) \to \infty \ \text{ while } \ \mathrm{nsr}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\oplus}(f) = n\) against \(\mathrm{nsr}(f) = 5 + o(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/UCmin.html" title="Minimum unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}_{\min}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/PostQ.html" title="Post-selected quantum query complexity">
+    <span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=UCmin&amp;b=PostQ">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{UC}_{\min}(f_n) \to \infty \ \text{ while } \ \mathrm{PostQ}_{\varepsilon}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{UC}_{\min}(f) = \Theta(n)\) against \(\mathrm{PostQ}_{\varepsilon}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/sdeg.html" title="Sign degree">
+    <span class="tex">\(\mathrm{sdeg}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Np&amp;b=sdeg">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{N}_{p}(f_n) \to \infty \ \text{ while } \ \mathrm{sdeg}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{N}_{p}(f) = \Omega(n),\ O(n\log n)\) against \(\mathrm{sdeg}(f) = 1\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-degree" href="../measures/deg2.html" title="Mod-2 degree">
+    <span class="tex">\(\deg_2(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/MaxInf.html" title="Maximum influence">
+    <span class="tex">\(\mathrm{MaxInf}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=deg2&amp;b=MaxInf">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\deg_2(f_n) \to \infty \ \text{ while } \ \mathrm{MaxInf}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\deg_2(f) = n\) against \(\mathrm{MaxInf}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-degree" href="../measures/degp.html" title="Mod-p degree">
+    <span class="tex">\(\deg_p(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/Var.html" title="Variance">
+    <span class="tex">\(\mathrm{Var}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=degp&amp;b=Var">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\deg_p(f_n) \to \infty \ \text{ while } \ \mathrm{Var}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\deg_p(f) = n\) against \(\mathrm{Var}(f) = 8/9 + o(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-fourier" href="../measures/L1.html" title="Spectral norm">
+    <span class="tex">\(\hat{L}_1(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=L1&amp;b=Cmin">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\hat{L}_1(f_n) \to \infty \ \text{ while } \ \mathrm{C}_{\min}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\hat{L}_1(f) = \Theta(n)\) against \(\mathrm{C}_{\min}(f) = 1\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/Inf1.html" title="Total L1 influence">
+    <span class="tex">\(\mathrm{I}^{1}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=D&amp;b=Inf1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) \to \infty \ \text{ while } \ \mathrm{I}^{1}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}(f) = n\) against \(\mathrm{I}^{1}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/Inf.html" title="Total influence (L2 influence)">
+    <span class="tex">\(\mathrm{I}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=D_size&amp;b=Inf">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{DTsize}(f_n) \to \infty \ \text{ while } \ \mathrm{I}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{DTsize}(f) = n+1\) against \(\mathrm{I}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/PostQ.html" title="Post-selected quantum query complexity">
+    <span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Np&amp;b=PostQ">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{N}_{p}(f_n) \to \infty \ \text{ while } \ \mathrm{PostQ}_{\varepsilon}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{N}_{p}(f) = \Omega(n),\ O(n\log n)\) against \(\mathrm{PostQ}_{\varepsilon}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-degree" href="../measures/degp.html" title="Mod-p degree">
+    <span class="tex">\(\deg_p(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/MaxInf.html" title="Maximum influence">
+    <span class="tex">\(\mathrm{MaxInf}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=degp&amp;b=MaxInf">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\deg_p(f_n) \to \infty \ \text{ while } \ \mathrm{MaxInf}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\deg_p(f) = n\) against \(\mathrm{MaxInf}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-fourier" href="../measures/L1.html" title="Spectral norm">
+    <span class="tex">\(\hat{L}_1(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=L1&amp;b=rank">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\hat{L}_1(f_n) \to \infty \ \text{ while } \ \mathrm{rank}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\hat{L}_1(f) = \Theta(n)\) against \(\mathrm{rank}(f) = 1\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/UCmin.html" title="Minimum unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}_{\min}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-adversary" href="../measures/Adv.html" title="Positive-weights adversary bound">
+    <span class="tex">\(\mathrm{Adv}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=UCmin&amp;b=Adv">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{UC}_{\min}(f_n) = \Omega\big(\mathrm{Adv}(f_n)^{2}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{UC}_{\min}(f) = \Theta(n)\) against \(\mathrm{Adv}(f) = \Theta(\sqrt n)\)</div>
+          </li>
+        </ul>
+        <p class="dim small">&hellip; and 136 more, all of them visible
+        in the <a href="../matrix.html">matrix</a> (widen it to all measures) and on the
+        pair pages.</p>
+      </section>
+
+      <section class="card">
+        <h2>Separations it witnesses</h2>
+        <ul class="witlist">
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/sdeg.html" title="Sign degree">
+    <span class="tex">\(\mathrm{sdeg}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=D&amp;b=sdeg">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">Unbounded: $\mathrm{D}=n$, $\mathrm{sdeg}=1$. Sign degree is <em>not</em> polynomially related to any other measure in the zoo.</div>
+<div class="refs"><a href="../refs.html#Beigel94" class="xref ref ">Beigel94</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
+    <span class="tex">\(\deg(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/sdeg.html" title="Sign degree">
+    <span class="tex">\(\mathrm{sdeg}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=deg&amp;b=sdeg">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">Unbounded and maximal: $\deg = n$ against $\mathrm{sdeg} = 1$.</div>
+          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=C&amp;b=Cmin">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">Unbounded: $\mathrm{C}=\lfloor n/2\rfloor+1$ at $e_1$ against $\mathrm{C}_{\min}=1$ at $e_n$.</div>
+          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=QE&amp;b=Q">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">Quadratic: $\mathrm{Q}_E = \Theta(n)$ (forced by $\deg = n$) against $\mathrm{Q} = \Theta(\sqrt n)$ (quantum maximum finding).</div>
+          </li>
+        </ul>
+      </section>
+
+
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#Beigel94" class="xref ref ">[Beigel94]</a> <span class="dim">Perceptrons, PP, and the polynomial hierarchy</span></li>
+            <li><a href="../refs.html#MinskyPapert69" class="xref ref ">[MinskyPapert69]</a> <span class="dim">Perceptrons</span></li>
+            <li><a href="../refs.html#DurrHoyer96" class="xref ref ">[DurrHoyer96]</a> <span class="dim">A quantum algorithm for finding the minimum</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/sdeg.html" class="xref measure "><span class="tex">\(\mathrm{sdeg}(f)\)</span></a></li><li><a href="../functions/MAJ.html" class="xref function "><span class="tex">\(\mathrm{MAJ}_n\)</span></a></li><li><a href="../measures/deg.html" class="xref measure "><span class="tex">\(\deg(f)\)</span></a></li><li><a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/01-basic.yaml</code> &mdash; id <code>OMB</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

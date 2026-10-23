@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prove2Me’s refined tournament sensitivity family &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#total">Total functions</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">Prove2MeTournament</div>
+    <div>
+      <h1>Prove2Me’s refined tournament sensitivity family</h1>
+      <p class="lede">$\mathrm{bs}\ge\mathrm{s}^{\alpha-o(1)}$, $\alpha=\log(14055^8)/\log(3738277295413674)=2.1308255793978239\ldots$.</p>
+      <p class="aliases">
+        <span class="kindtag k-total">total</span>
+        <span class="grouptag g-separating-total">separating-total</span>
+      </p>
+    </div>
+  </header>
+
+  <div class="banner warn">
+    <b>Definition not yet transcribed.</b> This page gives a pointer and an informal description
+    only; the exact mathematical definition still needs to be written into
+    <code>data/functions/07-recent-separations.yaml</code> under <code>formal:</code>. Follow the references below.
+  </div>
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>The accepted public theorem SensitivityPrimitiveCampaign.reach_source_q5_3738277295413674_strict refines the nested tournament construction. It uses a single binary tournament labelling with ordinary defect cutoffs $(24,31,38,44,50,55)$ and source cutoff $22$, followed by an exact recursive Boolean profile. The theorem states, without construction hypotheses, that for every $\varepsilon&gt;0$ and $S\ge2$ there is a finite total Boolean function with $\mathrm{s}\ge S$ and $\mathrm{bs}\ge\mathrm{s}^{\alpha-\varepsilon}$. The exact logarithmic quotient, rather than its rounded decimal, is the endpoint.</p>
+
+      </section>
+
+
+
+
+
+      <section class="card">
+        <h2>Cited as a witness by</h2>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=bs&amp;b=s#recent-bs-vs-s-total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{bs}(f_j)=\Omega(\mathrm{s}(f_j)^{2.130825579397823})\)</span></div>
+<div class="refs"><a href="../refs.html#Prove2MeSensitivity26" class="xref ref ">Prove2MeSensitivity26</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=fbs&amp;b=s#recent-fbs-vs-s-total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{fbs}(f_j)=\Omega(\mathrm{s}(f_j)^{2.130825579397823})\)</span></div>
+<div class="refs"><a href="../refs.html#Prove2MeSensitivity26" class="xref ref ">Prove2MeSensitivity26</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/RC.html" title="Randomized certificate complexity">
+    <span class="tex">\(\mathrm{RC}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=RC&amp;b=s#recent-RC-vs-s-total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{RC}(f_j)=\Omega(\mathrm{s}(f_j)^{2.130825579397823})\)</span></div>
+<div class="refs"><a href="../refs.html#Prove2MeSensitivity26" class="xref ref ">Prove2MeSensitivity26</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=bs&amp;b=lambda#recent-bs-vs-lambda-total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{bs}(f_j)=\Omega(\lambda(f_j)^{2.130825579397823})\)</span></div>
+<div class="refs"><a href="../refs.html#Prove2MeSensitivity26" class="xref ref ">Prove2MeSensitivity26</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=fbs&amp;b=lambda#recent-fbs-vs-lambda-total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{fbs}(f_j)=\Omega(\lambda(f_j)^{2.130825579397823})\)</span></div>
+<div class="refs"><a href="../refs.html#Prove2MeSensitivity26" class="xref ref ">Prove2MeSensitivity26</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/RC.html" title="Randomized certificate complexity">
+    <span class="tex">\(\mathrm{RC}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=RC&amp;b=lambda#recent-RC-vs-lambda-total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{RC}(f_j)=\Omega(\lambda(f_j)^{2.130825579397823})\)</span></div>
+<div class="refs"><a href="../refs.html#Prove2MeSensitivity26" class="xref ref ">Prove2MeSensitivity26</a></div>          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Notes</h2>
+        <p>The campaign and linked theorem were inspected on October 22, 2026. Prove2Me marks the theorem Proved (October 20), with human endorsements on October 21. This records the source’s verification status; the zoo has not independently rebuilt the Lean proof. The statement gives arbitrarily large sensitivity and arbitrarily small exponent loss, not a loss-free endpoint inequality on every member of a prescribed one-parameter family.</p>
+
+      </section>
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#Prove2MeSensitivity26" class="xref ref ">[Prove2MeSensitivity26]</a> <span class="dim">Block Sensitivity vs. Sensitivity: exact exponent log(14055^8)/log(3738277295413674)</span></li>
+            <li><a href="../refs.html#OpenAISensitivity26" class="xref ref ">[OpenAISensitivity26]</a> <span class="dim">A superquadratic separation between sensitivity and block sensitivity</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a></li><li><a href="../measures/s.html" class="xref measure "><span class="tex">\(\mathrm{s}(f)\)</span></a></li><li><a href="../measures/fbs.html" class="xref measure "><span class="tex">\(\mathrm{fbs}(f)\)</span></a></li><li><a href="../measures/RC.html" class="xref measure "><span class="tex">\(\mathrm{RC}(f)\)</span></a></li><li><a href="../measures/lambda.html" class="xref measure "><span class="tex">\(\lambda(f)\)</span></a></li><li><a href="../functions/OpenAINestedTournament.html" class="xref function ">OpenAI’s nested tournament sensitivity separator</a></li><li><a href="../open.html#open-bs-vs-s" class="xref open ">What is the optimal exponent of … versus …?</a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/07-recent-separations.yaml</code> &mdash; id <code>Prove2MeTournament</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

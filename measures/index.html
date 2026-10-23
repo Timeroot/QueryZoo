@@ -1,0 +1,2108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Measures &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="on">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <h1 class="pagetitle">Measures</h1>
+  <p class="lede">Every complexity measure the zoo knows about, grouped by flavour.
+  The <span class="dot yes"></span>/<span class="dot no"></span>/<span class="dot maybe"></span>
+  columns say whether the measure is defined for
+<b>total</b> / <b>partial</b> / <b>relation</b>  problems.</p>
+
+  <nav class="jump">
+      <a href="#deterministic">Deterministic <span class="n">7</span></a>
+      <a href="#randomized">Randomized <span class="n">8</span></a>
+      <a href="#quantum">Quantum <span class="n">13</span></a>
+      <a href="#degree">Polynomial degree <span class="n">15</span></a>
+      <a href="#combinatorial">Combinatorial <span class="n">20</span></a>
+      <a href="#fourier">Fourier-analytic <span class="n">11</span></a>
+      <a href="#adversary">Adversary &amp; games <span class="n">11</span></a>
+      <a href="#composition">Composition-theoretic <span class="n">9</span></a>
+  </nav>
+
+    <section class="card" id="deterministic">
+      <h2 class="cathead cat-deterministic">Deterministic</h2>
+      <p class="dim">Decision-tree depth, size, and distributional variants.</p>
+      <table class="listing">
+        <thead>
+          <tr>
+            <th>Symbol</th><th>Name</th>
+<th class="c" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</th><th class="c" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</th><th class="c" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</th>            <th>Parameters</th>
+            <th>What it is</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sym"><a href="../measures/D.html">\(\mathrm{D}(f)\)</a></td>
+            <td class="nm"><a href="../measures/D.html">Deterministic query complexity</a>
+                <div class="idtag">D</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="The standard setting. $\mathrm{D}(f) \le n$ always."></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="The tree must be correct on $\mathrm{Dom}(f)$ only; behaviour off-promise is unconstrained."></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="For $f \subseteq \{0,1\}^n \times \mathcal{O}$ the tree must output *some* $o$ with $(x,o) \in f$. Well defined whenever every $x$ has at least one valid output."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Minimum worst-case number of queries of a deterministic decision tree computing f.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Dna.html">\(\mathrm{D}^{\mathrm{na}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Dna.html">Non-adaptive deterministic query complexity</a>
+                <div class="idtag">Dna</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="$\mathrm{D}^{\mathrm{na}}(f) = \#\{\text{relevant variables}\}$."></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Genuinely a complexity measure here: $S$ must separate $f^{-1}(0)$ from $f^{-1}(1)$ on the promise only."></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Fewest queries when the whole query set must be fixed in advance.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/D_size.html">\(\mathrm{DTsize}(f)\)</a></td>
+            <td class="nm"><a href="../measures/D_size.html">Decision tree size</a>
+                <div class="idtag">D_size</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Standard: results such as $\mathrm{Q}(f) = O(\sqrt{\mathrm{DTsize}(f)})$ are stated for relations."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Minimum number of leaves of a deterministic decision tree computing f.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/rank.html">\(\mathrm{rank}(f)\)</a></td>
+            <td class="nm"><a href="../measures/rank.html">Decision tree rank</a>
+                <div class="idtag">rank</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Defined identically for search problems; this is the form used in proof complexity, where the rank of the false-clause search problem is the resolution depth-vs-width trade-off parameter."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">The &quot;Strahler number&quot; of a decision tree: how much branching, rather than how much depth, the tree needs.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/PDT.html">\(\mathrm{D}^{\oplus}(f)\)</a></td>
+            <td class="nm"><a href="../measures/PDT.html">Parity decision tree complexity</a>
+                <div class="idtag">PDT</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Defined identically; less studied."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Decision tree depth when each query may read the parity of an arbitrary subset of bits.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/D_prod.html">\(\mathrm{D}^{\mathrm{prod}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/D_prod.html">Product-distribution distributional complexity</a>
+                <div class="idtag">D_prod</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Max over <em>product</em> input distributions of the bounded-error distributional query complexity.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Dmu.html">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Dmu.html">Distributional query complexity</a>
+                <div class="idtag">Dmu</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span><span class="ptag">\(\mu\)</span>            </td>
+            <td class="short">Least depth of a deterministic tree that is correct except with probability eps under the input distribution mu.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="card" id="randomized">
+      <h2 class="cathead cat-randomized">Randomized</h2>
+      <p class="dim">Bounded error, zero error, expected cost, noisy oracles.</p>
+      <table class="listing">
+        <thead>
+          <tr>
+            <th>Symbol</th><th>Name</th>
+<th class="c" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</th><th class="c" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</th><th class="c" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</th>            <th>Parameters</th>
+            <th>What it is</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sym"><a href="../measures/R.html">\(\mathrm{R}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/R.html">Bounded-error randomized query complexity</a>
+                <div class="idtag">R</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Only inputs in the promise must be answered correctly."></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Must output some valid $o$ with probability $\ge 1-\varepsilon$. Yao-style minimax for relations is subtler; see [[settings]]."></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Worst-case number of queries of a randomized decision tree that errs with probability at most eps.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Rbar.html">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Rbar.html">Expected-cost randomized query complexity</a>
+                <div class="idtag">Rbar</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Same as R_eps but the cost is the expected (not worst-case) number of queries.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Rna.html">\(\mathrm{R}^{\mathrm{na}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Rna.html">Non-adaptive randomized query complexity</a>
+                <div class="idtag">Rna</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="The interesting case: property testing lives here."></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Bounded-error cost when the query set is drawn from a distribution fixed in advance, independent of the answers.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/R0.html">\(\mathrm{R}_{0}(f)\)</a></td>
+            <td class="nm"><a href="../measures/R0.html">Zero-error randomized query complexity</a>
+                <div class="idtag">R0</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Expected number of queries of a randomized algorithm that is always correct.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/R1.html">\(\mathrm{R}^{1}(f)\)</a></td>
+            <td class="nm"><a href="../measures/R1.html">One-sided-error randomized query complexity</a>
+                <div class="idtag">R1</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="Needs a notion of &#34;certainly valid output&#34;."></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Randomized complexity when errors are allowed on only one side.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/R1RP.html">\(\mathrm{R}_{\mathrm{RP}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/R1RP.html">One-sided randomized queries with certain rejection</a>
+                <div class="idtag">R1RP</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Negative inputs always reject; positive inputs accept with probability at least 2/3.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/psD.html">\(\mathrm{psD}(S)\)</a></td>
+            <td class="nm"><a href="../measures/psD.html">Pseudo-deterministic query complexity</a>
+                <div class="idtag">psD</div></td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="For total (or partial) Boolean functions $\mathrm{psD} = \Theta(\mathrm{R})$: there is only one correct answer, so reproducibility is free."></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="Same collapse as for total functions."></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="The natural home of this measure. Only interesting when a single input admits several valid outputs."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Randomized cost of a search algorithm that must output the <em>same</em> canonical answer with high probability on every input.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Np.html">\(\mathrm{N}_{p}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Np.html">Noisy decision tree complexity</a>
+                <div class="idtag">Np</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(p\)</span>            </td>
+            <td class="short">Number of queries when every query answer is independently flipped with probability p.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="card" id="quantum">
+      <h2 class="cathead cat-quantum">Quantum</h2>
+      <p class="dim">Bounded error, exact, post-selected, robust.</p>
+      <table class="listing">
+        <thead>
+          <tr>
+            <th>Symbol</th><th>Name</th>
+<th class="c" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</th><th class="c" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</th><th class="c" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</th>            <th>Parameters</th>
+            <th>What it is</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sym"><a href="../measures/Q.html">\(\mathrm{Q}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Q.html">Bounded-error quantum query complexity</a>
+                <div class="idtag">Q</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Where all the big speedups live: Simon, Forrelation, period finding."></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Standard; the general adversary bound has been extended to relations [BelovsLee20]."></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Number of applications of the phase/bit oracle O_x needed to compute f with error &lt;= eps.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/QE.html">\(\mathrm{Q}_{\mathrm{E}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/QE.html">Exact quantum query complexity</a>
+                <div class="idtag">QE</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Number of queries of a quantum algorithm that outputs f(x) with probability 1.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Q0.html">\(\mathrm{Q}_{0}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Q0.html">Zero-error (Las Vegas) quantum query complexity</a>
+                <div class="idtag">Q0</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Quantum algorithm that never errs but may output &quot;don't know&quot; with probability &lt;= 1/2.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/PostQ.html">\(\mathrm{PostQ}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/PostQ.html">Post-selected quantum query complexity</a>
+                <div class="idtag">PostQ</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="partial"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Quantum queries when the algorithm may post-select on an exponentially unlikely event.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/QC.html">\(\mathrm{QC}(f)\)</a></td>
+            <td class="nm"><a href="../measures/QC.html">Quantum certificate complexity</a>
+                <div class="idtag">QC</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Quantum analogue of certificate complexity; the square root of RC.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/NQ.html">\(\mathrm{NQ}(f)\)</a></td>
+            <td class="nm"><a href="../measures/NQ.html">Nondeterministic quantum query complexity</a>
+                <div class="idtag">NQ</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="partial"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Quantum algorithm with nonzero acceptance probability exactly on 1-inputs.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/QSweak.html">\(\mathrm{QS}_{\mathrm{weak}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/QSweak.html">Weak quantum sabotage complexity</a>
+                <div class="idtag">QSweak</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Quantum queries to distinguish stars from daggers in a sabotaged input, without access to its completions.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/robustQ.html">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/robustQ.html">Robust quantum query complexity</a>
+                <div class="idtag">robustQ</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(p\)</span>            </td>
+            <td class="short">Quantum queries when the oracle is noisy (each query answer is corrupted).</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/QSstr.html">\(\mathrm{QS}_{\mathrm{str}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/QSstr.html">Strong quantum sabotage complexity</a>
+                <div class="idtag">QSstr</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Quantum sabotage decision with query access to both opposite-output completions.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/QSweakind.html">\(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/QSweakind.html">Weak quantum sabotage index complexity</a>
+                <div class="idtag">QSweakind</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Find a sabotaged coordinate with quantum access to the sabotaged string alone.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/QSstrind.html">\(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/QSstrind.html">Strong quantum sabotage index complexity</a>
+                <div class="idtag">QSstrind</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Find a sabotaged coordinate with quantum access to both completions and the sabotaged string.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/QEcert.html">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/QEcert.html">Exact quantum certification complexity</a>
+                <div class="idtag">QEcert</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Worst-case exact quantum query cost of recognizing a known input against all opposite-output inputs.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Q0cert.html">\(\mathrm{Q}_{0}^{\mathrm{cert}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Q0cert.html">Zero-error quantum certification complexity</a>
+                <div class="idtag">Q0cert</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Zero-error quantum cost of the certification task; equivalent to its exact quantum cost.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="card" id="degree">
+      <h2 class="cathead cat-degree">Polynomial degree</h2>
+      <p class="dim">Exact, approximate, sign, rational, nondeterministic, mod-p.</p>
+      <table class="listing">
+        <thead>
+          <tr>
+            <th>Symbol</th><th>Name</th>
+<th class="c" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</th><th class="c" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</th><th class="c" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</th>            <th>Parameters</th>
+            <th>What it is</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sym"><a href="../measures/deg.html">\(\deg(f)\)</a></td>
+            <td class="nm"><a href="../measures/deg.html">Exact degree</a>
+                <div class="idtag">deg</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="**Warning:** for partial $f$ the representing polynomial is not unique, so $\deg(f)$ is defined as the *minimum* degree of a polynomial agreeing with $f$ on the domain (unbounded elsewhere). Most total-function relations involving $\deg$ break in this setting -- including $\widetilde{\deg} \le \deg$, which **fails**: on [[UniqueSearch]] $\deg = 1$ while $\widetilde{\deg} = \Theta(\sqrt n)$, and on [[OrderedSearch]] $\deg = 1$ while $\widetilde{\deg}$ grows. [[adeg]] insists on boundedness at *every* point of the cube; $\deg$, [[ndeg]], [[rdeg]], [[degp]] and [[odeg]] constrain only $\mathrm{Dom}(f)$."></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Degree of the unique multilinear real polynomial that represents f exactly.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/adeg.html">\(\widetilde{\deg}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/adeg.html">Approximate degree</a>
+                <div class="idtag">adeg</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="The boundedness condition off the promise is essential; without it the measure collapses. Standard in the quantum literature. It is also what breaks $\widetilde{\deg} \le \deg$ on a promise: the other degree measures constrain $\mathrm{Dom}(f)$ only, so an exact representation may be wildly unbounded off it. See [[UniqueSearch]]."></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="One can ask for a polynomial per output symbol; not standard."></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Least degree of a polynomial that approximates f pointwise to within eps.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/odeg.html">\(\widetilde{\deg}_{+}(f)\)</a></td>
+            <td class="nm"><a href="../measures/odeg.html">One-sided approximate degree</a>
+                <div class="idtag">odeg</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="The constraints are imposed only on $\mathrm{Dom}(f)$."></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Approximate degree when the polynomial only has to be <em>large</em> on 1-inputs, not close to 1.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/sdeg.html">\(\mathrm{sdeg}(f)\)</a></td>
+            <td class="nm"><a href="../measures/sdeg.html">Sign degree</a>
+                <div class="idtag">sdeg</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Least degree of a polynomial whose sign agrees with f everywhere.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/rdeg.html">\(\mathrm{rdeg}(f)\)</a></td>
+            <td class="nm"><a href="../measures/rdeg.html">Rational degree</a>
+                <div class="idtag">rdeg</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Unbounded separations from $\widetilde{\deg}$ in **both** directions exist for partial functions [IJKKKSWW23]."></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Least d such that f = p/q on the domain with deg(p), deg(q) &lt;= d.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/ardeg.html">\(\mathrm{rdeg}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/ardeg.html">Approximate rational degree</a>
+                <div class="idtag">ardeg</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Bounded-error version of rational degree; equals post-selected bounded-error quantum query complexity.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/ndeg.html">\(\mathrm{ndeg}(f)\)</a></td>
+            <td class="nm"><a href="../measures/ndeg.html">Nondeterministic degree</a>
+                <div class="idtag">ndeg</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Least degree of a polynomial that is nonzero exactly on the 1-inputs.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/deg2.html">\(\deg_2(f)\)</a></td>
+            <td class="nm"><a href="../measures/deg2.html">Mod-2 degree</a>
+                <div class="idtag">deg2</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="The $\mathbb{F}_2$ representation is not unique for partial $f$; one takes the minimum degree."></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Degree of f as a multilinear polynomial over F_2.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/degp.html">\(\deg_p(f)\)</a></td>
+            <td class="nm"><a href="../measures/degp.html">Mod-p degree</a>
+                <div class="idtag">degp</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(p\)</span>            </td>
+            <td class="short">Degree over F_p.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/cjdeg.html">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/cjdeg.html">Conical junta degree</a>
+                <div class="idtag">cjdeg</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="The junta must satisfy $h(x) \le 1+\varepsilon$ at *every* $x \in \{0,1\}^n$, not only on the promise -- the same boundedness [[adeg]] imposes, and what a randomized algorithm hands over, since $h(x) = \Pr[\text{output } 1]$ is perfectly well defined off the promise. The reading that constrains $\mathrm{Dom}(f)$ alone gives a smaller measure and breaks $\widetilde{\deg} \le \mathrm{cjdeg}$: on $\oplus_3$ with the single input $110$ dropped from the promise, a width-2 junta stays within $1/3$ of $f$ on the seven remaining inputs -- by reaching $5/3$ at $110$ -- while $\widetilde{\deg} = 3$."></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="The version used for total search problems in [BenDavidKundu24search]."></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Least d such that f is approximated by a non-negative combination of width-d conjunctions (a conical junta).</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/bdeg.html">\(\overline{\deg}(f)\)</a></td>
+            <td class="nm"><a href="../measures/bdeg.html">Exact bounded polynomial degree</a>
+                <div class="idtag">bdeg</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Exact degree with the polynomial also constrained to [0,1] on the entire Boolean cube.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/degcert.html">\(\overline{\deg}^{\mathrm{cert}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/degcert.html">Bounded degree certification complexity</a>
+                <div class="idtag">degcert</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Worst exact bounded degree of a known-input certification promise; a new lower bound on zero-error quantum queries.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/osdeg0.html">\(\overline{\mathrm{osdeg}}^{\,0}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/osdeg0.html">Bounded polynomial degree with error on 0-inputs</a>
+                <div class="idtag">osdeg0</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">A polynomial bounded in [0,1], exact on 1-inputs and approximate on 0-inputs.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/osdeg1.html">\(\overline{\mathrm{osdeg}}^{\,1}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/osdeg1.html">Bounded polynomial degree with error on 1-inputs</a>
+                <div class="idtag">osdeg1</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">A polynomial bounded in [0,1], exact on 0-inputs and approximate on 1-inputs.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/osdeg.html">\(\overline{\mathrm{osdeg}}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/osdeg.html">One-sided-error bounded polynomial degree</a>
+                <div class="idtag">osdeg</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">The maximum of the two bounded one-sided-error degrees; lower-bounds zero-error quantum queries.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="card" id="combinatorial">
+      <h2 class="cathead cat-combinatorial">Combinatorial</h2>
+      <p class="dim">Sensitivity, block sensitivity, certificates, spectral sensitivity.</p>
+      <table class="listing">
+        <thead>
+          <tr>
+            <th>Symbol</th><th>Name</th>
+<th class="c" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</th><th class="c" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</th><th class="c" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</th>            <th>Parameters</th>
+            <th>What it is</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sym"><a href="../measures/s.html">\(\mathrm{s}(f)\)</a></td>
+            <td class="nm"><a href="../measures/s.html">Sensitivity</a>
+                <div class="idtag">s</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="One must decide whether $x^{\oplus i}$ is required to be in the domain. The standard convention counts only $i$ with $x^{\oplus i} \in \mathrm{Dom}(f)$ and $f(x)\ne f(x^{\oplus i})$; with this convention sensitivity can be $0$ for a hard partial function, so it is nearly useless in the partial setting."></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="No standard definition: the output is not unique, so &#34;changes the output&#34; is not well defined. Sabotage-style variants are used instead."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Max over inputs of the number of coordinates whose flip changes the output.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/s0.html">\(\mathrm{s}^0(f)\)</a></td>
+            <td class="nm"><a href="../measures/s0.html">0-sensitivity</a>
+                <div class="idtag">s0</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Sensitivity maximised only over 0-inputs.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/s1.html">\(\mathrm{s}^1(f)\)</a></td>
+            <td class="nm"><a href="../measures/s1.html">1-sensitivity</a>
+                <div class="idtag">s1</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Sensitivity maximised only over 1-inputs.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/bs.html">\(\mathrm{bs}(f)\)</a></td>
+            <td class="nm"><a href="../measures/bs.html">Block sensitivity</a>
+                <div class="idtag">bs</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Requires $x^{\oplus B_j} \in \mathrm{Dom}(f)$. Still a valid lower bound on $\mathrm{R}$ and $\mathrm{D}$, but is often trivially small for promise problems."></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="Replaced by sabotage-style measures."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Max number of disjoint blocks of coordinates each of whose flips changes the output.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/bs0.html">\(\mathrm{bs}^0(f)\)</a></td>
+            <td class="nm"><a href="../measures/bs0.html">0-block sensitivity</a>
+                <div class="idtag">bs0</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Block sensitivity maximised only over 0-inputs.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/bs1.html">\(\mathrm{bs}^1(f)\)</a></td>
+            <td class="nm"><a href="../measures/bs1.html">1-block sensitivity</a>
+                <div class="idtag">bs1</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Block sensitivity maximised only over 1-inputs.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/fbs.html">\(\mathrm{fbs}(f)\)</a></td>
+            <td class="nm"><a href="../measures/fbs.html">Fractional block sensitivity</a>
+                <div class="idtag">fbs</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">LP relaxation of block sensitivity; equals the LP relaxation of certificate complexity by duality.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/FC.html">\(\mathrm{FC}(f)\)</a></td>
+            <td class="nm"><a href="../measures/FC.html">Fractional certificate complexity</a>
+                <div class="idtag">FC</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Only inputs $y$ *in the domain* impose constraints, so the LP has fewer constraints and $\mathrm{FC}$ shrinks, exactly as $\mathrm{C}$ does."></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="No standard version; the sabotage measures play this role."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">LP relaxation of certificate complexity: fractional weights on coordinates that must cover every disagreement.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/cbs.html">\(\mathrm{cbs}(S)\)</a></td>
+            <td class="nm"><a href="../measures/cbs.html">Critical block sensitivity</a>
+                <div class="idtag">cbs</div></td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="For a Boolean function every input is critical and $s = f$ is forced, so $\mathrm{cbs}(f) = \mathrm{bs}(f)$."></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="Same collapse."></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="The setting it was invented for -- in particular for the &#34;false clause&#34; search problems $\mathrm{SearchCNF}$ attached to unsatisfiable CNFs."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Block sensitivity of a search problem: the adversary picks the input, but the algorithm picks which valid answer to commit to.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/lambda.html">\(\lambda(f)\)</a></td>
+            <td class="nm"><a href="../measures/lambda.html">Spectral sensitivity</a>
+                <div class="idtag">lambda</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Definable, but like $\mathrm{s}$ and $\mathrm{bs}$ it is weak for promise problems (the sensitivity graph may be empty)."></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Largest eigenvalue of the adjacency matrix of the sensitivity graph of f.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/C.html">\(\mathrm{C}(f)\)</a></td>
+            <td class="nm"><a href="../measures/C.html">Certificate complexity</a>
+                <div class="idtag">C</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="The certificate only has to fix the value among *domain* inputs, which makes $\mathrm{C}$ much smaller for promise problems."></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="A certificate must fix *some* valid output; this is the natural &#34;NP-verifiability&#34; notion used e.g. for TFNP-style relations."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Max over inputs of the smallest partial assignment that fixes the value of f.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/C0.html">\(\mathrm{C}^0(f)\)</a></td>
+            <td class="nm"><a href="../measures/C0.html">0-certificate complexity</a>
+                <div class="idtag">C0</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="Only meaningful for relations with a distinguished &#34;no&#34; answer."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Largest minimal certificate over 0-inputs; the co-nondeterministic query complexity.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/C1.html">\(\mathrm{C}^1(f)\)</a></td>
+            <td class="nm"><a href="../measures/C1.html">1-certificate complexity</a>
+                <div class="idtag">C1</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Largest minimal certificate over 1-inputs; the nondeterministic query complexity.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Cmin.html">\(\mathrm{C}_{\min}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Cmin.html">Minimum certificate complexity</a>
+                <div class="idtag">Cmin</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Inherited from [[C]], which *is* defined for relations: a certificate is a set of queries whose answers fix some valid output, and $\mathrm{C}_{\min}$ takes the min of $\mathrm{C}_x$ over $x$ rather than the max. Nothing in that reading needs a Boolean output. This flag previously read `no`, which silently dropped the recorded $\mathrm{C}_{\min}$ rows on [[GroverSearch]], [[promiseFind1]], [[ApproxHW]], [[YamakawaZhandry]] and [[TseitinExpander]]. Unlike $\mathrm{C}_{\min}$, the unambiguous variants [[UC]], [[UCmin]] and [[SP]] stay undefined here, because unambiguity is a statement about the fibres of the output and a relation need not have any."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Min (rather than max) over inputs of the smallest certificate.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/UC.html">\(\mathrm{UC}(f)\)</a></td>
+            <td class="nm"><a href="../measures/UC.html">Unambiguous certificate complexity</a>
+                <div class="idtag">UC</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Certificate complexity where the certificates form a partition-like unambiguous cover.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/UCmin.html">\(\mathrm{UC}_{\min}(f)\)</a></td>
+            <td class="nm"><a href="../measures/UCmin.html">Minimum unambiguous certificate complexity</a>
+                <div class="idtag">UCmin</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">The cheaper of the two one-sided unambiguous certificate complexities.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/SP.html">\(\mathrm{SP}(f)\)</a></td>
+            <td class="nm"><a href="../measures/SP.html">Subcube partition complexity</a>
+                <div class="idtag">SP</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Smallest k such that the cube can be partitioned into monochromatic subcubes of codimension &lt;= k.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/lambdacert.html">\(\lambda^{\mathrm{cert}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/lambdacert.html">Spectral sensitivity certification</a>
+                <div class="idtag">lambdacert</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Spectral sensitivity of the hardest known-input certification promise; exactly the square root of sensitivity.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/RC.html">\(\mathrm{RC}(f)\)</a></td>
+            <td class="nm"><a href="../measures/RC.html">Randomized certificate complexity</a>
+                <div class="idtag">RC</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Cost of a randomized verifier that must detect, with constant probability, that the input has been changed to flip f.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/EC.html">\(\mathrm{EC}(f)\)</a></td>
+            <td class="nm"><a href="../measures/EC.html">Expectational certificate complexity</a>
+                <div class="idtag">EC</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">A relaxation of certificate complexity in which the certificate is a distribution and only expected agreement is required.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="card" id="fourier">
+      <h2 class="cathead cat-fourier">Fourier-analytic</h2>
+      <p class="dim">Influence, noise sensitivity, spectral norm, sparsity.</p>
+      <table class="listing">
+        <thead>
+          <tr>
+            <th>Symbol</th><th>Name</th>
+<th class="c" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</th><th class="c" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</th><th class="c" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</th>            <th>Parameters</th>
+            <th>What it is</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sym"><a href="../measures/Var.html">\(\mathrm{Var}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Var.html">Variance</a>
+                <div class="idtag">Var</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="Needs a distribution on the domain; the uniform measure on the promise is the usual choice, but no standard convention exists."></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">How far f is from constant. Not a complexity measure -- the unit the other Fourier quantities are divided by.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Inf.html">\(\mathrm{I}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Inf.html">Total influence (L2 influence)</a>
+                <div class="idtag">Inf</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="Needs a distribution on the domain; the uniform measure on the promise is the usual choice, but no standard convention exists."></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Expected number of sensitive coordinates on a uniformly random input; equals sum_S |S| fhat(S)^2.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Inf1.html">\(\mathrm{I}^{1}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Inf1.html">Total L1 influence</a>
+                <div class="idtag">Inf1</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Really a measure of *bounded real-valued functions*, not just Boolean ones."></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="partial"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Sum over i of E_x |D_i f(x)|; differs from total influence for bounded real-valued f.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/MaxInf.html">\(\mathrm{MaxInf}(f)\)</a></td>
+            <td class="nm"><a href="../measures/MaxInf.html">Maximum influence</a>
+                <div class="idtag">MaxInf</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="partial"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">The largest single-coordinate influence.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/osss.html">\(\mathrm{osss}(f)\)</a></td>
+            <td class="nm"><a href="../measures/osss.html">OSSS number</a>
+                <div class="idtag">osss</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="Both numerator and denominator need a distribution on the domain; the uniform measure on the promise is the usual choice, but no standard convention exists."></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Var(f)/MaxInf(f): the query lower bound the OSSS inequality reads off the influences.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/NS.html">\(\mathrm{NS}_{\delta}(f)\)</a></td>
+            <td class="nm"><a href="../measures/NS.html">Noise sensitivity</a>
+                <div class="idtag">NS</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="partial"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\delta\)</span>            </td>
+            <td class="short">Probability that f changes when each bit is flipped independently with probability delta.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Stab.html">\(\mathrm{Stab}_{\rho}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Stab.html">Noise stability</a>
+                <div class="idtag">Stab</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="partial"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\rho\)</span>            </td>
+            <td class="short">Correlation of f(x) and f(y) for rho-correlated x,y.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/nsr.html">\(\mathrm{nsr}(f)\)</a></td>
+            <td class="nm"><a href="../measures/nsr.html">Noise robustness</a>
+                <div class="idtag">nsr</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="Noising a promise input usually leaves the promise, so $\mathrm{NS}_\delta$ itself needs a convention (reject, or extend $f$) before $\delta^{*}$ means anything."></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">One over the noise rate at which f starts to break: the query-scale reading of NS_delta.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/L1.html">\(\hat{L}_1(f)\)</a></td>
+            <td class="nm"><a href="../measures/L1.html">Spectral norm</a>
+                <div class="idtag">L1</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="partial"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Sum of absolute values of the Fourier coefficients.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/spar.html">\(\mathrm{spar}(f)\)</a></td>
+            <td class="nm"><a href="../measures/spar.html">Fourier sparsity</a>
+                <div class="idtag">spar</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Number of nonzero Fourier coefficients.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Fdim.html">\(\dim_{\mathbb{F}_2}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Fdim.html">Fourier dimension</a>
+                <div class="idtag">Fdim</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Dimension of the F_2-span of the Fourier support.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="card" id="adversary">
+      <h2 class="cathead cat-adversary">Adversary &amp; games</h2>
+      <p class="dim">Quantum and classical adversary bounds, certificate games.</p>
+      <table class="listing">
+        <thead>
+          <tr>
+            <th>Symbol</th><th>Name</th>
+<th class="c" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</th><th class="c" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</th><th class="c" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</th>            <th>Parameters</th>
+            <th>What it is</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sym"><a href="../measures/CA.html">\(\mathrm{CA}(f)\)</a></td>
+            <td class="nm"><a href="../measures/CA.html">Classical adversary bound</a>
+                <div class="idtag">CA</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="$\mathrm{CA}(f) = \Theta(\mathrm{fbs}(f))$ for total $f$ -- all classical adversary methods are equivalent and equal fractional block sensitivity [ABIKPS17]."></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="For partial functions $\mathrm{CA}$ is strictly stronger than $\mathrm{fbs}$ and can be exponentially separated from $\mathrm{R}$ [CGLMSG23]."></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="The relational adversary was designed for exactly this setting."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">The classical analogue of the positive-weights quantum adversary; a lower bound on R.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Adv.html">\(\mathrm{Adv}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Adv.html">Positive-weights adversary bound</a>
+                <div class="idtag">Adv</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">The original quantum adversary lower bound; all positive-weight variants coincide.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/CG.html">\(\mathrm{CG}(f)\)</a></td>
+            <td class="nm"><a href="../measures/CG.html">Certificate game complexity (private coin)</a>
+                <div class="idtag">CG</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Inverse winning probability of a zero-communication game where two players must agree on a coordinate where their inputs differ.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/CGpub.html">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/CGpub.html">Certificate game complexity (public coin)</a>
+                <div class="idtag">CGpub</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Public-coin version of the certificate game; equals the classical adversary bound.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/CGstar.html">\(\mathrm{CG}^{*}(f)\)</a></td>
+            <td class="nm"><a href="../measures/CGstar.html">Quantum certificate game complexity</a>
+                <div class="idtag">CGstar</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Certificate game with shared entanglement.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/CGns.html">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/CGns.html">Non-signaling certificate game complexity</a>
+                <div class="idtag">CGns</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Certificate game with arbitrary non-signaling correlations; the weakest of the four.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Advpm.html">\(\mathrm{Adv}^{\pm}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Advpm.html">General (negative-weights) adversary bound</a>
+                <div class="idtag">Advpm</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Belovs gave a modified $\mathrm{Adv}^{\pm}_{\mathrm{rel}}$ characterising $\mathrm{Q}$ of efficiently verifiable relations, with a perfect composition theorem [BelovsLee20]."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">The tight SDP characterisation of bounded-error quantum query complexity.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/gamma2.html">\(\gamma_2^{\alpha}(f)\)</a></td>
+            <td class="nm"><a href="../measures/gamma2.html">Approximate gamma_2 norm</a>
+                <div class="idtag">gamma2</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="partial"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Factorisation-norm formulation of the general adversary bound.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/MAdv.html">\(\mathrm{MAdv}(f)\)</a></td>
+            <td class="nm"><a href="../measures/MAdv.html">Multiplicative adversary</a>
+                <div class="idtag">MAdv</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="partial"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">A multiplicative-weight version of the adversary method, at least as strong as Adv^pm.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/prt.html">\(\mathrm{prt}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/prt.html">Partition bound</a>
+                <div class="idtag">prt</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="The LP formulation extends verbatim to relations; this is how lifting theorems for search problems are usually stated."></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">LP relaxation of &quot;cover the cube by few low-codimension monochromatic subcubes&quot;; subsumes most classical lower bound techniques.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/rprt.html">\(\overline{\mathrm{prt}}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/rprt.html">Relaxed partition bound</a>
+                <div class="idtag">rprt</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">The partition bound with the &quot;fires with probability exactly 1&quot; constraint relaxed to &quot;at most 1&quot;; weaker, but unlike prt it lower-bounds information complexity.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="card" id="composition">
+      <h2 class="cathead cat-composition">Composition-theoretic</h2>
+      <p class="dim">Measures invented to make R(f o g) behave: RS, chi, chibar, LR, noisyR, R*.</p>
+      <table class="listing">
+        <thead>
+          <tr>
+            <th>Symbol</th><th>Name</th>
+<th class="c" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</th><th class="c" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</th><th class="c" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</th>            <th>Parameters</th>
+            <th>What it is</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sym"><a href="../measures/RS.html">\(\mathrm{RS}(f)\)</a></td>
+            <td class="nm"><a href="../measures/RS.html">Sabotage complexity</a>
+                <div class="idtag">RS</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="Definable in principle; not standard."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Randomized cost of finding a &quot;sabotaged&quot; (damaged) input bit; the first measure with perfect composition.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/chi.html">\(\chi(f)\)</a></td>
+            <td class="nm"><a href="../measures/chi.html">Conflict complexity</a>
+                <div class="idtag">chi</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">A measure of how hard it is for a decision tree to distinguish a random 0-input from a random 1-input, one query at a time.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/chibar.html">\(\bar{\chi}(f)\)</a></td>
+            <td class="nm"><a href="../measures/chibar.html">Max-conflict complexity</a>
+                <div class="idtag">chibar</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">A strengthening of conflict complexity that dominates sabotage complexity.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/LR.html">\(\mathrm{LR}(f)\)</a></td>
+            <td class="nm"><a href="../measures/LR.html">Linearised randomized complexity</a>
+                <div class="idtag">LR</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot maybe"
+                      title="The composition statement is proved for partial functions; the relational case is not standard."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">The largest measure satisfying an inner composition theorem R(f o g) = Omega(R(f) LR(g)).</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/noisyR.html">\(\mathrm{noisyR}(f)\)</a></td>
+            <td class="nm"><a href="../measures/noisyR.html">Noisy randomized query complexity</a>
+                <div class="idtag">noisyR</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="Buying biased copies and then having to name *some* valid output is a perfectly ordinary search problem; Lemma 37 of [BenDavidBlais20composition] is stated for relations, and the relational case is where the model comes apart from $\mathrm{R}$ for good -- see [[AgreeString]]."></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">Randomized complexity when the algorithm may buy a biased (noisy) copy of any bit at cost proportional to bias squared.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/noisyRna.html">\(\mathrm{noisyR}^{\mathrm{na}}(f)\)</a></td>
+            <td class="nm"><a href="../measures/noisyRna.html">Non-adaptive noisy randomized query complexity</a>
+                <div class="idtag">noisyRna</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">The bias-purchasing model with the whole schedule of biases committed to in advance.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Corr.html">\(\mathrm{Corr}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Corr.html">Correlated samples complexity</a>
+                <div class="idtag">Corr</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="$D_0$ and $D_1$ are supported inside the promise."></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="The definition splits the distribution by the *value* of $f$ into two sides; with many valid outputs there is no such split, and $f^k$ has no &#34;all copies agree&#34; event."></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Distributional complexity when the algorithm may query as many independent samples from the same side as it likes.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Sel.html">\(\mathrm{Sel}_{\varepsilon}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Sel.html">Selection complexity</a>
+                <div class="idtag">Sel</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="Inherits the obstruction of [[Corr]]: the hardest-distribution definition is set up around a Boolean output."></span>
+              </td>
+            <td class="params">
+<span class="ptag">\(\varepsilon\)</span>            </td>
+            <td class="short">Cost of solving <em>any one</em> of k independent instances, with k chosen by the algorithm and the instances drawn from the hardest distribution.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../measures/Rstar.html">\(\mathrm{R}^{*}(f)\)</a></td>
+            <td class="nm"><a href="../measures/Rstar.html">Asymptotic composition rate</a>
+                <div class="idtag">Rstar</div></td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot yes"
+                      title="yes"></span>
+              </td>
+              <td class="c">
+                <span class="dot no"
+                      title="no"></span>
+              </td>
+            <td class="params">
+            </td>
+            <td class="short">lim_k R(f^{o k})^{1/k}: the per-level cost of composing f with itself many times.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

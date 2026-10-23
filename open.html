@@ -1,0 +1,1104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open problems &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="index.html"
+         class="">Overview</a>
+      <a href="matrix.html"
+         class="">Matrix</a>
+      <a href="measures/index.html"
+         class="">Measures</a>
+      <a href="relations.html"
+         class="">Relations</a>
+      <a href="pair.html"
+         class="">Pairs</a>
+      <a href="functions/index.html"
+         class="">Functions</a>
+      <a href="concepts/index.html"
+         class="">Concepts</a>
+      <a href="open.html"
+         class="on">Open</a>
+      <a href="refs.html"
+         class="">References</a>
+      <a href="editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <h1 class="pagetitle">Open problems</h1>
+  <p class="lede">The gaps that people actually care about, with the best known bounds on each
+  side. If you close one, please edit <code>data/open_problems.yaml</code>.</p>
+
+  <nav class="jump">
+<a href="#open-D-vs-R">D-vs-R</a><a href="#open-D-vs-bs">D-vs-bs</a><a href="#open-bs-vs-s">bs-vs-s</a><a href="#open-D-vs-s">D-vs-s</a><a href="#open-D-vs-deg">D-vs-deg</a><a href="#open-D-vs-QE">D-vs-QE</a><a href="#open-QE-vs-deg">QE-vs-deg</a><a href="#open-R-vs-Q">R-vs-Q</a><a href="#open-Advpm-vs-Adv">Advpm-vs-Adv</a><a href="#open-rdeg">rdeg</a><a href="#open-RS-vs-R">RS-vs-R</a><a href="#open-Dprod-vs-R">Dprod-vs-R</a><a href="#open-chi-vs-C">chi-vs-C</a><a href="#open-adeg-composition">adeg-composition</a><a href="#open-aaronson-ambainis">aaronson-ambainis</a><a href="#open-log-rank">log-rank</a><a href="#open-R-composition">R-composition</a><a href="#open-composition-log">composition-log</a><a href="#open-noisyR-vs-R">noisyR-vs-R</a><a href="#open-Rstar">Rstar</a><a href="#open-fbs-vs-bs">fbs-vs-bs</a><a href="#open-R0-vs-fbs">R0-vs-fbs</a><a href="#open-direct-sum">direct-sum</a><a href="#open-QS-vs-Q">QS-vs-Q</a>  </nav>
+
+  <section class="card openp" id="open-D-vs-R">
+    <h2>Is $\mathrm{D}(f) = \widetilde O(\mathrm{R}(f)^2)$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-D-vs-R">#</a></h2>
+<p class="statusline">Gap between exponents 2 and 3. Both neighbouring error models are settled at 2.</p>    <div class="prose"><p>How much can randomness save a decision tree on a <em>total</em> function? Nisan's
+simulation gives $\mathrm{D}(f)\le 27\,\mathrm{R}(f)^3$; the pointer
+functions give a family with $\mathrm{D}=\widetilde\Omega(\mathrm{R}^2)$.
+Nobody has closed either end since.</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f) \le 27\,\mathrm{R}(f)^3\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Nisan91" class="xref ref ">Nisan91</a> <a href="refs.html#BdW02" class="xref ref ">BdW02</a></span>        </div>
+<div class="note">Through the combinatorial core: $\mathrm{D}\le\mathrm{C}^1\mathrm{bs}\le\mathrm{bs}^3$
+and $\mathrm{bs}\le 3\mathrm{R}$. Every factor of the cube is a step nobody
+knows how to skip.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) = \widetilde\Omega\big(\mathrm{R}(f_n)^2\big)\)</span></div>
+        <div class="meta">
+<span class="wit">witness: <a href="functions/pointer.html" class="xref function "><span class="tex">\(g_{\mathrm{ABBLSS}}\)</span></a></span><span class="refs"><a href="refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></span>        </div>
+<div class="note">The best separation, and it costs polylogs. Before the pointer functions the record was the $\mathrm{D}=\Theta(\mathrm{R}_0^{1.33})$ of <a href="functions/NANDtree.html" class="xref function "><span class="tex">\(\bar{\wedge}\text{-tree}\)</span></a>, which Saks and Wigderson conjectured to be optimal.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f) = O(\mathrm{R}_0(f)^2) \text{ and } \mathrm{D}(f) = O(\mathrm{R}^1(f)^2)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Nisan91" class="xref ref ">Nisan91</a> <a href="refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></span>        </div>
+<div class="note">Both are tight up to polylogs, by the same pointer functions. So zero error
+and one-sided error are <em>settled</em> at exponent 2, and two-sided bounded
+error is the only one of the three left open -- which is why a quadratic
+answer is the popular guess.</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>This is the headline cell of the classical corner, and it is the bottleneck
+in several others: $\mathrm{D}$ vs $\mathrm{bs}$, $\mathrm{D}$ vs $\deg$ and
+$\mathrm{R}$ vs $\mathrm{Q}$ all run through the same cubic-vs-quadratic
+slack. It is also the cell that says what randomness is <em>worth</em> on a total
+function: quadratic would mean a coin never buys more than the square root
+of the work, which is exactly what the Las Vegas and one-sided cases
+already say.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a>, <a href="measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>, <a href="measures/R0.html" class="xref measure "><span class="tex">\(\mathrm{R}_{0}(f)\)</span></a>, <a href="measures/R1.html" class="xref measure "><span class="tex">\(\mathrm{R}^{1}(f)\)</span></a>, <a href="functions/pointer.html" class="xref function "><span class="tex">\(g_{\mathrm{ABBLSS}}\)</span></a>, <a href="functions/NANDtree.html" class="xref function "><span class="tex">\(\bar{\wedge}\text{-tree}\)</span></a>, <a href="open.html#open-D-vs-bs" class="xref open ">Is …?</a>, <a href="open.html#open-RS-vs-R" class="xref open ">Is … for total …?</a></span><span class="refs"><a href="refs.html#Nisan91" class="xref ref ">Nisan91</a> <a href="refs.html#BdW02" class="xref ref ">BdW02</a> <a href="refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a> <a href="refs.html#SaksWigderson86" class="xref ref ">SaksWigderson86</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-D-vs-bs">
+    <h2>Is $\mathrm{D}(f) = O(\mathrm{bs}(f)^2)$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-D-vs-bs">#</a></h2>
+<p class="statusline">Gap between exponents 2 and 3.</p>    <div class="prose"><p>Block sensitivity is one of the two workhorse lower bounds on
+$\mathrm{D}$. We know $\mathrm{D}(f)\le\mathrm{s}(f)\mathrm{bs}(f)^2\le\mathrm{bs}(f)^3$
+[<a href="refs.html#BdW02" class="xref ref ">BdW02</a>, Cor. 1] and that $\mathrm{D}(f)$ can be $\Omega(\mathrm{bs}(f)^2)$.
+Which is the truth?</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f) \le \mathrm{C}^1(f)\,\mathrm{bs}(f) \le \mathrm{s}(f)\mathrm{bs}(f)^2 \le \mathrm{bs}(f)^3\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Nisan91" class="xref ref ">Nisan91</a> <a href="refs.html#BdW02" class="xref ref ">BdW02</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) = \Omega(\mathrm{bs}(f_n)^2)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Rubinstein95" class="xref ref ">Rubinstein95</a> <a href="refs.html#BdW02" class="xref ref ">BdW02</a></span>        </div>
+<div class="note">Open problem 2 of [<a href="refs.html#BdW02" class="xref ref ">BdW02</a>]; still open.</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>$\mathrm{bs}$ sits between $\mathrm{s}$ and $\mathrm{C}$, so this is the
+cleanest remaining question in the classical combinatorial core.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a>, <a href="measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a>, <a href="measures/s.html" class="xref measure "><span class="tex">\(\mathrm{s}(f)\)</span></a>, <a href="measures/C.html" class="xref measure "><span class="tex">\(\mathrm{C}(f)\)</span></a>, <a href="concepts/sensitivity-conjecture.html" class="xref concept ">The sensitivity conjecture (now Huang&#x27;s theorem)</a></span><span class="refs"><a href="refs.html#BdW02" class="xref ref ">BdW02</a> <a href="refs.html#Nisan91" class="xref ref ">Nisan91</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-bs-vs-s">
+    <h2>What is the optimal exponent of $\mathrm{bs}$ versus $\mathrm{s}$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-bs-vs-s">#</a></h2>
+<p class="statusline">Quadratic conjecture refuted; exponent gap [2.1308255793978239…, 4] (source checked October 22, 2026).</p>    <div class="prose"><p>The proposed quadratic upper bound is false. [<a href="refs.html#OpenAISensitivity26" class="xref ref ">OpenAISensitivity26</a>] first constructed total functions with a fixed exponent strictly larger than two. The accepted public theorem [<a href="refs.html#Prove2MeSensitivity26" class="xref ref ">Prove2MeSensitivity26</a>] gives, for every $\varepsilon&gt;0$ and arbitrarily large sensitivity,
+$$\mathrm{bs}(f)\ge\mathrm{s}(f)^{\alpha-\varepsilon},\qquad \alpha=\frac{\log(14055^8)}{\log(3738277295413674)}=2.1308255793978239\ldots.$$
+The universal upper bound remains $\mathrm{bs}\le2\deg^2\le2\mathrm{s}^4$. What is the optimal exponent in this interval?</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{bs}(f) \le 2\deg(f)^2 \le 2\,\mathrm{s}(f)^4\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#NS94" class="xref ref ">NS94</a> <a href="refs.html#Huang19" class="xref ref ">Huang19</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\forall\varepsilon&gt;0,\ S\ge2,\ \exists f:\ \mathrm{s}(f)\ge S,\ \mathrm{bs}(f)\ge\mathrm{s}(f)^{\alpha-\varepsilon}\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Prove2MeSensitivity26" class="xref ref ">Prove2MeSensitivity26</a></span>        </div>
+<div class="note">$\alpha=\log(14055^8)/\log(3738277295413674)$. The public theorem is marked Proved. No assertion of a loss-free endpoint or a matching upper bound.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\exists\alpha&gt;2,\ (F_m):\ \mathrm{bs}(F_m,0)\ge\mathrm{s}(F_m)^\alpha,\quad \mathrm{bs}(F_m,0)\to\infty\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#OpenAISensitivity26" class="xref ref ">OpenAISensitivity26</a></span>        </div>
+<div class="note">Corollary 4.3 amplifies a fixed nested-tournament seed.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{bs}(f) \ge \tfrac23 \mathrm{s}(f)^2 - \tfrac13\mathrm{s}(f)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#AmbainisSun11" class="xref ref ">AmbainisSun11</a></span>        </div>
+<div class="note">Improving Rubinstein's $\mathrm{s}^2/2$.</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>Huang settled polynomial boundedness, and the 2026 constructions rule out its quadratic strengthening. Improving either endpoint remains open. Since $\mathrm{bs}\le\mathrm{fbs}=\Theta(\mathrm{RC})$ and $\lambda\le\mathrm{s}$, the same family improves the lower exponents for fractional block sensitivity and randomized certificates versus sensitivity, and block sensitivity versus spectral sensitivity. The larger existing cubic separations of $\mathrm{D}$ and $\mathrm{C}$ from sensitivity are not improved by this implication.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a>, <a href="measures/s.html" class="xref measure "><span class="tex">\(\mathrm{s}(f)\)</span></a>, <a href="measures/deg.html" class="xref measure "><span class="tex">\(\deg(f)\)</span></a>, <a href="concepts/sensitivity-conjecture.html" class="xref concept ">The sensitivity conjecture (now Huang&#x27;s theorem)</a>, <a href="functions/Rubinstein.html" class="xref function "><span class="tex">\(f_{\mathrm{Rub}}\)</span></a>, <a href="functions/OpenAINestedTournament.html" class="xref function ">OpenAI’s nested tournament sensitivity separator</a>, <a href="functions/Prove2MeTournament.html" class="xref function ">Prove2Me’s refined tournament sensitivity family</a>, <a href="measures/fbs.html" class="xref measure "><span class="tex">\(\mathrm{fbs}(f)\)</span></a>, <a href="measures/RC.html" class="xref measure "><span class="tex">\(\mathrm{RC}(f)\)</span></a>, <a href="measures/lambda.html" class="xref measure "><span class="tex">\(\lambda(f)\)</span></a></span><span class="refs"><a href="refs.html#Huang19" class="xref ref ">Huang19</a> <a href="refs.html#AmbainisSun11" class="xref ref ">AmbainisSun11</a> <a href="refs.html#Rubinstein95" class="xref ref ">Rubinstein95</a> <a href="refs.html#KenyonKutin04" class="xref ref ">KenyonKutin04</a> <a href="refs.html#OpenAISensitivity26" class="xref ref ">OpenAISensitivity26</a> <a href="refs.html#Prove2MeSensitivity26" class="xref ref ">Prove2MeSensitivity26</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-D-vs-s">
+    <h2>What is the exponent of $\mathrm{D}$ versus $\mathrm{s}$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-D-vs-s">#</a></h2>
+<p class="statusline">Gap between exponents 3 and 6 -- the widest gap left in the total-function matrix.</p>    <div class="prose"><p>Huang's theorem is what makes this cell finite at all: $\deg\le\mathrm{s}^2$,
+and Midrijanis' $\mathrm{D}\le\mathrm{bs}\cdot\deg\le2\deg^3$ then gives
+$\mathrm{D}(f)\le 2\,\mathrm{s}(f)^6$. The widest separation anyone has
+built is cubic. Nothing is known to rule out either end.</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f) \le \mathrm{bs}(f)\deg(f) \le 2\deg(f)^3 \le 2\,\mathrm{s}(f)^6\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Midrijanis04" class="xref ref ">Midrijanis04</a> <a href="refs.html#NS94" class="xref ref ">NS94</a> <a href="refs.html#Huang19" class="xref ref ">Huang19</a></span>        </div>
+<div class="note">Two steps, and the second one is tight: $\deg\le\mathrm{s}^2$ is matched by
+<a href="functions/ANDOR.html" class="xref function "><span class="tex">\(\mathrm{AND}_n \circ \mathrm{OR}_n\)</span></a>, which has $\deg = n^2$ against $\mathrm{s}=n$. So this route cannot
+do better than the square of whatever the truth is for $\mathrm{D}$ versus
+$\deg$, and the cell is that open problem wearing a different hat.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) = \widetilde\Omega\big(\mathrm{s}(f_n)^3\big)\)</span></div>
+        <div class="meta">
+<span class="wit">witness: <a href="functions/BHTfn.html" class="xref function "><span class="tex">\(f_{\mathrm{BHT}}\)</span></a></span><span class="refs"><a href="refs.html#BHT17" class="xref ref ">BHT17</a></span>        </div>
+<div class="note">Desensitize a function with cheap <em>unambiguous</em> certificates -- triple every
+bit and accept only $ppp$ for $p$ a $1$-certificate, which drives $\mathrm{s}_0$
+down to $1$ without moving anything else -- then compose on the outside with a
+function whose certificates are almost all ones. Sensitivity stays $\widetilde O(n)$
+while $\mathrm{Q}$, and so $\mathrm{D}$, multiplies up to $\widetilde\Omega(n^3)$.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f) = O(\deg(f)^2)\ \Longrightarrow\ \mathrm{D}(f) = O(\mathrm{s}(f)^4)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#CPS23" class="xref ref ">CPS23</a></span>        </div>
+<div class="note">Which is why $4$, not $3$, is the natural guess for the answer -- though no function is known that reaches it.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(P) = O(\mathrm{s}(P)^2) \text{ for every graph property } P\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Turan84" class="xref ref ">Turan84</a> <a href="refs.html#CPS23" class="xref ref ">CPS23</a></span>        </div>
+<div class="note">Turán''s $\mathrm{s}(P) = \Omega(n)$ for non-trivial graph properties, against the
+trivial $\mathrm{D}(P)\le\binom n2$. [<a href="refs.html#CPS23" class="xref ref ">CPS23</a>] prove the matching $\mathrm{D}(P)=O(\deg(P)^2)$
+and get quadratic bounds for two further classes: functions with a constant number
+of alternations, and &quot;zebra&quot; functions, where every monotone path from $0^n$ to $1^n$
+alternates equally often (this contains the symmetric and the monotone functions).</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>This is the cell every other row inherits: a bound in terms of $\mathrm{s}$
+is almost always routed through $\deg$ or $\mathrm{bs}$, so the sixth power
+reappears all over the $\mathrm{s}$ column. It is also the one place where
+Huang's theorem is load-bearing -- before 2019 no polynomial bound existed
+here at all.</p>
+<p>A useful contrast is <a href="measures/lambda.html" class="xref measure "><span class="tex">\(\lambda(f)\)</span></a>, the spectral sensitivity that Huang's proof
+actually bounds. It obeys the same sixth-power ceiling, but its separation is
+<em>quartic</em>, from the pointer functions: they have $\lambda=\widetilde O(n^{1/4})$
+against $\mathrm{D}=\widetilde\Omega(n)$, while their sensitivity is
+$\widetilde O(\sqrt n)$ and so gives only a quadratic gap. Sensitivity is the
+harder measure to hold down, and <a href="functions/BHTfn.html" class="xref function "><span class="tex">\(f_{\mathrm{BHT}}\)</span></a> is the only construction that does.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a>, <a href="measures/s.html" class="xref measure "><span class="tex">\(\mathrm{s}(f)\)</span></a>, <a href="measures/deg.html" class="xref measure "><span class="tex">\(\deg(f)\)</span></a>, <a href="measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a>, <a href="measures/lambda.html" class="xref measure "><span class="tex">\(\lambda(f)\)</span></a>, <a href="functions/BHTfn.html" class="xref function "><span class="tex">\(f_{\mathrm{BHT}}\)</span></a>, <a href="functions/ANDOR.html" class="xref function "><span class="tex">\(\mathrm{AND}_n \circ \mathrm{OR}_n\)</span></a>, <a href="concepts/sensitivity-conjecture.html" class="xref concept ">The sensitivity conjecture (now Huang&#x27;s theorem)</a>, <a href="open.html#open-D-vs-deg" class="xref open ">Is …?</a>, <a href="open.html#open-bs-vs-s" class="xref open ">What is the optimal exponent of … versus …?</a></span><span class="refs"><a href="refs.html#Huang19" class="xref ref ">Huang19</a> <a href="refs.html#Midrijanis04" class="xref ref ">Midrijanis04</a> <a href="refs.html#NS94" class="xref ref ">NS94</a> <a href="refs.html#BHT17" class="xref ref ">BHT17</a> <a href="refs.html#CPS23" class="xref ref ">CPS23</a> <a href="refs.html#Turan84" class="xref ref ">Turan84</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-D-vs-deg">
+    <h2>Is $\mathrm{D}(f) = O(\deg(f)^2)$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-D-vs-deg">#</a></h2>
+<p class="statusline">Gap between exponents 2 and 3.</p>    <div class="prose"><p>Exact polynomial degree lower-bounds everything. Nisan-Smolensky gave
+$\mathrm{D}\le 2\deg^4$, improved by Midrijanis to $\mathrm{D}=O(\deg^3)$.
+The best separation is quadratic.</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f) \le \mathrm{bs}(f)\deg(f) = O(\deg(f)^3)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Midrijanis04" class="xref ref ">Midrijanis04</a></span>        </div>
+<div class="note">Midrijanis' inequality $\mathrm{D}\le\mathrm{bs}\cdot\deg$ combined with $\mathrm{bs}\le2\deg^2$.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f) \le \deg(f)^2\,\mathrm{bs}(f) \le 2\deg(f)^4\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#NisanSmolensky" class="xref ref ">NisanSmolensky</a> <a href="refs.html#BdW02" class="xref ref ">BdW02</a></span>        </div>
+<div class="note">The earlier bound.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) = \tilde\Omega(\deg(f_n)^2)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#GPW18" class="xref ref ">GPW18</a></span>        </div>
+<div class="note">The $\mathrm{D}$-vs-$\deg$ cell of the matrix; see that cell for the construction.</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>A positive answer would say the polynomial method loses at most a square.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a>, <a href="measures/deg.html" class="xref measure "><span class="tex">\(\deg(f)\)</span></a>, <a href="measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a>, <a href="measures/adeg.html" class="xref measure "><span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span></a></span><span class="refs"><a href="refs.html#Midrijanis04" class="xref ref ">Midrijanis04</a> <a href="refs.html#NisanSmolensky" class="xref ref ">NisanSmolensky</a> <a href="refs.html#BdW02" class="xref ref ">BdW02</a> <a href="refs.html#NS94" class="xref ref ">NS94</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-D-vs-QE">
+    <h2>Is $\mathrm{D}(f) = O(\mathrm{Q}_E(f)^2)$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-D-vs-QE">#</a></h2>
+<p class="statusline">Gap between exponents 2 and 3.</p>    <div class="prose"><p>An exact quantum algorithm has to be right on every input, which is a strong
+enough demand that no total function is known to gain more than a square by
+it. Midrijanis' simulation gives $\mathrm{D}(f)=O(\mathrm{Q}_E(f)^3)$; the
+pointer functions give a family with $\mathrm{D}=\widetilde\Omega(\mathrm{Q}_E^2)$.</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f) \le 2\deg(f)^3 \le 16\,\mathrm{Q}_E(f)^3\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Midrijanis04" class="xref ref ">Midrijanis04</a> <a href="refs.html#BBCMdW01" class="xref ref ">BBCMdW01</a></span>        </div>
+<div class="note">Through the degree, using $\deg\le2\mathrm{Q}_E$: an exact algorithm making
+$T$ queries writes the acceptance probability as a polynomial of degree
+$2T$, and for an exact algorithm that polynomial <em>is</em> $f$. Midrijanis states
+the cubic bound in this form; it superseded the $\mathrm{D}=O(\mathrm{Q}_E^4)$
+of [<a href="refs.html#BBCMdW01" class="xref ref ">BBCMdW01</a>].</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) = \widetilde\Omega\big(\mathrm{Q}_E(f_n)^2\big)\)</span></div>
+        <div class="meta">
+<span class="wit">witness: <a href="functions/pointer.html" class="xref function "><span class="tex">\(g_{\mathrm{ABBLSS}}\)</span></a></span><span class="refs"><a href="refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></span>        </div>
+<div class="note">The same family that gives the quadratic $\mathrm{D}$-vs-$\mathrm{R}_0$ separation: $\mathrm{D}=\widetilde\Omega(n)$ against $\mathrm{Q}_E=\widetilde O(\sqrt n)$, so exactness costs the pointer-chasing algorithm nothing.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{Q}_E(f) = O(\mathrm{D}(f)^{0.8675})\)</span></div>
+        <div class="meta">
+<span class="wit">witness: <a href="functions/Ambainis13fn.html" class="xref function "><span class="tex">\(\mathrm{NE}^d\)</span></a></span><span class="refs"><a href="refs.html#Ambainis13" class="xref ref ">Ambainis13</a></span>        </div>
+<div class="note">Exponent $1.15$, and historically the hard part: the first proof that an exact quantum algorithm can beat a deterministic one by more than a constant at all.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f) = O(\deg(f)^2)\ \Longrightarrow\ \mathrm{D}(f) = O(\mathrm{Q}_E(f)^2)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#CPS23" class="xref ref ">CPS23</a></span>        </div>
+<div class="note">And that would be tight, by the pointer functions. So this cell closes the moment $\mathrm{D}$ versus $\deg$ does.</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>$\mathrm{Q}_E$ sits between $\deg$ and $\mathrm{D}$, and this cell is pinned
+on both sides by open problems: $\deg\le2\mathrm{Q}_E\le2\mathrm{D}$, with
+<a href="open.html#open-QE-vs-deg" class="xref open ">Is …?</a> asking whether the left inequality is tight and
+<a href="open.html#open-D-vs-deg" class="xref open ">Is …?</a> asking about the right. If $\mathrm{Q}_E=\Theta(\deg)$ then
+this <em>is</em> the $\mathrm{D}$-vs-$\deg$ cell, and the two would close together;
+both currently stand at $[2,3]$.</p>
+<p>Where there is no room at all: for symmetric $f$, $\mathrm{Q}_E(f)=\Theta(n)$
+[<a href="refs.html#BdW02" class="xref ref ">BdW02</a>, Thm 21], so exactness costs the whole speedup.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a>, <a href="measures/QE.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span></a>, <a href="measures/deg.html" class="xref measure "><span class="tex">\(\deg(f)\)</span></a>, <a href="measures/Q0.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{0}(f)\)</span></a>, <a href="functions/pointer.html" class="xref function "><span class="tex">\(g_{\mathrm{ABBLSS}}\)</span></a>, <a href="functions/Ambainis13fn.html" class="xref function "><span class="tex">\(\mathrm{NE}^d\)</span></a>, <a href="open.html#open-QE-vs-deg" class="xref open ">Is …?</a>, <a href="open.html#open-D-vs-deg" class="xref open ">Is …?</a></span><span class="refs"><a href="refs.html#Midrijanis04" class="xref ref ">Midrijanis04</a> <a href="refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a> <a href="refs.html#Ambainis13" class="xref ref ">Ambainis13</a> <a href="refs.html#BBCMdW01" class="xref ref ">BBCMdW01</a> <a href="refs.html#BdW02" class="xref ref ">BdW02</a> <a href="refs.html#CPS23" class="xref ref ">CPS23</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-QE-vs-deg">
+    <h2>Is $\mathrm{Q}_E(f) = O(\deg(f))$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-QE-vs-deg">#</a></h2>
+<p class="statusline">Open. Open problem 4 of [<a href="refs.html#BdW02" class="xref ref ">BdW02</a>].</p>    <div class="prose"><p>We know $\deg(f)\le 2\mathrm{Q}_E(f)$. Is the converse true up to constants?
+Equivalently: is the polynomial method <em>tight</em> for exact quantum algorithms?</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\deg(f) \le 2\,\mathrm{Q}_E(f)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#BBCMdW01" class="xref ref ">BBCMdW01</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{Q}_E(f) \le \mathrm{D}(f) = O(\deg(f)^3)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Midrijanis04" class="xref ref ">Midrijanis04</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{Q}_E(f) = O(\mathrm{D}(f)^{0.8675})\)</span></div>
+        <div class="meta">
+<span class="wit">witness: <a href="functions/Ambainis13fn.html" class="xref function "><span class="tex">\(\mathrm{NE}^d\)</span></a></span><span class="refs"><a href="refs.html#Ambainis13" class="xref ref ">Ambainis13</a></span>        </div>
+<div class="note">The first superlinear exact-quantum advantage for a total function; shows $\mathrm{Q}_E$ is not simply $\Theta(\mathrm{D})$.</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>For symmetric $f$, $\mathrm{Q}_E(f)=\Theta(n)$ [<a href="refs.html#BdW02" class="xref ref ">BdW02</a>, Thm 21], so no
+speedup at all -- the question is entirely about asymmetric functions.
+The companion question &quot;is $\mathrm{Q}(f)=O(\widetilde{\deg}(f))$?&quot; is
+<strong>false</strong> for partial functions [<a href="refs.html#AmbainisBelovs23" class="xref ref ">AmbainisBelovs23</a>] and open for total ones.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/QE.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span></a>, <a href="measures/deg.html" class="xref measure "><span class="tex">\(\deg(f)\)</span></a>, <a href="measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>, <a href="measures/adeg.html" class="xref measure "><span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span></a>, <a href="functions/Ambainis13fn.html" class="xref function "><span class="tex">\(\mathrm{NE}^d\)</span></a></span><span class="refs"><a href="refs.html#BdW02" class="xref ref ">BdW02</a> <a href="refs.html#BBCMdW01" class="xref ref ">BBCMdW01</a> <a href="refs.html#Ambainis13" class="xref ref ">Ambainis13</a> <a href="refs.html#Midrijanis04" class="xref ref ">Midrijanis04</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-R-vs-Q">
+    <h2>Is the maximum quantum speedup for total functions cubic or quartic?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-R-vs-Q">#</a></h2>
+<p class="statusline">Gap between exponents 3 and 4.</p>    <div class="prose"><p>$\mathrm{R}(f)\le\mathrm{D}(f)=O(\mathrm{Q}(f)^4)$ [<a href="refs.html#ABKRT21" class="xref ref ">ABKRT21</a>], and there are
+total functions with $\mathrm{R}(f)=\tilde\Omega(\mathrm{Q}(f)^3)$.
+Which exponent is right?</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{R}(f) = O(\mathrm{Q}(f)^4)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#ABKRT21" class="xref ref ">ABKRT21</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{R}(f_n) = \tilde\Omega(\mathrm{Q}(f_n)^3)\)</span></div>
+        <div class="meta">
+<span class="wit">witness: <a href="functions/kForrelation.html" class="xref function "><span class="tex">\(\mathrm{forr}_k\)</span></a></span><span class="refs"><a href="refs.html#BansalSinha21" class="xref ref ">BansalSinha21</a> <a href="refs.html#SSW21" class="xref ref ">SSW21</a> <a href="refs.html#ABK16" class="xref ref ">ABK16</a></span>        </div>
+<div class="note">Via $k$-Forrelation plus a cheat sheet.</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>The single most-quoted number in query complexity. Note the
+$\mathrm{D}$-vs-$\mathrm{Q}$ version <em>is</em> settled at $4$ [ABBLSS17,
+ABKRT21]; the open part is specifically about bounded-error randomized.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>, <a href="measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>, <a href="measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a>, <a href="functions/kForrelation.html" class="xref function "><span class="tex">\(\mathrm{forr}_k\)</span></a>, <a href="functions/cheatsheet.html" class="xref function "><span class="tex">\(f_{\mathrm{CS}}\)</span></a>, <a href="concepts/cheat-sheets.html" class="xref concept ">Cheat sheets: turning partial separations into total ones</a></span><span class="refs"><a href="refs.html#ABKRT21" class="xref ref ">ABKRT21</a> <a href="refs.html#BansalSinha21" class="xref ref ">BansalSinha21</a> <a href="refs.html#SSW21" class="xref ref ">SSW21</a> <a href="refs.html#ABK16" class="xref ref ">ABK16</a> <a href="refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-Advpm-vs-Adv">
+    <h2>How much do negative weights buy the adversary?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-Advpm-vs-Adv">#</a></h2>
+<p class="statusline">Gap between exponents 2 and 6 on total functions. On partial functions the ratio is already known to be unbounded.</p>    <div class="prose"><p>The positive adversary is the general one with its weights restricted to be
+non-negative, so $\mathrm{Adv}\le\mathrm{Adv}^{\pm}$ for free, and
+$\mathrm{Adv}^{\pm}=\Theta(\mathrm{Q})$ [<a href="refs.html#Reichardt11" class="xref ref ">Reichardt11</a>]. The question is how far
+below the quantum query complexity the positive version can fall on a
+<em>total</em> function -- how much is lost by insisting on an adversary matrix
+that is entrywise non-negative.</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{Adv}^{\pm}(f) = \Theta(\mathrm{Q}(f)) \le \mathrm{D}(f) \le \mathrm{bs}(f)^3 \le \mathrm{Adv}(f)^6\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Reichardt11" class="xref ref ">Reichardt11</a> <a href="refs.html#Nisan91" class="xref ref ">Nisan91</a> <a href="refs.html#Ambainis02" class="xref ref ">Ambainis02</a></span>        </div>
+<div class="note">Nothing here is about adversaries except the two ends: the middle is the
+ordinary classical chain, entered through $\mathrm{bs}\le\mathrm{Adv}^2$
+[<a href="refs.html#Ambainis02" class="xref ref ">Ambainis02</a>]. Every improvement to $\mathrm{D}$ versus $\mathrm{bs}$ lands
+here doubled.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{Adv}^{\pm}(f_n) = \widetilde\Omega\big(\mathrm{Adv}(f_n)^2\big)\)</span></div>
+        <div class="meta">
+<span class="wit">witness: <a href="functions/cheatsheet.html" class="xref function "><span class="tex">\(f_{\mathrm{CS}}\)</span></a></span><span class="refs"><a href="refs.html#ABK16" class="xref ref ">ABK16</a> <a href="refs.html#SpalekSzegedy06" class="xref ref ">SpalekSzegedy06</a> <a href="refs.html#Zhang05" class="xref ref ">Zhang05</a></span>        </div>
+<div class="note">The <strong>certificate complexity barrier</strong>, $\mathrm{Adv}\le\sqrt{\mathrm{C}^0\mathrm{C}^1}$,
+applied to a function built to have cheap certificates and expensive quantum
+complexity: $\mathrm{Q}=\widetilde\Theta(n)$ against $\mathrm{C}=\widetilde O(\sqrt n)$,
+so $\mathrm{Adv}=\widetilde O(\sqrt n)$ whatever the truth about it is.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{Adv}^{\pm}(g^{\circ d}) \ge \mathrm{Adv}(g^{\circ d})^{1.098}\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#HLS07" class="xref ref ">HLS07</a></span>        </div>
+<div class="note">Smaller, but the only separation proved <em>between the two bounds themselves</em>
+rather than through $\mathrm{Q}$. Take the monotone $g$ on six bits whose
+minterms and maxterms are the Hamming-weight-three inputs of a function of
+Kushilevitz''s, so $\mathrm{C}^0(g)=\mathrm{C}^1(g)=3$; a numerically found
+negative-weight matrix gives $\mathrm{Adv}^{\pm}(g)\ge 2+3\sqrt5/5\approx3.341$,
+both bounds compose, and the barrier caps $\mathrm{Adv}(g^{\circ d})$ at $3^d$.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\sqrt{\mathrm{fbs}(f)} \le \mathrm{Adv}(f) \le \sqrt{\mathrm{FC}^0(f)\,\mathrm{FC}^1(f)} \le \mathrm{fbs}(f)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Ambainis02" class="xref ref ">Ambainis02</a> <a href="refs.html#KulkarniTal16" class="xref ref ">KulkarniTal16</a></span>        </div>
+<div class="note">The positive adversary is pinned within a square of fractional block
+sensitivity, so this cell is a proxy for $\mathrm{Q}$ versus $\mathrm{fbs}$:
+there $\mathrm{Q}=\widetilde\Omega(\mathrm{fbs}^2)$ is known (same witness) and
+$\mathrm{Q}=\widetilde O(\mathrm{fbs}^2)$ would follow from
+$\mathrm{D}=O(\mathrm{bs}^2)$ [<a href="refs.html#CPS23" class="xref ref ">CPS23</a>], which would bring the ceiling here down
+from $6$ to $4$.</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>$\mathrm{Adv}^{\pm}$ characterises quantum query complexity exactly, which
+makes it useless as an <em>explanation</em>: knowing $\mathrm{Q}=\Theta(\mathrm{Adv}^{\pm})$
+tells you nothing you did not already have to prove. $\mathrm{Adv}$ is the
+version one can actually reason about, a weighting of input pairs with a
+combinatorial feel, and the price of that is a barrier: it never exceeds
+$\sqrt{\mathrm{C}^0\mathrm{C}^1}$, or even $\sqrt{\mathrm{FC}^0\mathrm{FC}^1}$
+[<a href="refs.html#KulkarniTal16" class="xref ref ">KulkarniTal16</a>]. This cell measures what the barrier costs.</p>
+<p>The concrete thing that would move it: nobody has pinned $\mathrm{Adv}$ on the
+cheat-sheet function. It lies between $\widetilde\Omega(n^{1/4})$, from
+$\mathrm{fbs}\le\mathrm{Adv}^2$, and $\widetilde O(\sqrt n)$, from the barrier,
+against $\mathrm{Adv}^{\pm}=\widetilde\Theta(n)$ -- so the exponent that family
+witnesses is somewhere in $[2,4]$, and which end is right is a question about
+one explicit function rather than about all of them.</p>
+<p>On <strong>partial</strong> functions the answer is as bad as it can be, and is the reason
+the negative-weight version was invented. For a promise problem whose $0$- and
+$1$-inputs are all at relative Hamming distance $\ge\epsilon$, the positive
+adversary cannot exceed $1/\epsilon$ -- the <em>property-testing barrier</em> -- so
+<a href="functions/Collision.html" class="xref function "><span class="tex">\(\mathrm{COL}_n\)</span></a>, where $\epsilon=1/2$, has $\mathrm{Adv}=O(1)$ against
+$\mathrm{Q}=\Theta(n^{1/3})$.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/Advpm.html" class="xref measure "><span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span></a>, <a href="measures/Adv.html" class="xref measure "><span class="tex">\(\mathrm{Adv}(f)\)</span></a>, <a href="measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>, <a href="measures/fbs.html" class="xref measure "><span class="tex">\(\mathrm{fbs}(f)\)</span></a>, <a href="measures/MAdv.html" class="xref measure "><span class="tex">\(\mathrm{MAdv}(f)\)</span></a>, <a href="measures/gamma2.html" class="xref measure "><span class="tex">\(\gamma_2^{\alpha}(f)\)</span></a>, <a href="functions/cheatsheet.html" class="xref function "><span class="tex">\(f_{\mathrm{CS}}\)</span></a>, <a href="functions/Collision.html" class="xref function "><span class="tex">\(\mathrm{COL}_n\)</span></a>, <a href="concepts/adversary-methods.html" class="xref concept ">The adversary methods</a>, <a href="open.html#open-D-vs-bs" class="xref open ">Is …?</a></span><span class="refs"><a href="refs.html#Reichardt11" class="xref ref ">Reichardt11</a> <a href="refs.html#HLS07" class="xref ref ">HLS07</a> <a href="refs.html#ABK16" class="xref ref ">ABK16</a> <a href="refs.html#SpalekSzegedy06" class="xref ref ">SpalekSzegedy06</a> <a href="refs.html#Zhang05" class="xref ref ">Zhang05</a> <a href="refs.html#Ambainis02" class="xref ref ">Ambainis02</a> <a href="refs.html#KulkarniTal16" class="xref ref ">KulkarniTal16</a> <a href="refs.html#ABIKPS17" class="xref ref ">ABIKPS17</a> <a href="refs.html#CPS23" class="xref ref ">CPS23</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-rdeg">
+    <h2>What is the exponent of $\deg$ versus $\mathrm{rdeg}$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-rdeg">#</a></h2>
+<p class="statusline">Gap between exponents 2 and 3. The polynomial relation itself was open from 1994 until [<a href="refs.html#KKWY26" class="xref ref ">KKWY26</a>] in 2026.</p>    <div class="prose"><p>Fortnow's question -- is exact rational degree polynomially related to
+exact polynomial degree for total Boolean functions? -- was answered
+<em>yes</em> in 2026. What survives is the exponent: $\deg$ is somewhere between
+$\mathrm{rdeg}^2$ and $\widetilde{\mathrm{rdeg}}^3$, and $\mathrm{D}$
+between $\mathrm{rdeg}^2$ and $\mathrm{rdeg}^4$.</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\deg(f) = O\big(\mathrm{rdeg}(f)\deg_{\pm}(f)^2\log\mathrm{rdeg}(f)\big) = \widetilde O\big(\mathrm{rdeg}(f)^3\big)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#KKWY26" class="xref ref ">KKWY26</a></span>        </div>
+<div class="note">Corollary 4 of [<a href="refs.html#KKWY26" class="xref ref ">KKWY26</a>]: the answer to Fortnow's question, and the
+upper end of the surviving gap.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f) \le 4\deg_{\pm}(f)^2\mathrm{rdeg}(f)^2 \le 16\,\mathrm{rdeg}(f)^4\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#KKWY26" class="xref ref ">KKWY26</a></span>        </div>
+<div class="note">Theorem 4, which is what every other cell of the rdeg column now
+descends from. Its engine is <em>minimum</em> block sensitivity
+$\min_x\mathrm{bs}_x(f) \le 2\deg_{\pm}(f)^2$ -- a measure with no prior
+use in the literature, and one the zoo does not carry, since it is the
+min rather than the max over inputs.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\deg(f_n) = \Omega\big(\mathrm{rdeg}(f_n)^2\big)\)</span></div>
+        <div class="meta">
+<span class="wit">witness: <a href="functions/ANDEH.html" class="xref function "><span class="tex">\(\mathrm{AND}_n \circ \overline{\mathrm{EH}}_n\)</span></a></span><span class="refs"><a href="refs.html#IJKKKSWW23" class="xref ref ">IJKKKSWW23</a></span>        </div>
+<div class="note">The lower end. On $\wedge_n\circ\overline{\mathrm{EH}}_n$,
+$\mathrm{rdeg}=\Theta(n)$ while $\deg=\Theta(n^2)$; the same function
+gives the best separation anyone has of <em>any</em> measure from
+$\mathrm{rdeg}$, namely $\widetilde{\deg} = \Omega(\mathrm{rdeg}^{3/2})$.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{rdeg}(f) = \Omega(\deg(f)) \text{ for symmetric } f\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#IJKKKSWW23" class="xref ref ">IJKKKSWW23</a></span>        </div>
+<div class="note">Exponent $1$ on symmetric functions; the pre-2026 partial results, which are still the sharpest available on their classes.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{rdeg}(f) = \Omega(\sqrt{\deg(f)}) \text{ for unate } f \text{ and for read-once } \mathsf{AC}^0/\mathsf{TC}^0\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#IJKKKSWW23" class="xref ref ">IJKKKSWW23</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{rdeg}(f) \ge n/2 - O(\sqrt n) \text{ for almost every } f\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#IJKKKSWW23" class="xref ref ">IJKKKSWW23</a></span>        </div>
+      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>$\mathrm{rdeg}$ is the exact-error analogue of <a href="measures/ardeg.html" class="xref measure "><span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span></a>, and equals
+exact post-selected quantum query complexity [<a href="refs.html#MahadevdeWolf15" class="xref ref ">MahadevdeWolf15</a>]. A positive
+answer adds a genuine new column to the classical lattice, and gives
+$\mathsf{P} = (\mathsf{C}_{=}\mathsf{P}\cap\mathsf{co}\text{-}\mathsf{C}_{=}\mathsf{P})$
+relative to generic oracles -- which is what made Fortnow ask. The
+partial-function version fails in both directions, so this really is a
+total-function phenomenon; see <a href="functions/GapMaj.html" class="xref function "><span class="tex">\(\mathrm{GapMaj}^{\delta}_{n}\)</span></a>, where
+$\mathrm{rdeg} = \Theta(n)$ against $\mathrm{Q} = \Theta(1)$.</p>
+<p>Two cells are filed here. $\deg$ vs $\mathrm{rdeg}$ is Fortnow's own, and
+sits in $[2,3]$. $\mathrm{D}$ vs $\mathrm{rdeg}$ sits in $[2,4]$ and is
+harder to move: the trick that removes the $\log n$ from Theorem 8 for
+$\deg$ and $\mathrm{s}$ is to restrict to a maximal monomial or a maximal
+sensitive block, which shrinks the arity without raising $\mathrm{rdeg}$.
+Doing the same for $\mathrm{D}$ would need decision-tree complexity to
+condense onto $\mathrm{poly}(\mathrm{D})$ variables, which is open. And
+$\mathrm{D} = O(\deg^3)$ is still the best bound by ordinary degree, so
+$\mathrm{D} = O(\mathrm{rdeg}^3)$ would be at least as strong as
+<a href="open.html#open-D-vs-deg" class="xref open ">Is …?</a> on that route.</p>
+<p>The rest of the column -- $\mathrm{R}$, $\mathrm{C}$, $\mathrm{bs}$,
+$\mathrm{Q}$, $\mathrm{Q}_E$ and the others -- is no longer a separate
+mystery; each is an exponent gap inherited from these two.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/rdeg.html" class="xref measure "><span class="tex">\(\mathrm{rdeg}(f)\)</span></a>, <a href="measures/ardeg.html" class="xref measure "><span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span></a>, <a href="measures/deg.html" class="xref measure "><span class="tex">\(\deg(f)\)</span></a>, <a href="measures/adeg.html" class="xref measure "><span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span></a>, <a href="measures/PostQ.html" class="xref measure "><span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span></a>, <a href="measures/sdeg.html" class="xref measure "><span class="tex">\(\mathrm{sdeg}(f)\)</span></a>, <a href="functions/ANDEH.html" class="xref function "><span class="tex">\(\mathrm{AND}_n \circ \overline{\mathrm{EH}}_n\)</span></a>, <a href="open.html#open-D-vs-deg" class="xref open ">Is …?</a></span><span class="refs"><a href="refs.html#KKWY26" class="xref ref ">KKWY26</a> <a href="refs.html#IJKKKSWW23" class="xref ref ">IJKKKSWW23</a> <a href="refs.html#MahadevdeWolf15" class="xref ref ">MahadevdeWolf15</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-RS-vs-R">
+    <h2>Is $\mathrm{RS}(f) = \Theta(\mathrm{R}(f))$ for total $f$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-RS-vs-R">#</a></h2>
+<p class="statusline">Open. Quadratically tight: $\mathrm{R}(f)=O(\mathrm{RS}(f)^2\log\mathrm{RS}(f))$.</p>    <div class="prose"><p>Sabotage complexity is a lower bound on randomized query complexity that
+composes perfectly. No total function is known where it is asymptotically
+smaller.</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{RS}(f) \le \mathrm{R}(f) = O\big(\mathrm{RS}(f)^2\log \mathrm{RS}(f)\big)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{RS}(\mathrm{COL}_n) = \Theta(1) \quad\text{against}\quad \mathrm{R}(\mathrm{COL}_n) = \Theta(\sqrt n)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a></span>        </div>
+<div class="note">So the answer is emphatically <em>no</em> for partial functions, and the question is a question about totality. The obstruction is general: any promise whose two sides are far apart in Hamming distance has $\mathrm{RS} = O(1)$, because every sabotaged input is then riddled with stars [<a href="refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a>, Sec. 1.4]. The same witness puts $\bar\chi$ and $\mathrm{LR}$ unboundedly above $\mathrm{RS}$, since both are $\Omega(\sqrt{\mathrm{R}})$ even off the promise [<a href="refs.html#GLSS19" class="xref ref ">GLSS19</a>, Thm 6].</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>A positive answer immediately proves the <strong>randomized composition
+conjecture for total functions</strong>, since
+$\mathrm{R}(f\circ g)=\Omega(\mathrm{R}(f)\mathrm{RS}(g))$.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/RS.html" class="xref measure "><span class="tex">\(\mathrm{RS}(f)\)</span></a>, <a href="measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>, <a href="measures/chibar.html" class="xref measure "><span class="tex">\(\bar{\chi}(f)\)</span></a>, <a href="measures/LR.html" class="xref measure "><span class="tex">\(\mathrm{LR}(f)\)</span></a>, <a href="concepts/composition.html" class="xref concept ">Composition</a>, <a href="pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a></span><span class="refs"><a href="refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a> <a href="refs.html#GLSS19" class="xref ref ">GLSS19</a> <a href="refs.html#BBGM22" class="xref ref ">BBGM22</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-Dprod-vs-R">
+    <h2>Is $\mathrm{R}(f)$ polynomially bounded by $\mathrm{D}^{\mathrm{prod}}(f)$ for total $f$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-Dprod-vs-R">#</a></h2>
+<p class="statusline">Open, and wide open: no bound $\mathrm{R} \le g(\mathrm{D}^{\mathrm{prod}})$ is known for any function $g$ whatsoever, not merely no polynomial one. The known separation is a single small polynomial.</p>    <div class="prose"><p>Yao's minimax says $\mathrm{R}_\varepsilon(f)$ is the maximum of the distributional
+complexity $\mathrm{D}^{\mu}_\varepsilon(f)$ over <em>all</em> input distributions. Restrict the
+maximum to distributions in which the $n$ input bits are independent, and you get
+$\mathrm{D}^{\mathrm{prod}}$. How much does that restriction cost?</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f) \le \mathrm{R}(f)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Yao77" class="xref ref ">Yao77</a></span>        </div>
+<div class="note">The trivial direction, and the only one that is known.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}^{\mathrm{prod}}(g_d) = O(N^{0.69789\ldots}) \text{ while } \mathrm{R}(g_d) = \Theta(N^{0.75384\ldots})\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Sanyal24" class="xref ref ">Sanyal24</a> <a href="refs.html#Santha95" class="xref ref ">Santha95</a></span>        </div>
+<div class="note">The balanced NAND tree on $N = 2^d$ leaves, a ratio of exponents of $1.08$. This is the only polynomial separation known.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{RS}(g) = \tilde\Omega\big(\mathrm{D}^{\mathrm{prod}}(g)\big)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Sanyal24" class="xref ref ">Sanyal24</a></span>        </div>
+<div class="note">The best general handle, but it bounds $\mathrm{D}^{\mathrm{prod}}$ from above, so it is the wrong way round to close the cell -- and the NAND tree shows it is not tight.</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>The motivation is composition. $\mathrm{R}(f \circ g^n) = \tilde\Omega(\mathrm{R}(f)\,
+\mathrm{D}^{\mathrm{prod}}(g))$ [<a href="refs.html#Sanyal24" class="xref ref ">Sanyal24</a>], so a positive answer here would come close to
+the randomized composition conjecture from a direction independent of sabotage
+complexity (<a href="open.html#open-RS-vs-R" class="xref open ">Is … for total …?</a>). It is also the cleanest quantitative form of a question
+with a long history: how much of the hardness of a Boolean function lives in
+correlations between its input bits, rather than in the bits themselves?</p>
+<p>What makes the NAND tree separate is worth internalising, because it is not the usual
+&quot;product distributions are too weak&quot; hand-wave. Saks and Wigderson's classic
+$\Theta(\alpha^d)$ bound, $\alpha = (1+\sqrt{33})/4$, <em>is</em> proved against a product
+distribution -- but at zero error. Under a product distribution the two subtrees at a
+gate are independent, so an algorithm that knows $\mu$ can always recurse first on the
+child likelier to evaluate to $0$ instead of on a random one, and that greedy choice
+compounds over the depth: the recursion closes at
+$\sqrt{\tfrac{2}{27}(17+7\sqrt7)} = 1.62207\ldots$ per level rather than $\alpha =
+1.68614\ldots$. Against a correlated distribution the choice is not available. So the
+separation is powered by independence itself, which suggests that any counterexample to
+the polynomial relation will have to be deep rather than wide -- on the depth-$2$
+<a href="functions/MinskyPapert.html" class="xref function "><span class="tex">\(\mathrm{MP}_m\)</span></a> tree the same trick buys only a logarithmic factor.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/D_prod.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f)\)</span></a>, <a href="measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>, <a href="measures/RS.html" class="xref measure "><span class="tex">\(\mathrm{RS}(f)\)</span></a>, <a href="measures/Dmu.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span></a>, <a href="functions/NANDtree.html" class="xref function "><span class="tex">\(\bar{\wedge}\text{-tree}\)</span></a>, <a href="functions/MinskyPapert.html" class="xref function "><span class="tex">\(\mathrm{MP}_m\)</span></a>, <a href="open.html#open-RS-vs-R" class="xref open ">Is … for total …?</a>, <a href="concepts/composition.html" class="xref concept ">Composition</a></span><span class="refs"><a href="refs.html#Sanyal24" class="xref ref ">Sanyal24</a> <a href="refs.html#Yao77" class="xref ref ">Yao77</a> <a href="refs.html#SaksWigderson86" class="xref ref ">SaksWigderson86</a> <a href="refs.html#Santha95" class="xref ref ">Santha95</a> <a href="refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-chi-vs-C">
+    <h2>Is $\chi(f) = \Omega(\mathrm{C}(f))$, or $\chi(f) = O(\mathrm{C}(f))$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-chi-vs-C">#</a></h2>
+<p class="statusline">Open. Posed in the discussion section of [<a href="refs.html#Li18" class="xref ref ">Li18</a>], for $\chi$ and for $\bar\chi$ alike.</p>    <div class="prose"><p>Conflict complexity is pinned between the square root of certificate
+complexity and its square: $\tfrac12(\sqrt{\mathrm{C}(f)}+1) \le \chi(f) \le \mathrm{C}(f)^2$.
+Li asks which side, if either, is the truth -- and notes that the answer
+could be neither.</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\chi(f) \ge \tfrac12\big(\mathrm{bs}(f)+1\big)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Li18" class="xref ref ">Li18</a></span>        </div>
+<div class="note">Theorem 1, replacing the $\Omega(\sqrt{\mathrm{R}(f)})$ floor that came with the measure [<a href="refs.html#Sanyal18" class="xref ref ">Sanyal18</a>].</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\chi(f) \le \mathrm{D}(f)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Li18" class="xref ref ">Li18</a></span>        </div>
+<div class="note">Immediate from the definition -- the random walk stops if it reaches a last query node -- and hence $\chi \le \mathrm{C}^2$ and $\chi \le \mathrm{bs}^3$.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\chi(g) = \Omega\big(\sqrt{\mathrm{R}(g)}\big) \text{ for partial } g\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Sanyal18" class="xref ref ">Sanyal18</a> <a href="refs.html#AGJKLMSS17" class="xref ref ">AGJKLMSS17</a></span>        </div>
+      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>The two answers pull in opposite directions and both are worth having.
+$\chi = \Omega(\mathrm{C})$ would upgrade the randomized composition
+theorem to $\mathrm{R}(f\circ g^n) = \Omega(\mathrm{R}(f)\sqrt{\mathrm{D}(g)})$,
+beating the $\sqrt{\mathrm{R}(g)}$ that all of these measures currently
+share. $\chi = O(\mathrm{C})$ would go the other way: on
+$\wedge_n\circ\vee_n$ it forces $\chi = O(n) = O(\sqrt{\mathrm{R}})$, so
+$\chi$ would not compose perfectly and the square-root floor would be tight.
+Either way it also moves <a href="measures/chi.html" class="xref measure "><span class="tex">\(\chi(f)\)</span></a> against <a href="measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a>, where the recorded gap runs
+from $1$ to $3$ for want of anything sharper than $\chi\le\mathrm{D}\le\mathrm{bs}^3$.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/chi.html" class="xref measure "><span class="tex">\(\chi(f)\)</span></a>, <a href="measures/chibar.html" class="xref measure "><span class="tex">\(\bar{\chi}(f)\)</span></a>, <a href="measures/C.html" class="xref measure "><span class="tex">\(\mathrm{C}(f)\)</span></a>, <a href="measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a>, <a href="measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a>, <a href="functions/ANDOR.html" class="xref function "><span class="tex">\(\mathrm{AND}_n \circ \mathrm{OR}_n\)</span></a>, <a href="pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a>, <a href="open.html#open-RS-vs-R" class="xref open ">Is … for total …?</a></span><span class="refs"><a href="refs.html#Li18" class="xref ref ">Li18</a> <a href="refs.html#Sanyal18" class="xref ref ">Sanyal18</a> <a href="refs.html#GLSS19" class="xref ref ">GLSS19</a> <a href="refs.html#AGJKLMSS17" class="xref ref ">AGJKLMSS17</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-adeg-composition">
+    <h2>Does approximate degree compose?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-adeg-composition">#</a></h2>
+<p class="statusline">Upper bound settled; lower bound known only for restricted outer functions.</p>    <div class="prose"><p>Is $\widetilde{\deg}(f\circ g) = \tilde\Theta(\widetilde{\deg}(f)\widetilde{\deg}(g))$?
+The upper bound is known; the lower bound is open.</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\widetilde{\deg}(f\circ g) = O(\widetilde{\deg}(f)\widetilde{\deg}(g))\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Sherstov12robust" class="xref ref ">Sherstov12robust</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\widetilde{\deg}(f\circ g) = \tilde\Omega\big(\sqrt{\mathrm{bs}(f)}\,\widetilde{\deg}(g)\big)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#CKMPSS23" class="xref ref ">CKMPSS23</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\text{Composition holds for symmetric outer } f\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#CKMPSS23" class="xref ref ">CKMPSS23</a></span>        </div>
+      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>Approximate degree composition is the main tool for proving
+$\mathsf{AC}^0$ approximate-degree lower bounds and quantum query lower
+bounds by the dual polynomial method.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/adeg.html" class="xref measure "><span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span></a>, <a href="pair.html?a=adeg&b=adeg#comp-adeg" class="xref relation ">comp-adeg</a>, <a href="concepts/composition.html" class="xref concept ">Composition</a>, <a href="measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a>, <a href="measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a></span><span class="refs"><a href="refs.html#Sherstov12robust" class="xref ref ">Sherstov12robust</a> <a href="refs.html#CKMPSS23" class="xref ref ">CKMPSS23</a> <a href="refs.html#BT22" class="xref ref ">BT22</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-aaronson-ambainis">
+    <h2>The Aaronson-Ambainis conjecture   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-aaronson-ambainis">#</a></h2>
+<p class="statusline">Open. The decision-tree analogue (OSSS) is a theorem.</p>    <div class="prose"><p>Every bounded degree-$d$ polynomial $p:\{-1,1\}^n\to[-1,1]$ with
+$\mathrm{Var}(p)\ge\varepsilon$ has a variable with influence at least
+$\mathrm{poly}(\varepsilon/d)$.</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{Var}(f) \le \sum_i \delta_i(T)\,\mathrm{Inf}_i(f) \text{ for every decision tree } T\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#OSSS05" class="xref ref ">OSSS05</a></span>        </div>
+<div class="note">The decision-tree version, which <em>is</em> known.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{I}^{1}(p) = O(\deg(p)^2) \text{ for bounded } p\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#FHKL16" class="xref ref ">FHKL16</a></span>        </div>
+<div class="note">A related, weaker statement that is known.</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>If true, $\mathrm{R}(f)=\mathrm{poly}(\mathrm{Q}(f))$ for all <strong>total</strong> $f$,
+and more generally every bounded-error quantum query algorithm can be
+simulated classically with polynomially many queries on product
+distributions. &quot;Quantum speedups need structure.&quot;</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/MaxInf.html" class="xref measure "><span class="tex">\(\mathrm{MaxInf}(f)\)</span></a>, <a href="measures/Inf.html" class="xref measure "><span class="tex">\(\mathrm{I}(f)\)</span></a>, <a href="measures/Inf1.html" class="xref measure "><span class="tex">\(\mathrm{I}^{1}(f)\)</span></a>, <a href="measures/adeg.html" class="xref measure "><span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span></a>, <a href="measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>, <a href="measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a></span><span class="refs"><a href="refs.html#AaronsonAmbainis14" class="xref ref ">AaronsonAmbainis14</a> <a href="refs.html#OSSS05" class="xref ref ">OSSS05</a> <a href="refs.html#FHKL16" class="xref ref ">FHKL16</a> <a href="refs.html#BackursBavarian14" class="xref ref ">BackursBavarian14</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-log-rank">
+    <h2>Parity decision trees vs Fourier sparsity (query log-rank)   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-log-rank">#</a></h2>
+<p class="statusline">Best known: $\mathrm{D}^{\oplus}(f)=O(\sqrt{\mathrm{spar}(f)}\log\mathrm{spar}(f))$.</p>    <div class="prose"><p>Is $\mathrm{D}^{\oplus}(f) = \mathrm{polylog}(\mathrm{spar}(f))$?</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}^{\oplus}(f) = O\big(\sqrt{\mathrm{spar}(f)}\log \mathrm{spar}(f)\big)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#TsangWongXieZhang13" class="xref ref ">TsangWongXieZhang13</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}^{\oplus}(f)\ge \tfrac12\log_2 \mathrm{spar}(f)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#TsangWongXieZhang13" class="xref ref ">TsangWongXieZhang13</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\text{Known for small } \mathbb{F}_2\text{-degree and for sparse symmetric } f\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Sanyal19" class="xref ref ">Sanyal19</a></span>        </div>
+      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>A positive answer implies the <strong>log-rank conjecture for XOR functions</strong>
+in communication complexity, via lifting.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/PDT.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span></a>, <a href="measures/spar.html" class="xref measure "><span class="tex">\(\mathrm{spar}(f)\)</span></a>, <a href="measures/L1.html" class="xref measure "><span class="tex">\(\hat{L}_1(f)\)</span></a>, <a href="measures/Fdim.html" class="xref measure "><span class="tex">\(\dim_{\mathbb{F}_2}(f)\)</span></a>, <a href="concepts/lifting.html" class="xref concept ">Lifting: query complexity as a source of communication lower bounds</a></span><span class="refs"><a href="refs.html#TsangWongXieZhang13" class="xref ref ">TsangWongXieZhang13</a> <a href="refs.html#Sanyal19" class="xref ref ">Sanyal19</a> <a href="refs.html#GopalanEtAl16" class="xref ref ">GopalanEtAl16</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-R-composition">
+    <h2>Does randomized query complexity compose for total functions?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-R-composition">#</a></h2>
+<p class="statusline"><strong>False for partial functions</strong> [<a href="refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a>]; open for total.</p>    <div class="prose"><p>Is $\mathrm{R}(f\circ g^n) = \tilde\Omega(\mathrm{R}(f)\mathrm{R}(g))$ for all
+total $f$ and $g$?</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{R}(f\circ g^n) = \Omega(\mathrm{noisyR}(f)\,\mathrm{R}(g))\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{R}(f\circ g^n) = \Omega(\mathrm{R}(f)\,\mathrm{LR}(g))\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#BBGM22" class="xref ref ">BBGM22</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\text{Holds when } \mathrm{R}(f)=\Theta(n) \text{ or } f \text{ is (weakly) symmetric}\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#CKMPSS23" class="xref ref ">CKMPSS23</a></span>        </div>
+      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>Composition is the basic tool for building hard functions out of easy
+ones; its failure for partial functions was a genuine surprise.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a>, <a href="measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>, <a href="measures/noisyR.html" class="xref measure "><span class="tex">\(\mathrm{noisyR}(f)\)</span></a>, <a href="measures/LR.html" class="xref measure "><span class="tex">\(\mathrm{LR}(f)\)</span></a>, <a href="measures/RS.html" class="xref measure "><span class="tex">\(\mathrm{RS}(f)\)</span></a>, <a href="concepts/composition.html" class="xref concept ">Composition</a>, <a href="open.html#open-RS-vs-R" class="xref open ">Is … for total …?</a>, <a href="open.html#open-composition-log" class="xref open ">Does randomized composition survive a … loss?</a>, <a href="open.html#open-noisyR-vs-R" class="xref open ">Is …?</a></span><span class="refs"><a href="refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a> <a href="refs.html#BBGM22" class="xref ref ">BBGM22</a> <a href="refs.html#CKMPSS23" class="xref ref ">CKMPSS23</a> <a href="refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-composition-log">
+    <h2>Does randomized composition survive a $\log n$ loss?   <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+      <a class="anchor" href="#open-composition-log">#</a></h2>
+<p class="statusline">Open. Equivalent to <a href="open.html#open-noisyR-vs-R" class="xref open ">Is …?</a>.</p>    <div class="prose"><p><strong>Conjecture 2 of [<a href="refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a>].</strong> For all partial Boolean $f$ and $g$,
+$$\mathrm{R}(f\circ g) \;=\; \Omega\!\left(\frac{\mathrm{R}(f)\,\mathrm{R}(g)}{\log n}\right),$$
+where $n$ is the input size of $f$ (<em>not</em> $\mathrm{R}(f)$).</p>
+<p>This is what is left of the randomized composition conjecture after Theorem 1
+refutes it. The refutation is not gentle -- the loss is
+$\mathrm{R}(f)^{1/3}\mathrm{R}(g)^{1/3}$, a polynomial factor -- but in the
+counterexample $\mathrm{R}(f)$ and $\mathrm{R}(g)$ are both only <em>logarithmic in
+the input size of $f$</em>, because $f$ carries an array of length $2^m$. So a
+$\log n$ slack absorbs it, and might absorb everything.</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{R}(f\circ g) = \Omega\big(\mathrm{noisyR}(f)\,\mathrm{R}(g)\big)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a></span>        </div>
+<div class="note">The conjecture is exactly this bound plus $\mathrm{noisyR}(f) = \Omega(\mathrm{R}(f)/\log n)$.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\exists \text{ partial } f,g:\ \mathrm{R}(f\circ g) = O\big(\mathrm{R}(f)^{2/3}\mathrm{R}(g)^{2/3}\log^{2/3}\mathrm{R}(f)\big)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a></span>        </div>
+<div class="note">Theorem 1, the counterexample. It does not touch the conjecture above.</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>Every application of composition the author of a lower bound actually wants --
+amplifying a hard function by composing it with itself -- can afford a $\log n$.
+A proof would restore the tool in essentially full strength; a refutation would
+have to find hardness that is not merely hiding in a huge input.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a>, <a href="measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>, <a href="measures/noisyR.html" class="xref measure "><span class="tex">\(\mathrm{noisyR}(f)\)</span></a>, <a href="functions/ApproxIndex.html" class="xref function "><span class="tex">\(\mathrm{ApproxIndex}_k\)</span></a>, <a href="functions/GapMaj.html" class="xref function "><span class="tex">\(\mathrm{GapMaj}^{\delta}_{n}\)</span></a>, <a href="open.html#open-R-composition" class="xref open ">Does randomized query complexity compose for total functions?</a>, <a href="open.html#open-noisyR-vs-R" class="xref open ">Is …?</a></span><span class="refs"><a href="refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a> <a href="refs.html#GLSS19" class="xref ref ">GLSS19</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-noisyR-vs-R">
+    <h2>Is $\mathrm{noisyR}(f) = \Omega(\mathrm{R}(f)/\log n)$?   <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+      <a class="anchor" href="#open-noisyR-vs-R">#</a></h2>
+<p class="statusline">Open. Known: $\mathrm{noisyR} = \Omega(\mathrm{fbs})$, which is all.</p>    <div class="prose"><p><strong>Conjecture 7 of [<a href="refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a>]</strong>, and equivalent to
+<a href="open.html#open-composition-log" class="xref open ">Does randomized composition survive a … loss?</a>: for every (possibly partial) Boolean $f$ on $n$ bits,
+is buying cheap bias only a $\log n$ better than reading bits?</p>
+<p>The equivalence runs through the two halves of the theory: Theorem 3
+($\mathrm{R}(f\circ g) = \Omega(\mathrm{noisyR}(f)\mathrm{R}(g))$) gives one
+direction, and Lemma 6 (no measure beats $\mathrm{noisyR}$ in an outer
+composition theorem), applied with $M(f) = \mathrm{R}(f)/\log n$, gives the other.</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{noisyR}(f) = \Omega(\mathrm{fbs}(f))\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a></span>        </div>
+<div class="note">Lemma 38. For total $f$ this already gives $\mathrm{R}(f) = O(\mathrm{noisyR}(f)^3)$ via $\mathrm{D} = O(\mathrm{fbs}^3)$; for partial $f$ it gives nothing, since $\mathrm{R}$ is unbounded in terms of $\mathrm{fbs}$ there.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{R}(f) = 2^{\Omega(\mathrm{noisyR}(f))} \text{ for some partial } f\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a></span>        </div>
+<div class="note">On <a href="functions/ApproxIndex.html" class="xref function "><span class="tex">\(\mathrm{ApproxIndex}_k\)</span></a>. Note $\log n = \Theta(\mathrm{R}(f))$ there, so this is consistent with the conjecture -- it is the same example as in Theorem 1, seen through $\mathrm{noisyR}$.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{noisyR}^{\mathrm{na}}(f) = \Theta(\mathrm{R}^{\mathrm{na}}(f))\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a></span>        </div>
+<div class="note">Theorem 8: the non-adaptive version is true, with no $\log$ at all.</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p><strong>The relational barrier.</strong> The conjecture is <em>false</em> for relations: on
+<a href="functions/AgreeString.html" class="xref function "><span class="tex">\(\mathrm{AGREE}_n\)</span></a>, $\mathrm{noisyR} = \Theta(1)$ while $\mathrm{R} = \Theta(\sqrt n)$.
+So any proof must use the fact that $f$ has Boolean output -- and essentially no
+technique in query complexity does. The one proof that manages it is Theorem 8, in
+the non-adaptive setting, where the Boolean-ness enters at the very last step
+(turning conditional entropy into error probability, which has no relational
+analogue). Whether that trick can be made adaptive is the question.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/noisyR.html" class="xref measure "><span class="tex">\(\mathrm{noisyR}(f)\)</span></a>, <a href="measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>, <a href="measures/fbs.html" class="xref measure "><span class="tex">\(\mathrm{fbs}(f)\)</span></a>, <a href="measures/noisyRna.html" class="xref measure "><span class="tex">\(\mathrm{noisyR}^{\mathrm{na}}(f)\)</span></a>, <a href="measures/Rna.html" class="xref measure "><span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span></a>, <a href="functions/AgreeString.html" class="xref function "><span class="tex">\(\mathrm{AGREE}_n\)</span></a>, <a href="functions/ApproxIndex.html" class="xref function "><span class="tex">\(\mathrm{ApproxIndex}_k\)</span></a>, <a href="open.html#open-composition-log" class="xref open ">Does randomized composition survive a … loss?</a>, <a href="open.html#open-R-composition" class="xref open ">Does randomized query complexity compose for total functions?</a></span><span class="refs"><a href="refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a> <a href="refs.html#GLSS19" class="xref ref ">GLSS19</a> <a href="refs.html#Samorodnitsky16" class="xref ref ">Samorodnitsky16</a> <a href="refs.html#PolyanskiyWu17" class="xref ref ">PolyanskiyWu17</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-Rstar">
+    <h2>Is $\mathrm{R}^{*}(f) = \Theta(\mathrm{R}(f))$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-Rstar">#</a></h2>
+<p class="statusline">Open even for total functions; strictly weaker than full composition.</p>    <div class="prose"><p>Does randomized query complexity compose with <em>itself</em>? I.e. is
+$\lim_k \mathrm{R}(f^{\circ k})^{1/k} = \Theta(\mathrm{R}(f))$?</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{R}^{*}(f) = \Omega\big(\max(\mathrm{Q}(f), \mathrm{LR}(f))\big)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#BBGM22" class="xref ref ">BBGM22</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\text{Whether } \mathrm{Q} \text{ or } \mathrm{LR} \text{ dominates is itself open.}\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#BBGM22" class="xref ref ">BBGM22</a></span>        </div>
+      </li>
+    </ul>
+
+
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/Rstar.html" class="xref measure "><span class="tex">\(\mathrm{R}^{*}(f)\)</span></a>, <a href="measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>, <a href="measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>, <a href="measures/LR.html" class="xref measure "><span class="tex">\(\mathrm{LR}(f)\)</span></a>, <a href="concepts/composition.html" class="xref concept ">Composition</a></span><span class="refs"><a href="refs.html#BBGM22" class="xref ref ">BBGM22</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-fbs-vs-bs">
+    <h2>Is $\mathrm{fbs}(f) = O(\mathrm{bs}(f)^{3/2})$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-fbs-vs-bs">#</a></h2>
+<p class="statusline">Gap between exponents 3/2 and 2.</p>    <div class="prose"><p>Fractional block sensitivity is the LP relaxation of block sensitivity, so
+$\mathrm{bs}\le\mathrm{fbs}$ always, and $\mathrm{fbs}\le\mathrm{C}\le\mathrm{s}\cdot\mathrm{bs}\le\mathrm{bs}^2$.
+The largest known integrality gap is $\mathrm{fbs}=\widetilde\Omega(\mathrm{bs}^{3/2})$
+[<a href="refs.html#GSS16" class="xref ref ">GSS16</a>]. Which end of $[3/2,\,2]$ is the truth?</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{fbs}(f) \le \mathrm{C}(f) \le \mathrm{s}(f)\,\mathrm{bs}(f) \le \mathrm{bs}(f)^2\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Nisan91" class="xref ref ">Nisan91</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{fbs}(f_n) = \widetilde\Omega\big(\mathrm{bs}(f_n)^{3/2}\big)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#GSS16" class="xref ref ">GSS16</a> <a href="refs.html#APV18" class="xref ref ">APV18</a></span>        </div>
+<div class="note">[<a href="refs.html#APV18" class="xref ref ">APV18</a>] simplify the construction and improve the constant, but not the exponent.</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>$\mathrm{fbs}=\Theta(\mathrm{RC})=\Theta(\mathrm{CA})$ and $\mathrm{QC}=\Theta(\sqrt{\mathrm{fbs}})$,
+so this is simultaneously a question about randomized certificates, the
+classical adversary method, and quantum certificate complexity -- all of which
+would collapse onto $\mathrm{bs}$ if the answer were $3/2$... or rather, would
+stay distinct from it.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/fbs.html" class="xref measure "><span class="tex">\(\mathrm{fbs}(f)\)</span></a>, <a href="measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a>, <a href="measures/RC.html" class="xref measure "><span class="tex">\(\mathrm{RC}(f)\)</span></a>, <a href="measures/QC.html" class="xref measure "><span class="tex">\(\mathrm{QC}(f)\)</span></a>, <a href="measures/CA.html" class="xref measure "><span class="tex">\(\mathrm{CA}(f)\)</span></a>, <a href="functions/GSSfn.html" class="xref function "><span class="tex">\(f_{\mathrm{GSS}}\)</span></a></span><span class="refs"><a href="refs.html#GSS16" class="xref ref ">GSS16</a> <a href="refs.html#APV18" class="xref ref ">APV18</a> <a href="refs.html#Tal13" class="xref ref ">Tal13</a> <a href="refs.html#Aaronson08" class="xref ref ">Aaronson08</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-R0-vs-fbs">
+    <h2>Is $\mathrm{R}_0(f) = O(\mathrm{FC}(f)^2)$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-R0-vs-fbs">#</a></h2>
+<p class="statusline">Gap between exponents 2 and 3.</p>    <div class="prose"><p>Aaronson's question, in the fractional-certificate notation
+$\mathrm{FC}=\mathrm{fbs}$: we know
+$\mathrm{R}_0(f)\le\mathrm{D}(f)\le\mathrm{C}^{(1)}(f)\,\mathrm{bs}(f)=O(\mathrm{fbs}(f)^3)$,
+and Tribes gives a quadratic separation. Is the cubic bound tight?</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f) = O\big(\mathrm{fbs}(f)^3\big)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Aaronson08" class="xref ref ">Aaronson08</a> <a href="refs.html#Nisan91" class="xref ref ">Nisan91</a> <a href="refs.html#Tal13" class="xref ref ">Tal13</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(\mathrm{TRIBES}_n) = \Theta(n) = \Theta\big(\mathrm{fbs}(\mathrm{TRIBES}_n)^2\big)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Aaronson08" class="xref ref ">Aaronson08</a></span>        </div>
+      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>The analogous question for integral certificate complexity is <em>settled</em> at 2
+($\mathrm{C}=O(\mathrm{fbs}^2)$ is tight [<a href="refs.html#GSS16" class="xref ref ">GSS16</a>]), so a positive answer would say
+the LP relaxation loses nothing beyond what rounding already costs.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/R0.html" class="xref measure "><span class="tex">\(\mathrm{R}_{0}(f)\)</span></a>, <a href="measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a>, <a href="measures/fbs.html" class="xref measure "><span class="tex">\(\mathrm{fbs}(f)\)</span></a>, <a href="measures/RC.html" class="xref measure "><span class="tex">\(\mathrm{RC}(f)\)</span></a>, <a href="measures/C.html" class="xref measure "><span class="tex">\(\mathrm{C}(f)\)</span></a>, <a href="functions/TRIBES.html" class="xref function "><span class="tex">\(\mathrm{Tribes}_{w,s}\)</span></a>, <a href="open.html#open-fbs-vs-bs" class="xref open ">Is …?</a></span><span class="refs"><a href="refs.html#Aaronson08" class="xref ref ">Aaronson08</a> <a href="refs.html#Tal13" class="xref ref ">Tal13</a> <a href="refs.html#GSS16" class="xref ref ">GSS16</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-direct-sum">
+    <h2>How hard is it to solve $k$ copies?   <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+      <a class="anchor" href="#open-direct-sum">#</a></h2>
+<p class="statusline">Direct sum settled up to constants for $\mathrm{D}$ (exactly) and $\mathrm{R}$; the sharp constants, the large-budget direct product, and the quantum case are open.</p>    <div class="prose"><p>Three related questions about $f^{\otimes k}$, all raised in the papers that
+settled the easy parts.</p>
+<ol>
+<li><strong>Worst-case direct sum, sharply.</strong> [<a href="refs.html#JainKlauckSantha10" class="xref ref ">JainKlauckSantha10</a>] prove
+$\mathrm{R}_\varepsilon(f^{\otimes k}) \ge \delta^2 k\,\mathrm{R}_{\varepsilon/(1-\delta)+\delta}(f)$
+for every relation $f$. The $\delta^2$ loss and the additive $\delta$ in the error are
+known to be necessary in the <em>distributional</em> setting ([<a href="refs.html#Shaltiel04" class="xref ref ">Shaltiel04</a>]) -- is either
+necessary in the worst case?</li>
+<li><strong>Direct product above the threshold.</strong> [<a href="refs.html#Drucker12" class="xref ref ">Drucker12</a>] gives a DPT with query budget
+$\gamma^3\mathrm{R}(f)k/11$. What worst-case success probability is achievable with
+$\alpha\,\mathrm{R}(f)k$ queries for $\alpha \gg 1$? Quantumly this was settled by
+[<a href="refs.html#BNRdW07" class="xref ref ">BNRdW07</a>]; classically it is open, and the interesting regime is exactly the one where
+the $O(\mathrm{R}(f)k\log k)$ upper bound lives.</li>
+<li><strong>A tight quantum direct sum.</strong> Is $\mathrm{Q}(f^{\otimes k}) = \Theta(k\,\mathrm{Q}(f))$?
+The known bound loses a log factor and holds only for Boolean functions, because it goes
+through the adversary bound; [<a href="refs.html#JainKlauckSantha10" class="xref ref ">JainKlauckSantha10</a>] ask for a direct proof, even for relations.</li>
+</ol>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{D}(f^{\otimes k}) = k\,\mathrm{D}(f) \text{ exactly, for every relation}\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#JainKlauckSantha10" class="xref ref ">JainKlauckSantha10</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{R}_\varepsilon(f^{\otimes k}) \ge \delta^2 k\,\mathrm{R}_{\varepsilon'}(f)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#JainKlauckSantha10" class="xref ref ">JainKlauckSantha10</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\bar{\mathrm{R}}_\varepsilon(f^{k}) = \Theta\big(k\,\bar{\mathrm{R}}_{\varepsilon/k}(f)\big)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#BlaisBrody19" class="xref ref ">BlaisBrody19</a></span>        </div>
+<div class="note">The sharp form, in expected cost; it implies a total $f$ with $\mathrm{R}(f^{\otimes k}) = \Theta(k\log k\,\mathrm{R}(f))$.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\text{DPT at budget } \gamma^3\mathrm{R}(f)k/11 \text{, success } &lt; (1/2+\gamma)^k\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Drucker12" class="xref ref ">Drucker12</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\text{Quantum DPT at budget } \Omega(\mathrm{Q}(f)k)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#LeeRoland13" class="xref ref ">LeeRoland13</a></span>        </div>
+      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>Direct sum is composition with a trivial outer function, so it is the floor of the
+composition programme: anything we cannot prove here we certainly cannot prove for
+<a href="pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a>. It is also the source of the $\log$ factors that make $\varepsilon$-dependence
+and expected cost unavoidable topics -- see <a href="concepts/direct-sum.html" class="xref concept ">Direct sum and direct product</a>.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="pair.html?a=D&b=D#dirsum-D" class="xref relation ">dirsum-D</a>, <a href="pair.html?a=R&b=R#dirsum-R" class="xref relation ">dirsum-R</a>, <a href="pair.html?a=R&b=R#dirprod-R" class="xref relation ">dirprod-R</a>, <a href="pair.html?a=Q&b=Q#dirprod-Q" class="xref relation ">dirprod-Q</a>, <a href="concepts/direct-sum.html" class="xref concept ">Direct sum and direct product</a>, <a href="pair.html?a=R&b=R#param-R-directsum" class="xref relation ">param-R-directsum</a>, <a href="measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>, <a href="measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a>, <a href="measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>, <a href="pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a></span><span class="refs"><a href="refs.html#JainKlauckSantha10" class="xref ref ">JainKlauckSantha10</a> <a href="refs.html#Drucker12" class="xref ref ">Drucker12</a> <a href="refs.html#Shaltiel04" class="xref ref ">Shaltiel04</a> <a href="refs.html#BlaisBrody19" class="xref ref ">BlaisBrody19</a> <a href="refs.html#BNRdW07" class="xref ref ">BNRdW07</a> <a href="refs.html#LeeRoland13" class="xref ref ">LeeRoland13</a> <a href="refs.html#FRPU94" class="xref ref ">FRPU94</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-QS-vs-Q">
+    <h2>Do the quantum sabotage variants coincide, and how do they compare with Q?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-QS-vs-Q">#</a></h2>
+<p class="statusline">Open. Strong decision costs O(Q); strong index costs O(Q^{3/2}); the total weak-model bound is O(Q⁴).</p>    <div class="prose"><p>Can the strong index upper bound $\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}=O(\mathrm{Q}^{3/2})$ be made linear? Are weak and strong oracle access equivalent, and are decision and index output equivalent? [<a href="refs.html#CMP24" class="xref ref ">CMP24</a>] prove these equivalences classically, but leave them open quantumly. The certification collapses in [<a href="refs.html#KLLPV26" class="xref ref ">KLLPV26</a>] apply only after the certification transform.</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{QS}_{\mathrm{str}}(f)=O(\mathrm{Q}(f)),\quad \mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f)=O(\mathrm{Q}(f)^{3/2})\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#CMP24" class="xref ref ">CMP24</a></span>        </div>
+<div class="note">Lemma 1.1 and Theorem 1.2 also hold for partial functions.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{Q}(f)=\widetilde O(\mathrm{QS}(f)^6)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#CMP24" class="xref ref ">CMP24</a></span>        </div>
+<div class="note">For every variant on total functions; equations (1)–(4).</div>      </li>
+    </ul>
+
+
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/QSweak.html" class="xref measure "><span class="tex">\(\mathrm{QS}_{\mathrm{weak}}(f)\)</span></a>, <a href="measures/QSstr.html" class="xref measure "><span class="tex">\(\mathrm{QS}_{\mathrm{str}}(f)\)</span></a>, <a href="measures/QSweakind.html" class="xref measure "><span class="tex">\(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(f)\)</span></a>, <a href="measures/QSstrind.html" class="xref measure "><span class="tex">\(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f)\)</span></a>, <a href="measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>, <a href="measures/QC.html" class="xref measure "><span class="tex">\(\mathrm{QC}(f)\)</span></a>, <a href="concepts/quantum-sabotage.html" class="xref concept ">Quantum sabotage: four variants</a>, <a href="concepts/certification.html" class="xref concept ">Operational certification complexity</a></span><span class="refs"><a href="refs.html#CMP24" class="xref ref ">CMP24</a> <a href="refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span>    </footer>
+  </section>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="static/app.js"></script>
+</body>
+</html>

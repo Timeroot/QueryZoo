@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cost conventions: worst case, expected cost, zero error &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="">Functions</a>
+      <a href="../concepts/index.html"
+         class="on">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../concepts/index.html">Concepts</a></div>
+  <header class="entryhead concept">
+    <div>
+      <h1>Cost conventions: worst case, expected cost, zero error</h1>
+      <p class="lede">Why R_0 must be an expected-cost measure, and when worst-case and expected cost differ.</p>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="main-col">
+      <article class="card prose">
+        <p>Two orthogonal choices define a randomized measure:</p>
+<ol>
+<li><strong>Error model.</strong> Zero error / one-sided error / bounded error /
+unbounded error. ($\mathsf{ZPP}$ / $\mathsf{RP}$ / $\mathsf{BPP}$ /
+$\mathsf{PP}$.)</li>
+<li><strong>Cost model.</strong> Worst-case number of queries over all coin flips, or
+expected number of queries.</li>
+</ol>
+<h3>The zero-error trap</h3>
+<p>If you demand <strong>zero error</strong> and <strong>worst-case cost</strong>, you get
+$\mathrm{D}(f)$ exactly: fix the coins of an always-correct depth-$T$
+algorithm and you have a deterministic depth-$T$ tree. So
+$\mathrm{R}_0$ and $\mathrm{Q}_0$ cannot be worst-case-cost measures with a
+forced answer.</p>
+<p>There are two ways out, and they give the same measure up to a factor of two:
+charge the <strong>expected</strong> number of queries, or keep worst-case cost and allow
+the answer $\bot$ with probability $\le 1/2$. Markov truncation at twice the
+expected cost converts the first into the second; repeating until an answer
+appears converts the second into the first. The zoo takes $\mathrm{R}_0$ in
+the expected-cost form and $\mathrm{Q}_0$ in the $\bot$ form, purely because
+that is how each is usually written -- and applying the truncation to a
+classical Las Vegas algorithm gives
+$\mathrm{Q}_0(f)\le 2\,\mathrm{R}_0(f)$, for relations as much as for total
+functions. A $\mathrm{Q}_0$ value above the function's own $\mathrm{R}_0$ is
+therefore an error, not a convention clash.</p>
+<p>One trap of its own: allowing $\bot$ weakens the polynomial method. A
+$T$-query zero-error algorithm makes $p_1$ <em>vanish</em> on $f^{-1}(0)$ rather
+than <em>equal</em> $f$, so it bounds
+$\mathrm{rdeg} = \max\{\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f)\}$, not $\deg$:
+the floor is $\mathrm{rdeg}/2$, and $\deg/2$ is a floor for
+$\mathrm{Q}_{\mathrm{E}}$ only. On <a href="../functions/NANDtree.html" class="xref function "><span class="tex">\(\bar{\wedge}\text{-tree}\)</span></a> the two differ by a square.</p>
+<h3>The bounded-error case</h3>
+<p>$\bar{\mathrm{R}}_\varepsilon(f) \le \mathrm{R}_\varepsilon(f)$ always, and
+Markov + truncation gives
+$\mathrm{R}_{\varepsilon+\delta}(f)\le \bar{\mathrm{R}}_\varepsilon(f)/\delta$.
+So for <em>constant</em> error the two agree up to constants and nobody bothers to
+distinguish them.</p>
+<p>They stop agreeing as $\varepsilon \to 0$, and this is not pedantry:</p>
+<ul>
+<li>$\mathrm{R}(\mathrm{MAJ}_n\circ g^n)=\Theta(n\cdot\bar{\mathrm{R}}_{1/n}(g))$
+[<a href="../refs.html#GoosMaystre21" class="xref ref ">GoosMaystre21</a>] -- the <em>expected</em> complexity at error $1/n$ is the right
+quantity, and converting to $\mathrm{R}_{1/n}$ would cost a factor $n$.</li>
+<li>The strong direct sum $\bar{\mathrm{R}}_\varepsilon(f^k)=\Theta(k\bar{\mathrm{R}}_{\varepsilon/k}(f))$
+[<a href="../refs.html#BlaisBrody19" class="xref ref ">BlaisBrody19</a>] is false for worst-case cost.</li>
+<li>Yao's minimax question is <em>about</em> expected cost; see <a href="../concepts/minimax.html" class="xref concept ">Yao&#x27;s minimax and its failures</a>.</li>
+</ul>
+<h3>Unbounded error</h3>
+<p>Letting $\varepsilon \to 1/2$ gives the $\mathsf{PP}$-flavoured measures:
+<a href="../measures/sdeg.html" class="xref measure "><span class="tex">\(\mathrm{sdeg}(f)\)</span></a> (sign degree), <a href="../measures/PostQ.html" class="xref measure "><span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span></a> (post-selected quantum), and
+<a href="../measures/ardeg.html" class="xref measure "><span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span></a>. See <a href="../pair.html?a=adeg&b=adeg#param-adeg-eps" class="xref relation ">param-adeg-eps</a>.</p>
+
+      </article>
+    </div>
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/Rbar.html" class="xref measure "><span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/R0.html" class="xref measure "><span class="tex">\(\mathrm{R}_{0}(f)\)</span></a></li><li><a href="../measures/Q0.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{0}(f)\)</span></a></li><li><a href="../measures/sdeg.html" class="xref measure "><span class="tex">\(\mathrm{sdeg}(f)\)</span></a></li><li><a href="../measures/PostQ.html" class="xref measure "><span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span></a></li><li><a href="../concepts/minimax.html" class="xref concept ">Yao&#x27;s minimax and its failures</a></li></ul>
+      </section>
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#BlaisBrody19" class="xref ref ">[BlaisBrody19]</a> <span class="dim">Optimal Separation and Strong Direct Sum for Randomized Query Complexity</span></li>
+            <li><a href="../refs.html#GoosMaystre21" class="xref ref ">[GoosMaystre21]</a> <span class="dim">A Majority Lemma for Randomised Query Complexity</span></li>
+            <li><a href="../refs.html#Vereshchagin98" class="xref ref ">[Vereshchagin98]</a> <span class="dim">Randomized Boolean decision trees: several remarks</span></li>
+            <li><a href="../refs.html#BdW02" class="xref ref ">[BdW02]</a> <span class="dim">Complexity measures and decision tree complexity: a survey</span></li>
+        </ul>
+      </section>
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/concepts.yaml</code> &mdash; id <code>cost-conventions</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

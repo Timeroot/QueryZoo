@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SearchCNF &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#relation">Relations</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">\(\mathrm{Search}(\varphi)\)</div>
+    <div>
+      <h1>SearchCNF</h1>
+      <p class="lede">The canonical TFNP-style query relation: given an assignment, output a falsified clause.</p>
+      <p class="aliases">
+        <span class="kindtag k-relation">relation</span>
+        <span class="grouptag g-relational">relational</span>
+<span class="tag">arity: $n$ bits (an assignment to an unsatisfiable CNF $\varphi$)</span>      </p>
+    </div>
+  </header>
+
+  <div class="banner warn">
+    <b>Definition not yet transcribed.</b> This page gives a pointer and an informal description
+    only; the exact mathematical definition still needs to be written into
+    <code>data/functions/04-partial-and-relations.yaml</code> under <code>formal:</code>. Follow the references below.
+  </div>
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>Fix an unsatisfiable $k$-CNF $\varphi$ on $n$ variables. Given an assignment
+$x$, output (the index of) some clause of $\varphi$ falsified by $x$.
+Total by unsatisfiability. This is the query-complexity home of TFNP$^{dt}$
+and of resolution lower bounds.</p>
+
+      </section>
+
+
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R.html">Bounded-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">For a random $\Delta$-dense unsatisfiable $k$-CNF with $\Delta$ a large enough constant: with high probability <em>every</em> assignment falsifies a constant fraction of the clauses, so sampling $O(1)$ clauses at random and reading their $k$ variables finds a falsified one. At least one query is needed, so $\Theta(1)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+
+                  <a href="../measures/psD.html">Pseudo-deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(n^{1/3})\)</span></td>
+              <td class="short">$\Omega(\sqrt n)$ in the related setting of [<a href="../refs.html#GIPS21" class="xref ref ">GIPS21</a>]; also $\exp(\widetilde\Omega(n^{1/4}))$ in pseudo-deterministic decision-tree <em>size</em>.
+<span class="refs"><a href="../refs.html#CDM23" class="xref ref ">CDM23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D.html">Deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">For a random $\Delta$-dense unsatisfiable $k$-CNF. $\mathrm{D}(\mathrm{Search}(\varphi))$ <em>is</em> the minimum depth of a tree-like resolution refutation of $\varphi$ [<a href="../refs.html#LNNW95" class="xref ref ">LNNW95</a>] -- a decision tree solving the search problem, read leaf-to-root, is exactly such a refutation. Random $k$-CNFs require resolution width $\Omega(n)$, hence depth $\Omega(n)$; and $n$ queries trivially suffice. So the $\mathrm{R} = O(1)$ upper bound above is an unbounded $\mathrm{D}$-vs-$\mathrm{R}$ separation, for a <em>total</em> relation.
+<span class="refs"><a href="../refs.html#LNNW95" class="xref ref ">LNNW95</a> <a href="../refs.html#BenSassonWigderson01" class="xref ref ">BenSassonWigderson01</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_size.html">Decision tree size</a>
+              </td>
+              <td class="val"><span class="tex">\(2^{\Theta(n)}\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">Decision-tree size for the search problem equals tree-like resolution size, and the size-width tradeoff of [<a href="../refs.html#BenSassonWigderson01" class="xref ref ">BenSassonWigderson01</a>] with the $\Omega(n)$ width bound gives $2^{\Omega(n)}$ for random $k$-CNFs; $2^n$ is the trivial ceiling. Compare $\mathrm{R}=O(1)$: no bounded-error algorithm needs to know anything about $\varphi$ beyond one clause.
+<span class="refs"><a href="../refs.html#BenSassonWigderson01" class="xref ref ">BenSassonWigderson01</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dna.html">Non-adaptive deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span></td>
+              <td class="short">Every variable is relevant, so a non-adaptive algorithm reads the whole assignment.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rna.html">Non-adaptive randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Sampling a clause of $\varphi$ at random and reading its $k$ variables is non-adaptive; for a random $\Delta$-dense $\varphi$ a constant fraction of clauses is falsified by any fixed assignment, so $O(1)$ tries suffice.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/cbs.html" title="Critical block sensitivity">
+    <span class="tex">\(\mathrm{cbs}(S)\)</span>
+  </a>
+
+                  <a href="../measures/cbs.html">Critical block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">For the <em>random $\Delta$-dense</em> formula this entry is otherwise about -- <strong>not</strong> $\Theta(n)$. Critical block sensitivity lower-bounds the randomized cost: let $s$ be the plurality output of a bounded-error algorithm, take a critical $x$ and $b$ disjoint blocks with $s(x^B) \ne s(x)$; an algorithm that never queries inside $B$ cannot answer whp at both $x$ and $x^B$, so it must enter each block with constant probability and $\mathrm{cbs} = O(\mathrm{R})$. Here $\mathrm{R} = \Theta(1)$. [<a href="../refs.html#ABK21lifting" class="xref ref ">ABK21lifting</a>] give the same conclusion through $\mathrm{cbs} = O(\mathrm{CA})$ with $\mathrm{CA} = \Theta(1)$. The famous $\mathrm{cbs} = \Theta(n)$ belongs to the <strong>Tseitin</strong> contradiction on a bounded-degree expander [<a href="../refs.html#HuynhNordstrom12" class="xref ref ">HuynhNordstrom12</a>, <a href="../refs.html#GoosPitassi14" class="xref ref ">GoosPitassi14</a>], where an assignment can falsify a single vertex constraint and random sampling therefore fails -- see <a href="../functions/TseitinExpander.html" class="xref function "><span class="tex">\(\mathrm{Ts}(G)\)</span></a>. Against $\mathrm{D} = \Theta(n)$ this makes the dense random formula an <em>unbounded</em> $\mathrm{D}$-vs-$\mathrm{cbs}$ separation rather than the $\Theta(1)$ ratio previously recorded.
+<span class="refs"><a href="../refs.html#GoosPitassi14" class="xref ref ">GoosPitassi14</a> <a href="../refs.html#HuynhNordstrom12" class="xref ref ">HuynhNordstrom12</a> <a href="../refs.html#ABK21lifting" class="xref ref ">ABK21lifting</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                  <a href="../measures/C.html">Certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">The $k$ variables of a falsified clause certify that clause, so $\mathrm{C} \le k = O(1)$ at every assignment. So $\mathrm{C} = \Theta(1)$ against $\mathrm{D} = \Theta(n)$: a falsified clause is trivially <em>verifiable</em> and yet, by the resolution-depth lower bound, very far from <em>findable</em>. This is the query-complexity shadow of TFNP.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R0.html">Zero-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">The witness is self-verifying (read the clause's $k$ variables and check), so the sampling algorithm can be made never-wrong by repeating until it succeeds: $\mathrm{R}_0 = \Theta(\mathrm{R}) = \Theta(1)$. Contrast <a href="../functions/ApproxHW.html" class="xref function "><span class="tex">\(\mathrm{ApproxHW}\)</span></a>, where there is no witness and $\mathrm{R}_0$ jumps to $\Theta(n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rbar.html">Expected-cost randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">$\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(\mathrm{R}_{\varepsilon}(f))$ for every $f$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q.html">Bounded-error quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">At most $\mathrm{R} = \Theta(1)$; at least one query.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q0.html">Zero-error (Las Vegas) quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">At most $\mathrm{R}_0 = \Theta(1)$; at least $\mathrm{Q}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Adv.html" title="Positive-weights adversary bound">
+    <span class="tex">\(\mathrm{Adv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Adv.html">Positive-weights adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">A lower bound on $\mathrm{Q} = \Theta(1)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Advpm.html" title="General (negative-weights) adversary bound">
+    <span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Advpm.html">General (negative-weights) adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">$\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q}) = \Theta(1)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dmu.html">Distributional query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">By Yao, $\max_\mu \mathrm{D}^\mu = \mathrm{R} = \Theta(1)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_prod.html" title="Product-distribution distributional complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_prod.html">Product-distribution distributional complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">At most $\mathrm{D}_\mu = \Theta(1)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CA.html" title="Classical adversary bound">
+    <span class="tex">\(\mathrm{CA}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CA.html">Classical adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">A lower bound on $\mathrm{R} = \Theta(1)$, hence $\Theta(1)$. By $\mathrm{cbs} = O(\mathrm{CA})$ [<a href="../refs.html#ABK21lifting" class="xref ref ">ABK21lifting</a>] this forces <a href="../measures/cbs.html" class="xref measure "><span class="tex">\(\mathrm{cbs}(S)\)</span></a> $= \Theta(1)$ here too: both of these adversary-flavoured measures lower-bound the <em>randomized</em> cost, so neither can see the $\Theta(n)$ deterministic cost. Only <a href="../measures/D_size.html" class="xref measure "><span class="tex">\(\mathrm{DTsize}(f)\)</span></a> and <a href="../measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a> do.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/cjdeg.html">Conical junta degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Squeezed by $\mathrm{cjdeg} \le \mathrm{R} = \Theta(1)$ and $\mathrm{cjdeg} \ge 1$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Np.html">Noisy decision tree complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Sample a clause and read each of its $k$ variables $O(1)$ times to beat the noise.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/robustQ.html">Robust quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">At most $\mathrm{N}_p = \Theta(1)$, at least $\mathrm{Q} = \Theta(1)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/prt.html" title="Partition bound">
+    <span class="tex">\(\mathrm{prt}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/prt.html">Partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(O(1)\)</span></td>
+              <td class="short">From $\mathrm{prt} \le 2\mathrm{R} = O(1)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/rprt.html" title="Relaxed partition bound">
+    <span class="tex">\(\overline{\mathrm{prt}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rprt.html">Relaxed partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(O(1)\)</span></td>
+              <td class="short">From $\overline{\mathrm{prt}} \le \mathrm{prt} = O(1)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/C1.html">1-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">The same $k$-variable certificate as $\mathrm{C}$: reading the variables of a falsified clause certifies that clause as a valid output.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Cmin.html">Minimum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Between $1$ and $\mathrm{C} = \Theta(1)$: the short certificate is available at <em>every</em> assignment, which is exactly why $\mathrm{R}$ and $\mathrm{cbs}$ stay constant while $\mathrm{D} = \Theta(n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QE.html">Exact quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(O(n)\)</span></td>
+              <td class="short">Only $\mathrm{Q}_E \le \mathrm{D} = O(n)$ is available. The Las Vegas value $\mathrm{Q}_0 = \Theta(1)$ does not bound it: certainty on <em>every</em> branch is what <a href="../functions/GroverSearch.html" class="xref function "><span class="tex">\(\mathrm{SEARCH}_n\)</span></a> shows can cost the full $n$, and no lower bound better than $\Omega(1)$ is proved here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rank.html">Decision tree rank</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Decision-tree rank for $\mathrm{Search}(\varphi)$ is exactly the value of the Pudlak--Impagliazzo Prover--Delayer game, and a Delayer scoring $p$ points forces tree-like resolution size $\ge 2^{p}$. Random $\Delta$-dense $k$-CNFs admit a Delayer strategy scoring $\Omega(n)$ points, and $\mathrm{rank} \le \mathrm{D} = \Theta(n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/MAdv.html" title="Multiplicative adversary">
+    <span class="tex">\(\mathrm{MAdv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MAdv.html">Multiplicative adversary</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{Adv}^{\pm} \le \mathrm{MAdv} \le \mathrm{Q}$, and both ends are $\Theta(1)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/gamma2.html" title="Approximate gamma_2 norm">
+    <span class="tex">\(\gamma_2^{\alpha}(f)\)</span>
+  </a>
+
+                  <a href="../measures/gamma2.html">Approximate gamma_2 norm</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">$\gamma_2 = \Theta(\mathrm{Adv}^{\pm}) = \Theta(\mathrm{Q}) = \Theta(1)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R1.html">One-sided-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Squeezed: $\mathrm{R} \le \mathrm{R}^1 \le \mathrm{R}_0 = \Theta(1)$. A falsified clause is self-certifying, so demanding a never-invalid output costs nothing.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/noisyR.html" title="Noisy randomized query complexity">
+    <span class="tex">\(\mathrm{noisyR}(f)\)</span>
+  </a>
+
+                  <a href="../measures/noisyR.html">Noisy randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">At most $\mathrm{R} = \Theta(1)$, and at least $1$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/noisyRna.html" title="Non-adaptive noisy randomized query complexity">
+    <span class="tex">\(\mathrm{noisyR}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/noisyRna.html">Non-adaptive noisy randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Squeezed: $\mathrm{noisyR} = \Theta(1) \le \mathrm{noisyR}^{\mathrm{na}} \le \mathrm{R}^{\mathrm{na}} = \Theta(1)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/PostQ.html" title="Post-selected quantum query complexity">
+    <span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/PostQ.html">Post-selected quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">At most $\mathrm{Q} = \Theta(1)$, and at least $1$.
+</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Separations its values prove <span class="dim">— computed, not recorded</span></h2>
+        <p class="dim small">Read straight off the table above by comparing two values: no
+        relation record states these, and where one does and says more, the record wins and the
+        pair is not listed here. 13 in total.</p>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=rank&amp;b=C">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{rank}(f_n) \to \infty \ \text{ while } \ \mathrm{C}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{rank}(f) = \Theta(n)\) against \(\mathrm{C}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Dna&amp;b=C1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\mathrm{na}}(f_n) \to \infty \ \text{ while } \ \mathrm{C}^1(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\mathrm{na}}(f) = n\) against \(\mathrm{C}^1(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=psD&amp;b=Cmin">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{psD}(S)(f_n) \to \infty \ \text{ while } \ \mathrm{C}_{\min}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{psD}(S) = \Omega(n^{1/3})\) against \(\mathrm{C}_{\min}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=rank&amp;b=C1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{rank}(f_n) \to \infty \ \text{ while } \ \mathrm{C}^1(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{rank}(f) = \Theta(n)\) against \(\mathrm{C}^1(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Dna&amp;b=Cmin">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\mathrm{na}}(f_n) \to \infty \ \text{ while } \ \mathrm{C}_{\min}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\mathrm{na}}(f) = n\) against \(\mathrm{C}_{\min}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=psD&amp;b=R0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{psD}(S)(f_n) \to \infty \ \text{ while } \ \mathrm{R}_{0}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{psD}(S) = \Omega(n^{1/3})\) against \(\mathrm{R}_{0}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=rank&amp;b=Cmin">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{rank}(f_n) \to \infty \ \text{ while } \ \mathrm{C}_{\min}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{rank}(f) = \Theta(n)\) against \(\mathrm{C}_{\min}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Dna&amp;b=R0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\mathrm{na}}(f_n) \to \infty \ \text{ while } \ \mathrm{R}_{0}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\mathrm{na}}(f) = n\) against \(\mathrm{R}_{0}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=psD&amp;b=C1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{psD}(S)(f_n) \to \infty \ \text{ while } \ \mathrm{C}^1(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{psD}(S) = \Omega(n^{1/3})\) against \(\mathrm{C}^1(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=rank&amp;b=R0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{rank}(f_n) \to \infty \ \text{ while } \ \mathrm{R}_{0}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{rank}(f) = \Theta(n)\) against \(\mathrm{R}_{0}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=Dna&amp;b=Q0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\mathrm{na}}(f_n) \to \infty \ \text{ while } \ \mathrm{Q}_{0}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\mathrm{na}}(f) = n\) against \(\mathrm{Q}_{0}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=rank&amp;b=Q0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{rank}(f_n) \to \infty \ \text{ while } \ \mathrm{Q}_{0}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{rank}(f) = \Theta(n)\) against \(\mathrm{Q}_{0}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+
+              <a class="go" href="../pair.html?a=psD&amp;b=Q0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{psD}(S)(f_n) \to \infty \ \text{ while } \ \mathrm{Q}_{0}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{psD}(S) = \Omega(n^{1/3})\) against \(\mathrm{Q}_{0}(f) = \Theta(1)\)</div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Separations it witnesses</h2>
+        <ul class="witlist">
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=D&amp;b=R">pair &rarr;</a>
+  <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+            </div>
+            <div class="stmt">Unbounded, for a <em>total</em> relation: $\mathrm{R}=O(1)$ but $\mathrm{D}=\Theta(n)$. Unlike <a href="../functions/promiseFind1.html" class="xref function "><span class="tex">\(\mathrm{Find1}_{\ge n/2}\)</span></a> no promise is needed -- the hardness is that a deterministic algorithm must name a <em>specific</em> falsified clause, which is a resolution refutation in disguise.</div>
+<div class="refs"><a href="../refs.html#LNNW95" class="xref ref ">LNNW95</a></div>          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Cited as a witness by</h2>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+   <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
+
+              <a class="go" href="../pair.html?a=psD&amp;b=R#psD__R__relation">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{psD}(\mathrm{SearchCNF}) = \Omega(n^{1/3}) \text{ for random } k\text{-CNFs}\)</span></div>
+<div class="refs"><a href="../refs.html#CDM23" class="xref ref ">CDM23</a> <a href="../refs.html#GIPS21" class="xref ref ">GIPS21</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/cbs.html" title="Critical block sensitivity">
+    <span class="tex">\(\mathrm{cbs}(S)\)</span>
+  </a>
+
+                <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+   <span class="pill st-fails" title="Proved that no bound of this form can hold in this setting.">No bound exists</span>
+
+              <a class="go" href="../pair.html?a=D&amp;b=cbs#D__cbs__relation">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}(\mathrm{SearchCNF}) = \Theta(n) \to \infty, \qquad \mathrm{cbs}(\mathrm{SearchCNF}) = \Theta(1)\)</span></div>
+<div class="refs"><a href="../refs.html#GoosPitassi14" class="xref ref ">GoosPitassi14</a> <a href="../refs.html#LNNW95" class="xref ref ">LNNW95</a></div>          </li>
+        </ul>
+      </section>
+
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#GIPS21" class="xref ref ">[GIPS21]</a> <span class="dim">On the pseudo-deterministic query complexity of NP search problems</span></li>
+            <li><a href="../refs.html#CDM23" class="xref ref ">[CDM23]</a> <span class="dim">Query Complexity of Search Problems</span></li>
+            <li><a href="../refs.html#LNNW95" class="xref ref ">[LNNW95]</a> <span class="dim">Search problems in the decision tree model</span></li>
+            <li><a href="../refs.html#BenSassonWigderson01" class="xref ref ">[BenSassonWigderson01]</a> <span class="dim">Short proofs are narrow -- resolution made simple</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/psD.html" class="xref measure "><span class="tex">\(\mathrm{psD}(S)\)</span></a></li><li><a href="../functions/ApproxHW.html" class="xref function "><span class="tex">\(\mathrm{ApproxHW}\)</span></a></li><li><a href="../measures/D_size.html" class="xref measure "><span class="tex">\(\mathrm{DTsize}(f)\)</span></a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/04-partial-and-relations.yaml</code> &mdash; id <code>SearchCNF</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

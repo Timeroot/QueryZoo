@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two different noisy query models &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="">Functions</a>
+      <a href="../concepts/index.html"
+         class="on">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../concepts/index.html">Concepts</a></div>
+  <header class="entryhead concept">
+    <div>
+      <h1>Two different noisy query models</h1>
+      <p class="lede">N_p (faulty oracle) and noisyR (bias purchasing) are NOT the same measure. Read this before using either.</p>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="main-col">
+      <article class="card prose">
+        <p>The word &quot;noisy&quot; is used for two genuinely different things, and the zoo
+keeps them as separate measures.</p>
+<h3>1. Faulty oracle -- <a href="../measures/Np.html" class="xref measure "><span class="tex">\(\mathrm{N}_{p}(f)\)</span></a></h3>
+<p>Introduced by [<a href="../refs.html#FRPU94" class="xref ref ">FRPU94</a>] (see also [<a href="../refs.html#ReischukSchmeltz91" class="xref ref ">ReischukSchmeltz91</a>]). Every query answer
+is independently flipped with probability $p$; the algorithm has no control
+over this. Cost = number of queries.</p>
+<ul>
+<li>$\mathrm{N}_p(f) = O(\mathrm{R}(f)\log \mathrm{R}(f)/(1-2p)^2)$ -- repeat
+and majority-vote.</li>
+<li>$\mathrm{N}_p(\mathrm{PARITY}_n)=\Theta(n\log n)$: the $\log$ is
+<strong>necessary</strong> [<a href="../refs.html#FRPU94" class="xref ref ">FRPU94</a>, <a href="../refs.html#EvansPippenger98" class="xref ref ">EvansPippenger98</a>].</li>
+<li>The quantum analogue <a href="../measures/robustQ.html" class="xref measure "><span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span></a> behaves differently:
+$\mathrm{Q}^{\mathrm{rob}}(\mathrm{PARITY}_n)=\Theta(n)$ -- <strong>no log</strong>
+[<a href="../refs.html#BNRdW05" class="xref ref ">BNRdW05</a>].</li>
+</ul>
+<h3>2. Bias purchasing -- <a href="../measures/noisyR.html" class="xref measure "><span class="tex">\(\mathrm{noisyR}(f)\)</span></a></h3>
+<p>Introduced by [<a href="../refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a>]. The algorithm may query a bit
+&quot;at bias $\gamma$&quot;, receiving the correct value with probability
+$\tfrac12+\gamma$, and pays $\gamma^2$ for it (so an exact query costs
+$\Theta(1)$). The algorithm <em>chooses</em> the noise level per query.</p>
+<ul>
+<li>$\mathrm{noisyR}(f)\le\mathrm{R}(f)$.</li>
+<li>$\mathrm{noisyR}(f)=\Theta\big(\mathrm{R}(f\circ\mathrm{GapMaj}_n)/\mathrm{R}(\mathrm{GapMaj}_n)\big)$
+-- an exact characterisation.</li>
+<li>$\mathrm{noisyR}$ is the largest measure $M$ with
+$\mathrm{R}(f\circ g^n)=\Omega(M(f)\mathrm{R}(g))$.</li>
+<li>There are partial $f$ with $\mathrm{R}(f)=\mathrm{noisyR}(f)^{1+\Omega(1)}$;
+this separation <em>is</em> the refutation of the randomized composition conjecture.</li>
+</ul>
+<h3>The difference in one line</h3>
+<p>In $\mathrm{N}_p$ the noise is <strong>imposed</strong> on the algorithm and the natural
+question is &quot;how much repetition do you need?&quot;; in $\mathrm{noisyR}$ the
+noise is <strong>bought</strong> by the algorithm and the natural question is &quot;how little
+information suffices?&quot;. Their behaviour on $\mathrm{PARITY}$ already differs:
+$\mathrm{N}_p(\mathrm{PARITY}_n)=\Theta(n\log n)$ while
+$\mathrm{noisyR}(\mathrm{PARITY}_n)=\Theta(n)$ (since
+$\mathrm{R}(\mathrm{PARITY}_n)=\Theta(n)$ is full, and
+$\mathrm{R}(f)=\Theta(n)\Rightarrow\mathrm{noisyR}(f)=\Theta(\mathrm{R}(f))$
+[<a href="../refs.html#CKMPSS23" class="xref ref ">CKMPSS23</a>]).</p>
+<h3>The information-theoretic engine, and what is open in it</h3>
+<p>Both halves of <a href="../measures/noisyRna.html" class="xref measure "><span class="tex">\(\mathrm{noisyR}^{\mathrm{na}}(f)\)</span></a>'s Theorem 8 -- $\mathrm{noisyR}^{\mathrm{na}}(f)
+=\Theta(\mathrm{R}^{\mathrm{na}}(f))$ for total and partial $f$, but not for
+relations -- run on one inequality of [<a href="../refs.html#Samorodnitsky16" class="xref ref ">Samorodnitsky16</a>], in the form isolated
+by [<a href="../refs.html#PolyanskiyWu17" class="xref ref ">PolyanskiyWu17</a>]: a <strong>noisy</strong> copy of $X$ at bias $\rho$ tells you at
+least as much about $f(X)$ as an <strong>erasure</strong> copy that survives with
+probability $\rho^2$. Since erasures are honest queries, a noise budget
+converts into a query budget.</p>
+<p>That inequality is a by-product of the <em>most informative Boolean function</em>
+conjecture of [<a href="../refs.html#CourtadeKumar14" class="xref ref ">CourtadeKumar14</a>]: if $Y$ is $X$ sent through a binary
+symmetric channel with crossover probability $\varepsilon$, then for every
+Boolean $f$,
+$$I\big(f(X);Y\big) \;\le\; 1 - H_2(\varepsilon),$$
+with equality for a dictator (a subcube of codimension 1). It is <strong>open</strong>.
+[<a href="../refs.html#Samorodnitsky16" class="xref ref ">Samorodnitsky16</a>] proves it for high noise -- there is an absolute $\delta&gt;0$
+such that it holds whenever $(1-2\varepsilon)^2\le\delta$ -- via the
+strengthening of Mrs. Gerber's lemma
+$\mathrm{Ent}(T_\varepsilon f)\le \mathbb{E}_T\,\mathrm{Ent}(f\mid T)$ that
+also yields the noise-beats-erasure comparison above.</p>
+<p>The reason none of this survives for <strong>relations</strong> is the last step, not the
+first: converting an entropy gap into a guessing advantage needs
+Fano / [<a href="../refs.html#HellmanRaviv70" class="xref ref ">HellmanRaviv70</a>], and with many acceptable outputs there is nothing
+to guess. That is exactly where the exponential separation of Theorem 8
+lives.</p>
+
+      </article>
+    </div>
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/Np.html" class="xref measure "><span class="tex">\(\mathrm{N}_{p}(f)\)</span></a></li><li><a href="../measures/noisyR.html" class="xref measure "><span class="tex">\(\mathrm{noisyR}(f)\)</span></a></li><li><a href="../measures/noisyRna.html" class="xref measure "><span class="tex">\(\mathrm{noisyR}^{\mathrm{na}}(f)\)</span></a></li><li><a href="../measures/robustQ.html" class="xref measure "><span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span></a></li><li><a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a></li><li><a href="../functions/GapMaj.html" class="xref function "><span class="tex">\(\mathrm{GapMaj}^{\delta}_{n}\)</span></a></li><li><a href="../functions/PARITY.html" class="xref function "><span class="tex">\(\oplus_n\)</span></a></li><li><a href="../concepts/composition.html" class="xref concept ">Composition</a></li></ul>
+      </section>
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#FRPU94" class="xref ref ">[FRPU94]</a> <span class="dim">Computing with Noisy Information</span></li>
+            <li><a href="../refs.html#EvansPippenger98" class="xref ref ">[EvansPippenger98]</a> <span class="dim">Average-case lower bounds for noisy Boolean decision trees</span></li>
+            <li><a href="../refs.html#ReischukSchmeltz91" class="xref ref ">[ReischukSchmeltz91]</a> <span class="dim">Reliable computation with noisy circuits and decision trees -- a general n log n lower bound</span></li>
+            <li><a href="../refs.html#BenDavidBlais20composition" class="xref ref ">[BenDavidBlais20composition]</a> <span class="dim">A Tight Composition Theorem for the Randomized Query Complexity of Partial Functions</span></li>
+            <li><a href="../refs.html#BNRdW05" class="xref ref ">[BNRdW05]</a> <span class="dim">Robust Polynomials and Quantum Algorithms</span></li>
+            <li><a href="../refs.html#CKMPSS23" class="xref ref ">[CKMPSS23]</a> <span class="dim">On the Composition of Randomized Query Complexity and Approximate Degree</span></li>
+            <li><a href="../refs.html#Gu25noisy" class="xref ref ">[Gu25noisy]</a> <span class="dim">Tight Bounds for Noisy Computation of High-Influence Functions, Connectivity, and Threshold</span></li>
+            <li><a href="../refs.html#GLX26noisy" class="xref ref ">[GLX26noisy]</a> <span class="dim">A Unified Lower Bound on the Noisy Query Complexity of Boolean Functions</span></li>
+            <li><a href="../refs.html#Samorodnitsky16" class="xref ref ">[Samorodnitsky16]</a> <span class="dim">On the entropy of a noisy function</span></li>
+            <li><a href="../refs.html#PolyanskiyWu17" class="xref ref ">[PolyanskiyWu17]</a> <span class="dim">Strong data-processing inequalities for channels and Bayesian networks</span></li>
+            <li><a href="../refs.html#CourtadeKumar14" class="xref ref ">[CourtadeKumar14]</a> <span class="dim">Which Boolean functions maximize mutual information on noisy inputs?</span></li>
+            <li><a href="../refs.html#HellmanRaviv70" class="xref ref ">[HellmanRaviv70]</a> <span class="dim">Probability of error, equivocation, and the Chernoff bound</span></li>
+        </ul>
+      </section>
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/concepts.yaml</code> &mdash; id <code>noisy-models</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

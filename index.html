@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Query Complexity Zoo</title>
+<link rel="stylesheet" href="static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="index.html"
+         class="on">Overview</a>
+      <a href="matrix.html"
+         class="">Matrix</a>
+      <a href="measures/index.html"
+         class="">Measures</a>
+      <a href="relations.html"
+         class="">Relations</a>
+      <a href="pair.html"
+         class="">Pairs</a>
+      <a href="functions/index.html"
+         class="">Functions</a>
+      <a href="concepts/index.html"
+         class="">Concepts</a>
+      <a href="open.html"
+         class="">Open</a>
+      <a href="refs.html"
+         class="">References</a>
+      <a href="editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero">
+  <div class="wrap">
+    <h1>The Query Complexity Zoo</h1>
+    <p class="sub">Measures, relations, and separations for Boolean decision trees</p>
+    <p class="lede">A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <div class="statbar">
+      <a href="measures/index.html"><b>94</b> measures</a>
+      <a href="relations.html"><b>564</b> pairs</a>
+      <a href="relations.html"><b>557</b> relation records</a>
+      <a href="functions/index.html"><b>75</b> functions</a>
+      <a href="matrix.html"><b>144</b> matrix cells</a>
+      <a href="concepts/index.html"><b>15</b> concepts</a>
+      <a href="open.html"><b>24</b> open problems</a>
+      <a href="refs.html"><b>248</b> references</a>
+    </div>
+  </div>
+</section>
+
+<div class="wrap cols">
+  <div class="main-col">
+
+    <section class="card">
+      <h2>What this is</h2>
+      <p>Query complexity has a lot of measures and a lot of folklore. This site tries to put
+      the folklore in one place, in a form you can grep, correct, and extend.</p>
+      <p>For each ordered pair of measures \((M_1, M_2)\) we record, <em>separately for each of the
+      three settings</em>:</p>
+      <ul class="tick">
+        <li>the best known <b>upper bound</b> &mdash; a statement
+            \(M_1(f) = O(g(M_2(f)))\) that holds for <em>every</em> \(f\) in the setting,
+            with log factors kept rather than swept into \(\tilde O\) where anyone has bothered to pin them down;</li>
+        <li>the best known <b>lower bound / separation</b> &mdash; a family \(\{f_n\}\) with
+            \(M_1(f_n) = \Omega(g(M_2(f_n)))\), together with a link to the
+            <a href="functions/index.html">function</a> that witnesses it;</li>
+        <li>whether the two <b>meet</b> (<span class="pill st-settled">Settled</span>),
+            leave a <span class="pill st-gap">Gap</span>, are
+            <span class="pill st-open">Wide open</span>, or whether the relation provably
+            <span class="pill st-fails">has no bound</span> in that setting.</li>
+      </ul>
+      <p>Start with the <a href="matrix.html">exponent matrix</a> for the classical
+      13-measure picture, then click into a cell for the fine-grained statements. Any of the
+      94&times;94 ordered pairs &mdash; including the ones
+      where the only thing to say is what the build can derive &mdash; opens in the
+      <a href="pair.html">pair browser</a>.
+      <a href="concepts/reading-the-tables.html">How to read the tables</a> explains
+      the conventions.</p>
+    </section>
+
+    <section class="card">
+      <h2>The three settings</h2>
+      <p>Almost every interesting subtlety in this subject is a setting distinction, so it is a
+      first-class axis everywhere on this site.</p>
+      <div class="settinggrid">
+        <div class="settingbox s-total">
+          <h3>  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+ Total functions</h3>
+          <p>f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.</p>
+        </div>
+        <div class="settingbox s-partial">
+          <h3>  <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+ Partial functions</h3>
+          <p>f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.</p>
+        </div>
+        <div class="settingbox s-relation">
+          <h3>  <span class="pill setting s-relation" title="f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.">relation</span>
+ Relations</h3>
+          <p>f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.</p>
+        </div>
+      </div>
+      <p class="dim">More: <a href="concepts/settings.html">Total vs partial vs relational</a>.</p>
+    </section>
+
+    <section class="card">
+      <h2>The measures</h2>
+        <div class="catrow">
+          <h3><a href="measures/index.html#deterministic">Deterministic</a>
+              <span class="dim">Decision-tree depth, size, and distributional variants.</span></h3>
+          <div class="chips">
+  <a class="chip cat-deterministic" href="measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+  <a class="chip cat-deterministic" href="measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+  <a class="chip cat-deterministic" href="measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+  <a class="chip cat-deterministic" href="measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+  <a class="chip cat-deterministic" href="measures/PDT.html" title="Parity decision tree complexity">
+    <span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span>
+  </a>
+  <a class="chip cat-deterministic" href="measures/D_prod.html" title="Product-distribution distributional complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f)\)</span>
+  </a>
+  <a class="chip cat-deterministic" href="measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+          </div>
+        </div>
+        <div class="catrow">
+          <h3><a href="measures/index.html#randomized">Randomized</a>
+              <span class="dim">Bounded error, zero error, expected cost, noisy oracles.</span></h3>
+          <div class="chips">
+  <a class="chip cat-randomized" href="measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+  <a class="chip cat-randomized" href="measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+  <a class="chip cat-randomized" href="measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+  <a class="chip cat-randomized" href="measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+  <a class="chip cat-randomized" href="measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+  <a class="chip cat-randomized" href="measures/R1RP.html" title="One-sided randomized queries with certain rejection">
+    <span class="tex">\(\mathrm{R}_{\mathrm{RP}}(f)\)</span>
+  </a>
+  <a class="chip cat-randomized" href="measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+  <a class="chip cat-randomized" href="measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+          </div>
+        </div>
+        <div class="catrow">
+          <h3><a href="measures/index.html#quantum">Quantum</a>
+              <span class="dim">Bounded error, exact, post-selected, robust.</span></h3>
+          <div class="chips">
+  <a class="chip cat-quantum" href="measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+  <a class="chip cat-quantum" href="measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+  <a class="chip cat-quantum" href="measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+  <a class="chip cat-quantum" href="measures/PostQ.html" title="Post-selected quantum query complexity">
+    <span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span>
+  </a>
+  <a class="chip cat-quantum" href="measures/QC.html" title="Quantum certificate complexity">
+    <span class="tex">\(\mathrm{QC}(f)\)</span>
+  </a>
+  <a class="chip cat-quantum" href="measures/NQ.html" title="Nondeterministic quantum query complexity">
+    <span class="tex">\(\mathrm{NQ}(f)\)</span>
+  </a>
+  <a class="chip cat-quantum" href="measures/QSweak.html" title="Weak quantum sabotage complexity">
+    <span class="tex">\(\mathrm{QS}_{\mathrm{weak}}(f)\)</span>
+  </a>
+  <a class="chip cat-quantum" href="measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+  <a class="chip cat-quantum" href="measures/QSstr.html" title="Strong quantum sabotage complexity">
+    <span class="tex">\(\mathrm{QS}_{\mathrm{str}}(f)\)</span>
+  </a>
+  <a class="chip cat-quantum" href="measures/QSweakind.html" title="Weak quantum sabotage index complexity">
+    <span class="tex">\(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(f)\)</span>
+  </a>
+  <a class="chip cat-quantum" href="measures/QSstrind.html" title="Strong quantum sabotage index complexity">
+    <span class="tex">\(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f)\)</span>
+  </a>
+  <a class="chip cat-quantum" href="measures/QEcert.html" title="Exact quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)\)</span>
+  </a>
+  <a class="chip cat-quantum" href="measures/Q0cert.html" title="Zero-error quantum certification complexity">
+    <span class="tex">\(\mathrm{Q}_{0}^{\mathrm{cert}}(f)\)</span>
+  </a>
+          </div>
+        </div>
+        <div class="catrow">
+          <h3><a href="measures/index.html#degree">Polynomial degree</a>
+              <span class="dim">Exact, approximate, sign, rational, nondeterministic, mod-p.</span></h3>
+          <div class="chips">
+  <a class="chip cat-degree" href="measures/deg.html" title="Exact degree">
+    <span class="tex">\(\deg(f)\)</span>
+  </a>
+  <a class="chip cat-degree" href="measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+  <a class="chip cat-degree" href="measures/odeg.html" title="One-sided approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{+}(f)\)</span>
+  </a>
+  <a class="chip cat-degree" href="measures/sdeg.html" title="Sign degree">
+    <span class="tex">\(\mathrm{sdeg}(f)\)</span>
+  </a>
+  <a class="chip cat-degree" href="measures/rdeg.html" title="Rational degree">
+    <span class="tex">\(\mathrm{rdeg}(f)\)</span>
+  </a>
+  <a class="chip cat-degree" href="measures/ardeg.html" title="Approximate rational degree">
+    <span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span>
+  </a>
+  <a class="chip cat-degree" href="measures/ndeg.html" title="Nondeterministic degree">
+    <span class="tex">\(\mathrm{ndeg}(f)\)</span>
+  </a>
+  <a class="chip cat-degree" href="measures/deg2.html" title="Mod-2 degree">
+    <span class="tex">\(\deg_2(f)\)</span>
+  </a>
+  <a class="chip cat-degree" href="measures/degp.html" title="Mod-p degree">
+    <span class="tex">\(\deg_p(f)\)</span>
+  </a>
+  <a class="chip cat-degree" href="measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+  <a class="chip cat-degree" href="measures/bdeg.html" title="Exact bounded polynomial degree">
+    <span class="tex">\(\overline{\deg}(f)\)</span>
+  </a>
+  <a class="chip cat-degree" href="measures/degcert.html" title="Bounded degree certification complexity">
+    <span class="tex">\(\overline{\deg}^{\mathrm{cert}}(f)\)</span>
+  </a>
+  <a class="chip cat-degree" href="measures/osdeg0.html" title="Bounded polynomial degree with error on 0-inputs">
+    <span class="tex">\(\overline{\mathrm{osdeg}}^{\,0}_{\varepsilon}(f)\)</span>
+  </a>
+  <a class="chip cat-degree" href="measures/osdeg1.html" title="Bounded polynomial degree with error on 1-inputs">
+    <span class="tex">\(\overline{\mathrm{osdeg}}^{\,1}_{\varepsilon}(f)\)</span>
+  </a>
+  <a class="chip cat-degree" href="measures/osdeg.html" title="One-sided-error bounded polynomial degree">
+    <span class="tex">\(\overline{\mathrm{osdeg}}_{\varepsilon}(f)\)</span>
+  </a>
+          </div>
+        </div>
+        <div class="catrow">
+          <h3><a href="measures/index.html#combinatorial">Combinatorial</a>
+              <span class="dim">Sensitivity, block sensitivity, certificates, spectral sensitivity.</span></h3>
+          <div class="chips">
+  <a class="chip cat-combinatorial" href="measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/s0.html" title="0-sensitivity">
+    <span class="tex">\(\mathrm{s}^0(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/s1.html" title="1-sensitivity">
+    <span class="tex">\(\mathrm{s}^1(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/bs0.html" title="0-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^0(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/bs1.html" title="1-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^1(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/FC.html" title="Fractional certificate complexity">
+    <span class="tex">\(\mathrm{FC}(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/cbs.html" title="Critical block sensitivity">
+    <span class="tex">\(\mathrm{cbs}(S)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/UC.html" title="Unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/UCmin.html" title="Minimum unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}_{\min}(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/SP.html" title="Subcube partition complexity">
+    <span class="tex">\(\mathrm{SP}(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/lambdacert.html" title="Spectral sensitivity certification">
+    <span class="tex">\(\lambda^{\mathrm{cert}}(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/RC.html" title="Randomized certificate complexity">
+    <span class="tex">\(\mathrm{RC}(f)\)</span>
+  </a>
+  <a class="chip cat-combinatorial" href="measures/EC.html" title="Expectational certificate complexity">
+    <span class="tex">\(\mathrm{EC}(f)\)</span>
+  </a>
+          </div>
+        </div>
+        <div class="catrow">
+          <h3><a href="measures/index.html#fourier">Fourier-analytic</a>
+              <span class="dim">Influence, noise sensitivity, spectral norm, sparsity.</span></h3>
+          <div class="chips">
+  <a class="chip cat-fourier" href="measures/Var.html" title="Variance">
+    <span class="tex">\(\mathrm{Var}(f)\)</span>
+  </a>
+  <a class="chip cat-fourier" href="measures/Inf.html" title="Total influence (L2 influence)">
+    <span class="tex">\(\mathrm{I}(f)\)</span>
+  </a>
+  <a class="chip cat-fourier" href="measures/Inf1.html" title="Total L1 influence">
+    <span class="tex">\(\mathrm{I}^{1}(f)\)</span>
+  </a>
+  <a class="chip cat-fourier" href="measures/MaxInf.html" title="Maximum influence">
+    <span class="tex">\(\mathrm{MaxInf}(f)\)</span>
+  </a>
+  <a class="chip cat-fourier" href="measures/osss.html" title="OSSS number">
+    <span class="tex">\(\mathrm{osss}(f)\)</span>
+  </a>
+  <a class="chip cat-fourier" href="measures/NS.html" title="Noise sensitivity">
+    <span class="tex">\(\mathrm{NS}_{\delta}(f)\)</span>
+  </a>
+  <a class="chip cat-fourier" href="measures/Stab.html" title="Noise stability">
+    <span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span>
+  </a>
+  <a class="chip cat-fourier" href="measures/nsr.html" title="Noise robustness">
+    <span class="tex">\(\mathrm{nsr}(f)\)</span>
+  </a>
+  <a class="chip cat-fourier" href="measures/L1.html" title="Spectral norm">
+    <span class="tex">\(\hat{L}_1(f)\)</span>
+  </a>
+  <a class="chip cat-fourier" href="measures/spar.html" title="Fourier sparsity">
+    <span class="tex">\(\mathrm{spar}(f)\)</span>
+  </a>
+  <a class="chip cat-fourier" href="measures/Fdim.html" title="Fourier dimension">
+    <span class="tex">\(\dim_{\mathbb{F}_2}(f)\)</span>
+  </a>
+          </div>
+        </div>
+        <div class="catrow">
+          <h3><a href="measures/index.html#adversary">Adversary &amp; games</a>
+              <span class="dim">Quantum and classical adversary bounds, certificate games.</span></h3>
+          <div class="chips">
+  <a class="chip cat-adversary" href="measures/CA.html" title="Classical adversary bound">
+    <span class="tex">\(\mathrm{CA}(f)\)</span>
+  </a>
+  <a class="chip cat-adversary" href="measures/Adv.html" title="Positive-weights adversary bound">
+    <span class="tex">\(\mathrm{Adv}(f)\)</span>
+  </a>
+  <a class="chip cat-adversary" href="measures/CG.html" title="Certificate game complexity (private coin)">
+    <span class="tex">\(\mathrm{CG}(f)\)</span>
+  </a>
+  <a class="chip cat-adversary" href="measures/CGpub.html" title="Certificate game complexity (public coin)">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span>
+  </a>
+  <a class="chip cat-adversary" href="measures/CGstar.html" title="Quantum certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{*}(f)\)</span>
+  </a>
+  <a class="chip cat-adversary" href="measures/CGns.html" title="Non-signaling certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span>
+  </a>
+  <a class="chip cat-adversary" href="measures/Advpm.html" title="General (negative-weights) adversary bound">
+    <span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span>
+  </a>
+  <a class="chip cat-adversary" href="measures/gamma2.html" title="Approximate gamma_2 norm">
+    <span class="tex">\(\gamma_2^{\alpha}(f)\)</span>
+  </a>
+  <a class="chip cat-adversary" href="measures/MAdv.html" title="Multiplicative adversary">
+    <span class="tex">\(\mathrm{MAdv}(f)\)</span>
+  </a>
+  <a class="chip cat-adversary" href="measures/prt.html" title="Partition bound">
+    <span class="tex">\(\mathrm{prt}_{\varepsilon}(f)\)</span>
+  </a>
+  <a class="chip cat-adversary" href="measures/rprt.html" title="Relaxed partition bound">
+    <span class="tex">\(\overline{\mathrm{prt}}_{\varepsilon}(f)\)</span>
+  </a>
+          </div>
+        </div>
+        <div class="catrow">
+          <h3><a href="measures/index.html#composition">Composition-theoretic</a>
+              <span class="dim">Measures invented to make R(f o g) behave: RS, chi, chibar, LR, noisyR, R*.</span></h3>
+          <div class="chips">
+  <a class="chip cat-composition" href="measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
+  </a>
+  <a class="chip cat-composition" href="measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+  <a class="chip cat-composition" href="measures/chibar.html" title="Max-conflict complexity">
+    <span class="tex">\(\bar{\chi}(f)\)</span>
+  </a>
+  <a class="chip cat-composition" href="measures/LR.html" title="Linearised randomized complexity">
+    <span class="tex">\(\mathrm{LR}(f)\)</span>
+  </a>
+  <a class="chip cat-composition" href="measures/noisyR.html" title="Noisy randomized query complexity">
+    <span class="tex">\(\mathrm{noisyR}(f)\)</span>
+  </a>
+  <a class="chip cat-composition" href="measures/noisyRna.html" title="Non-adaptive noisy randomized query complexity">
+    <span class="tex">\(\mathrm{noisyR}^{\mathrm{na}}(f)\)</span>
+  </a>
+  <a class="chip cat-composition" href="measures/Corr.html" title="Correlated samples complexity">
+    <span class="tex">\(\mathrm{Corr}_{\varepsilon}(f)\)</span>
+  </a>
+  <a class="chip cat-composition" href="measures/Sel.html" title="Selection complexity">
+    <span class="tex">\(\mathrm{Sel}_{\varepsilon}(f)\)</span>
+  </a>
+  <a class="chip cat-composition" href="measures/Rstar.html" title="Asymptotic composition rate">
+    <span class="tex">\(\mathrm{R}^{*}(f)\)</span>
+  </a>
+          </div>
+        </div>
+    </section>
+
+  </div>
+
+  <aside class="side-col">
+    <section class="card tight">
+      <h2>Start here</h2>
+      <ul class="linklist">
+        <li><a href="matrix.html">The exponent matrix</a><span>the core grid, expandable to all 94 measures</span></li>
+        <li><a href="concepts/reading-the-tables.html">Reading the tables</a><span>notation &amp; conventions</span></li>
+        <li><a href="concepts/settings.html">Total / partial / relation</a><span>what changes and why</span></li>
+        <li><a href="concepts/cheat-sheets.html">Cheat sheet</a><span>the chain of inequalities</span></li>
+        <li><a href="open.html">Open problems</a><span>24 of them</span></li>
+      </ul>
+    </section>
+
+    <section class="card tight">
+      <h2>Health warning</h2>
+      <p>Entries carry a confidence marker. A
+      <span class="conf low">?</span> means the statement was written from memory or a secondary
+      source and has <em>not</em> been checked against the paper; a
+      <span class="conf med">&#183;</span> means the statement is believed right but the exact
+      constants and log factors were not re-derived. Unmarked entries were checked against the
+      cited source.</p>
+      <p>Nothing here is a substitute for reading the paper.</p>
+    </section>
+
+    <section class="card tight">
+      <h2>Editing</h2>
+      <p>All content is YAML under <code>data/</code>. Add a measure by adding a block to
+      <code>data/measures/*.yaml</code>; add a bound by adding a block to
+      <code>data/relations/*.yaml</code>. Then:</p>
+      <pre><code>python3 build.py --strict</code></pre>
+      <p><a href="editing.html">Full editing guide &rarr;</a></p>
+    </section>
+  </aside>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="static/app.js"></script>
+</body>
+</html>

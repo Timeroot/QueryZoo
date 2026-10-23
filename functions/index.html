@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Functions &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <h1 class="pagetitle">Functions</h1>
+  <p class="lede">The witnesses. Every separation in the zoo points at one of these families;
+  every page gives the definition (or says plainly that it has not been transcribed yet), the
+  measure values that make it interesting, and the separations it witnesses.</p>
+
+  <nav class="jump">
+      <a href="#total">Total functions <span class="n">46</span></a>
+      <a href="#partial">Partial functions <span class="n">17</span></a>
+      <a href="#relation">Relations <span class="n">12</span></a>
+  </nav>
+
+    <section class="card" id="total">
+      <h2>Total functions</h2>
+      <p class="dim">f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.</p>
+      <table class="listing">
+        <thead><tr><th>Symbol</th><th>Name</th><th>Group</th><th>Definition given?</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="sym"><a href="../functions/OR.html">\(\mathrm{OR}_n\)</a></td>
+            <td class="nm"><a href="../functions/OR.html">OR</a>
+              <div class="idtag">OR</div></td>
+            <td><span class="grouptag g-basic">basic</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The archetypal one-sided function: cheap 1-certificates, expensive 0-certificates.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/AND.html">\(\mathrm{AND}_n\)</a></td>
+            <td class="nm"><a href="../functions/AND.html">AND</a>
+              <div class="idtag">AND</div></td>
+            <td><span class="grouptag g-basic">basic</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The dual of OR; the witness cited in most &quot;$2,2$&quot; and &quot;$2,4$&quot; cells of the total-function matrix.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/PARITY.html">\(\oplus_n\)</a></td>
+            <td class="nm"><a href="../functions/PARITY.html">PARITY</a>
+              <div class="idtag">PARITY</div></td>
+            <td><span class="grouptag g-basic">basic</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Maximally hard for every measure in the zoo except parity decision trees -- hence the witness for every &quot;$1,1$&quot; cell.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/MAJ.html">\(\mathrm{MAJ}_n\)</a></td>
+            <td class="nm"><a href="../functions/MAJ.html">MAJORITY</a>
+              <div class="idtag">MAJ</div></td>
+            <td><span class="grouptag g-basic">basic</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Hard for quantum too ($\mathrm{Q}=\Theta(n)$), but with sensitivity only $\approx n/2$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/THR.html">\(\mathrm{THR}^n_k\)</a></td>
+            <td class="nm"><a href="../functions/THR.html">Threshold</a>
+              <div class="idtag">THR</div></td>
+            <td><span class="grouptag g-basic">basic</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The whole one-parameter family interpolating OR ($k=1$), MAJ ($k=n/2$) and AND ($k=n$).</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/SYM.html">\(f = f(|x|)\)</a></td>
+            <td class="nm"><a href="../functions/SYM.html">Symmetric functions (general)</a>
+              <div class="idtag">SYM</div></td>
+            <td><span class="grouptag g-basic">basic</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Every measure in the polynomial/quantum column is pinned down exactly by Paturi's theorem.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/EH.html">\(\mathrm{EH}_n\)</a></td>
+            <td class="nm"><a href="../functions/EH.html">EXACT-HALF</a>
+              <div class="idtag">EH</div></td>
+            <td><span class="grouptag g-basic">basic</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Nondeterministic degree 1 for the negation -- the engine behind the rdeg separations.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/OMB.html">\(\mathrm{OMB}_n\)</a></td>
+            <td class="nm"><a href="../functions/OMB.html">ODD-MAX-BIT</a>
+              <div class="idtag">OMB</div></td>
+            <td><span class="grouptag g-basic">basic</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Sign degree $1$, deterministic complexity $n$: the extreme sdeg separation.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/ADDR.html">\(\mathrm{ADDR}_k\)</a></td>
+            <td class="nm"><a href="../functions/ADDR.html">ADDRESS / multiplexer</a>
+              <div class="idtag">ADDR</div></td>
+            <td><span class="grouptag g-basic">basic</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The standard gadget in lifting theorems and in &quot;adaptivity is necessary&quot; arguments.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/TreeNav.html">\(\mathrm{Nav}_k\)</a></td>
+            <td class="nm"><a href="../functions/TreeNav.html">Binary tree navigation</a>
+              <div class="idtag">TreeNav</div></td>
+            <td><span class="grouptag g-basic">basic</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Adaptivity at its most extreme: $\mathrm{D}=k$ but every one of the $2^k-1$ variables is relevant.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/TRIBES.html">\(\mathrm{Tribes}_{w,s}\)</a></td>
+            <td class="nm"><a href="../functions/TRIBES.html">TRIBES</a>
+              <div class="idtag">TRIBES</div></td>
+            <td><span class="grouptag g-basic">basic</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Balanced read-once DNF; the KKL / max-influence extremal example.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/IP.html">\(\mathrm{IP}_n\)</a></td>
+            <td class="nm"><a href="../functions/IP.html">Inner product mod 2</a>
+              <div class="idtag">IP</div></td>
+            <td><span class="grouptag g-basic">basic</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Everything combinatorial is $n$ and everything Fourier is as spread out as it can be: the flat spectrum makes $\mathrm{L}_1 = 2^{n/2}$ with $\mathrm{spar} = 2^n$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/SCORPION.html">\(\mathrm{SCORP}_m\)</a></td>
+            <td class="nm"><a href="../functions/SCORPION.html">Scorpion graphs</a>
+              <div class="idtag">SCORPION</div></td>
+            <td><span class="grouptag g-basic">basic</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The nontrivial graph property that is nowhere near evasive: $\mathrm{D} = \Theta(m) = \Theta(\sqrt N)$ out of $N$ possible queries.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/CONN.html">\(\mathrm{CONN}_m\)</a></td>
+            <td class="nm"><a href="../functions/CONN.html">Graph connectivity</a>
+              <div class="idtag">CONN</div></td>
+            <td><span class="grouptag g-basic">basic</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The monotone graph property everyone checks first: evasive, $\mathrm{R} = \Theta(N)$, and $\mathrm{Q} = \Theta(N^{3/4})$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/ANDOR.html">\(\mathrm{AND}_n \circ \mathrm{OR}_n\)</a></td>
+            <td class="nm"><a href="../functions/ANDOR.html">AND-OR tree (depth 2)</a>
+              <div class="idtag">ANDOR</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The witness for the &quot;$\wedge\circ\vee$&quot; cells: $\mathrm{D}=N$ but every combinatorial measure is $\sqrt N$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/NANDtree.html">\(\bar{\wedge}\text{-tree}\)</a></td>
+            <td class="nm"><a href="../functions/NANDtree.html">NAND tree (balanced AND-OR formula)</a>
+              <div class="idtag">NANDtree</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The Saks-Wigderson function: $\mathrm{R}_0 = \Theta(N^{0.7537})$, $\mathrm{Q}=\Theta(\sqrt N)$, $\deg = N$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/RMAJ3.html">\(\mathrm{MAJ}_3^{\circ d}\)</a></td>
+            <td class="nm"><a href="../functions/RMAJ3.html">Recursive MAJORITY-of-3</a>
+              <div class="idtag">RMAJ3</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The other classical recursive benchmark; its randomized complexity is still not pinned down.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/Kushilevitz.html">\(K^{\circ k}\)</a></td>
+            <td class="nm"><a href="../functions/Kushilevitz.html">Kushilevitz&#39;s function (iterated)</a>
+              <div class="idtag">Kushilevitz</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">A 6-variable function with $\deg = 3$ and $\mathrm{s}=6$; iterating gives $\mathrm{s} = \deg^{1.63}$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/Rubinstein.html">\(f_{\mathrm{Rub}}\)</a></td>
+            <td class="nm"><a href="../functions/Rubinstein.html">Rubinstein&#39;s function</a>
+              <div class="idtag">Rubinstein</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The classical quadratic separation $\mathrm{bs} = \tfrac12\mathrm{s}^2$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/AmbainisSunFn.html">\(f_{\mathrm{AS}}\)</a></td>
+            <td class="nm"><a href="../functions/AmbainisSunFn.html">Ambainis-Sun function</a>
+              <div class="idtag">AmbainisSunFn</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Improves Rubinstein's constant to $\mathrm{bs} = \tfrac23 \mathrm{s}^2 - \tfrac13 \mathrm{s}$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/ANDEH.html">\(\mathrm{AND}_n \circ \overline{\mathrm{EH}}_n\)</a></td>
+            <td class="nm"><a href="../functions/ANDEH.html">AND composed with NOT-EXACT-HALF</a>
+              <div class="idtag">ANDEH</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The witness for the whole rdeg column: $\mathrm{rdeg}=\Theta(n)$ while $\mathrm{s},\deg,\mathrm{D}=\Theta(n^2)$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/MeiburgTournament.html">\(f_{\mathrm{Mei}}\)</a></td>
+            <td class="nm"><a href="../functions/MeiburgTournament.html">Meiburg&#39;s tournament-subcube function</a>
+              <div class="idtag">MeiburgTournament</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">Refutes $\mathrm{bs} = O(\lambda^2)$: a total function with $\mathrm{bs} \ge \lambda^{2.127}$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/MinskyPapert.html">\(\mathrm{MP}_m\)</a></td>
+            <td class="nm"><a href="../functions/MinskyPapert.html">Minsky-Papert one-in-a-box</a>
+              <div class="idtag">MinskyPapert</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The unbalanced AND-OR tree, tuned so that Minsky-Papert's $\min\{m,\sqrt b\}$ is maximised: $\mathrm{sdeg} = \Theta(N^{1/3})$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/ElementDistinctness.html">\(\mathrm{ED}_n\)</a></td>
+            <td class="nm"><a href="../functions/ElementDistinctness.html">Element distinctness</a>
+              <div class="idtag">ElementDistinctness</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">$\mathrm{Q}=\Theta(n^{2/3})$ vs $\mathrm{R}=\Theta(n)$; a total (non-Boolean-input) function.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/Surjectivity.html">\(\mathrm{SURJ}_{N,R}\)</a></td>
+            <td class="nm"><a href="../functions/Surjectivity.html">Surjectivity</a>
+              <div class="idtag">Surjectivity</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The only known <em>natural</em> function separating $\mathrm{Q}$ from $\widetilde{\deg}$: $\widetilde{\deg} = \tilde\Theta(n^{3/4})$ while $\mathrm{Q} = \tilde\Theta(n)$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/KDistinctness.html">\(\mathrm{DIST}^k_n\)</a></td>
+            <td class="nm"><a href="../functions/KDistinctness.html">$k$-distinctness</a>
+              <div class="idtag">KDistinctness</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">$\mathrm{Q} = \Theta(n^{3/4 - 1/(4(2^k-1))})$, settled in 2026 after fourteen years; the approximate degree is still open.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/TriangleFinding.html">\(\mathrm{TRI}_m\)</a></td>
+            <td class="nm"><a href="../functions/TriangleFinding.html">Triangle finding</a>
+              <div class="idtag">TriangleFinding</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The flagship open problem of quantum query complexity: $\Omega(m)$ against $O(m^{5/4})$, stuck for twenty years.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/pointer.html">\(g_{\mathrm{ABBLSS}}\)</a></td>
+            <td class="nm"><a href="../functions/pointer.html">Pointer functions</a>
+              <div class="idtag">pointer</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">The construction that refuted the Saks-Wigderson conjecture and set most of the top-left corner of the matrix.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/cheatsheet.html">\(f_{\mathrm{CS}}\)</a></td>
+            <td class="nm"><a href="../functions/cheatsheet.html">Cheat-sheet functions</a>
+              <div class="idtag">cheatsheet</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">A generic transformation turning a <em>partial</em>-function separation into a <em>total</em>-function separation.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/BHTfn.html">\(f_{\mathrm{BHT}}\)</a></td>
+            <td class="nm"><a href="../functions/BHTfn.html">Low-sensitivity function from unambiguous certificates</a>
+              <div class="idtag">BHTfn</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The current record for D-vs-s: $\mathrm{D} = \widetilde\Omega(\mathrm{s}^3)$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/BBGJKfn.html">\(f_{\mathrm{BBGJK}}\)</a></td>
+            <td class="nm"><a href="../functions/BBGJKfn.html">Unambiguous-DNF / Alon-Saks-Seymour function</a>
+              <div class="idtag">BBGJKfn</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Sets the C row: $\mathrm{C}=\widetilde\Omega(\mathrm{s}^3)$, $\widetilde\Omega(\lambda^4)$, $\widetilde\Omega(\deg^2)$, $\widetilde\Omega(\widetilde{\deg}^3)$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/GSSfn.html">\(f_{\mathrm{GSS}}\)</a></td>
+            <td class="nm"><a href="../functions/GSSfn.html">Gilmer-Saks-Srinivasan functions</a>
+              <div class="idtag">GSSfn</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Separates C from RC quadratically -- with no log loss -- and RC from bs by a $3/2$ power.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/GSSinner.html">\(g_n\)</a></td>
+            <td class="nm"><a href="../functions/GSSinner.html">Random-indicator gadget</a>
+              <div class="idtag">GSSinner</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The inner gadget of <a href="../functions/GSSfn.html" class="xref function "><span class="tex">\(f_{\mathrm{GSS}}\)</span></a>, on its own: $\mathrm{C}^0 = \Theta(n)$ with $\mathrm{bs}^0 = O(1)$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/GPWfn.html">\(f_{\mathrm{GPW}}\)</a></td>
+            <td class="nm"><a href="../functions/GPWfn.html">Goos-Pitassi-Watson partition-number function</a>
+              <div class="idtag">GPWfn</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The query-side function behind &quot;deterministic communication vs partition number&quot;; gives $\mathrm{D}=\widetilde\Omega(\deg^2)$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/GJPWfn.html">\(f_{\mathrm{GJPW}}\)</a></td>
+            <td class="nm"><a href="../functions/GJPWfn.html">Goos-Jayram-Pitassi-Watson function</a>
+              <div class="idtag">GJPWfn</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Randomized analogue of GPW: $\mathrm{R}_0, \mathrm{R} = \widetilde\Omega(\deg^2)$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/Ambainis13fn.html">\(\mathrm{NE}^d\)</a></td>
+            <td class="nm"><a href="../functions/Ambainis13fn.html">Ambainis&#39; exact-quantum function</a>
+              <div class="idtag">Ambainis13fn</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The first total function with a superlinear exact quantum speedup: $\mathrm{Q}_E = O(\mathrm{D}^{0.8675})$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/SINK.html">\(\mathrm{SINK}_m\)</a></td>
+            <td class="nm"><a href="../functions/SINK.html">Sink of a tournament</a>
+              <div class="idtag">SINK</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The function that killed the log-approximate-rank conjecture: spectral norm $O(\sqrt N)$, but $\mathrm{SINK}\circ\mathrm{XOR}$ has randomized communication complexity $\Omega(\sqrt N)$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/Champion.html">Champion</a></td>
+            <td class="nm"><a href="../functions/Champion.html">Ben-David–Kothari championship function</a>
+              <div class="idtag">Champion</div></td>
+            <td><span class="grouptag g-separating-total">separating-total</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Simultaneously $\mathrm{C}=\Omega(n^2)$, $\mathrm{R}=O(n\log n)$ and $\mathrm{Q}=\widetilde O(\sqrt n)$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/AIKDNF.html">AIKDNF</a></td>
+            <td class="nm"><a href="../functions/AIKDNF.html">Ambainis–Iraids–Kokainis unambiguous DNF</a>
+              <div class="idtag">AIKDNF</div></td>
+            <td><span class="grouptag g-separating-total">separating-total</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Log-free optimal separation $\mathrm{C}=\Theta(\mathrm{R}_{\mathrm{RP}}^2)$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/AIKCheatSheet.html">AIKCheatSheet</a></td>
+            <td class="nm"><a href="../functions/AIKCheatSheet.html">Ambainis–Iraids–Kokainis certificate cheat sheet</a>
+              <div class="idtag">AIKCheatSheet</div></td>
+            <td><span class="grouptag g-separating-total">separating-total</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Quartic $\mathrm{C}/\mathrm{Q}$ and $\mathrm{R}_0/\mathrm{Q}$ separations, with quadratic $\mathrm{C}/\mathrm{Q}_{\mathrm{E}}$ and $\mathrm{C}/\mathrm{Q}_0$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/PabbarajuDNF.html">PabbarajuDNF</a></td>
+            <td class="nm"><a href="../functions/PabbarajuDNF.html">Pabbaraju’s optimal unambiguous DNF</a>
+              <div class="idtag">PabbarajuDNF</div></td>
+            <td><span class="grouptag g-separating-total">separating-total</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">$\mathrm{C}^0=\Omega(n^2)$ and $\mathrm{UC}^1=O(n)$, without logarithmic losses.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/PabbarajuQuartic.html">PabbarajuQuartic</a></td>
+            <td class="nm"><a href="../functions/PabbarajuQuartic.html">Pabbaraju’s quartic approximate-degree function</a>
+              <div class="idtag">PabbarajuQuartic</div></td>
+            <td><span class="grouptag g-separating-total">separating-total</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">$\mathrm{C}\ge\Omega(\widetilde{\deg}^{\,4}/\log^6 n)$; settles the exponent at four.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/PabbarajuCubicSensitivity.html">PabbarajuCubicSensitivity</a></td>
+            <td class="nm"><a href="../functions/PabbarajuCubicSensitivity.html">Pabbaraju’s certificate–sensitivity separator</a>
+              <div class="idtag">PabbarajuCubicSensitivity</div></td>
+            <td><span class="grouptag g-separating-total">separating-total</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Log-free $\mathrm{C}=\Omega(\mathrm{s}^3)$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/OpenAINestedTournament.html">OpenAINestedTournament</a></td>
+            <td class="nm"><a href="../functions/OpenAINestedTournament.html">OpenAI’s nested tournament sensitivity separator</a>
+              <div class="idtag">OpenAINestedTournament</div></td>
+            <td><span class="grouptag g-separating-total">separating-total</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Refutes $\mathrm{bs}=O(\mathrm{s}^2)$; a fixed seed yields an exponent strictly greater than two.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/Prove2MeTournament.html">Prove2MeTournament</a></td>
+            <td class="nm"><a href="../functions/Prove2MeTournament.html">Prove2Me’s refined tournament sensitivity family</a>
+              <div class="idtag">Prove2MeTournament</div></td>
+            <td><span class="grouptag g-separating-total">separating-total</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">$\mathrm{bs}\ge\mathrm{s}^{\alpha-o(1)}$, $\alpha=\log(14055^8)/\log(3738277295413674)=2.1308255793978239\ldots$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/ANDNotExactOne.html">ANDNotExactOne</a></td>
+            <td class="nm"><a href="../functions/ANDNotExactOne.html">AND of complemented EXACT-ONE functions</a>
+              <div class="idtag">ANDNotExactOne</div></td>
+            <td><span class="grouptag g-separating-total">separating-total</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">New quantum-certification lower bounds separate $\mathrm{Q}_0$ from both $\mathrm{Q}$ and rational degree.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="card" id="partial">
+      <h2>Partial functions</h2>
+      <p class="dim">f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.</p>
+      <table class="listing">
+        <thead><tr><th>Symbol</th><th>Name</th><th>Group</th><th>Definition given?</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="sym"><a href="../functions/Forrelation.html">\(\mathrm{forr}\)</a></td>
+            <td class="nm"><a href="../functions/Forrelation.html">FORRELATION</a>
+              <div class="idtag">Forrelation</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">One quantum query vs $\widetilde\Theta(\sqrt n)$ randomized queries -- the maximal possible gap at $\mathrm{Q}=1$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/kForrelation.html">\(\mathrm{forr}_k\)</a></td>
+            <td class="nm"><a href="../functions/kForrelation.html">k-FORRELATION</a>
+              <div class="idtag">kForrelation</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Optimal $\mathrm{Q}$-vs-$\mathrm{R}$ separation for every $k$: $\mathrm{Q}=\lceil k/2\rceil$, $\mathrm{R}=\widetilde\Theta(n^{1-1/k})$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/Simon.html">\(\mathrm{SIMON}_n\)</a></td>
+            <td class="nm"><a href="../functions/Simon.html">Simon&#39;s problem</a>
+              <div class="idtag">Simon</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The first exponential quantum speedup for a promise problem: $\mathrm{Q}=O(n)$ vs $\mathrm{R}=\Omega(2^{n/2})$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/DeutschJozsa.html">\(\mathrm{DJ}_n\)</a></td>
+            <td class="nm"><a href="../functions/DeutschJozsa.html">Deutsch-Jozsa</a>
+              <div class="idtag">DeutschJozsa</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Exact quantum: 1 query vs $N/2+1$ deterministic queries (but $\mathrm{R}=O(1)$).</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/BV.html">\(\mathrm{BV}_n\)</a></td>
+            <td class="nm"><a href="../functions/BV.html">Bernstein-Vazirani</a>
+              <div class="idtag">BV</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">One exact quantum query recovers an $n$-bit secret that costs $n$ classical queries.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/UniqueSearch.html">\(\mathrm{SEARCH}^{\le 1}_n\)</a></td>
+            <td class="nm"><a href="../functions/UniqueSearch.html">Unique search</a>
+              <div class="idtag">UniqueSearch</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Grover search as a <em>partial function</em>. The reason it is in the zoo: $\deg = 1$ while $\widetilde{\deg} = \Theta(\sqrt n)$, so $\widetilde{\deg} \le \deg$ -- a triviality for total functions -- fails outright on a promise.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/Search02.html">\(\mathrm{SEARCH}^{0/2}_n\)</a></td>
+            <td class="nm"><a href="../functions/Search02.html">Two-or-none search</a>
+              <div class="idtag">Search02</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short"><a href="../functions/UniqueSearch.html" class="xref function "><span class="tex">\(\mathrm{SEARCH}^{\le 1}_n\)</span></a> with the promise moved from $|x|\le 1$ to $|x|\in\{0,2\}$. No two domain points are now adjacent, so $\mathrm{s} = \lambda = 0$, while $\mathrm{Q} = \mathrm{Adv} = \Theta(\sqrt n)$ is untouched.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/MarkedBit.html">\(\mathrm{MARK}_n\)</a></td>
+            <td class="nm"><a href="../functions/MarkedBit.html">Marked bit</a>
+              <div class="idtag">MarkedBit</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The certificate barrier at full strength: $\mathrm{C} = \mathrm{C}^0 = \mathrm{C}^1 = 1$, yet $\widetilde{\deg} = \mathrm{Q} = \Theta(\sqrt n)$ and $\mathrm{R} = \mathrm{D} = \Theta(n)$. Recognising the answer is one query; finding it is Grover.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/DenseMarkedBit.html">\(\mathrm{DMARK}_n\)</a></td>
+            <td class="nm"><a href="../functions/DenseMarkedBit.html">Dense marked bit</a>
+              <div class="idtag">DenseMarkedBit</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Zero-error randomized cost $O(1)$ against $\deg = \mathrm{Q}_E = \Theta(n)$: the cheapest witness that exact degree is not bounded by any function of $\mathrm{R}_0$ off the promise.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/Collision.html">\(\mathrm{COL}_n\)</a></td>
+            <td class="nm"><a href="../functions/Collision.html">Collision problem</a>
+              <div class="idtag">Collision</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">$\mathrm{Q}=\Theta(n^{1/3})$ vs $\mathrm{R}=\Theta(\sqrt n)$: a <em>polynomial-only</em> quantum speedup for a promise problem.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/AmbainisBelovsFn.html">\(\mathrm{TSAT}_n\)</a></td>
+            <td class="nm"><a href="../functions/AmbainisBelovsFn.html">Ambainis-Belovs function</a>
+              <div class="idtag">AmbainisBelovsFn</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Constant exact degree ($\le 9$) against $\mathrm{Q} = \Omega(n^{1/3})$: the polynomial method is exponentially lossy off-promise.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/RecursiveFourierSampling.html">\(\mathrm{RFS}^g_\ell\)</a></td>
+            <td class="nm"><a href="../functions/RecursiveFourierSampling.html">Recursive Fourier sampling</a>
+              <div class="idtag">RecursiveFourierSampling</div></td>
+            <td><span class="grouptag g-quantum">quantum</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The original superpolynomial oracle separation: $\mathrm{Q}_E = 2^\ell$ against $n^{\Omega(\log n)}$ classically at $\ell = \log n$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/GapMaj.html">\(\mathrm{GapMaj}^{\delta}_{n}\)</a></td>
+            <td class="nm"><a href="../functions/GapMaj.html">Gap-Majority</a>
+              <div class="idtag">GapMaj</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The universal &quot;hardest easy&quot; promise problem; characterises noisy randomized complexity.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/GapMajConst.html">\(\mathrm{GapMaj}^{1/4}_{n}\)</a></td>
+            <td class="nm"><a href="../functions/GapMajConst.html">Gap-Majority at constant gap</a>
+              <div class="idtag">GapMajConst</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The $\delta = 1/4$ instance of Gap-Majority: $\Theta(1)$ for every bounded-error measure, $\Theta(n)$ for every exact one.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/Find1Parity.html">\(\mathrm{Find1}^{\mathrm{par}}_{n}\)</a></td>
+            <td class="nm"><a href="../functions/Find1Parity.html">Parity-labelled FIND-1</a>
+              <div class="idtag">Find1Parity</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The decision version of FIND-1: zero-error $O(1)$ against deterministic $n/4+1$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/ApproxIndex.html">\(\mathrm{ApproxIndex}_k\)</a></td>
+            <td class="nm"><a href="../functions/ApproxIndex.html">Approximate index</a>
+              <div class="idtag">ApproxIndex</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The outer function that refutes the randomized composition conjecture: a <em>biased guess</em> at the index is good enough, which is cheap noisily and expensive classically.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/OrderedSearch.html">\(\mathrm{OS}_n\)</a></td>
+            <td class="nm"><a href="../functions/OrderedSearch.html">Ordered search</a>
+              <div class="idtag">OrderedSearch</div></td>
+            <td><span class="grouptag g-separating">separating</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">Where quantum buys only a constant factor: $\mathrm{D} = \lceil\log_2(n+1)\rceil$ and $\mathrm{Q} = \Theta(\log n)$, with the constant pinned between $0.221$ and $0.390$.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="card" id="relation">
+      <h2>Relations</h2>
+      <p class="dim">f subset of {0,1}^n x O : any output o with (x,o) in f is acceptable. Search problems, TFNP-style.</p>
+      <table class="listing">
+        <thead><tr><th>Symbol</th><th>Name</th><th>Group</th><th>Definition given?</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="sym"><a href="../functions/GroverSearch.html">\(\mathrm{SEARCH}_n\)</a></td>
+            <td class="nm"><a href="../functions/GroverSearch.html">Unstructured search (relation)</a>
+              <div class="idtag">GroverSearch</div></td>
+            <td><span class="grouptag g-relational">relational</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The canonical relation: output any index $i$ with $x_i=1$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/promiseFind1.html">\(\mathrm{Find1}_{\ge n/2}\)</a></td>
+            <td class="nm"><a href="../functions/promiseFind1.html">FIND-1 under a density promise</a>
+              <div class="idtag">promiseFind1</div></td>
+            <td><span class="grouptag g-relational">relational</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">The cleanest D-vs-R relational separation: $\mathrm{R}=O(1)$, $\mathrm{D}=n/2+1$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/ApproxHW.html">\(\mathrm{ApproxHW}\)</a></td>
+            <td class="nm"><a href="../functions/ApproxHW.html">Approximate Hamming weight</a>
+              <div class="idtag">ApproxHW</div></td>
+            <td><span class="grouptag g-relational">relational</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">Total search problem with $\mathrm{R}=O(1)$ but $\mathrm{psD}=\Omega(n)$: reproducibility is exponentially expensive.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/AgreeString.html">\(\mathrm{AGREE}_n\)</a></td>
+            <td class="nm"><a href="../functions/AgreeString.html">Correlated-string search</a>
+              <div class="idtag">AgreeString</div></td>
+            <td><span class="grouptag g-relational">relational</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The GLSS19 relational counterexample to composition: $\mathrm{R}=\Theta(\sqrt n)$ but $\mathrm{noisyR}=\Theta(1)$, adaptively <em>and</em> non-adaptively.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/SearchCNF.html">\(\mathrm{Search}(\varphi)\)</a></td>
+            <td class="nm"><a href="../functions/SearchCNF.html">SearchCNF</a>
+              <div class="idtag">SearchCNF</div></td>
+            <td><span class="grouptag g-relational">relational</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">The canonical TFNP-style query relation: given an assignment, output a falsified clause.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/BDKrelation.html">\(\mathrm{AndOr}_{\mathcal{H},t}\)</a></td>
+            <td class="nm"><a href="../functions/BDKrelation.html">Ben-David-Kundu total search problems</a>
+              <div class="idtag">BDKrelation</div></td>
+            <td><span class="grouptag g-relational">relational</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">A <em>total</em> search problem with $\mathrm{Q} = \Omega(\sqrt n\log^4 n)$ but conical junta degree $O(\log^7 n)$ -- exponential, and against a measure usually <em>larger</em> than $\mathrm{R}$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/YamakawaZhandry.html">\(S_{\mathrm{YZ}}\)</a></td>
+            <td class="nm"><a href="../functions/YamakawaZhandry.html">Yamakawa-Zhandry problem</a>
+              <div class="idtag">YamakawaZhandry</div></td>
+            <td><span class="grouptag g-relational">relational</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">Verifiable exponential quantum advantage for an NP search problem relative to a random oracle.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/GluedTrees.html">\(\mathrm{WT}_n\)</a></td>
+            <td class="nm"><a href="../functions/GluedTrees.html">Welded trees</a>
+              <div class="idtag">GluedTrees</div></td>
+            <td><span class="grouptag g-relational">relational</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The quantum-walk speedup: $\mathrm{Q} = \Theta(n)$ against $\mathrm{R} = \mathrm{D} = \tilde\Theta(2^{n/2})$ -- exponential in the tree height, but only $\tilde\Theta(\sqrt{N})$ in the vertex count.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/LocalSearchCube.html">\(\mathrm{LS}(\{0,1\}^n)\)</a></td>
+            <td class="nm"><a href="../functions/LocalSearchCube.html">Local search on the hypercube</a>
+              <div class="idtag">LocalSearchCube</div></td>
+            <td><span class="grouptag g-relational">relational</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The query-complexity home of PLS, and tight in all three models: $\mathrm{D} = \Theta(2^n/\sqrt n)$, $\mathrm{R} = \Theta(2^{n/2}\sqrt n)$, $\mathrm{Q} = \Theta(2^{n/3}n^{1/6})$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/LocalSearchGrid.html">\(\mathrm{LS}([k]^d)\)</a></td>
+            <td class="nm"><a href="../functions/LocalSearchGrid.html">Local search on the grid</a>
+              <div class="idtag">LocalSearchGrid</div></td>
+            <td><span class="grouptag g-relational">relational</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">Tight at $\Theta(k^{d/2})$ randomized for $d\ge4$ and $\Theta(k^{d/3})$ quantum for $d\ge6$; the low dimensions took another decade, and $d=4$ quantum is still open.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/FourierFishing.html">\(\mathrm{FFish}_N\)</a></td>
+            <td class="nm"><a href="../functions/FourierFishing.html">Fourier fishing</a>
+              <div class="idtag">FourierFishing</div></td>
+            <td><span class="grouptag g-relational">relational</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The largest separation there is: one quantum query against $\Omega(N/\log N)$ randomized ones -- impossible for a decision problem.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/TseitinExpander.html">\(\mathrm{Ts}(G)\)</a></td>
+            <td class="nm"><a href="../functions/TseitinExpander.html">Tseitin search on an expander</a>
+              <div class="idtag">TseitinExpander</div></td>
+            <td><span class="grouptag g-relational">relational</span></td>
+            <td class="c"><span class="dot yes" title="formal definition present"></span>
+</td>
+            <td class="short">The family critical block sensitivity was invented for: $\mathrm{cbs} = \Theta(n)$, and here it really does match $\mathrm{R}$ and $\mathrm{D}$.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

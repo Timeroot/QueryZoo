@@ -1,0 +1,1144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Low-sensitivity function from unambiguous certificates &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#total">Total functions</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">\(f_{\mathrm{BHT}}\)</div>
+    <div>
+      <h1>Low-sensitivity function from unambiguous certificates</h1>
+      <p class="lede">The current record for D-vs-s: $\mathrm{D} = \widetilde\Omega(\mathrm{s}^3)$.</p>
+      <p class="aliases">
+        <span class="kindtag k-total">total</span>
+        <span class="grouptag g-separating">separating</span>
+<span class="tag">arity: $\mathrm{poly}(n)$ bits</span>      </p>
+    </div>
+  </header>
+
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>Built from a function with small <em>unambiguous</em> certificate complexity by a
+composition that keeps sensitivity low while forcing deterministic (and
+quantum) algorithms to work hard.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Formal definition</h2>
+        <p>Two ingredients [<a href="../refs.html#BHT17" class="xref ref ">BHT17</a>]. <em>Desensitizing</em>: replace each input bit $x_i$ of
+$f$ by three bits and accept only strings of the form $ppp$ for $p$ an
+unambiguous $1$-certificate; the result $f'$ has $\mathrm{s}_0(f')\le 1$
+and $\mathrm{s}_1(f')\le 3\,\mathrm{UC}_1(f)$, while no measure in
+$\{\mathrm{D},\mathrm{R},\mathrm{Q},\mathrm{C},\mathrm{bs},\mathrm{RC},
+\mathrm{UC},\deg\}$ decreases. <em>Amplifying</em>: compose on the outside with
+$\mathrm{OR}_{3\mathrm{UC}_{\min}(f)}$ (for $\mathrm{D}$) or with
+$\mathrm{BSum}_{\mathrm{UC}_{\min}(f)}$, Block $k$-sum (for $\mathrm{Q}$),
+both of which have certificates using only $O(\mathrm{polylog})$ ones, so
+that $\mathrm{s}(\hat f)=\widetilde O(\mathrm{UC}_{\min}(f))$ while the
+outer complexity multiplies through. Throughout the table below, $f$ is
+the base function, $f'$ is its desensitized version, and
+$\hat f := \mathrm{BSum}_n \circ f'$ with $n = \mathrm{UC}_{\min}(f)$ is
+the amplified function whose values are recorded.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                  <a href="../measures/s.html">Sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n)\)</span></td>
+              <td class="short">Every sensitive bit of $\hat f = \mathrm{BSum}_n\circ f'$ lies in a block that is sensitive for the outer Block $k$-sum, and Block $k$-sum has certificates containing only $O(\log^3 n)$ ones; with $\mathrm{s}_0(f')\le 1$ this gives $\mathrm{s}(\hat f)\le n\,\mathrm{s}_0(f')+O(\log^3 n)\,\mathrm{s}_1(f')=\widetilde O(n)$ [<a href="../refs.html#BHT17" class="xref ref ">BHT17</a>, Thm 3].
+<span class="refs"><a href="../refs.html#BHT17" class="xref ref ">BHT17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q.html">Bounded-error quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Quantum query complexity is multiplicative under composition, so $\mathrm{Q}(\hat f)=\widetilde\Omega(n\cdot\mathrm{Q}(f))$; with the base $\mathrm{BKK}_{\mathrm{CS}}$ contributing $\mathrm{Q}(f)=\widetilde\Omega(n^2)$ this is $\widetilde\Omega(n^3)$ [<a href="../refs.html#BHT17" class="xref ref ">BHT17</a>, Cor. 2].
+<span class="refs"><a href="../refs.html#BHT17" class="xref ref ">BHT17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R.html">Bounded-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{R}\ge\mathrm{Q}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R0.html">Zero-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{R}_0\ge\mathrm{R}\ge\mathrm{Q}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D.html">Deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{D}\ge\mathrm{R}_0\ge\mathrm{Q}$. This is the recorded $\mathrm{D}=\widetilde\Omega(\mathrm{s}^3)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QE.html">Exact quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{Q}_E\ge\mathrm{Q}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R1.html">One-sided-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{R}^1\ge\mathrm{R}\ge\mathrm{Q}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
+  </a>
+
+                  <a href="../measures/RS.html">Sabotage complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^{3/2})\)</span></td>
+              <td class="short">The sabotage inequality runs $\mathrm{R}_\varepsilon\ge\overline{\mathrm{R}}_\varepsilon\ge(1-2\varepsilon)\mathrm{RS}$ [<a href="../refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a>, Thm 12], i.e. $\mathrm{RS}=O(\mathrm{R})$, so the recorded $\mathrm{R}=\widetilde\Omega(n^3)$ gives no floor. What does: $\mathrm{R}=O(\mathrm{RS}^2\log\mathrm{RS})$ for total $f$ [Thm 32], hence $\mathrm{RS}=\widetilde\Omega(\sqrt{\mathrm{R}})=\widetilde\Omega(n^{3/2})$; the weaker $\mathrm{RS}\ge\mathrm{CG}^{\mathrm{pub}}\ge\mathrm{fbs}$ only gives $\widetilde\Omega(n)$. Since no total function with $\mathrm{RS}=o(\mathrm{R})$ is known, the truth is probably $\widetilde\Theta(n^3)$, but that is not a theorem.
+<span class="refs"><a href="../refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rna.html">Non-adaptive randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{R}^{\mathrm{na}}\ge\mathrm{R}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dna.html">Non-adaptive deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{D}^{\mathrm{na}}\ge\mathrm{D}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Advpm.html" title="General (negative-weights) adversary bound">
+    <span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Advpm.html">General (negative-weights) adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">The general adversary bound characterises bounded-error quantum query complexity, $\mathrm{Adv}^{\pm}=\Theta(\mathrm{Q})$, so it inherits the recorded $\mathrm{Q}$.
+<span class="refs"><a href="../refs.html#Reichardt11" class="xref ref ">Reichardt11</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/gamma2.html" title="Approximate gamma_2 norm">
+    <span class="tex">\(\gamma_2^{\alpha}(f)\)</span>
+  </a>
+
+                  <a href="../measures/gamma2.html">Approximate gamma_2 norm</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">The approximate $\gamma_2$ norm is the factorisation-norm form of $\mathrm{Adv}^{\pm}$, hence $\Theta(\mathrm{Q})$.
+<span class="refs"><a href="../refs.html#LMRSS11" class="xref ref ">LMRSS11</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/MAdv.html" title="Multiplicative adversary">
+    <span class="tex">\(\mathrm{MAdv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MAdv.html">Multiplicative adversary</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{Adv}^{\pm}\le\mathrm{MAdv}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                  <a href="../measures/C.html">Certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^{3/2})\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">From $\mathrm{D}\le\mathrm{C}^2$ against $\mathrm{D}=\widetilde\Omega(n^3)$. No matching upper bound is known here: all that totality gives is $\mathrm{C}\le\mathrm{s}\cdot\mathrm{bs}$ [<a href="../refs.html#Nisan91" class="xref ref ">Nisan91</a>], and the only <em>theorem</em> bounding $\mathrm{bs}$ by $\mathrm{s}$ is $\mathrm{bs}\le 2\deg^2\le 2\mathrm{s}^4$ (Nisan-Szegedy plus Huang), giving $\mathrm{C}\le 2\mathrm{s}^5=\widetilde O(n^5)$. The familiar $\mathrm{bs}\le\mathrm{s}^2$ is an open conjecture, not an available bound.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/UC.html" title="Unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/UC.html">Unambiguous certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^{3/2})\)</span></td>
+              <td class="short">Squeeze: $\mathrm{UC}\ge\mathrm{C}$; equivalently $\mathrm{D}\le\mathrm{UC}^2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/SP.html" title="Subcube partition complexity">
+    <span class="tex">\(\mathrm{SP}(f)\)</span>
+  </a>
+
+                  <a href="../measures/SP.html">Subcube partition complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^{3/2})\)</span></td>
+              <td class="short">Squeeze: $\mathrm{SP}\ge\mathrm{C}$; equivalently $\mathrm{D}\le\mathrm{SP}^2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs.html">Block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">From $\mathrm{D}\le\mathrm{s}\cdot\mathrm{bs}^2$ with the recorded $\mathrm{s}=\widetilde O(n)$ and $\mathrm{D}=\widetilde\Omega(n^3)$: $\mathrm{bs}\ge\sqrt{\mathrm{D}/\mathrm{s}}=\widetilde\Omega(n)$. So the low-sensitivity function is <em>not</em> low-block-sensitivity: $\mathrm{bs}$ is already as large as $\mathrm{s}$. The available ceiling is $\mathrm{bs}\le 2\deg^2\le 2\mathrm{s}^4=\widetilde O(n^4)$ (Nisan-Szegedy composed with Huang's $\deg\le\mathrm{s}^2$); $\mathrm{bs}\le\mathrm{s}^2$ would give $\widetilde O(n^2)$ but is still conjectural.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/fbs.html">Fractional block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{fbs}\ge\mathrm{bs}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/FC.html" title="Fractional certificate complexity">
+    <span class="tex">\(\mathrm{FC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/FC.html">Fractional certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{FC}=\mathrm{fbs}$ exactly.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/RC.html" title="Randomized certificate complexity">
+    <span class="tex">\(\mathrm{RC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/RC.html">Randomized certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{RC}=\Theta(\mathrm{fbs})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CA.html" title="Classical adversary bound">
+    <span class="tex">\(\mathrm{CA}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CA.html">Classical adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{CA}=\Theta(\mathrm{fbs})$ for total functions.
+<span class="refs"><a href="../refs.html#ABIKPS17" class="xref ref ">ABIKPS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
+    <span class="tex">\(\deg(f)\)</span>
+  </a>
+
+                  <a href="../measures/deg.html">Exact degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">From $\mathrm{D}=O(\deg^3)$ [<a href="../refs.html#Midrijanis04" class="xref ref ">Midrijanis04</a>] against $\mathrm{D}=\widetilde\Omega(n^3)$. Huang caps it at $\deg\le\mathrm{s}^2=\widetilde O(n^2)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/adeg.html">Approximate degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^{3/4})\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">From $\mathrm{D}=O(\widetilde{\deg}^4)$ [<a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a>] against $\mathrm{D}=\widetilde\Omega(n^3)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                  <a href="../measures/lambda.html">Spectral sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n)\)</span></td>
+              <td class="short">Squeeze: $\lambda\le\mathrm{s}=\widetilde O(n)$. Spectral sensitivity is therefore small here too, which is why this family also witnesses a large $\mathrm{D}$-vs-$\lambda$ gap.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s0.html" title="0-sensitivity">
+    <span class="tex">\(\mathrm{s}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/s0.html">0-sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{s}_0\le\mathrm{s}=\widetilde O(n)$. The desensitizing step is what makes both sides small: the inner $f'$ has $\mathrm{s}_0(f')\le 1$ by construction.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s1.html" title="1-sensitivity">
+    <span class="tex">\(\mathrm{s}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/s1.html">1-sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{s}_1\le\mathrm{s}=\widetilde O(n)$; the outer Block $k$-sum contributes only $O(\log^3 n)$ ones per certificate.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Inf.html" title="Total influence (L2 influence)">
+    <span class="tex">\(\mathrm{I}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Inf.html">Total influence (L2 influence)</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{I}(f)=\mathbf{E}_x[\mathrm{s}(f,x)]\le\mathrm{s}(f)=\widetilde O(n)$. Combined with $\mathrm{D}=\widetilde\Omega(n^3)$ this is a cubic $\mathrm{D}$-vs-$\mathrm{I}$ gap that tracks the record $\mathrm{D}$-vs-$\mathrm{s}$ gap exactly.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Inf1.html" title="Total L1 influence">
+    <span class="tex">\(\mathrm{I}^{1}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Inf1.html">Total L1 influence</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n)\)</span></td>
+              <td class="short">For a Boolean-valued function the $L_1$ and $L_2$ influences coincide coordinate by coordinate, so $\mathrm{I}^{1}=\mathrm{I}=\widetilde O(n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/UCmin.html" title="Minimum unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/UCmin.html">Minimum unambiguous certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^{3/2})\)</span></td>
+              <td class="short">Squeeze: $\mathrm{D}=O(\mathrm{UC}_{\min}^2)$ [<a href="../refs.html#BHT17" class="xref ref ">BHT17</a>] against $\mathrm{D}=\widetilde\Omega(n^3)$. Note this is the <em>output</em> of the amplification, not the $\mathrm{UC}_{\min}$ of the base function that sets the scale variable.
+<span class="refs"><a href="../refs.html#BHT17" class="xref ref ">BHT17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/EC.html" title="Expectational certificate complexity">
+    <span class="tex">\(\mathrm{EC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/EC.html">Expectational certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^{3/2})\)</span></td>
+              <td class="short">Squeeze: $\mathrm{R}_0=O(\mathrm{EC}^2)$ against $\mathrm{R}_0=\widetilde\Omega(n^3)$. This beats the bare $\mathrm{EC}\ge\mathrm{fbs}=\widetilde\Omega(n)$ by half a power.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CG.html" title="Certificate game complexity (private coin)">
+    <span class="tex">\(\mathrm{CG}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CG.html">Certificate game complexity (private coin)</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{R}_0=O(\mathrm{CG})$ against $\mathrm{R}_0=\widetilde\Omega(n^3)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q0.html">Zero-error (Las Vegas) quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{Q}_0\ge\mathrm{Q}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QC.html" title="Quantum certificate complexity">
+    <span class="tex">\(\mathrm{QC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QC.html">Quantum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{QC}=\Theta(\sqrt{\mathrm{fbs}})$ with $\mathrm{fbs}=\widetilde\Omega(n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/cbs.html" title="Critical block sensitivity">
+    <span class="tex">\(\mathrm{cbs}(S)\)</span>
+  </a>
+
+                  <a href="../measures/cbs.html">Critical block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n)\)</span></td>
+              <td class="short">For a Boolean function every input is critical and the solution function is forced, so $\mathrm{cbs}=\mathrm{bs}=\widetilde\Omega(n)$ (<a href="../measures/cbs.html" class="xref measure "><span class="tex">\(\mathrm{cbs}(S)\)</span></a> vs <a href="../measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a>).
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+
+                  <a href="../measures/psD.html">Pseudo-deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">For a Boolean function the canonical solution is forced to be $f$ itself, so $\mathrm{psD}=\mathrm{R}=\widetilde\Omega(n^3)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rbar.html">Expected-cost randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">The distributional form of $\mathrm{R}$: $\overline{\mathrm{R}}=\Theta(\mathrm{R})=\widetilde\Omega(n^3)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dmu.html">Distributional query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Yao's minimax: $\max_\mu\mathrm{D}^{\mu}=\Theta(\mathrm{R})=\widetilde\Omega(n^3)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_size.html">Decision tree size</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{D}\le\mathrm{DTsize}-1$, so the tree needs at least $\widetilde\Omega(n^3)$ leaves. Only the trivial size bound is claimed -- the exponential lower bound one would expect is not established here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+
+                  <a href="../measures/chi.html">Conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^{3/2})\)</span></td>
+              <td class="short">Floor from $\mathrm{R}=O(\chi^2)$ [<a href="../refs.html#Sanyal18" class="xref ref ">Sanyal18</a>] against $\mathrm{R}=\widetilde\Omega(n^3)$. This beats the block-sensitivity floor $\chi=\Omega(\mathrm{bs})=\widetilde\Omega(n)$ [<a href="../refs.html#Li18" class="xref ref ">Li18</a>] by half a power.
+<span class="refs"><a href="../refs.html#Sanyal18" class="xref ref ">Sanyal18</a> <a href="../refs.html#Li18" class="xref ref ">Li18</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/chibar.html" title="Max-conflict complexity">
+    <span class="tex">\(\bar{\chi}(f)\)</span>
+  </a>
+
+                  <a href="../measures/chibar.html">Max-conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^{3/2})\)</span></td>
+              <td class="short">Squeeze: $\bar\chi=\Omega(\mathrm{RS})=\widetilde\Omega(n^{3/2})$ along the chain $\mathrm{RS}\lesssim\bar\chi\lesssim\mathrm{LR}\lesssim\mathrm{R}$ [<a href="../refs.html#GLSS19" class="xref ref ">GLSS19</a>]; equivalently $\bar\chi=\Omega(\sqrt{\mathrm{R}})$ directly.
+<span class="refs"><a href="../refs.html#GLSS19" class="xref ref ">GLSS19</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/LR.html" title="Linearised randomized complexity">
+    <span class="tex">\(\mathrm{LR}(f)\)</span>
+  </a>
+
+                  <a href="../measures/LR.html">Linearised randomized complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^{3/2})\)</span></td>
+              <td class="short">Squeeze: $\mathrm{LR}\ge\bar\chi=\widetilde\Omega(n^{3/2})$, equivalently $\mathrm{LR}=\Omega(\sqrt{\mathrm{R}})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/Rstar.html" title="Asymptotic composition rate">
+    <span class="tex">\(\mathrm{R}^{*}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rstar.html">Asymptotic composition rate</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Unlike the classical relaxations above, this one is pinned at the top by the quantum floor $\mathrm{R}^*\ge\Omega(\mathrm{Q})=\widetilde\Omega(n^3)$, and $\mathrm{R}^*\le\mathrm{R}$ costs nothing since $\mathrm{R}$ is itself only bounded below.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Np.html">Noisy decision tree complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{N}_p\ge\mathrm{R}=\widetilde\Omega(n^3)$; the $O(\mathrm{R}\log\mathrm{R})$ ceiling adds nothing because $\mathrm{R}$ has no recorded ceiling.
+<span class="refs"><a href="../refs.html#FRPU94" class="xref ref ">FRPU94</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/robustQ.html">Robust quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^3)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{Q}^{\mathrm{rob}}\ge\mathrm{Q}=\widetilde\Omega(n^3)$ [<a href="../refs.html#BNRdW05" class="xref ref ">BNRdW05</a>].
+<span class="refs"><a href="../refs.html#BNRdW05" class="xref ref ">BNRdW05</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGpub.html" title="Certificate game complexity (public coin)">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGpub.html">Certificate game complexity (public coin)</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n)\)</span></td>
+              <td class="short">The public-coin certificate game value collapses to $\Theta(\mathrm{CA})=\Theta(\mathrm{fbs})=\widetilde\Omega(n)$ for total functions [<a href="../refs.html#ABIKPS17" class="xref ref ">ABIKPS17</a>]. Against the recorded $\mathrm{CG}=\widetilde\Omega(n^3)$ this cell is where the private-coin/public-coin gap would show, but only the two floors are known.
+<span class="refs"><a href="../refs.html#ABIKPS17" class="xref ref ">ABIKPS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGns.html" title="Non-signaling certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGns.html">Non-signaling certificate game complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n)\)</span></td>
+              <td class="short">Same collapse: $\mathrm{CG}^{\mathrm{ns}}=\Theta(\mathrm{CA})=\Theta(\mathrm{fbs})=\widetilde\Omega(n)$.
+<span class="refs"><a href="../refs.html#ABIKPS17" class="xref ref ">ABIKPS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGstar.html" title="Quantum certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{*}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGstar.html">Quantum certificate game complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n)\)</span></td>
+              <td class="short">Same collapse: entangled certificate games are $\Theta(\mathrm{CA})=\widetilde\Omega(n)$.
+<span class="refs"><a href="../refs.html#ABIKPS17" class="xref ref ">ABIKPS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/prt.html" title="Partition bound">
+    <span class="tex">\(\mathrm{prt}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/prt.html">Partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n)\)</span></td>
+              <td class="short">Two floors coincide: $\mathrm{prt}_\varepsilon\ge\mathrm{RC}+\log\varepsilon=\widetilde\Omega(n)$, and $\mathrm{D}=O(\mathrm{prt}_{1/3}^3)$ against $\mathrm{D}=\widetilde\Omega(n^3)$ gives $\widetilde\Omega(n)$ as well [<a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a>]. No ceiling, since $\mathrm{prt}\le 2\mathrm{R}$ and $\mathrm{R}$ is unbounded above here.
+<span class="refs"><a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/rprt.html" title="Relaxed partition bound">
+    <span class="tex">\(\overline{\mathrm{prt}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rprt.html">Relaxed partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n)\)</span></td>
+              <td class="short">The $\mathrm{RC}$ floor survives the relaxation of the partition bound, so $\mathrm{rprt}=\widetilde\Omega(n)$ by the argument of the $\mathrm{prt}$ line.
+<span class="refs"><a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Adv.html" title="Positive-weights adversary bound">
+    <span class="tex">\(\mathrm{Adv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Adv.html">Positive-weights adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{bs}\le\mathrm{Adv}^2$ [<a href="../refs.html#Ambainis02" class="xref ref ">Ambainis02</a>] with $\mathrm{bs}=\widetilde\Omega(n)$. The certificate barrier $\mathrm{Adv}\le\sqrt{\mathrm{C}^0\mathrm{C}^1}$ gives no ceiling here because neither one-sided certificate complexity is bounded above, and $\lambda\le\mathrm{Adv}$ gives no floor because $\lambda$ is only bounded above.
+<span class="refs"><a href="../refs.html#Ambainis02" class="xref ref ">Ambainis02</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/cjdeg.html">Conical junta degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^{3/4})\)</span></td>
+              <td class="short">Squeeze: $\mathrm{cjdeg}\ge\widetilde{\deg}=\widetilde\Omega(n^{3/4})$ (dropping non-negativity can only lower the degree).
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/MaxInf.html" title="Maximum influence">
+    <span class="tex">\(\mathrm{MaxInf}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MaxInf.html">Maximum influence</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n)\)</span></td>
+              <td class="short">A maximum is at most a sum, so $\mathrm{MaxInf}\le\mathrm{I}=\widetilde O(n)$; equally $\mathrm{MaxInf}\le\mathrm{s}$. Against $\mathrm{D}=\widetilde\Omega(n^3)$ this is a cubic gap, i.e. the same record the $\mathrm{s}$ column records.
+</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Separations its values prove <span class="dim">— computed, not recorded</span></h2>
+        <p class="dim small">Read straight off the table above by comparing two values: no
+        relation record states these, and where one does and says more, the record wins and the
+        pair is not listed here. 29 in total,
+        strongest first.</p>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Dmu&amp;b=s">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f_n) = \widetilde\Omega\big(\mathrm{s}(f_n)^{3}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\mu}_{\varepsilon}(f) = \widetilde\Omega(n^3)\) against \(\mathrm{s}(f) = \widetilde O(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=R&amp;b=lambda">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}_{\varepsilon}(f_n) = \widetilde\Omega\big(\lambda(f_n)^{3}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{R}_{\varepsilon}(f) = \widetilde\Omega(n^3)\) against \(\lambda(f) = \widetilde O(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Dmu&amp;b=lambda">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f_n) = \widetilde\Omega\big(\lambda(f_n)^{3}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\mu}_{\varepsilon}(f) = \widetilde\Omega(n^3)\) against \(\lambda(f) = \widetilde O(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=R&amp;b=s">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}_{\varepsilon}(f_n) = \widetilde\Omega\big(\mathrm{s}(f_n)^{3}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{R}_{\varepsilon}(f) = \widetilde\Omega(n^3)\) against \(\mathrm{s}(f) = \widetilde O(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Rbar&amp;b=s">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f_n) = \widetilde\Omega\big(\mathrm{s}(f_n)^{3}\big)\)</span></div>
+            <div class="refs dim">from \(\bar{\mathrm{R}}_{\varepsilon}(f) = \widetilde\Omega(n^3)\) against \(\mathrm{s}(f) = \widetilde O(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=R1&amp;b=lambda">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}^{1}(f_n) = \widetilde\Omega\big(\lambda(f_n)^{3}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{R}^{1}(f) = \widetilde\Omega(n^3)\) against \(\lambda(f) = \widetilde O(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Rbar&amp;b=lambda">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f_n) = \widetilde\Omega\big(\lambda(f_n)^{3}\big)\)</span></div>
+            <div class="refs dim">from \(\bar{\mathrm{R}}_{\varepsilon}(f) = \widetilde\Omega(n^3)\) against \(\lambda(f) = \widetilde O(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=R1&amp;b=s">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}^{1}(f_n) = \widetilde\Omega\big(\mathrm{s}(f_n)^{3}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{R}^{1}(f) = \widetilde\Omega(n^3)\) against \(\mathrm{s}(f) = \widetilde O(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-composition" href="../measures/Rstar.html" title="Asymptotic composition rate">
+    <span class="tex">\(\mathrm{R}^{*}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Rstar&amp;b=s">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}^{*}(f_n) = \widetilde\Omega\big(\mathrm{s}(f_n)^{3}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{R}^{*}(f) = \widetilde\Omega(n^3)\) against \(\mathrm{s}(f) = \widetilde O(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Np&amp;b=lambda">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{N}_{p}(f_n) = \widetilde\Omega\big(\lambda(f_n)^{3}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{N}_{p}(f) = \widetilde\Omega(n^3)\) against \(\lambda(f) = \widetilde O(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-composition" href="../measures/Rstar.html" title="Asymptotic composition rate">
+    <span class="tex">\(\mathrm{R}^{*}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Rstar&amp;b=lambda">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}^{*}(f_n) = \widetilde\Omega\big(\lambda(f_n)^{3}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{R}^{*}(f) = \widetilde\Omega(n^3)\) against \(\lambda(f) = \widetilde O(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Np&amp;b=s">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{N}_{p}(f_n) = \widetilde\Omega\big(\mathrm{s}(f_n)^{3}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{N}_{p}(f) = \widetilde\Omega(n^3)\) against \(\mathrm{s}(f) = \widetilde O(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-adversary" href="../measures/CG.html" title="Certificate game complexity (private coin)">
+    <span class="tex">\(\mathrm{CG}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=CG&amp;b=s">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{CG}(f_n) = \widetilde\Omega\big(\mathrm{s}(f_n)^{3}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{CG}(f) = \widetilde\Omega(n^3)\) against \(\mathrm{s}(f) = \widetilde O(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=psD&amp;b=lambda">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{psD}(S)(f_n) = \widetilde\Omega\big(\lambda(f_n)^{3}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{psD}(S) = \widetilde\Omega(n^3)\) against \(\lambda(f) = \widetilde O(n)\)</div>
+          </li>
+        </ul>
+        <p class="dim small">&hellip; and 15 more, all of them visible
+        in the <a href="../matrix.html">matrix</a> (widen it to all measures) and on the
+        pair pages.</p>
+      </section>
+
+      <section class="card">
+        <h2>Separations it witnesses</h2>
+        <ul class="witlist">
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=D&amp;b=s">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">$\mathrm{D} = \widetilde\Omega(\mathrm{s}^3)$ against the upper bound $\mathrm{D}=O(\mathrm{s}^6)$ (Huang + Midrijanis).</div>
+<div class="refs"><a href="../refs.html#BHT17" class="xref ref ">BHT17</a> <a href="../refs.html#Huang19" class="xref ref ">Huang19</a> <a href="../refs.html#Midrijanis04" class="xref ref ">Midrijanis04</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=R0&amp;b=s">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">$\mathrm{R}_0 = \widetilde\Omega(\mathrm{s}^3)$.</div>
+<div class="refs"><a href="../refs.html#BHT17" class="xref ref ">BHT17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=R&amp;b=s">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">$\mathrm{R} = \widetilde\Omega(\mathrm{s}^3)$.</div>
+<div class="refs"><a href="../refs.html#BHT17" class="xref ref ">BHT17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=Q&amp;b=s">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">$\mathrm{Q} = \widetilde\Omega(\mathrm{s}^3)$.</div>
+<div class="refs"><a href="../refs.html#BHT17" class="xref ref ">BHT17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/UCmin.html" title="Minimum unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}_{\min}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=C&amp;b=UCmin">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">$\mathrm{C} = \Omega(\mathrm{UC}_{\min}^{1.22})$.</div>
+<div class="refs"><a href="../refs.html#BHT17" class="xref ref ">BHT17</a></div>          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Cited as a witness by</h2>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=D&amp;b=s#D__s__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) = \widetilde\Omega\big(\mathrm{s}(f_n)^3\big)\)</span></div>
+<div class="refs"><a href="../refs.html#BHT17" class="xref ref ">BHT17</a></div>          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Notes</h2>
+        <p>The values describe the sensitivity-amplified function
+$\hat f=\mathrm{BSum}_n\circ f'$ of [<a href="../refs.html#BHT17" class="xref ref ">BHT17</a>, Thm 3, Cor. 2], which is what
+sets the $\mathrm{s}$ column. The last witness below,
+$\mathrm{C}=\Omega(\mathrm{UC}_{\min}^{1.22})$, comes from a <em>different</em>
+family in the same paper -- a projective-plane gadget with
+$\mathrm{C}=k^2-k+1$ and $\mathrm{UC}_{\min}=k(k+1)/2$ composed over a
+weighted alphabet [<a href="../refs.html#BHT17" class="xref ref ">BHT17</a>, Thm 5] -- so its numbers are not merged into the
+table above. Feeding that family through the same amplification is what
+gives $\mathrm{C}=\Omega(\mathrm{s}^{2.22})$ [<a href="../refs.html#BHT17" class="xref ref ">BHT17</a>, Cor. 4]; it has since
+been superseded by the cubic gap of <a href="../functions/BBGJKfn.html" class="xref function "><span class="tex">\(f_{\mathrm{BBGJK}}\)</span></a>.</p>
+
+      </section>
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#BHT17" class="xref ref ">[BHT17]</a> <span class="dim">Low-Sensitivity Functions from Unambiguous Certificates</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/s.html" class="xref measure "><span class="tex">\(\mathrm{s}(f)\)</span></a></li><li><a href="../measures/UC.html" class="xref measure "><span class="tex">\(\mathrm{UC}(f)\)</span></a></li><li><a href="../measures/UCmin.html" class="xref measure "><span class="tex">\(\mathrm{UC}_{\min}(f)\)</span></a></li><li><a href="../functions/BBGJKfn.html" class="xref function "><span class="tex">\(f_{\mathrm{BBGJK}}\)</span></a></li><li><a href="../functions/cheatsheet.html" class="xref function "><span class="tex">\(f_{\mathrm{CS}}\)</span></a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/03-separating-total.yaml</code> &mdash; id <code>BHTfn</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

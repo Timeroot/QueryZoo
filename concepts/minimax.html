@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yao&#39;s minimax and its failures &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="">Functions</a>
+      <a href="../concepts/index.html"
+         class="on">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../concepts/index.html">Concepts</a></div>
+  <header class="entryhead concept">
+    <div>
+      <h1>Yao&#39;s minimax and its failures</h1>
+      <p class="lede">The distributional characterisation of randomized query complexity: what is true, what Vereshchagin fixed, and where it breaks.</p>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="main-col">
+      <article class="card prose">
+        <h3>The easy version (error minimax)</h3>
+<p>Fix a depth budget $T$. The game &quot;algorithm picks a depth-$T$ tree,
+adversary picks an input, payoff = probability of error&quot; is zero-sum and
+finite, so von Neumann gives
+$$\mathrm{R}_\varepsilon(f) \;=\; \max_{\mu}\ \mathrm{D}^{\mu}_{\varepsilon}(f),$$
+where $\mathrm{D}^\mu_\varepsilon(f)$ is the least depth of a deterministic
+tree erring with probability $\le\varepsilon$ under $\mu$. No subtleties.</p>
+<h3>The hard version (cost minimax)</h3>
+<p>Now fix the error and minimise the <em>cost</em>. Yao (1977) asked whether
+$$\bar{\mathrm{R}}_\varepsilon(f) \;\stackrel{?}{=}\; \Theta\Big(\max_\mu\ \bar{\mathrm{D}}^{\mu}_{\varepsilon}(f)\Big).$$
+This is no longer a plain zero-sum game, because the error constraint is a
+hard constraint rather than a payoff.</p>
+<ul>
+<li><strong>Yes for bounded error</strong> [<a href="../refs.html#Vereshchagin98" class="xref ref ">Vereshchagin98</a>].</li>
+<li><strong>No for small bias</strong> $\varepsilon = 1/2-o(1)$ [<a href="../refs.html#BBGM22" class="xref ref ">BBGM22</a>].</li>
+</ul>
+<h3>The repair</h3>
+<p>[<a href="../refs.html#BenDavidBlais20minimax" class="xref ref ">BenDavidBlais20minimax</a>] prove a new minimax theorem producing a <em>single</em>
+hard distribution that works at <strong>all bias levels simultaneously</strong>, and
+show it applies to randomized query complexity, communication complexity,
+approximate degree and approximate log-rank. This is the technical engine
+behind the $\mathrm{noisyR}$ composition theorem.</p>
+
+      </article>
+    </div>
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/Rbar.html" class="xref measure "><span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/Dmu.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/D_prod.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f)\)</span></a></li><li><a href="../measures/noisyR.html" class="xref measure "><span class="tex">\(\mathrm{noisyR}(f)\)</span></a></li><li><a href="../concepts/cost-conventions.html" class="xref concept ">Cost conventions: worst case, expected cost, zero error</a></li></ul>
+      </section>
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#Yao77" class="xref ref ">[Yao77]</a> <span class="dim">Probabilistic computations: Toward a unified measure of complexity</span></li>
+            <li><a href="../refs.html#Vereshchagin98" class="xref ref ">[Vereshchagin98]</a> <span class="dim">Randomized Boolean decision trees: several remarks</span></li>
+            <li><a href="../refs.html#BBGM22" class="xref ref ">[BBGM22]</a> <span class="dim">Randomised Composition and Small-Bias Minimax</span></li>
+            <li><a href="../refs.html#BenDavidBlais20minimax" class="xref ref ">[BenDavidBlais20minimax]</a> <span class="dim">A New Minimax Theorem for Randomized Algorithms</span></li>
+        </ul>
+      </section>
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/concepts.yaml</code> &mdash; id <code>minimax</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

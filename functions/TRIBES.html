@@ -1,0 +1,1445 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRIBES &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#total">Total functions</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">\(\mathrm{Tribes}_{w,s}\)</div>
+    <div>
+      <h1>TRIBES</h1>
+      <p class="lede">Balanced read-once DNF; the KKL / max-influence extremal example.</p>
+      <p class="aliases">
+        <span class="kindtag k-total">total</span>
+        <span class="grouptag g-basic">basic</span>
+<span class="tag">arity: $n = ws$ bits</span>      </p>
+    </div>
+  </header>
+
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>An OR of $s$ disjoint ANDs of $w$ variables each, with $w,s$ chosen so that
+$\Pr[\mathrm{Tribes}=1] \approx 1/2$, i.e. $s \approx 2^w \ln 2$.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Formal definition</h2>
+        <p>$$\mathrm{Tribes}_{w,s}(x) = \bigvee_{j=1}^{s} \bigwedge_{i=1}^{w} x_{(j-1)w+i},
+  \qquad w \approx \log_2 n - \log_2\ln n,\ \ s = n/w .$$</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D.html">Deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span></td>
+              <td class="short">
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R.html">Bounded-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/noisyR.html" title="Noisy randomized query complexity">
+    <span class="tex">\(\mathrm{noisyR}(f)\)</span>
+  </a>
+
+                  <a href="../measures/noisyR.html">Noisy randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">From $\mathrm{R}(f) = \Theta(n) \Rightarrow \mathrm{noisyR}(f) = \Theta(\mathrm{R}(f))$ [<a href="../refs.html#CKMPSS23" class="xref ref ">CKMPSS23</a>] -- see the <a href="../measures/noisyR.html" class="xref measure "><span class="tex">\(\mathrm{noisyR}(f)\)</span></a> vs <a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a> record. At the top of the range there is no room for fractional queries to help.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s1.html" title="1-sensitivity">
+    <span class="tex">\(\mathrm{s}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/s1.html">1-sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\log n)\)</span></td>
+              <td class="short">Flip any bit of the unique all-ones tribe.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s0.html" title="0-sensitivity">
+    <span class="tex">\(\mathrm{s}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/s0.html">0-sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">Every tribe missing exactly one bit.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                  <a href="../measures/s.html">Sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs.html">Block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/C1.html">1-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\log n)\)</span></td>
+              <td class="short">
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/C0.html">0-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                  <a href="../measures/C.html">Certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Inf.html" title="Total influence (L2 influence)">
+    <span class="tex">\(\mathrm{I}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Inf.html">Total influence (L2 influence)</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\log n)\)</span></td>
+              <td class="short">
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/MaxInf.html" title="Maximum influence">
+    <span class="tex">\(\mathrm{MaxInf}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MaxInf.html">Maximum influence</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\log n / n)\)</span></td>
+              <td class="short">Extremal for the KKL theorem: no variable has influence more than $O(\log n/n)$.
+<span class="refs"><a href="../refs.html#KKL88" class="xref ref ">KKL88</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Var.html" title="Variance">
+    <span class="tex">\(\mathrm{Var}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Var.html">Variance</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Exactly $1-o(1)$: the width is chosen so that $\Pr[f = 1] \to \tfrac12$. It also follows from the recorded $\mathrm{NS}_\delta = \tfrac12-o(1)$ and $\mathrm{NS}_\delta \le \mathrm{Var}/2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/osss.html" title="OSSS number">
+    <span class="tex">\(\mathrm{osss}(f)\)</span>
+  </a>
+
+                  <a href="../measures/osss.html">OSSS number</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">$\mathrm{Var} = 1-o(1)$ over $\mathrm{MaxInf} = \Theta(\log n/n)$. <strong>The extremal case:</strong> KKL says no function beats $O(n/\log n)$, and TRIBES attains it, so this is the largest lower bound OSSS can ever produce. It coincides with $\mathrm{s} = \mathrm{bs} = \Theta(n/\log n)$ here, and falls a $\log$ short of $\mathrm{D} = n$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/nsr.html" title="Noise robustness">
+    <span class="tex">\(\mathrm{nsr}(f)\)</span>
+  </a>
+
+                  <a href="../measures/nsr.html">Noise robustness</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\log n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Upper: $\mathrm{nsr}\le 4\mathrm{I}/\mathrm{Var} = \Theta(\log n)$. Lower: a uniform input has $\Theta(\log n)$ tribes that are a single $0$ away from firing, so at $\delta = c/\log n$ one of them flips with constant probability and $\mathrm{NS}_\delta = \Omega(1)$. Note $\mathrm{osss}\cdot\mathrm{nsr} = \Theta(n)$, as for every transitive function whose $\mathrm{NS}_\delta \le \delta\mathrm{I}$ bound is tight.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
+    <span class="tex">\(\deg(f)\)</span>
+  </a>
+
+                  <a href="../measures/deg.html">Exact degree</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span></td>
+              <td class="short">The multilinear polynomial $1-\prod_j(1-\prod_{i\in T_j} x_i)$ has the full monomial.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs0.html" title="0-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs0.html">0-block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs1.html" title="1-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs1.html">1-block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\log n)\)</span></td>
+              <td class="short">At most $\mathrm{C}^1 = w$, and the $w$ singletons inside the satisfied tribe achieve it.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/fbs.html">Fractional block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">Between $\mathrm{bs}$ and $\mathrm{C}$, which agree up to constants.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/FC.html" title="Fractional certificate complexity">
+    <span class="tex">\(\mathrm{FC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/FC.html">Fractional certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">Equal to $\mathrm{fbs}$ by LP duality.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/RC.html" title="Randomized certificate complexity">
+    <span class="tex">\(\mathrm{RC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/RC.html">Randomized certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">$\mathrm{RC}=\Theta(\mathrm{fbs})$.
+<span class="refs"><a href="../refs.html#Aaronson08" class="xref ref ">Aaronson08</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/EC.html" title="Expectational certificate complexity">
+    <span class="tex">\(\mathrm{EC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/EC.html">Expectational certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">Between $\mathrm{fbs}$ and $\mathrm{C}$, which agree up to constants.
+<span class="refs"><a href="../refs.html#GJKKLSSV17" class="xref ref ">GJKKLSSV17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Cmin.html">Minimum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\log n)\)</span></td>
+              <td class="short">The cheapest input to certify is a $1$-input: one satisfied tribe, $w=\Theta(\log n)$ bits.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R0.html">Zero-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Between $\mathrm{R}=\Theta(n)$ and $\mathrm{D}=n$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q.html">Bounded-error quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span></td>
+              <td class="short">Grover over the $s$ tribes, Grover inside each: $\sqrt s\cdot\sqrt w = \sqrt n$. Tight, since $\widetilde{\deg}=\Theta(\sqrt n)$.
+<span class="refs"><a href="../refs.html#Grover96" class="xref ref ">Grover96</a> <a href="../refs.html#BT22" class="xref ref ">BT22</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/adeg.html">Approximate degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span></td>
+              <td class="short">As for any depth-two AND-OR tree on $n$ variables.
+<span class="refs"><a href="../refs.html#BT22" class="xref ref ">BT22</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                  <a href="../measures/lambda.html">Spectral sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span></td>
+              <td class="short">At most $\sqrt{\mathrm{s}^0\mathrm{s}^1} = \sqrt{\Theta(n/\log n)\cdot\Theta(\log n)} = \Theta(\sqrt n)$, and at least $\sqrt{\deg} = \sqrt n$ by Huang.
+<span class="refs"><a href="../refs.html#Huang19" class="xref ref ">Huang19</a> <a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/NS.html" title="Noise sensitivity">
+    <span class="tex">\(\mathrm{NS}_{\delta}(f)\)</span>
+  </a>
+
+                  <a href="../measures/NS.html">Noise sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\tfrac12 - o(1)\)</span></td>
+              <td class="short">For any fixed $\delta&gt;0$: TRIBES is the standard example of a <em>noise-sensitive</em> monotone function, because all its influences are $O(\log n/n)$.
+<span class="refs"><a href="../refs.html#ODonnell14" class="xref ref ">ODonnell14</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Inf1.html" title="Total L1 influence">
+    <span class="tex">\(\mathrm{I}^{1}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Inf1.html">Total L1 influence</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\log n)\)</span></td>
+              <td class="short">Boolean-valued, so equal to $\mathrm{I}(f)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dna.html">Non-adaptive deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span></td>
+              <td class="short">Every variable is relevant.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CA.html" title="Classical adversary bound">
+    <span class="tex">\(\mathrm{CA}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CA.html">Classical adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{RC}(f) \le \mathrm{CA}(f) \le \mathrm{fbs}(f)$, with both ends $\Theta(n/\log n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGpub.html" title="Certificate game complexity (public coin)">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGpub.html">Certificate game complexity (public coin)</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{RC}(f) \le \mathrm{CG}^{\mathrm{pub}}(f) \le \mathrm{fbs}(f)$, with both ends $\Theta(n/\log n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGstar.html" title="Quantum certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{*}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGstar.html">Quantum certificate game complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, <a href="../measures/CGpub.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span></a> vs <a href="../measures/CGns.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span></a>), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin <a href="../measures/CG.html" class="xref measure "><span class="tex">\(\mathrm{CG}(f)\)</span></a> can be larger.
+<span class="refs"><a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGns.html" title="Non-signaling certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGns.html">Non-signaling certificate game complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">All three of $\mathrm{CG}^{\mathrm{pub}}$, $\mathrm{CG}^{*}$ and $\mathrm{CG}^{\mathrm{ns}}$ collapse to $\Theta(\mathrm{CA})$ for every function (the non-signaling bottleneck, <a href="../measures/CGpub.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span></a> vs <a href="../measures/CGns.html" class="xref measure "><span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span></a>), so this is the recorded $\mathrm{CG}^{\mathrm{pub}}$ value verbatim; only the private-coin <a href="../measures/CG.html" class="xref measure "><span class="tex">\(\mathrm{CG}(f)\)</span></a> can be larger.
+<span class="refs"><a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rna.html">Non-adaptive randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{\mathrm{na}}(f) \le \mathrm{D}^{\mathrm{na}}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}^{\mathrm{na}}(f) = n$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Advpm.html" title="General (negative-weights) adversary bound">
+    <span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Advpm.html">General (negative-weights) adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span></td>
+              <td class="short">Sandwiched: $\lambda(f) \le \mathrm{Adv}^{\pm}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with both ends $\Theta(\sqrt n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/gamma2.html" title="Approximate gamma_2 norm">
+    <span class="tex">\(\gamma_2^{\alpha}(f)\)</span>
+  </a>
+
+                  <a href="../measures/gamma2.html">Approximate gamma_2 norm</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span></td>
+              <td class="short">$\gamma_2^{\alpha}(f) = \Theta(\mathrm{Q}_{\varepsilon}(f))$ for every $f$ (<a href="../measures/gamma2.html" class="xref measure "><span class="tex">\(\gamma_2^{\alpha}(f)\)</span></a> vs <a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>), and $\mathrm{Q}_{\varepsilon}(f) = \Theta(\sqrt n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Adv.html" title="Positive-weights adversary bound">
+    <span class="tex">\(\mathrm{Adv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Adv.html">Positive-weights adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span></td>
+              <td class="short">Sandwiched: $\lambda(f) \le \mathrm{Adv}(f) \le \mathrm{Adv}^{\pm}(f)$, with both ends $\Theta(\sqrt n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rbar.html">Expected-cost randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \bar{\mathrm{R}}_{\varepsilon}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R1.html">One-sided-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{R}_{\varepsilon}(f) \le \mathrm{R}^{1}(f) \le \mathrm{D}(f)$, with $\mathrm{R}_{\varepsilon}(f) = \Theta(n)$ and $\mathrm{D}(f) = n$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QE.html">Exact quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\deg(f)/2 \le \mathrm{Q}_{\mathrm{E}}(f) \le \mathrm{D}(f)$ -- a $t$-query exact algorithm gives an exact polynomial of degree at most $2t$, so the degree bound is halved -- with $\deg(f) = n$ and $\mathrm{D}(f) = n$ here, hence $n/2 \le \mathrm{Q}_{\mathrm{E}} \le n$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/MAdv.html" title="Multiplicative adversary">
+    <span class="tex">\(\mathrm{MAdv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MAdv.html">Multiplicative adversary</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span></td>
+              <td class="short">Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{MAdv}(f) \le \mathrm{Q}_{\varepsilon}(f)$, with both ends $\Theta(\sqrt n)$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/deg2.html" title="Mod-2 degree">
+    <span class="tex">\(\deg_2(f)\)</span>
+  </a>
+
+                  <a href="../measures/deg2.html">Mod-2 degree</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Over $\mathbb{F}_2$, $\bigvee_j y_j = 1 + \prod_j(1+y_j)$ contributes the monomial $\prod_j y_j$ with coefficient $1$, and each $y_j$ is the product of its tribe's variables. So the full monomial $x_1\cdots x_n$ survives, exactly as over $\mathbb{R}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q0.html">Zero-error (Las Vegas) quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(n/\log n),\ O(n)\)</span></td>
+              <td class="short">Not $\Theta(n)$ on the evidence the zoo has: $\deg/2$ floors $\mathrm{Q}_{\mathrm{E}}$, not $\mathrm{Q}_0$, whose floor is $\mathrm{rdeg}/2 = \Theta(n/\log n)$. The same bound comes from a restriction: fixing all but one bit of every tribe to $1$ leaves $\mathrm{OR}_w$ on the free bits, and $\mathrm{Q}_0(\mathrm{OR}_w) = w = \Theta(n/\log n)$ [<a href="../refs.html#BCWZ99" class="xref ref ">BCWZ99</a>]. Ceiling $\mathrm{D} = n$. So $\mathrm{Q}_0$ is pinned only to within the $\log n$, still a full quadratic above $\mathrm{Q} = \Theta(\sqrt n)$.
+<span class="refs"><a href="../refs.html#BCWZ99" class="xref ref ">BCWZ99</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
+  </a>
+
+                  <a href="../measures/RS.html">Sabotage complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">At most $\mathrm{R} = \Theta(n)$. For the lower bound take the sabotaged input in which every tribe has exactly one $0$ except one distinguished tribe, which is all $1$s apart from a single $\ast$; the value is undetermined. Ruling out a tribe means finding its unique $0$, which costs $\Omega(w)$ queries, and a constant fraction of the $s$ tribes must be ruled out, so $\Omega(sw) = \Omega(n)$.
+<span class="refs"><a href="../refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/chibar.html" title="Max-conflict complexity">
+    <span class="tex">\(\bar{\chi}(f)\)</span>
+  </a>
+
+                  <a href="../measures/chibar.html">Max-conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{RS}(f) = O(\bar{\chi}(f))$ and $\bar{\chi}(f) = O(\mathrm{R}(f))$, with both ends $\Theta(n)$ here.
+<span class="refs"><a href="../refs.html#GLSS19" class="xref ref ">GLSS19</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/LR.html" title="Linearised randomized complexity">
+    <span class="tex">\(\mathrm{LR}(f)\)</span>
+  </a>
+
+                  <a href="../measures/LR.html">Linearised randomized complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\bar{\chi}(f) = O(\mathrm{LR}(f)) \le \mathrm{R}(f)$, with both ends $\Theta(n)$ here.
+<span class="refs"><a href="../refs.html#BBGM22" class="xref ref ">BBGM22</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/Rstar.html" title="Asymptotic composition rate">
+    <span class="tex">\(\mathrm{R}^{*}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rstar.html">Asymptotic composition rate</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Sandwiched: $\mathrm{LR}(f) = O(\mathrm{R}^{*}(f)) \le \mathrm{R}(f)$, with both ends $\Theta(n)$ here.
+<span class="refs"><a href="../refs.html#BBGM22" class="xref ref ">BBGM22</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QC.html" title="Quantum certificate complexity">
+    <span class="tex">\(\mathrm{QC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QC.html">Quantum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt{n/\log n})\)</span></td>
+              <td class="short">$\mathrm{QC}(f) = \Theta(\sqrt{\mathrm{RC}(f)})$ for every $f$, and $\mathrm{RC}(f) = \Theta(n/\log n)$ here. Strictly below $\mathrm{Q} = \Theta(\sqrt n)$ by a $\sqrt{\log n}$ factor.
+<span class="refs"><a href="../refs.html#Aaronson08" class="xref ref ">Aaronson08</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rank.html">Decision tree rank</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Equal to the number of tribes $s$. Write $h(m,r)$ for the rank of $\mathrm{AND}_m \vee G$ with $\mathrm{rank}(G) = r$ on disjoint variables: $h(1,r) = r$ (the $\mathrm{AND}_1$ variable has a constant branch) and $h(m,r) = r+1$ for $m \ge 2$, since querying a tribe variable gives branches of rank $r$ and $r$ or $r+1$. Iterating over the $s$ tribes from $\mathrm{rank}(\mathrm{AND}_w) = 1$ gives $s$. Checked by hand at $w = s = 2$, where the rank is $2$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/ndeg.html" title="Nondeterministic degree">
+    <span class="tex">\(\mathrm{ndeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/ndeg.html">Nondeterministic degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\log n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Exactly $w$. Upper: $p(x) = \sum_j \prod_{i \in T_j} x_i$ is a sum of nonnegative terms that vanishes precisely when no tribe is all-ones, and has degree $w$. Lower: kill all but one tribe by planting a $0$ in each of the others; the restriction is $\mathrm{AND}_w$, whose nondeterministic degree is $w$ because a polynomial vanishing on all but one point of the cube needs full degree. Contrast $\deg = n$: the <a href="../measures/rdeg.html" class="xref measure "><span class="tex">\(\mathrm{rdeg}(f)\)</span></a> gap comes entirely from the other side.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/NQ.html" title="Nondeterministic quantum query complexity">
+    <span class="tex">\(\mathrm{NQ}(f)\)</span>
+  </a>
+
+                  <a href="../measures/NQ.html">Nondeterministic quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\log n)\)</span></td>
+              <td class="short">$\mathrm{NQ}(f) = \lceil \mathrm{ndeg}(f)/2\rceil$, and $\mathrm{ndeg}(f) = w = \Theta(\log n)$ here.
+<span class="refs"><a href="../refs.html#deWolf03" class="xref ref ">deWolf03</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/degp.html" title="Mod-p degree">
+    <span class="tex">\(\deg_p(f)\)</span>
+  </a>
+
+                  <a href="../measures/degp.html">Mod-p degree</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">For <strong>every</strong> prime $p$. Over $\mathbb{F}_p$ the representation is still $1 - \prod_j(1 - \prod_{i\in T_j} x_i)$, whose top monomial $x_1\cdots x_n$ has coefficient $(-1)^{s+1} \ne 0$ in every characteristic. Consistent with the $\deg_2 = n$ entry above.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Fdim.html" title="Fourier dimension">
+    <span class="tex">\(\dim_{\mathbb{F}_2}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Fdim.html">Fourier dimension</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">TRIBES is monotone, so $\hat f(\{i\}) = \mathrm{Inf}_i &gt; 0$ for every $i$: the Fourier support contains all $n$ singletons and therefore spans $\mathbb{F}_2^n$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Stab.html" title="Noise stability">
+    <span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Stab.html">Noise stability</a>
+              </td>
+              <td class="val"><span class="tex">\(o(1)\)</span></td>
+              <td class="short">For every fixed $\rho \in (-1,1)$, from $\mathrm{Stab}_\rho = 1 - 2\,\mathrm{NS}_{(1-\rho)/2}$ and $\mathrm{NS}_\delta \to 1/2$. TRIBES is balanced and noise sensitive, so correlation between $f(x)$ and $f(y)$ vanishes -- the extreme opposite of <a href="../functions/MAJ.html" class="xref function "><span class="tex">\(\mathrm{MAJ}_n\)</span></a>.
+<span class="refs"><a href="../refs.html#ODonnell14" class="xref ref ">ODonnell14</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/robustQ.html">Robust quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(\sqrt n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">At least $\mathrm{Q} = \Omega(\sqrt n)$. The matching upper bound is the ordinary $\sqrt s \cdot \sqrt w$ algorithm with both Grover layers replaced by robust amplitude amplification, which tolerates bounded-error inputs with no log overhead. So the quantum speedup over $\mathrm{R} = \Theta(n)$ survives noisy oracles intact.
+<span class="refs"><a href="../refs.html#HoyerMoscadeWolf03" class="xref ref ">HoyerMoscadeWolf03</a> <a href="../refs.html#BNRdW05" class="xref ref ">BNRdW05</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/UC.html" title="Unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/UC.html">Unambiguous certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">A parity obstruction. An unambiguous $b$-cover partitions $f^{-1}(b)$ into subcubes of sizes $2^{n-c_i}$, so if $|f^{-1}(b)|$ is odd some $c_i$ must equal $n$. Here $|f^{-1}(0)| = (2^w-1)^s$ is a power of an odd number, hence odd, and $|f^{-1}(1)| = 2^n - (2^w-1)^s$ is odd too. So $\mathrm{UC}^0 = \mathrm{UC}^1 = n$, far above $\mathrm{C} = \Theta(n/\log n)$ and $\mathrm{C}^1 = \Theta(\log n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/UCmin.html" title="Minimum unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/UCmin.html">Minimum unambiguous certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Both sides are $n$ by the parity argument on the <a href="../measures/UC.html" class="xref measure "><span class="tex">\(\mathrm{UC}(f)\)</span></a> line, so the one-sided minimum does not help. TRIBES is therefore useless as a witness for the [<a href="../refs.html#BHT17" class="xref ref ">BHT17</a>] $\mathrm{C}$-vs-$\mathrm{UC}_{\min}$ question, despite its very lopsided certificate complexities.
+<span class="refs"><a href="../refs.html#BHT17" class="xref ref ">BHT17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/SP.html" title="Subcube partition complexity">
+    <span class="tex">\(\mathrm{SP}(f)\)</span>
+  </a>
+
+                  <a href="../measures/SP.html">Subcube partition complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">A subcube partition induces an unambiguous cover on each side, so $\mathrm{SP} \ge \mathrm{UC} = n$ by the parity argument on the <a href="../measures/UC.html" class="xref measure "><span class="tex">\(\mathrm{UC}(f)\)</span></a> line; and $\mathrm{SP} \le \mathrm{D} = n$. The $\Theta(\log n)$-size $1$-certificates cannot be assembled into a partition.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/PDT.html" title="Parity decision tree complexity">
+    <span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span>
+  </a>
+
+                  <a href="../measures/PDT.html">Parity decision tree complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">At most $\mathrm{D} = n$. For the lower bound, the $0/1$ representation $1-\prod_j(1-\prod_{i\in T_j}x_i)$ has top monomial coefficient $(-1)^{s+1} = \pm1$, so the $\pm1$-valued $g = 1-2f$ has $\hat g([n]) = \pm2^{-(n-1)}$ -- the largest granularity an $n$-bit function can have -- and $\mathrm{D}^{\oplus} \ge \mathrm{gran}+1 = n$ [<a href="../refs.html#ChistopolskayaPodolskii18" class="xref ref ">ChistopolskayaPodolskii18</a>]. Parity queries buy nothing.
+<span class="refs"><a href="../refs.html#ChistopolskayaPodolskii18" class="xref ref ">ChistopolskayaPodolskii18</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CG.html" title="Certificate game complexity (private coin)">
+    <span class="tex">\(\mathrm{CG}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CG.html">Certificate game complexity (private coin)</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Squeezed by the [<a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a>] sandwich $\max\{\mathrm{Adv}^2,\mathrm{R}_0\} \le \mathrm{CG} \le \mathrm{C}^0\mathrm{C}^1$: below, $\mathrm{Adv}^2 = \Theta(n)$ and $\mathrm{R}_0 = \Theta(n)$; above, $\mathrm{C}^0\mathrm{C}^1 = \Theta(n/\log n)\cdot\Theta(\log n) = \Theta(n)$. The lopsidedness of the two certificate complexities is exactly what makes this cell close, unlike <a href="../functions/OMB.html" class="xref function "><span class="tex">\(\mathrm{OMB}_n\)</span></a> where the same sandwich leaves a quadratic gap.
+<span class="refs"><a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/rdeg.html" title="Rational degree">
+    <span class="tex">\(\mathrm{rdeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rdeg.html">Rational degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Exactly $s$. From $\mathrm{rdeg}(f) = \max\{\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f)\}$ with $\mathrm{ndeg}(f) = w$ recorded above: $\bar f$ is an AND of ORs, and $\prod_j\big(\sum_{i \in T_j}(1-x_i)\big)$ is nonzero exactly when every tribe contains a $0$, giving $\mathrm{ndeg}(\bar f) \le s$; setting $w-1$ bits of each tribe to $1$ restricts $\bar f$ to $\mathrm{AND}_s$, whose nondeterministic degree is $s$, giving the match. So $\mathrm{rdeg} = \Theta(n/\log n)$ against $\deg = n$ -- a genuine, if only logarithmic, rational-vs-exact degree gap on a monotone function.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_prod.html" title="Product-distribution distributional complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_prod.html">Product-distribution distributional complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Equal to $\Theta(s)$, strictly below $\mathrm{R} = \Theta(n)$: <strong>product distributions are provably not worst case for TRIBES.</strong> Lower: under the uniform distribution a depth-$m$ tree touches at most $m$ tribes, and each of the $\ge s-m$ untouched tribes is independently all-ones with probability $2^{-w} = \Theta(1/s)$, so for $m = \varepsilon s$ the answer is still an almost-fair coin at every leaf. Upper: for any product distribution, resolve tribes one at a time, querying each tribe's bits in increasing order of $\Pr[x_i=1]$; the expected cost of resolving a tribe with all-ones probability $q_j$ is at most $\sum_{t&lt;w} q_j^{t/w}$, which is $O(1)$ in the only hard regime $q_j = \Theta(1/s)$ (larger $q_j$ makes some tribe satisfied almost surely, smaller makes the answer almost surely $0$). $O(s)$ queries then resolve every tribe except with probability $e^{-\Omega(s)}$. Marked medium confidence because the upper bound is a case analysis over product distributions rather than a single clean argument.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/spar.html" title="Fourier sparsity">
+    <span class="tex">\(\mathrm{spar}(f)\)</span>
+  </a>
+
+                  <a href="../measures/spar.html">Fourier sparsity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(2^n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Full support, or one short of it. Write $\mathrm{Tribes} = 1 - \prod_{j=1}^{s}(1-A_j)$ with $A_j = \prod_{i \in T_j}x_i = 2^{-w}\prod_{i \in T_j}(1-\chi_i)$. The tribes are on disjoint variables, so the Fourier coefficient of $\chi_S$ in the product factorises over $j$, the factor being $1-2^{-w}$ when $S \cap T_j = \emptyset$ and $-(-1)^{|S \cap T_j|}2^{-w}$ otherwise -- never zero. So every nonempty $S$ carries a nonzero coefficient. The empty set is the only possible exception: in the $\pm1$ encoding $\hat g(\emptyset) = 2(1-2^{-w})^{s}-1$, which vanishes exactly when the function is perfectly balanced. Maximal sparsity, in contrast with the $2^{n-1}$ of <a href="../functions/MAJ.html" class="xref function "><span class="tex">\(\mathrm{MAJ}_n\)</span></a> and <a href="../functions/EH.html" class="xref function "><span class="tex">\(\mathrm{EH}_n\)</span></a>, which are forced down by a symmetry.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/odeg.html" title="One-sided approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{+}(f)\)</span>
+  </a>
+
+                  <a href="../measures/odeg.html">One-sided approximate degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(\sqrt{\log n}),\ O(\log n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Upper: $p(x) = \sum_j \prod_{i \in T_j} x_i$ has degree $w$, equals $0$ on every $0$-input (each tribe has a zero) and is $\ge 1$ on every $1$-input -- a one-sided approximant of degree $w = \Theta(\log n)$, exponentially below $\widetilde{\deg} = \Theta(\sqrt n)$. Lower: restricting all but one tribe to contain a $0$ leaves $\mathrm{AND}_w$, and $\mathrm{odeg}(\mathrm{AND}_w) = \widetilde{\deg}(\mathrm{AND}_w) = \Theta(\sqrt w)$ by the single-slice normalisation argument spelled out on the <a href="../functions/EH.html" class="xref function "><span class="tex">\(\mathrm{EH}_n\)</span></a> $\mathrm{odeg}$ line. This is the zoo's cleanest illustration that one-sidedness is worth an exponential factor for a monotone DNF.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/sdeg.html" title="Sign degree">
+    <span class="tex">\(\mathrm{sdeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/sdeg.html">Sign degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(\sqrt{\log n}),\ O(\log n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Upper: $\mathrm{sdeg} \le \mathrm{odeg} \le w = \Theta(\log n)$, since a one-sided approximant minus $1/2$ sign-represents. Lower: restrict to $m = \sqrt w$ tribes (force a $0$ into each of the others), leaving $\mathrm{OR}_m \circ \mathrm{AND}_{m^2}$, the negation of the Minsky--Papert function, whose threshold degree is $\Omega(m)$ [<a href="../refs.html#MinskyPapert69" class="xref ref ">MinskyPapert69</a>]. Threshold degree is negation-invariant, so $\mathrm{sdeg}(\mathrm{Tribes}) = \Omega(\sqrt{\log n})$.
+<span class="refs"><a href="../refs.html#MinskyPapert69" class="xref ref ">MinskyPapert69</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/cjdeg.html">Conical junta degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(n/\log n),\ O(n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Upper: $\mathrm{cjdeg}_{\varepsilon}(f) \le \mathrm{D}(f) = n$. Lower: fixing $w-1$ variables of each tribe to $1$ leaves $\vee_s$ on the remaining $s = \Theta(n/\log n)$ variables, and a conical junta restricts to a conical junta of no larger width, so the <a href="../functions/OR.html" class="xref function "><span class="tex">\(\mathrm{OR}_n\)</span></a> line gives $\mathrm{cjdeg} = \Omega(s)$. This beats the $\widetilde{\deg}_{\varepsilon} = \Theta(\sqrt n)$ lower bound; whether the truth is $\Theta(n)$ is open.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/prt.html" title="Partition bound">
+    <span class="tex">\(\mathrm{prt}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/prt.html">Partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(\sqrt n),\ O(n)\)</span></td>
+              <td class="short">Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \mathrm{prt}_{\varepsilon}(f) \le \mathrm{D}(f)$. The truth is presumably $\Theta(n)$, matching $\mathrm{R}$, but the partition bound is not known to reach $\mathrm{R}$ for TRIBES and the recorded $\mathrm{RC} = \Theta(n/\log n)$ is already below $\mathrm{R}$, so no better lower bound is claimed here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/rprt.html" title="Relaxed partition bound">
+    <span class="tex">\(\overline{\mathrm{prt}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rprt.html">Relaxed partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(\sqrt n),\ O(n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">Sandwiched: $\widetilde{\deg}_{\varepsilon}(f) \le \overline{\mathrm{prt}}_{\varepsilon}(f) \le \mathrm{D}(f)$. Same caveat as the <a href="../measures/prt.html" class="xref measure "><span class="tex">\(\mathrm{prt}_{\varepsilon}(f)\)</span></a> line above.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dmu.html">Distributional query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Yao's minimax: $\max_\mu \mathrm{D}^{\mu}_{1/3}(f) = \mathrm{R}_{1/3}(f) = \Theta(n)$. Worth contrasting with the <a href="../measures/D_prod.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f)\)</span></a> line, $\Theta(n/\log n)$: no <em>product</em> distribution is hard enough, so the maximising $\mu$ must correlate the variables inside a tribe.
+<span class="refs"><a href="../refs.html#Yao77" class="xref ref ">Yao77</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/cbs.html" title="Critical block sensitivity">
+    <span class="tex">\(\mathrm{cbs}(S)\)</span>
+  </a>
+
+                  <a href="../measures/cbs.html">Critical block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n/\log n)\)</span></td>
+              <td class="short">Degenerate for Boolean functions: every input is critical and the only solution function is $f$ itself, so $\mathrm{cbs}(f) = \mathrm{bs}(f)$, which is $\Theta(n/\log n)$ here by the <a href="../measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a> line.
+<span class="refs"><a href="../refs.html#GoosPitassi14" class="xref ref ">GoosPitassi14</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+
+                  <a href="../measures/psD.html">Pseudo-deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Degenerate for Boolean functions: there is a single correct output, so the canonical answer is forced and $\mathrm{psD}(f) = \Theta(\mathrm{R}(f))$ $= \Theta(n)$.
+<span class="refs"><a href="../refs.html#CDM23" class="xref ref ">CDM23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+
+                  <a href="../measures/chi.html">Conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(n/\log n),\ O(n)\)</span></td>
+              <td class="short">Lower: $\chi(g) = \Omega(\mathrm{bs}(g))$ [<a href="../refs.html#Li18" class="xref ref ">Li18</a>] and $\mathrm{bs} = \Theta(n/\log n)$. Upper: $\chi \le \bar\chi = \Theta(n)$ by the <a href="../measures/chibar.html" class="xref measure "><span class="tex">\(\bar{\chi}(f)\)</span></a> line. The gap is the same $\log n$ that separates $\mathrm{bs}$ from $\mathrm{R}$ here, and closing it would say which of the two the composition theorem really sees.
+<span class="refs"><a href="../refs.html#Li18" class="xref ref ">Li18</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/L1.html" title="Spectral norm">
+    <span class="tex">\(\hat{L}_1(f)\)</span>
+  </a>
+
+                  <a href="../measures/L1.html">Spectral norm</a>
+              </td>
+              <td class="val"><span class="tex">\(2^{\Theta(n/\log n)}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Exactly $2^{s(1\pm o(1))}$ with $s = \Theta(n/\log n)$ tribes. Write $f = 1 - \prod_j (1-A_j)$ with $A_j = \prod_{i \in T_j} x_i$. In the $\pm1$ basis $A_j = 2^{-w}\prod_{i \in T_j}(1-\chi_i)$ has $\hat L_1(A_j) = 1$, so $\hat L_1(1-A_j) = (1-2^{-w}) + (1-2^{-w}) = 2 - 2^{1-w}$; the tribes are variable-disjoint, so the norms multiply and $\hat L_1\big(\prod_j (1-A_j)\big) = (2-2^{1-w})^s$. Subtracting the product from $1$ changes only the constant term. Since $w = \Theta(\log n)$, this is $2^{\Theta(n/\log n)}$ -- exponentially large, but exponentially far below the maximum $2^{\mathrm{D}} = 2^n$.
+<span class="refs"><a href="../refs.html#ODonnell14" class="xref ref ">ODonnell14</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_size.html">Decision tree size</a>
+              </td>
+              <td class="val"><span class="tex">\(2^{\Omega(n/\log n)},\ 2^{O(n\log\log n/\log n)}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Lower: the subcube of a $0$-leaf must contain a $0$ in each of the $s$ tribes, so it has codimension at least $s$ and measure at most $2^{-s}$; the $0$-leaves cover a set of measure $\Pr[f=0] \to 1/2$, so there are at least $2^{s-1}$ of them, and $s = \Theta(n/\log n)$. Upper: the natural tree reads one tribe at a time, stopping at the first $0$ inside a tribe, and its leaf count satisfies $T(j) = w\,T(j-1)+1$, giving $T(s) \le 2w^s = 2^{O(s\log w)} = 2^{O(n\log\log n/\log n)}$. The $\log\log n$ gap is left open.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Np.html">Noisy decision tree complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(n),\ O(n\log n)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">Lower: $\mathrm{N}_p \ge \mathrm{R} = \Theta(n)$. Upper: $O(\mathrm{R}\log\mathrm{R})$ by repeating each query. The influence-based bound $\mathrm{N}_p = \Omega(\mathrm{I}\log\mathrm{I})$ [<a href="../refs.html#GLX26noisy" class="xref ref ">GLX26noisy</a>] gives only $\Omega(\log n\log\log n)$ here, since $\mathrm{I} = \Theta(\log n)$, so as at <a href="../functions/OMB.html" class="xref function "><span class="tex">\(\mathrm{OMB}_n\)</span></a> there is no evidence that the repetition log is needed.
+<span class="refs"><a href="../refs.html#FRPU94" class="xref ref ">FRPU94</a> <a href="../refs.html#GLX26noisy" class="xref ref ">GLX26noisy</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/ardeg.html" title="Approximate rational degree">
+    <span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/ardeg.html">Approximate rational degree</a>
+              </td>
+              <td class="val"><span class="tex">\(O(\log n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Upper bound only, and it is $w$: put $S(x) = \sum_j \prod_{i \in T_j} x_i$, of degree $w$, and take $r = 3S/(1+3S)$. On $0$-inputs no tribe is all-ones, so $S = 0$ and $r = 0$; on $1$-inputs $S \ge 1$ and $r \ge 3/4$. No lower bound beyond the trivial $1$ is known -- the restriction to a single tribe only gives $\mathrm{rdeg}_{\varepsilon}(\wedge_w) = 1$, as at <a href="../functions/AND.html" class="xref function "><span class="tex">\(\mathrm{AND}_n\)</span></a>.
+<span class="refs"><a href="../refs.html#MahadevdeWolf15" class="xref ref ">MahadevdeWolf15</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/PostQ.html" title="Post-selected quantum query complexity">
+    <span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/PostQ.html">Post-selected quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(O(\log n)\)</span></td>
+              <td class="short">$\mathrm{PostQ}_{\varepsilon}(f) = \Theta(\mathrm{rdeg}_{\varepsilon}(f))$ [<a href="../refs.html#MahadevdeWolf15" class="xref ref ">MahadevdeWolf15</a>] applied to the <a href="../measures/ardeg.html" class="xref measure "><span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span></a> line, hence an upper bound only. Postselection brings TRIBES from $\mathrm{R} = \Theta(n)$ down to at most $O(\log n)$.
+<span class="refs"><a href="../refs.html#MahadevdeWolf15" class="xref ref ">MahadevdeWolf15</a></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Separations its values prove <span class="dim">— computed, not recorded</span></h2>
+        <p class="dim small">Read straight off the table above by comparing two values: no
+        relation record states these, and where one does and says more, the record wins and the
+        pair is not listed here. 130 in total,
+        strongest first.</p>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/Stab.html" title="Noise stability">
+    <span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=D&amp;b=Stab">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) \to \infty \ \text{ while } \ \mathrm{Stab}_{\rho}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}(f) = n\) against \(\mathrm{Stab}_{\rho}(f) = o(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s1.html" title="1-sensitivity">
+    <span class="tex">\(\mathrm{s}^1(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=rank&amp;b=s1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{rank}(f_n) = 2^{\Omega(\mathrm{s}^1(f_n))}\)</span></div>
+            <div class="refs dim">from \(\mathrm{rank}(f) = \Theta(n/\log n)\) against \(\mathrm{s}^1(f) = \Theta(\log n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-fourier" href="../measures/osss.html" title="OSSS number">
+    <span class="tex">\(\mathrm{osss}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=osss&amp;b=C1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{osss}(f_n) = 2^{\Omega(\mathrm{C}^1(f_n))}\)</span></div>
+            <div class="refs dim">from \(\mathrm{osss}(f) = \Theta(n/\log n)\) against \(\mathrm{C}^1(f) = \Theta(\log n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/Stab.html" title="Noise stability">
+    <span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=s&amp;b=Stab">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{s}(f_n) \to \infty \ \text{ while } \ \mathrm{Stab}_{\rho}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{s}(f) = \Theta(n/\log n)\) against \(\mathrm{Stab}_{\rho}(f) = o(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=rank&amp;b=C1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{rank}(f_n) = 2^{\Omega(\mathrm{C}^1(f_n))}\)</span></div>
+            <div class="refs dim">from \(\mathrm{rank}(f) = \Theta(n/\log n)\) against \(\mathrm{C}^1(f) = \Theta(\log n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-fourier" href="../measures/osss.html" title="OSSS number">
+    <span class="tex">\(\mathrm{osss}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s1.html" title="1-sensitivity">
+    <span class="tex">\(\mathrm{s}^1(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=osss&amp;b=s1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{osss}(f_n) = 2^{\Omega(\mathrm{s}^1(f_n))}\)</span></div>
+            <div class="refs dim">from \(\mathrm{osss}(f) = \Theta(n/\log n)\) against \(\mathrm{s}^1(f) = \Theta(\log n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/s0.html" title="0-sensitivity">
+    <span class="tex">\(\mathrm{s}^0(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/Stab.html" title="Noise stability">
+    <span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=s0&amp;b=Stab">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{s}^0(f_n) \to \infty \ \text{ while } \ \mathrm{Stab}_{\rho}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{s}^0(f) = \Theta(n/\log n)\) against \(\mathrm{Stab}_{\rho}(f) = o(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=rank&amp;b=Cmin">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{rank}(f_n) = 2^{\Omega(\mathrm{C}_{\min}(f_n))}\)</span></div>
+            <div class="refs dim">from \(\mathrm{rank}(f) = \Theta(n/\log n)\) against \(\mathrm{C}_{\min}(f) = \Theta(\log n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-fourier" href="../measures/osss.html" title="OSSS number">
+    <span class="tex">\(\mathrm{osss}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/bs1.html" title="1-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^1(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=osss&amp;b=bs1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{osss}(f_n) = 2^{\Omega(\mathrm{bs}^1(f_n))}\)</span></div>
+            <div class="refs dim">from \(\mathrm{osss}(f) = \Theta(n/\log n)\) against \(\mathrm{bs}^1(f) = \Theta(\log n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/s1.html" title="1-sensitivity">
+    <span class="tex">\(\mathrm{s}^1(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/Stab.html" title="Noise stability">
+    <span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=s1&amp;b=Stab">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{s}^1(f_n) \to \infty \ \text{ while } \ \mathrm{Stab}_{\rho}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{s}^1(f) = \Theta(\log n)\) against \(\mathrm{Stab}_{\rho}(f) = o(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/bs1.html" title="1-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^1(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=rank&amp;b=bs1">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{rank}(f_n) = 2^{\Omega(\mathrm{bs}^1(f_n))}\)</span></div>
+            <div class="refs dim">from \(\mathrm{rank}(f) = \Theta(n/\log n)\) against \(\mathrm{bs}^1(f) = \Theta(\log n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-fourier" href="../measures/osss.html" title="OSSS number">
+    <span class="tex">\(\mathrm{osss}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=osss&amp;b=Cmin">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{osss}(f_n) = 2^{\Omega(\mathrm{C}_{\min}(f_n))}\)</span></div>
+            <div class="refs dim">from \(\mathrm{osss}(f) = \Theta(n/\log n)\) against \(\mathrm{C}_{\min}(f) = \Theta(\log n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/Stab.html" title="Noise stability">
+    <span class="tex">\(\mathrm{Stab}_{\rho}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=bs&amp;b=Stab">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{bs}(f_n) \to \infty \ \text{ while } \ \mathrm{Stab}_{\rho}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{bs}(f) = \Theta(n/\log n)\) against \(\mathrm{Stab}_{\rho}(f) = o(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/NQ.html" title="Nondeterministic quantum query complexity">
+    <span class="tex">\(\mathrm{NQ}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=rank&amp;b=NQ">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{rank}(f_n) = 2^{\Omega(\mathrm{NQ}(f_n))}\)</span></div>
+            <div class="refs dim">from \(\mathrm{rank}(f) = \Theta(n/\log n)\) against \(\mathrm{NQ}(f) = \Theta(\log n)\)</div>
+          </li>
+        </ul>
+        <p class="dim small">&hellip; and 116 more, all of them visible
+        in the <a href="../matrix.html">matrix</a> (widen it to all measures) and on the
+        pair pages.</p>
+      </section>
+
+      <section class="card">
+        <h2>Separations it witnesses</h2>
+        <ul class="witlist">
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-combinatorial" href="../measures/s0.html" title="0-sensitivity">
+    <span class="tex">\(\mathrm{s}^0(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s1.html" title="1-sensitivity">
+    <span class="tex">\(\mathrm{s}^1(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=s0&amp;b=s1">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">Unbounded, and on a monotone read-once DNF: $\mathrm{s}^0 = \Theta(n/\log n)$ against $\mathrm{s}^1 = \Theta(\log n)$, a ratio of $n/\log^2 n$. The same asymmetry runs through $\mathrm{bs}^0$ vs $\mathrm{bs}^1$ and $\mathrm{C}^0$ vs $\mathrm{C}^1$; it is the reason TRIBES is the KKL extremal example.</div>
+          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=C&amp;b=Cmin">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">Unbounded: $\mathrm{C} = \Theta(n/\log n)$ at a $0$-input (every tribe must be shown to fail) against $\mathrm{C}_{\min} = \Theta(\log n)$ at a $1$-input (exhibit one satisfied tribe).</div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Cited as a witness by</h2>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=D&amp;b=fbs#D__fbs__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}(\mathrm{TRIBES}_n) = \Theta(n) = \Theta\big(\mathrm{fbs}(\mathrm{TRIBES}_n)^2\big)\)</span></div>
+<div class="refs"><a href="../refs.html#Aaronson08" class="xref ref ">Aaronson08</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=R&amp;b=fbs#R__fbs__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}(\mathrm{TRIBES}_n) = \Theta(n) = \Theta\big(\mathrm{fbs}(\mathrm{TRIBES}_n)^2\big)\)</span></div>
+<div class="refs"><a href="../refs.html#Aaronson08" class="xref ref ">Aaronson08</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-fourier" href="../measures/NS.html" title="Noise sensitivity">
+    <span class="tex">\(\mathrm{NS}_{\delta}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-fourier" href="../measures/MaxInf.html" title="Maximum influence">
+    <span class="tex">\(\mathrm{MaxInf}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-fails" title="Proved that no bound of this form can hold in this setting.">No bound exists</span>
+
+              <a class="go" href="../pair.html?a=NS&amp;b=MaxInf#NS__MaxInf__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{NS}_{\delta}(\mathrm{TRIBES}_n) \to \tfrac12, \qquad \mathrm{MaxInf}(\mathrm{TRIBES}_n) = \Theta(\log n / n) \to 0\)</span></div>
+<div class="refs"><a href="../refs.html#KKL88" class="xref ref ">KKL88</a> <a href="../refs.html#ODonnell14" class="xref ref ">ODonnell14</a></div>          </li>
+        </ul>
+      </section>
+
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#KKL88" class="xref ref ">[KKL88]</a> <span class="dim">The influence of variables on Boolean functions</span></li>
+            <li><a href="../refs.html#ODonnell14" class="xref ref ">[ODonnell14]</a> <span class="dim">Analysis of Boolean Functions</span></li>
+            <li><a href="../refs.html#BOL85" class="xref ref ">[BOL85]</a> <span class="dim">Collective coin flipping, robust voting schemes and minima of Banzhaf values</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/Inf.html" class="xref measure "><span class="tex">\(\mathrm{I}(f)\)</span></a></li><li><a href="../measures/MaxInf.html" class="xref measure "><span class="tex">\(\mathrm{MaxInf}(f)\)</span></a></li><li><a href="../functions/OR.html" class="xref function "><span class="tex">\(\mathrm{OR}_n\)</span></a></li><li><a href="../functions/AND.html" class="xref function "><span class="tex">\(\mathrm{AND}_n\)</span></a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/01-basic.yaml</code> &mdash; id <code>TRIBES</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

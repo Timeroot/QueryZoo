@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operational certification complexity &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="">Functions</a>
+      <a href="../concepts/index.html"
+         class="on">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../concepts/index.html">Concepts</a></div>
+  <header class="entryhead concept">
+    <div>
+      <h1>Operational certification complexity</h1>
+      <p class="lede">Recognize a publicly known input against all opposite-output inputs, then maximize over the known input.</p>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="main-col">
+      <article class="card prose">
+        <p>For $f:D\subseteq\{0,1\}^n\to\{0,1\}$ and a publicly known $z\in D$,
+define $f_z^{\mathrm{cert}}$ on $\{z\}\cup f^{-1}(1-f(z))$, accepting $z$ and
+rejecting the opposite-output inputs. For a complexity measure $M$, put
+$$M^{\mathrm{cert}}(f)=\max_{z\in D}M(f_z^{\mathrm{cert}}).$$
+The input $z$ is free information to the certifying algorithm; only the unknown
+input is queried. [<a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a>, Definitions 1–2] systematize this transform.</p>
+<p><strong>Collapses onto existing measures.</strong> Theorem 3 gives, for partial functions too,
+$\mathrm{D}^{\mathrm{cert}}=\mathrm{R}_0^{\mathrm{cert}}=\mathrm{UC}^{\mathrm{cert}}=\mathrm{C}$
+and $\mathrm{CG}^{\mathrm{cert}}=\Theta(\mathrm{C})$. Bounded-error randomized
+queries, sabotage, expectational certificates, the partition bound and critical
+fractional block sensitivity all certify at cost $\Theta(\mathrm{RC})=\Theta(\mathrm{fbs})$.
+The local measures $\mathrm{C},\mathrm{RC},\mathrm{FC},\mathrm{fbs},\mathrm{bs},\mathrm{s}$
+are unchanged by certification (Remark 39).</p>
+<p>Theorems 4 and 6 give
+$$\mathrm{Q}^{\mathrm{cert}}=\Theta(\mathrm{QC})=
+\Theta(\mathrm{QD}^{\mathrm{cert}})=\Theta(\mathrm{MM}^{\mathrm{cert}})=
+\Theta(\mathrm{QS}^{\mathrm{cert}})=\Theta(\widetilde{\deg}^{\mathrm{cert}})=
+\Theta(\mathrm{bm\text{-}deg}^{\mathrm{cert}}).$$
+Here QD is quantum distinguishing complexity, MM the positive-weight minimax quantum adversary
+bound, and bm-deg the whole-cube bounded block-multilinear approximate degree.
+The QS equality holds for each of the <a href="../concepts/quantum-sabotage.html" class="xref concept ">four variants</a>.
+These are identities <strong>after certification</strong>, not identities of the original measures.
+Rational degree is unchanged: $\mathrm{rdeg}^{\mathrm{cert}}=\mathrm{rdeg}$ (Lemma 50).
+Spectral sensitivity certifies to <a href="../measures/lambdacert.html" class="xref measure "><span class="tex">\(\lambda^{\mathrm{cert}}(f)\)</span></a>, exactly $\sqrt{\mathrm{s}}$ (Theorem 42).</p>
+<p><strong>New lower bounds for zero-error quantum queries.</strong> Exact and zero-error quantum
+certification coincide up to constants:
+$$\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}=\Theta(\mathrm{Q}_0^{\mathrm{cert}})=O(\mathrm{Q}_0).$$
+Theorem 5 uses exact amplitude amplification: success probability on the fixed,
+known reference input can be computed without queries.
+The zoo records these as <a href="../measures/QEcert.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)\)</span></a> and <a href="../measures/Q0cert.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{0}^{\mathrm{cert}}(f)\)</span></a>.</p>
+<p>The new <a href="../measures/osdeg.html" class="xref measure "><span class="tex">\(\overline{\mathrm{osdeg}}_{\varepsilon}(f)\)</span></a> is the maximum of two degrees of polynomials bounded in $[0,1]$
+on the whole cube, each exact on one output class and accurate on the other.
+It differs from the existing <a href="../measures/odeg.html" class="xref measure "><span class="tex">\(\widetilde{\deg}_{+}(f)\)</span></a>, which allows positive-side overshoot.
+Theorem 8 proves $\overline{\mathrm{osdeg}}=O(\mathrm{Q}_0)$.
+Its certification transform equals the bounded exact degree certification <a href="../measures/degcert.html" class="xref measure "><span class="tex">\(\overline{\deg}^{\mathrm{cert}}(f)\)</span></a>
+(Theorem 9). In particular,
+$$\mathrm{rdeg}\le\overline{\deg}^{\mathrm{cert}}\le\mathrm{C},\qquad
+\overline{\deg}^{\mathrm{cert}}=O(\overline{\mathrm{osdeg}}),\qquad
+\overline{\deg}^{\mathrm{cert}}\le2\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}.$$</p>
+<p><strong>Boundedness on a promise matters.</strong> This paper's exact degree requires
+$0\le p\le1$ on the whole cube. It equals ordinary <a href="../measures/deg.html" class="xref measure "><span class="tex">\(\deg(f)\)</span></a> for total functions,
+but has its own id <a href="../measures/bdeg.html" class="xref measure "><span class="tex">\(\overline{\deg}(f)\)</span></a> for partial functions. A certification promise is
+partial even when the original function is total, so <a href="../measures/degcert.html" class="xref measure "><span class="tex">\(\overline{\deg}^{\mathrm{cert}}(f)\)</span></a> uses <a href="../measures/bdeg.html" class="xref measure "><span class="tex">\(\overline{\deg}(f)\)</span></a>.
+Theorem 12 proves $\mathrm{bs}=O((\overline{\deg}^{\mathrm{cert}})^2)$ for partial
+functions and $\mathrm{C}=O((\overline{\deg}^{\mathrm{cert}})^3)$ for total ones.
+No application of the total-only upper bound to arbitrary partial functions is recorded.</p>
+<p>On <a href="../functions/ANDNotExactOne.html" class="xref function ">AND of complemented EXACT-ONE functions</a>, Theorem 10 and Lemma 55 give
+$\mathrm{rdeg}=m$, $\mathrm{Q}=\Theta(m)$,
+$\overline{\deg}^{\mathrm{cert}}=\Omega(m^{3/2}/\log^2m)$, and
+$\mathrm{Q}_0=O(m^{3/2})$. Thus the new certification lower bounds exceed both
+rational degree and bounded-error quantum complexity on the same total family.
+On <a href="../functions/ANDOR.html" class="xref function "><span class="tex">\(\mathrm{AND}_n \circ \mathrm{OR}_n\)</span></a>, Proposition 52 gives degree $m^2$ against certified degree $m$.</p>
+
+      </article>
+    </div>
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/QEcert.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\mathrm{E}}^{\mathrm{cert}}(f)\)</span></a></li><li><a href="../measures/Q0cert.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{0}^{\mathrm{cert}}(f)\)</span></a></li><li><a href="../measures/QC.html" class="xref measure "><span class="tex">\(\mathrm{QC}(f)\)</span></a></li><li><a href="../measures/degcert.html" class="xref measure "><span class="tex">\(\overline{\deg}^{\mathrm{cert}}(f)\)</span></a></li><li><a href="../measures/bdeg.html" class="xref measure "><span class="tex">\(\overline{\deg}(f)\)</span></a></li><li><a href="../measures/osdeg.html" class="xref measure "><span class="tex">\(\overline{\mathrm{osdeg}}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/osdeg0.html" class="xref measure "><span class="tex">\(\overline{\mathrm{osdeg}}^{\,0}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/osdeg1.html" class="xref measure "><span class="tex">\(\overline{\mathrm{osdeg}}^{\,1}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/lambdacert.html" class="xref measure "><span class="tex">\(\lambda^{\mathrm{cert}}(f)\)</span></a></li><li><a href="../measures/rdeg.html" class="xref measure "><span class="tex">\(\mathrm{rdeg}(f)\)</span></a></li><li><a href="../functions/ANDNotExactOne.html" class="xref function ">AND of complemented EXACT-ONE functions</a></li><li><a href="../functions/ANDOR.html" class="xref function "><span class="tex">\(\mathrm{AND}_n \circ \mathrm{OR}_n\)</span></a></li><li><a href="../concepts/quantum-sabotage.html" class="xref concept ">Quantum sabotage: four variants</a></li></ul>
+      </section>
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#KLLPV26" class="xref ref ">[KLLPV26]</a> <span class="dim">Certification complexity of Boolean functions</span></li>
+            <li><a href="../refs.html#CMP24" class="xref ref ">[CMP24]</a> <span class="dim">Quantum Sabotage Complexity</span></li>
+            <li><a href="../refs.html#Aaronson08" class="xref ref ">[Aaronson08]</a> <span class="dim">Quantum certificate complexity</span></li>
+        </ul>
+      </section>
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/concepts.yaml</code> &mdash; id <code>certification</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Total functions, partial functions, and relations &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="">Functions</a>
+      <a href="../concepts/index.html"
+         class="on">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../concepts/index.html">Concepts</a></div>
+  <header class="entryhead concept">
+    <div>
+      <h1>Total functions, partial functions, and relations</h1>
+      <p class="lede">The single most important distinction in this zoo: almost every polynomial relation is a theorem about total Boolean functions only.</p>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="main-col">
+      <article class="card prose">
+        <p>Three kinds of computational problem appear in query complexity, and the
+zoo keeps them strictly apart.</p>
+<h3>Total function</h3>
+<p>$f : \{0,1\}^n \to \{0,1\}$. Every input is legal, every input has exactly
+one right answer. <strong>This is the setting of essentially every polynomial
+relation in the literature.</strong> When a paper says &quot;$\mathrm{D}(f) = O(\mathrm{R}(f)^3)$&quot;
+with no qualification, it means total $f$.</p>
+<h3>Partial function (promise problem)</h3>
+<p>$f : \mathrm{Dom}(f) \to \{0,1\}$ with $\mathrm{Dom}(f) \subseteq \{0,1\}^n$.
+The algorithm may behave arbitrarily off the promise. Almost every
+polynomial relation <strong>fails</strong>, usually spectacularly:</p>
+<table>
+<thead>
+<tr>
+  <th>relation</th>
+  <th>total</th>
+  <th>partial</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>$\mathrm{D}$ vs $\mathrm{R}$</td>
+  <td>$\mathrm{D}=O(\mathrm{R}^3)$</td>
+  <td>unbounded (<a href="../functions/promiseFind1.html" class="xref function "><span class="tex">\(\mathrm{Find1}_{\ge n/2}\)</span></a>)</td>
+</tr>
+<tr>
+  <td>$\mathrm{R}$ vs $\mathrm{Q}$</td>
+  <td>$\mathrm{R}=O(\mathrm{Q}^4)$</td>
+  <td>unbounded (<a href="../functions/Forrelation.html" class="xref function "><span class="tex">\(\mathrm{forr}\)</span></a>, <a href="../functions/Simon.html" class="xref function "><span class="tex">\(\mathrm{SIMON}_n\)</span></a>)</td>
+</tr>
+<tr>
+  <td>$\mathrm{Q}$ vs $\widetilde{\deg}$</td>
+  <td>polynomial</td>
+  <td>exponential [<a href="../refs.html#AmbainisBelovs23" class="xref ref ">AmbainisBelovs23</a>]</td>
+</tr>
+<tr>
+  <td>$\mathrm{D}$ vs $\mathrm{s}$</td>
+  <td>$\mathrm{D}\le\mathrm{s}^4$</td>
+  <td>unbounded</td>
+</tr>
+</tbody>
+</table>
+<p>What <em>does</em> survive: the trivial chain
+$\mathrm{Q}\le\mathrm{R}\le\mathrm{R}_0\le\mathrm{D}$, the polynomial
+method ($\widetilde{\deg}\le 2\mathrm{Q}$, $\widetilde{\deg}\le\mathrm{R}$),
+and the general adversary characterisation
+$\mathrm{Q}=\Theta(\mathrm{Adv}^{\pm})$. These never used totality.</p>
+<p>Why do the combinatorial measures die? Because $\mathrm{s}$, $\mathrm{bs}$,
+$\mathrm{C}$ and friends all measure <em>local</em> structure of the hypercube,
+and a promise deletes most of the hypercube. A single promise can make
+every input have an $O(1)$-size certificate while leaving the problem
+maximally hard.</p>
+<h3>Relation / search problem</h3>
+<p>$S \subseteq \{0,1\}^n \times \mathcal{O}$ where every $x$ has at least one
+valid output. The algorithm must output <em>some</em> $o$ with $(x,o)\in S$.
+A <strong>total search problem</strong> is the query analogue of $\mathsf{TFNP}$.</p>
+<p>Which measures still make sense?</p>
+<ul>
+<li><strong>Fine:</strong> $\mathrm{D}$, $\mathrm{R}$, $\mathrm{R}_0$, $\mathrm{Q}$,
+$\mathrm{Adv}^{\pm}$, $\mathrm{prt}$, $\mathrm{cjdeg}$,
+$\overline{\mathrm{prt}}$, $\mathrm{DTsize}$.</li>
+<li><strong>Only meaningful here:</strong> <a href="../measures/psD.html" class="xref measure "><span class="tex">\(\mathrm{psD}(S)\)</span></a> (pseudo-determinism) -- for a function
+there is only one correct answer, so $\mathrm{psD}=\mathrm{R}$; for a
+search problem, committing to a canonical answer can be exponentially
+harder [<a href="../refs.html#CDM23" class="xref ref ">CDM23</a>].</li>
+<li><strong>Awkward or undefined:</strong> anything defined through $f^{-1}(0)$ and
+$f^{-1}(1)$ -- $\mathrm{s}$, $\mathrm{bs}$, $\mathrm{C}^0/\mathrm{C}^1$,
+$\deg$, $\widetilde{\deg}$ (one can define these via the output relation
+but the standard theorems do not apply). Approximate degree <em>is</em> usually
+defined for search problems as the minimum degree of a &quot;conical junta&quot;-
+style certificate; see <a href="../measures/cjdeg.html" class="xref measure "><span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span></a>.</li>
+<li><strong>Collapses:</strong> $\mathrm{R}_0$ vs $\mathrm{R}$ largely collapses when
+outputs are cheaply verifiable.</li>
+</ul>
+<p>Total search problems are much closer to partial functions than to total
+functions: [<a href="../refs.html#BenDavidKundu24search" class="xref ref ">BenDavidKundu24search</a>] give explicit conversions in both
+directions, and use them to transport exponential separations back and forth.</p>
+
+      </article>
+    </div>
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a></li><li><a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/psD.html" class="xref measure "><span class="tex">\(\mathrm{psD}(S)\)</span></a></li><li><a href="../measures/cjdeg.html" class="xref measure "><span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span></a></li><li><a href="../functions/Forrelation.html" class="xref function "><span class="tex">\(\mathrm{forr}\)</span></a></li><li><a href="../functions/promiseFind1.html" class="xref function "><span class="tex">\(\mathrm{Find1}_{\ge n/2}\)</span></a></li><li><a href="../functions/Simon.html" class="xref function "><span class="tex">\(\mathrm{SIMON}_n\)</span></a></li></ul>
+      </section>
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#BenDavidKundu24search" class="xref ref ">[BenDavidKundu24search]</a> <span class="dim">Separations in query complexity for total search problems</span></li>
+            <li><a href="../refs.html#CDM23" class="xref ref ">[CDM23]</a> <span class="dim">Query Complexity of Search Problems</span></li>
+            <li><a href="../refs.html#AmbainisBelovs23" class="xref ref ">[AmbainisBelovs23]</a> <span class="dim">An exponential separation between quantum query complexity and the polynomial degree</span></li>
+            <li><a href="../refs.html#BdW02" class="xref ref ">[BdW02]</a> <span class="dim">Complexity measures and decision tree complexity: a survey</span></li>
+        </ul>
+      </section>
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/concepts.yaml</code> &mdash; id <code>settings</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

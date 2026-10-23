@@ -1,0 +1,1381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pointer functions &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#total">Total functions</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">\(g_{\mathrm{ABBLSS}}\)</div>
+    <div>
+      <h1>Pointer functions</h1>
+      <p class="lede">The construction that refuted the Saks-Wigderson conjecture and set most of the top-left corner of the matrix.</p>
+      <p class="aliases">
+        <span class="kindtag k-total">total</span>
+        <span class="grouptag g-separating">separating</span>
+<span class="tag">arity: $n$ bits (a grid of cells, each holding a value plus pointers)</span>&mdash; also: <code>the ABB+17 functions</code>, <code>Goos-Pitassi-Watson-style pointer gadgets</code>      </p>
+    </div>
+  </header>
+
+  <div class="banner warn">
+    <b>Definition not yet transcribed.</b> This page gives a pointer and an informal description
+    only; the exact mathematical definition still needs to be written into
+    <code>data/functions/03-separating-total.yaml</code> under <code>formal:</code>. Follow the references below.
+  </div>
+<div class="banner todo"><b>TODO:</b> Transcribe the exact cell/pointer encoding from [<a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a>, Section 2].</div>
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>The input is an $m\times m$ grid of <em>cells</em>. Each cell holds a bit and a
+pointer to another cell. The function asks whether there is a column all of
+whose cells are marked, together with a pointer chain certifying it; the
+pointers let a randomized algorithm follow a short path to the answer, while
+a deterministic algorithm can be forced to explore much more of the grid.
+Several variants of the payload/pointer structure give different separations.</p>
+
+      </section>
+
+
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D.html">Deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n)\)</span></td>
+              <td class="short">On a $p\times m$ grid of cells the adversary of [<a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a>, Thm 2] leaves the value undetermined after $pm-1$ cell queries, and one cell costs $\lceil\log|\Sigma|\rceil=\Theta(\log n)$ bits, so $\mathrm{D}$ is the input length up to logarithms. This holds for <strong>every</strong> variant listed below, which is what makes the upper bounds in this table mutually comparable: each $\widetilde O(\cdot)$ entry below is measured on a variant whose $\mathrm{D}$ is still $\widetilde\Omega(n)$.
+<span class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R0.html">Zero-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$ [<a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a>, Thm 4, Cor. 7]: $\widetilde O(m)$ cell queries on a grid of $2m^2$ cells, i.e. $\widetilde O(\sqrt n)$ bit queries. The back pointers let the Las Vegas algorithm halve the number of candidate zeroes each round.
+<span class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R.html">Bounded-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt n)\)</span></td>
+              <td class="short">Variant $g_{m,m}$ [<a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a>, Thm 12, Cor. 14], for which $\mathrm{R}_0 = \widetilde\Omega(n)$ -- this is the $\mathrm{R}_0$-vs-$\mathrm{R}$ separation, so the two $\widetilde O(\sqrt n)$ lines here are attained on <em>different</em> variants. Proved there for one-sided error, which dominates $\mathrm{R}$.
+<span class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QE.html">Exact quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt n)\)</span></td>
+              <td class="short">Same variant $g_{m,m}$ [<a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a>, Thm 12, Cor. 14]: the exact quantum algorithm costs $\widetilde O(m)$ on $m^2$ cells. Since that variant has $\mathrm{R}_0=\widetilde\Omega(n)$ this is a quadratic $\mathrm{R}_0$-vs-$\mathrm{Q}_E$ gap, and against $\mathrm{D}=\widetilde\Omega(n)$ it gives $\mathrm{D}=\widetilde\Omega(\mathrm{Q}_E^2)$.
+<span class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q.html">Bounded-error quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">Variant $f_{2m,m}$ [<a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a>, Thm 5, Cor. 7]: Grover search over columns costs $\widetilde O(\sqrt m)=\widetilde O(n^{1/4})$.
+<span class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/adeg.html">Approximate degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">Variant $\tilde h_{1,m,m}$ [<a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a>, Thm 22, Cor. 23]. The approximating polynomial is the <em>sum</em> over the $m$ candidate marked columns of the acceptance polynomials of a $\widetilde O(\sqrt m)$-query column verifier; the sum is legitimate because at most one column can be marked.
+<span class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                  <a href="../measures/lambda.html">Spectral sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">Squeeze: $\lambda(f)=O(\widetilde{\deg}(f))$ [<a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a>, Thms 17-18] applied to the line above. This is where the $\mathrm{D}=\widetilde\Omega(\lambda^4)$ entry of the $\lambda$ column comes from.
+<span class="refs"><a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dna.html">Non-adaptive deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(n)\)</span></td>
+              <td class="short">Squeezed between $\mathrm{D}=\widetilde\Omega(n)$ and the input length $n$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                  <a href="../measures/C.html">Certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Variant $f_{2m,m}$. Upper: a zero-error algorithm's transcript is a certificate, so $\mathrm{C}\le 2\,\mathrm{R}_0=\widetilde O(\sqrt n)$. Lower: $\mathrm{D}\le\mathrm{C}^2$ against $\mathrm{D}=\widetilde\Omega(n)$. So the $\mathrm{D}$-vs-$\mathrm{R}_0$ separation is simultaneously an extremal $\mathrm{D}=\widetilde\Theta(\mathrm{C}^2)$ family.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs.html">Block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Variant $f_{2m,m}$. Upper $\mathrm{bs}\le\mathrm{C}$; lower $\mathrm{bs}\ge\mathrm{D}/\mathrm{C}=\widetilde\Omega(\sqrt n)$ from $\mathrm{D}\le\mathrm{C}\cdot\mathrm{bs}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/fbs.html">Fractional block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Squeezed between $\mathrm{bs}$ and $\mathrm{C}$, which coincide here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/FC.html" title="Fractional certificate complexity">
+    <span class="tex">\(\mathrm{FC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/FC.html">Fractional certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{FC}=\mathrm{fbs}$ exactly.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/RC.html" title="Randomized certificate complexity">
+    <span class="tex">\(\mathrm{RC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/RC.html">Randomized certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{RC}=\Theta(\mathrm{fbs})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CA.html" title="Classical adversary bound">
+    <span class="tex">\(\mathrm{CA}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CA.html">Classical adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{CA}=\Theta(\mathrm{fbs})$ for total functions.
+<span class="refs"><a href="../refs.html#ABIKPS17" class="xref ref ">ABIKPS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                  <a href="../measures/s.html">Sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{s}\le\mathrm{bs}=\widetilde O(\sqrt n)$ on variant $f_{2m,m}$; Huang gives the floor $\mathrm{s}\ge\sqrt{\mathrm{bs}}=\widetilde\Omega(n^{1/4})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QC.html" title="Quantum certificate complexity">
+    <span class="tex">\(\mathrm{QC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QC.html">Quantum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(n^{1/4})\)</span></td>
+              <td class="short">Squeeze: $\mathrm{QC}=\Theta(\sqrt{\mathrm{fbs}})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Advpm.html" title="General (negative-weights) adversary bound">
+    <span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Advpm.html">General (negative-weights) adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: $\mathrm{Adv}^{\pm}=\Theta(\mathrm{Q})$, so the adversary bound is as small as the algorithm.
+<span class="refs"><a href="../refs.html#Reichardt11" class="xref ref ">Reichardt11</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/gamma2.html" title="Approximate gamma_2 norm">
+    <span class="tex">\(\gamma_2^{\alpha}(f)\)</span>
+  </a>
+
+                  <a href="../measures/gamma2.html">Approximate gamma_2 norm</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: the approximate $\gamma_2$ norm is the factorisation-norm form of $\mathrm{Adv}^{\pm}=\Theta(\mathrm{Q})$.
+<span class="refs"><a href="../refs.html#LMRSS11" class="xref ref ">LMRSS11</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R1.html">One-sided-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt n)\)</span></td>
+              <td class="short">Variant $g_{m,m}$: the algorithm of [<a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a>, Thm 12] is stated for one-sided error, which is what the recorded $\mathrm{R}$ line quotes.
+<span class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q0.html">Zero-error (Las Vegas) quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt n)\)</span></td>
+              <td class="short">Variant $g_{m,m}$: squeeze $\mathrm{Q}\le\mathrm{Q}_0\le\mathrm{Q}_E=\widetilde O(\sqrt n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
+    <span class="tex">\(\deg(f)\)</span>
+  </a>
+
+                  <a href="../measures/deg.html">Exact degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^{1/3})\)</span></td>
+              <td class="short">Squeeze: $\mathrm{D}=O(\deg^3)$ [<a href="../refs.html#Midrijanis04" class="xref ref ">Midrijanis04</a>] against $\mathrm{D}=\widetilde\Omega(n)$. Exact degree cannot follow $\widetilde{\deg}=\widetilde O(n^{1/4})$ down.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/C0.html">0-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Variant $f_{2m,m}$. Upper: $\mathrm{C}^0\le\mathrm{C}=\widetilde O(\sqrt n)$. Lower: $\mathrm{D}\le\mathrm{C}^0\mathrm{C}^1\le\mathrm{C}^0\cdot\mathrm{C}$, and $\mathrm{D}=\widetilde\Omega(n)$ with $\mathrm{C}=\widetilde O(\sqrt n)$ forces $\mathrm{C}^0=\widetilde\Omega(\sqrt n)$. So neither side of the certificate complexity can be the cheap one.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/C1.html">1-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Variant $f_{2m,m}$; the argument of the $\mathrm{C}^0$ line with the roles of the two sides exchanged.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Cmin.html">Minimum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Variant $f_{2m,m}$, a $2m\times m$ grid with $n=\widetilde\Theta(m^2)$ bits. Upper: $\mathrm{C}_{\min}\le\mathrm{C}=\widetilde O(\sqrt n)$. Lower: certifying a $1$ requires exhibiting a whole marked column, i.e. all $2m$ cells of it; certifying a $0$ requires an unmarked cell in each of the $m$ columns. So $\mathrm{C}_x\ge m=\widetilde\Omega(\sqrt n)$ for <em>every</em> input $x$, not just the worst one.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/EC.html" title="Expectational certificate complexity">
+    <span class="tex">\(\mathrm{EC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/EC.html">Expectational certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Squeezed between $\mathrm{fbs}=\widetilde\Theta(\sqrt n)$ and $\mathrm{C}=\widetilde\Theta(\sqrt n)$ on variant $f_{2m,m}$, which coincide.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rank.html">Decision tree rank</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: a Delayer who defers on every query survives at least $\mathrm{C}_{\min}$ rounds, so $\mathrm{rank}\ge\mathrm{C}_{\min}=\widetilde\Omega(\sqrt n)$; the ceiling is $\mathrm{rank}\le\mathrm{D}=\widetilde O(n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/UC.html" title="Unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/UC.html">Unambiguous certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: $\mathrm{UC}\ge\mathrm{SP}\ge\mathrm{C}=\widetilde\Omega(\sqrt n)$. No matching upper bound is claimed -- an unambiguous cover of the pointer function is not known to be as cheap as an ordinary certificate.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/SP.html" title="Subcube partition complexity">
+    <span class="tex">\(\mathrm{SP}(f)\)</span>
+  </a>
+
+                  <a href="../measures/SP.html">Subcube partition complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: every subcube of a monochromatic partition is a certificate, so $\mathrm{SP}\ge\mathrm{C}=\widetilde\Omega(\sqrt n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/UCmin.html" title="Minimum unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/UCmin.html">Minimum unambiguous certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{D}=O(\mathrm{UC}_{\min}^2)$ [<a href="../refs.html#BHT17" class="xref ref ">BHT17</a>] against $\mathrm{D}=\widetilde\Omega(n)$, which holds on every variant.
+<span class="refs"><a href="../refs.html#BHT17" class="xref ref ">BHT17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/cbs.html" title="Critical block sensitivity">
+    <span class="tex">\(\mathrm{cbs}(S)\)</span>
+  </a>
+
+                  <a href="../measures/cbs.html">Critical block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: for a Boolean function the solution function is forced and every input is critical, so $\mathrm{cbs}$ degenerates to $\mathrm{bs}=\widetilde\Theta(\sqrt n)$ (<a href="../measures/cbs.html" class="xref measure "><span class="tex">\(\mathrm{cbs}(S)\)</span></a> vs <a href="../measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a>).
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/MAdv.html" title="Multiplicative adversary">
+    <span class="tex">\(\mathrm{MAdv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MAdv.html">Multiplicative adversary</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: $\mathrm{MAdv}=\Theta(\mathrm{Q})$, so the multiplicative adversary is as small as the algorithm.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Adv.html" title="Positive-weights adversary bound">
+    <span class="tex">\(\mathrm{Adv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Adv.html">Positive-weights adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: $\mathrm{Adv}\le\mathrm{Adv}^{\pm}=\Theta(\mathrm{Q})=\widetilde O(n^{1/4})$. Note the certificate barrier $\mathrm{Adv}\le\sqrt{\mathrm{C}^0\mathrm{C}^1}=\widetilde O(\sqrt n)$ is the weaker of the two bounds here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dmu.html">Distributional query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt n)\)</span></td>
+              <td class="short">Variant $g_{m,m}$: $\max_\mu\mathrm{D}^{\mu}=\Theta(\mathrm{R})=\widetilde O(\sqrt n)$ by Yao's minimax.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rbar.html">Expected-cost randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt n)\)</span></td>
+              <td class="short">Variant $g_{m,m}$: the distributional/average-case form of $\mathrm{R}$, $\overline{\mathrm{R}}=\Theta(\mathrm{R})=\widetilde O(\sqrt n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+
+                  <a href="../measures/psD.html">Pseudo-deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt n)\)</span></td>
+              <td class="short">Variant $g_{m,m}$: for a Boolean function the canonical solution is forced to be $f$ itself, so $\mathrm{psD}=\mathrm{R}=\widetilde O(\sqrt n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/odeg.html" title="One-sided approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{+}(f)\)</span>
+  </a>
+
+                  <a href="../measures/odeg.html">One-sided approximate degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">Variant $\tilde h_{1,m,m}$: $\widetilde{\deg}_+\le\widetilde{\deg}=\widetilde O(n^{1/4})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/sdeg.html" title="Sign degree">
+    <span class="tex">\(\mathrm{sdeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/sdeg.html">Sign degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">Variant $\tilde h_{1,m,m}$: $\mathrm{sdeg}\le\widetilde{\deg}_+\le\widetilde{\deg}=\widetilde O(n^{1/4})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/rdeg.html" title="Rational degree">
+    <span class="tex">\(\mathrm{rdeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rdeg.html">Rational degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: $\mathrm{rdeg}\le\mathrm{C}=\widetilde O(\sqrt n)$ -- write the exact rational representation from the certificate cover.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Inf.html" title="Total influence (L2 influence)">
+    <span class="tex">\(\mathrm{I}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Inf.html">Total influence (L2 influence)</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">Variant $\tilde h_{1,m,m}$: $\mathrm{I}(f)=O(\widetilde{\deg}(f))$ [<a href="../refs.html#Shi00" class="xref ref ">Shi00</a>] applied to $\widetilde{\deg}=\widetilde O(n^{1/4})$. Against $\mathrm{D}=\widetilde\Omega(n)$, valid on the same variant, this is a fourth-power $\mathrm{D}$-vs-$\mathrm{I}$ gap for a function whose sensitivity is still polynomially large.
+<span class="refs"><a href="../refs.html#Shi00" class="xref ref ">Shi00</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/Inf1.html" title="Total L1 influence">
+    <span class="tex">\(\mathrm{I}^{1}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Inf1.html">Total L1 influence</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">For a Boolean-valued function the $L_1$ and $L_2$ influences coincide coordinate by coordinate, so $\mathrm{I}^{1}=\mathrm{I}=\widetilde O(n^{1/4})$ on variant $\tilde h_{1,m,m}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-fourier" href="../measures/MaxInf.html" title="Maximum influence">
+    <span class="tex">\(\mathrm{MaxInf}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MaxInf.html">Maximum influence</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">Variant $\tilde h_{1,m,m}$: a maximum is at most a sum, so $\mathrm{MaxInf}\le\mathrm{I}=\widetilde O(n^{1/4})$. OSSS gives no useful floor here because the function is very unbalanced under the uniform measure, so $\mathrm{Var}=o(1)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s1.html" title="1-sensitivity">
+    <span class="tex">\(\mathrm{s}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/s1.html">1-sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Variant $f_{2m,m}$, a $2m\times m$ grid with $n=\widetilde\Theta(m^2)$ bits. Lower: a $1$-input has one all-marked column, and it is unique, so flipping the marked bit of any one of that column's $2m$ cells leaves no all-marked column at all and sends the value to $0$. That is $2m=\widetilde\Omega(\sqrt n)$ sensitive coordinates at a single input. Upper: $\mathrm{s}^1\le\mathrm{s}\le\mathrm{bs}=\widetilde O(\sqrt n)$. Combined with the recorded $\mathrm{s}$ line this pins $\mathrm{s}=\widetilde\Theta(\sqrt n)$: the pointer function is <em>not</em> a sensitivity separation, and all of its gaps against $\mathrm{D}$ live on the randomized/quantum side.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s0.html" title="0-sensitivity">
+    <span class="tex">\(\mathrm{s}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/s0.html">0-sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{s}^0\le\mathrm{s}\le\mathrm{bs}=\widetilde O(\sqrt n)$ on variant $f_{2m,m}$. The $\mathrm{s}=\widetilde\Theta(\sqrt n)$ pin comes entirely from the $1$-side (see the $\mathrm{s}^1$ line), so no matching floor is claimed for $\mathrm{s}^0$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs1.html" title="1-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs1.html">1-block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Variant $f_{2m,m}$. The $2m$ singleton blocks of the $\mathrm{s}^1$ line are pairwise disjoint and each is sensitive, so $\mathrm{bs}^1\ge\mathrm{s}^1=\widetilde\Omega(\sqrt n)$; the ceiling is $\mathrm{bs}^1\le\mathrm{bs}=\widetilde O(\sqrt n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs0.html" title="0-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs0.html">0-block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{bs}^0\le\mathrm{bs}=\widetilde O(\sqrt n)$ on variant $f_{2m,m}$. Against $\mathrm{D}=\widetilde\Omega(n)$ this alone is a quadratic $\mathrm{D}$-vs-$\mathrm{bs}^0$ gap. No floor is claimed: the natural candidate blocks (mark a whole column) are $m$ disjoint blocks but their sensitivity depends on the pointer conventions of the variant.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
+  </a>
+
+                  <a href="../measures/RS.html">Sabotage complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$. Ceiling: $\mathrm{R}_\varepsilon\ge\overline{\mathrm{R}}_\varepsilon\ge(1-2\varepsilon)\mathrm{RS}$ [<a href="../refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a>, Thm 12], so $\mathrm{RS}=O(\mathrm{R})=\widetilde O(\sqrt n)$. Floor: $\mathrm{fbs}\le\mathrm{CG}^{\mathrm{pub}}\le\mathrm{RS}$, and $\mathrm{fbs}=\widetilde\Theta(\sqrt n)$ here. So randomized sabotage is tight against $\mathrm{R}$ on this family, consistent with the fact that no total function with $\mathrm{RS}=o(\mathrm{R})$ is known.
+<span class="refs"><a href="../refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a> <a href="../refs.html#ABIKPS17" class="xref ref ">ABIKPS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+
+                  <a href="../measures/chi.html">Conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$. Floor $\chi\ge\Omega(\mathrm{bs})=\widetilde\Omega(\sqrt n)$ [<a href="../refs.html#Li18" class="xref ref ">Li18</a>]; ceiling $\chi=O(\mathrm{R})=\widetilde O(\sqrt n)$, since $\mathrm{R}(f\circ g)=\Omega(\mathrm{R}(f)\chi(g))$ would otherwise beat $\mathrm{R}(f\circ g)=O(\mathrm{R}(f)\mathrm{R}(g))$.
+<span class="refs"><a href="../refs.html#Li18" class="xref ref ">Li18</a> <a href="../refs.html#Sanyal18" class="xref ref ">Sanyal18</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/chibar.html" title="Max-conflict complexity">
+    <span class="tex">\(\bar{\chi}(f)\)</span>
+  </a>
+
+                  <a href="../measures/chibar.html">Max-conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: squeezed between $\mathrm{RS}=\widetilde\Theta(\sqrt n)$ and $\mathrm{R}=\widetilde O(\sqrt n)$ along the chain $\mathrm{RS}\lesssim\bar\chi\lesssim\mathrm{LR}\lesssim\mathrm{R}$ [<a href="../refs.html#GLSS19" class="xref ref ">GLSS19</a>].
+<span class="refs"><a href="../refs.html#GLSS19" class="xref ref ">GLSS19</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/LR.html" title="Linearised randomized complexity">
+    <span class="tex">\(\mathrm{LR}(f)\)</span>
+  </a>
+
+                  <a href="../measures/LR.html">Linearised randomized complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: squeezed between $\bar\chi=\widetilde\Theta(\sqrt n)$ and $\mathrm{R}=\widetilde O(\sqrt n)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/Rstar.html" title="Asymptotic composition rate">
+    <span class="tex">\(\mathrm{R}^{*}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rstar.html">Asymptotic composition rate</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: squeezed between $\mathrm{LR}=\widetilde\Theta(\sqrt n)$ and $\mathrm{R}=\widetilde O(\sqrt n)$. The quantum floor $\mathrm{R}^*\ge\Omega(\mathrm{Q})=\widetilde\Omega(n^{1/4})$ is weaker.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Np.html">Noisy decision tree complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Variant $g_{m,m}$: $\mathrm{R}\le\mathrm{N}_p=O(\mathrm{R}\log\mathrm{R})$, and $\mathrm{R}=\widetilde\Theta(\sqrt n)$ there ($\widetilde O(\sqrt n)$ by [<a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a>, Thm 12], $\widetilde\Omega(\sqrt n)$ from $\mathrm{fbs}$). The noise overhead is inside the tilde.
+<span class="refs"><a href="../refs.html#FRPU94" class="xref ref ">FRPU94</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/robustQ.html">Robust quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: $\mathrm{Q}^{\mathrm{rob}}=O(\mathrm{Q}\log\mathrm{Q})$ [<a href="../refs.html#BNRdW05" class="xref ref ">BNRdW05</a>] applied to $\mathrm{Q}=\widetilde O(n^{1/4})$.
+<span class="refs"><a href="../refs.html#BNRdW05" class="xref ref ">BNRdW05</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGpub.html" title="Certificate game complexity (public coin)">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGpub.html">Certificate game complexity (public coin)</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: the public-coin certificate game value collapses to $\Theta(\mathrm{CA})$, and $\mathrm{CA}=\Theta(\mathrm{fbs})=\widetilde\Theta(\sqrt n)$ for total functions [<a href="../refs.html#ABIKPS17" class="xref ref ">ABIKPS17</a>].
+<span class="refs"><a href="../refs.html#ABIKPS17" class="xref ref ">ABIKPS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGns.html" title="Non-signaling certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGns.html">Non-signaling certificate game complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: $\mathrm{CG}^{\mathrm{ns}}$, $\mathrm{CG}^*$ and $\mathrm{CG}^{\mathrm{pub}}$ all collapse to $\Theta(\mathrm{CA})=\Theta(\mathrm{fbs})=\widetilde\Theta(\sqrt n)$.
+<span class="refs"><a href="../refs.html#ABIKPS17" class="xref ref ">ABIKPS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGstar.html" title="Quantum certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{*}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGstar.html">Quantum certificate game complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: same collapse as the $\mathrm{CG}^{\mathrm{ns}}$ line -- entangled certificate games are $\Theta(\mathrm{CA})=\Theta(\mathrm{fbs})$ here.
+<span class="refs"><a href="../refs.html#ABIKPS17" class="xref ref ">ABIKPS17</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CG.html" title="Certificate game complexity (private coin)">
+    <span class="tex">\(\mathrm{CG}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CG.html">Certificate game complexity (private coin)</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n),\ \widetilde O(n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$. The total-function sandwich $\max\{\mathrm{Adv}^2,\mathrm{R}_0,\mathrm{CA}\}\le\mathrm{CG}\le\min\{\mathrm{C}^0\mathrm{C}^1,O(\mathrm{EC}^2)\}$ with $\mathrm{C}^0=\mathrm{C}^1=\mathrm{EC}=\widetilde\Theta(\sqrt n)$ gives the ceiling $\widetilde O(n)$; the floor is $\mathrm{R}_0$ on this variant, which is only $\widetilde\Omega(\sqrt n)$. Private coins are the one escapee from the collapse recorded in the three lines above, so the gap between this line and $\mathrm{CG}^{\mathrm{pub}}$ is genuine and open.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/prt.html" title="Partition bound">
+    <span class="tex">\(\mathrm{prt}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/prt.html">Partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Variant $g_{m,m}$: $\mathrm{prt}_\varepsilon\le 2\mathrm{R}_\varepsilon=\widetilde O(\sqrt n)$ [<a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a>, Thm 3.1], and $\mathrm{prt}_\varepsilon\ge\mathrm{RC}+\log\varepsilon=\widetilde\Omega(\sqrt n)$. So the partition bound is tight against $\mathrm{R}$ here and does not see the $\mathrm{D}$-vs-$\mathrm{R}$ gap.
+<span class="refs"><a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/rprt.html" title="Relaxed partition bound">
+    <span class="tex">\(\overline{\mathrm{prt}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rprt.html">Relaxed partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Theta(\sqrt n)\)</span></td>
+              <td class="short">Variant $g_{m,m}$: $\mathrm{rprt}\le\mathrm{prt}=\widetilde O(\sqrt n)$, and the $\mathrm{RC}$ floor survives the relaxation, so $\mathrm{rprt}=\widetilde\Omega(\sqrt n)$ too.
+<span class="refs"><a href="../refs.html#JainKlauck10" class="xref ref ">JainKlauck10</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rna.html">Non-adaptive randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(\sqrt n),\ \widetilde O(n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: $\mathrm{R}\le\mathrm{R}^{\mathrm{na}}\le\mathrm{D}^{\mathrm{na}}=\widetilde\Theta(n)$, with $\mathrm{R}\ge\mathrm{fbs}=\widetilde\Omega(\sqrt n)$. Nonadaptivity is expected to cost the full input length here, since the whole point of the pointer payload is that queries must chase a chain.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_size.html">Decision tree size</a>
+              </td>
+              <td class="val"><span class="tex">\(2^{\widetilde\Omega(\sqrt n)}\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: a decision tree of rank $r$ has at least $2^r$ leaves, so $\mathrm{DTsize}\ge 2^{\mathrm{rank}}$, and $\mathrm{rank}\ge\mathrm{C}_{\min}=\widetilde\Omega(\sqrt n)$ from the Prover-Delayer game. The ceiling is the trivial $2^{\mathrm{D}}=2^{\widetilde O(n)}$.
+<span class="refs"><a href="../refs.html#EhrenfeuchtHaussler89" class="xref ref ">EhrenfeuchtHaussler89</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/ndeg.html" title="Nondeterministic degree">
+    <span class="tex">\(\mathrm{ndeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/ndeg.html">Nondeterministic degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: $\mathrm{ndeg}\le\mathrm{C}^1=\widetilde\Theta(\sqrt n)$ -- sum the $1$-certificate indicator conjunctions, which are non-negative and cannot cancel.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/NQ.html" title="Nondeterministic quantum query complexity">
+    <span class="tex">\(\mathrm{NQ}(f)\)</span>
+  </a>
+
+                  <a href="../measures/NQ.html">Nondeterministic quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: $\mathrm{NQ}=\lceil\mathrm{ndeg}/2\rceil$, so the $\mathrm{ndeg}$ line transfers verbatim.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/ardeg.html" title="Approximate rational degree">
+    <span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/ardeg.html">Approximate rational degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">Variant $\tilde h_{1,m,m}$: $\mathrm{rdeg}_{1/3}\le\widetilde{\deg}=\widetilde O(n^{1/4})$ (a polynomial is a rational function with denominator $1$).
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/PostQ.html" title="Post-selected quantum query complexity">
+    <span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/PostQ.html">Post-selected quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde O(n^{1/4})\)</span></td>
+              <td class="short">Variant $\tilde h_{1,m,m}$: $\mathrm{PostQ}_\varepsilon=\Theta(\mathrm{rdeg}_\varepsilon)$ [<a href="../refs.html#MahadevdeWolf15" class="xref ref ">MahadevdeWolf15</a>] applied to the $\mathrm{ardeg}$ line. Post-selection buys nothing beyond bounded-error quantum here.
+<span class="refs"><a href="../refs.html#MahadevdeWolf15" class="xref ref ">MahadevdeWolf15</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/cjdeg.html">Conical junta degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\widetilde\Omega(n^{1/4}),\ \widetilde O(n)\)</span></td>
+              <td class="short">Variant $f_{2m,m}$: a depth-$\mathrm{D}$ decision tree is an exact conical junta of width $\mathrm{D}$ (one conjunction per accepting path, all coefficients $1$), so $\mathrm{cjdeg}\le\mathrm{D}=\widetilde O(n)$; the floor is $\mathrm{cjdeg}\ge\widetilde{\deg}\ge\Omega(\sqrt{\mathrm{bs}})=\widetilde\Omega(n^{1/4})$.
+</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Separations its values prove <span class="dim">— computed, not recorded</span></h2>
+        <p class="dim small">Read straight off the table above by comparing two values: no
+        relation record states these, and where one does and says more, the record wins and the
+        pair is not listed here. 10 in total.</p>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=D_size&amp;b=Np">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{DTsize}(f_n) = 2^{\Omega(\mathrm{N}_{p}(f_n))}\)</span></div>
+            <div class="refs dim">from \(\mathrm{DTsize}(f) = 2^{\widetilde\Omega(\sqrt n)}\) against \(\mathrm{N}_{p}(f) = \widetilde\Theta(\sqrt n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Dna&amp;b=robustQ">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\mathrm{na}}(f_n) = \widetilde\Omega\big(\mathrm{Q}^{\mathrm{rob}}(f_n)^{4}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\mathrm{na}}(f) = \widetilde\Theta(n)\) against \(\mathrm{Q}^{\mathrm{rob}}(f) = \widetilde O(n^{1/4})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Cmin&amp;b=Q">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}_{\min}(f_n) = \widetilde\Omega\big(\mathrm{Q}_{\varepsilon}(f_n)^{2}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}_{\min}(f) = \widetilde\Theta(\sqrt n)\) against \(\mathrm{Q}_{\varepsilon}(f) = \widetilde O(n^{1/4})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-adversary" href="../measures/rprt.html" title="Relaxed partition bound">
+    <span class="tex">\(\overline{\mathrm{prt}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=D_size&amp;b=rprt">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{DTsize}(f_n) = 2^{\Omega(\overline{\mathrm{prt}}_{\varepsilon}(f_n))}\)</span></div>
+            <div class="refs dim">from \(\mathrm{DTsize}(f) = 2^{\widetilde\Omega(\sqrt n)}\) against \(\overline{\mathrm{prt}}_{\varepsilon}(f) = \widetilde\Theta(\sqrt n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Cmin&amp;b=robustQ">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}_{\min}(f_n) = \widetilde\Omega\big(\mathrm{Q}^{\mathrm{rob}}(f_n)^{2}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}_{\min}(f) = \widetilde\Theta(\sqrt n)\) against \(\mathrm{Q}^{\mathrm{rob}}(f) = \widetilde O(n^{1/4})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-adversary" href="../measures/Adv.html" title="Positive-weights adversary bound">
+    <span class="tex">\(\mathrm{Adv}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Cmin&amp;b=Adv">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}_{\min}(f_n) = \widetilde\Omega\big(\mathrm{Adv}(f_n)^{2}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}_{\min}(f) = \widetilde\Theta(\sqrt n)\) against \(\mathrm{Adv}(f) = \widetilde O(n^{1/4})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-adversary" href="../measures/Advpm.html" title="General (negative-weights) adversary bound">
+    <span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Cmin&amp;b=Advpm">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}_{\min}(f_n) = \widetilde\Omega\big(\mathrm{Adv}^{\pm}(f_n)^{2}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}_{\min}(f) = \widetilde\Theta(\sqrt n)\) against \(\mathrm{Adv}^{\pm}(f) = \widetilde O(n^{1/4})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-adversary" href="../measures/gamma2.html" title="Approximate gamma_2 norm">
+    <span class="tex">\(\gamma_2^{\alpha}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Cmin&amp;b=gamma2">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}_{\min}(f_n) = \widetilde\Omega\big(\gamma_2^{\alpha}(f_n)^{2}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}_{\min}(f) = \widetilde\Theta(\sqrt n)\) against \(\gamma_2^{\alpha}(f) = \widetilde O(n^{1/4})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-adversary" href="../measures/MAdv.html" title="Multiplicative adversary">
+    <span class="tex">\(\mathrm{MAdv}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Cmin&amp;b=MAdv">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}_{\min}(f_n) = \widetilde\Omega\big(\mathrm{MAdv}(f_n)^{2}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}_{\min}(f) = \widetilde\Theta(\sqrt n)\) against \(\mathrm{MAdv}(f) = \widetilde O(n^{1/4})\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Cmin&amp;b=adeg">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}_{\min}(f_n) = \widetilde\Omega\big(\widetilde{\deg}_{\varepsilon}(f_n)^{2}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}_{\min}(f) = \widetilde\Theta(\sqrt n)\) against \(\widetilde{\deg}_{\varepsilon}(f) = \widetilde O(n^{1/4})\)</div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Separations it witnesses</h2>
+        <ul class="witlist">
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=D&amp;b=R0">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">$\mathrm{D} = \widetilde\Omega(\mathrm{R}_0^2)$, and $\mathrm{D}=O(\mathrm{R}_0^2)$, so this cell is <strong>settled</strong>. Refutes the Saks-Wigderson conjecture ($\mathrm{D}=O(\mathrm{R}_0^{1.33})$).</div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=R0&amp;b=R">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">$\mathrm{R}_0 = \widetilde\Omega(\mathrm{R}^2)$, matching $\mathrm{R}_0 = \widetilde O(\mathrm{R}^2)$. <strong>Settled.</strong></div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=D&amp;b=R">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">$\mathrm{D}=\widetilde\Omega(\mathrm{R}^2)$ against the upper bound $\mathrm{D}\le 27\mathrm{R}^3$.</div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=D&amp;b=Q">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">$\mathrm{D} = \widetilde\Omega(\mathrm{Q}^4)$, matching $\mathrm{D}=O(\mathrm{Q}^4)$. <strong>Settled.</strong></div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a> <a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=D&amp;b=adeg">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">$\mathrm{D} = \widetilde\Omega(\widetilde{\deg}^4)$, matching $\mathrm{D}=O(\widetilde{\deg}^4)$. <strong>Settled.</strong></div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a> <a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=R0&amp;b=Q">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">$\mathrm{R}_0 = \widetilde\Omega(\mathrm{Q}^3)$ against the upper bound $\mathrm{R}_0=O(\mathrm{Q}^4)$.</div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=R&amp;b=QE">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">$\mathrm{R} = \widetilde\Omega(\mathrm{Q}_E^{3/2})$.</div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=D&amp;b=lambda">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">$\mathrm{D} = \widetilde\Omega(\lambda^4)$ against $\mathrm{D}=O(\lambda^6)$.</div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a> <a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a></div>          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Cited as a witness by</h2>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=D&amp;b=R#D__R__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) = \widetilde\Omega\big(\mathrm{R}(f_n)^2\big)\)</span></div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
+
+              <a class="go" href="../pair.html?a=D&amp;b=R0#D__R0__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) = \widetilde\Omega\big(\mathrm{R}_0(f_n)^2\big)\)</span></div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
+
+              <a class="go" href="../pair.html?a=D&amp;b=R1#D__R1__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) = \widetilde\Omega\big(\mathrm{R}^{1}(f_n)^2\big)\)</span></div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
+
+              <a class="go" href="../pair.html?a=R0&amp;b=R#R0__R__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}_0(f_n) = \widetilde\Omega\big(\mathrm{R}(f_n)^2\big)\)</span></div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
+
+              <a class="go" href="../pair.html?a=D&amp;b=adeg#D__adeg__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) = \widetilde\Omega(\widetilde{\deg}(f_n)^4)\)</span></div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
+
+              <a class="go" href="../pair.html?a=R&amp;b=adeg#R__adeg__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}(f_n) = \widetilde\Omega(\widetilde{\deg}(f_n)^4)\)</span></div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
+
+              <a class="go" href="../pair.html?a=D&amp;b=Q#D__Q__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) = \widetilde\Omega(\mathrm{Q}(f_n)^4)\)</span></div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=D&amp;b=QE#D__QE__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) = \widetilde\Omega(\mathrm{Q}_E(f_n)^2)\)</span></div>
+<div class="refs"><a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a></div>          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Notes</h2>
+        <p>The entry is a family of variants sharing one skeleton, and the values
+above mix them: each $\widetilde O(\cdot)$ line names the variant it is
+attained on. That is sound because $\mathrm{D}=\widetilde\Omega(n)$ holds
+for all of them, so every (lower, upper) pair the engine forms from this
+table is a statement about a single function. The variants are, in the
+notation of [<a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a>]: $f_{p,m}$ (a $p\times m$ grid, one distinguished
+all-ones column, back pointers), $g_{p,m}$ (adds a second pointer so that
+one-sided error and exact quantum algorithms get traction), and
+$h_{k,p,m}$ / $\tilde h_{k,p,m}$ (adds $k$ layers of pointers, tuned for
+approximate degree).</p>
+
+      </section>
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#ABBLSS17" class="xref ref ">[ABBLSS17]</a> <span class="dim">Separations in Query Complexity Based on Pointer Functions</span></li>
+            <li><a href="../refs.html#GPW18" class="xref ref ">[GPW18]</a> <span class="dim">Deterministic Communication vs. Partition Number</span></li>
+            <li><a href="../refs.html#GJPW18" class="xref ref ">[GJPW18]</a> <span class="dim">Randomized Communication vs. Partition Number</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../functions/cheatsheet.html" class="xref function "><span class="tex">\(f_{\mathrm{CS}}\)</span></a></li><li><a href="../functions/NANDtree.html" class="xref function "><span class="tex">\(\bar{\wedge}\text{-tree}\)</span></a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/03-separating-total.yaml</code> &mdash; id <code>pointer</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

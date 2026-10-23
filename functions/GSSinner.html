@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Random-indicator gadget &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#total">Total functions</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">\(g_n\)</div>
+    <div>
+      <h1>Random-indicator gadget</h1>
+      <p class="lede">The inner gadget of <a href="../functions/GSSfn.html" class="xref function "><span class="tex">\(f_{\mathrm{GSS}}\)</span></a>, on its own: $\mathrm{C}^0 = \Theta(n)$ with $\mathrm{bs}^0 = O(1)$.</p>
+      <p class="aliases">
+        <span class="kindtag k-total">total</span>
+        <span class="grouptag g-separating">separating</span>
+<span class="tag">arity: $n$ bits</span>&mdash; also: <code>the GSS inner function</code>, <code>indicator of a random code</code>      </p>
+    </div>
+  </header>
+
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>The indicator of $2^{n/50}$ points of the cube chosen uniformly at random.
+A random set that sparse is a good code -- its points are far apart, so no
+$0$-input has more than a constant number of disjoint sensitive blocks --
+and yet it is dense enough that no small subcube avoids it, so every
+$0$-input needs a linear certificate.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Formal definition</h2>
+        <p>Pick $x^1,\dots,x^N \in \{0,1\}^n$ uniformly at random with $N = 2^{n/50}$
+and let $g_n$ be their indicator. With high probability [GSS16, Thm 32,
+Claim 34]:</p>
+<ul>
+<li>the points are at pairwise Hamming distance $\ge n/100$, so a $0$-input
+has at most $200$ disjoint sensitive blocks --
+$\mathrm{bs}^0(g_n),\ \mathrm{fbs}^0(g_n) = O(1)$;</li>
+<li>every subcube of codimension $n/100$ contains one of the points, so no
+$0$-certificate is shorter than $n/100$ -- $\mathrm{C}^0(g_n)\ge n/100$.</li>
+</ul>
+<p>The $1$-side is the opposite extreme: a $1$-input is an isolated point, so
+all $n$ of its bits are sensitive and its only certificate is the whole
+input.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/C0.html">0-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Floor $\mathrm{C}^0\ge n/100$ [<a href="../refs.html#GSS16" class="xref ref ">GSS16</a>, Thm 32]: a $0$-certificate is a subcube of $0$-inputs, and every subcube of codimension $n/100$ contains a planted point. Ceiling: the whole input, $n$.
+<span class="refs"><a href="../refs.html#GSS16" class="xref ref ">GSS16</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs0.html" title="0-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs0.html">0-block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Ceiling $\mathrm{bs}^0 = O(1)$ [<a href="../refs.html#GSS16" class="xref ref ">GSS16</a>, Thm 32]. A sensitive block $B$ at a $0$-input $x$ means $x^B$ is a planted point, so two disjoint blocks give two planted points at Hamming distance exactly $|B_1|+|B_2|$; pairwise distance $\ge n/100$ therefore forces every pair of blocks to have total size $\ge n/100$, and disjoint blocks fit in $n$ coordinates, so there are at most $201$ of them. Floor $1$: a neighbour of a planted point is a $0$-input with a sensitive bit.
+<span class="refs"><a href="../refs.html#GSS16" class="xref ref ">GSS16</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s0.html" title="0-sensitivity">
+    <span class="tex">\(\mathrm{s}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/s0.html">0-sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Squeeze: $1\le\mathrm{s}^0\le\mathrm{bs}^0=O(1)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/C1.html">1-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">The $1$-inputs are isolated (pairwise distance $\ge n/100$), so any subcube containing one and no $0$-input is that single point.
+<span class="refs"><a href="../refs.html#GSS16" class="xref ref ">GSS16</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s1.html" title="1-sensitivity">
+    <span class="tex">\(\mathrm{s}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/s1.html">1-sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Every neighbour of an isolated planted point is a $0$-input.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs1.html" title="1-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs1.html">1-block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Squeeze: $\mathrm{s}^1\le\mathrm{bs}^1\le\mathrm{C}^1$, both $n$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                  <a href="../measures/s.html">Sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span></td>
+              <td class="short">Squeeze: $\mathrm{s}=\max\{\mathrm{s}^0,\mathrm{s}^1\}=n$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs.html">Block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span></td>
+              <td class="short">Squeeze: $\mathrm{s}\le\mathrm{bs}\le\mathrm{C}=n$. The whole gap between $\mathrm{C}^0$ and $\mathrm{bs}^0$ is invisible to the two-sided measures, which the $1$-side saturates.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/fbs.html">Fractional block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span></td>
+              <td class="short">Squeeze: $\mathrm{bs}\le\mathrm{fbs}\le\mathrm{C}=n$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                  <a href="../measures/C.html">Certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span></td>
+              <td class="short">Squeeze: $\mathrm{C}=\max\{\mathrm{C}^0,\mathrm{C}^1\}=n$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Cmin.html">Minimum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Floor: every $0$-input needs $n/100$ bits and every $1$-input needs $n$, so the <em>minimum</em> certificate complexity is already linear -- unusually, $\mathrm{C}_{\min}=\Theta(\mathrm{C})$ here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D.html">Deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span></td>
+              <td class="short">Squeeze: $\mathrm{C}\le\mathrm{D}\le n$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/UC.html" title="Unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/UC.html">Unambiguous certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span></td>
+              <td class="short">Squeeze: $\mathrm{C}\le\mathrm{UC}\le\mathrm{D}$, both $n$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R0.html">Zero-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{C}\le\mathrm{R}_0\le\mathrm{D}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R.html">Bounded-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{R}=\Omega(\mathrm{fbs})=\Omega(n)$ and $\mathrm{R}\le\mathrm{D}=n$. Nothing about this gadget is easy for randomness; the point of it is the shape of the $0$-side, not a speed-up.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/FC.html" title="Fractional certificate complexity">
+    <span class="tex">\(\mathrm{FC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/FC.html">Fractional certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(n\)</span></td>
+              <td class="short">Squeeze: $\mathrm{FC}=\mathrm{fbs}$ exactly.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/RC.html" title="Randomized certificate complexity">
+    <span class="tex">\(\mathrm{RC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/RC.html">Randomized certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{RC}=\Theta(\mathrm{fbs})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q.html">Bounded-error quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(\sqrt n)\)</span></td>
+              <td class="short">Squeeze: $\mathrm{bs}=O(\mathrm{Q}^2)$ [<a href="../refs.html#BBCMdW01" class="xref ref ">BBCMdW01</a>] with $\mathrm{bs}=n$.
+</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Separations its values prove <span class="dim">— computed, not recorded</span></h2>
+        <p class="dim small">Read straight off the table above by comparing two values: no
+        relation record states these, and where one does and says more, the record wins and the
+        pair is not listed here. 4 in total.</p>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s0.html" title="0-sensitivity">
+    <span class="tex">\(\mathrm{s}^0(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=C0&amp;b=s0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}^0(f_n) \to \infty \ \text{ while } \ \mathrm{s}^0(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}^0(f) = \Theta(n)\) against \(\mathrm{s}^0(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/bs0.html" title="0-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^0(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Cmin&amp;b=bs0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}_{\min}(f_n) \to \infty \ \text{ while } \ \mathrm{bs}^0(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}_{\min}(f) = \Theta(n)\) against \(\mathrm{bs}^0(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/bs0.html" title="0-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^0(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=C0&amp;b=bs0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}^0(f_n) \to \infty \ \text{ while } \ \mathrm{bs}^0(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}^0(f) = \Theta(n)\) against \(\mathrm{bs}^0(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s0.html" title="0-sensitivity">
+    <span class="tex">\(\mathrm{s}^0(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=Cmin&amp;b=s0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}_{\min}(f_n) \to \infty \ \text{ while } \ \mathrm{s}^0(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}_{\min}(f) = \Theta(n)\) against \(\mathrm{s}^0(f) = \Theta(1)\)</div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Separations it witnesses</h2>
+        <ul class="witlist">
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/bs0.html" title="0-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^0(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=C0&amp;b=bs0">pair &rarr;</a>
+  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+            </div>
+            <div class="stmt">$\mathrm{C}^0 = \Theta(n)$ while $\mathrm{bs}^0 = O(1)$: <strong>no bound of any kind</strong> holds in the other direction. The one-sided certificate complexity is not a function of the one-sided block sensitivity -- Nisan's $\mathrm{C}^0 \le \mathrm{s}^1\,\mathrm{bs}^0$ needs the $1$-side, and here it pays the full $\mathrm{s}^1 = n$.</div>
+<div class="refs"><a href="../refs.html#GSS16" class="xref ref ">GSS16</a></div>          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Cited as a witness by</h2>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/bs0.html" title="0-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^0(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-fails" title="Proved that no bound of this form can hold in this setting.">No bound exists</span>
+
+              <a class="go" href="../pair.html?a=C0&amp;b=bs0#C0__bs0__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}^0(g_n) = \Theta(n),\quad \mathrm{bs}^0(g_n) = O(1)\)</span></div>
+<div class="refs"><a href="../refs.html#GSS16" class="xref ref ">GSS16</a></div>          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Notes</h2>
+        <p>Recorded separately from <a href="../functions/GSSfn.html" class="xref function "><span class="tex">\(f_{\mathrm{GSS}}\)</span></a> because the two say different things.
+The composed $\mathrm{OR}_n\circ g_n$ multiplies the $0$-side by $n$ and so
+turns a constant $\mathrm{bs}^0$ into $\mathrm{bs}^0 = \Theta(n)$; that is
+what makes it a <em>quadratic</em> $\mathrm{C}$-vs-$\mathrm{bs}$ separation. The
+gadget on its own is the extreme case in a different direction: the ratio
+$\mathrm{C}^0/\mathrm{bs}^0$ is unbounded, which no amount of composition
+can improve on and which the composed function hides.</p>
+<p>Not explicit: the construction is probabilistic, and the properties hold
+with high probability over the choice of the $N$ points. That is enough for
+a separation -- some choice works -- but the family has no description
+shorter than the list of points.</p>
+
+      </section>
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#GSS16" class="xref ref ">[GSS16]</a> <span class="dim">Composition limits and separating examples for some Boolean function complexity measures</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../functions/GSSfn.html" class="xref function "><span class="tex">\(f_{\mathrm{GSS}}\)</span></a></li><li><a href="../measures/C0.html" class="xref measure "><span class="tex">\(\mathrm{C}^0(f)\)</span></a></li><li><a href="../measures/bs0.html" class="xref measure "><span class="tex">\(\mathrm{bs}^0(f)\)</span></a></li><li><a href="../measures/s1.html" class="xref measure "><span class="tex">\(\mathrm{s}^1(f)\)</span></a></li><li><a href="../measures/C.html" class="xref measure "><span class="tex">\(\mathrm{C}(f)\)</span></a></li><li><a href="../functions/OR.html" class="xref function "><span class="tex">\(\mathrm{OR}_n\)</span></a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/03-separating-total.yaml</code> &mdash; id <code>GSSinner</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

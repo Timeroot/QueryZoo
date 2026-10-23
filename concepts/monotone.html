@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monotone functions &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="">Functions</a>
+      <a href="../concepts/index.html"
+         class="on">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../concepts/index.html">Concepts</a></div>
+  <header class="entryhead concept">
+    <div>
+      <h1>Monotone functions</h1>
+      <p class="lede">Everything collapses: s = bs = C, D &lt;= s^2, and the quantum speedup is at most quadratic.</p>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="main-col">
+      <article class="card prose">
+        <p>For monotone $f$:</p>
+<ul>
+<li>$\mathrm{s}(f) = \mathrm{bs}(f) = \mathrm{C}(f)$ [<a href="../refs.html#Nisan91" class="xref ref ">Nisan91</a>].</li>
+<li>Hence $\mathrm{D}(f) \le \mathrm{C}^0(f)\mathrm{C}^1(f) \le \mathrm{s}(f)^2$
+[<a href="../refs.html#BdW02" class="xref ref ">BdW02</a>, Cor. 5].</li>
+<li>$\mathrm{s}(f) \le \deg(f)$ [<a href="../refs.html#BdW02" class="xref ref ">BdW02</a>, Prop. 4].</li>
+<li>Therefore $\mathrm{D}(f)=O(\mathrm{R}(f)^2)$, $\mathrm{D}(f)=O(\mathrm{Q}_E(f)^2)$
+and $\mathrm{D}(f)=O(\mathrm{Q}(f)^4)$ [<a href="../refs.html#BdW02" class="xref ref ">BdW02</a>, Cor. 6].</li>
+<li><strong>Monotone graph properties</strong> have $\mathrm{Q}(f)=\Omega(n)$ on
+$\binom{n}{2}$-bit inputs, i.e. $\Omega(N^{1/2})$ [<a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a>, Thm 5] --
+a quantum version of the Aanderaa-Karp-Rosenberg evasiveness programme.</li>
+<li>Zero-error quantum gives near-optimal separations for monotone graph
+properties [<a href="../refs.html#BCWZ99" class="xref ref ">BCWZ99</a>].</li>
+</ul>
+<p>Monotonicity is the standard sanity check: any conjectured
+super-quadratic separation must use a non-monotone function.</p>
+
+      </article>
+    </div>
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../measures/s.html" class="xref measure "><span class="tex">\(\mathrm{s}(f)\)</span></a></li><li><a href="../measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a></li><li><a href="../measures/C.html" class="xref measure "><span class="tex">\(\mathrm{C}(f)\)</span></a></li><li><a href="../measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a></li><li><a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/QE.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span></a></li><li><a href="../concepts/sensitivity-conjecture.html" class="xref concept ">The sensitivity conjecture (now Huang&#x27;s theorem)</a></li></ul>
+      </section>
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#Nisan91" class="xref ref ">[Nisan91]</a> <span class="dim">CREW PRAMs and Decision Trees</span></li>
+            <li><a href="../refs.html#BdW02" class="xref ref ">[BdW02]</a> <span class="dim">Complexity measures and decision tree complexity: a survey</span></li>
+            <li><a href="../refs.html#ABKRT21" class="xref ref ">[ABKRT21]</a> <span class="dim">Degree vs. Approximate Degree and Quantum Implications of Huang&#39;s Sensitivity Theorem</span></li>
+            <li><a href="../refs.html#BCWZ99" class="xref ref ">[BCWZ99]</a> <span class="dim">Bounds for small-error and zero-error quantum algorithms</span></li>
+        </ul>
+      </section>
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/concepts.yaml</code> &mdash; id <code>monotone</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

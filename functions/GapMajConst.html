@@ -1,0 +1,1334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gap-Majority at constant gap &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="on">Functions</a>
+      <a href="../concepts/index.html"
+         class="">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../functions/index.html">Functions</a> &rsaquo;
+    <a href="../functions/index.html#partial">Partial functions</a></div>
+
+  <header class="entryhead fn">
+    <div class="bigsym">\(\mathrm{GapMaj}^{1/4}_{n}\)</div>
+    <div>
+      <h1>Gap-Majority at constant gap</h1>
+      <p class="lede">The $\delta = 1/4$ instance of Gap-Majority: $\Theta(1)$ for every bounded-error measure, $\Theta(n)$ for every exact one.</p>
+      <p class="aliases">
+        <span class="kindtag k-partial">partial</span>
+        <span class="grouptag g-separating">separating</span>
+<span class="tag">arity: $n$ bits</span>      </p>
+    </div>
+  </header>
+
+
+  <div class="cols">
+    <div class="main-col">
+
+      <section class="card">
+        <h2>Description</h2>
+        <p>Promise $\big||x| - n/2\big| \ge n/4$; output $1$ if $|x| \ge 3n/4$ and $0$ if
+$|x| \le n/4$. This is <a href="../functions/GapMaj.html" class="xref function "><span class="tex">\(\mathrm{GapMaj}^{\delta}_{n}\)</span></a> with the gap parameter frozen at
+$\delta = 1/4$, and it is the instance that does the separating: every
+$\Theta(\min(n,1/\delta))$ or $\Theta(\min(n,1/\delta^2))$ entry of the
+general family collapses to $\Theta(1)$ here, while the $\delta$-free
+entries stay at $\Theta(n)$.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Formal definition</h2>
+        <p>$\mathrm{GapMaj}^{1/4}_n(x) = \mathbb{1}[|x| &gt; n/2]$ restricted to $\{x : \big||x|-n/2\big| \ge n/4\}$.</p>
+
+      </section>
+
+      <section class="card">
+        <h2>Measure values</h2>
+        <table class="listing values">
+          <thead><tr><th>Measure</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D.html">Deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Exactly $n/2 + 1$ up to integrality, by the adversary count of <a href="../functions/GapMaj.html" class="xref function "><span class="tex">\(\mathrm{GapMaj}^{\delta}_{n}\)</span></a> at $\delta = 1/4$: an adversary answering queries can keep both outputs alive for $(1-2\delta)n = n/2$ queries.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                  <a href="../measures/C.html">Certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Exactly $n/4 + 1$ on both sides: a $1$-certificate must exhibit that many ones, or setting every free coordinate to $0$ leaves a $0$-input of the promise.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/C0.html">0-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">See $\mathrm{C}$; attained on both sides.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/C1.html">1-certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">See $\mathrm{C}$; attained on both sides.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Cmin.html">Minimum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Every certificate has the same length, so the min over inputs equals the max.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dna.html">Non-adaptive deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Between $\mathrm{D}$ and $n$; the adversary count never used adaptivity.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R0.html">Zero-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">A zero-error run must end on a certificate, so $\mathrm{R}_0 \ge \mathrm{C} = \Theta(n)$; and $\mathrm{R}_0 \le \mathrm{D}$. Against $\mathrm{R} = \Theta(1)$ this is the unbounded $\mathrm{R}_0$-vs-$\mathrm{R}$ separation on partial functions.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R1.html">One-sided-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Squeezed between $\mathrm{C}^1$ and $\mathrm{R}_0$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/UC.html" title="Unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/UC.html">Unambiguous certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Between $\mathrm{C}$ and $\mathrm{D}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/UCmin.html" title="Minimum unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}_{\min}(f)\)</span>
+  </a>
+
+                  <a href="../measures/UCmin.html">Minimum unambiguous certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Between $\mathrm{C}_{\min}$ and $\mathrm{UC}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/SP.html" title="Subcube partition complexity">
+    <span class="tex">\(\mathrm{SP}(f)\)</span>
+  </a>
+
+                  <a href="../measures/SP.html">Subcube partition complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Between $\mathrm{C}$ and $\mathrm{D}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rank.html">Decision tree rank</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Between $\mathrm{C}_{\min}$ and $\mathrm{D}$: with every certificate of full length there is no caterpillar structure to exploit.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/PDT.html" title="Parity decision tree complexity">
+    <span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span>
+  </a>
+
+                  <a href="../measures/PDT.html">Parity decision tree complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Parity queries do not help: after $q &lt; n/4$ of them the consistent affine space still contains inputs of both values. See <a href="../functions/GapMaj.html" class="xref function "><span class="tex">\(\mathrm{GapMaj}^{\delta}_{n}\)</span></a>.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_size.html" title="Decision tree size">
+    <span class="tex">\(\mathrm{DTsize}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_size.html">Decision tree size</a>
+              </td>
+              <td class="val"><span class="tex">\(2^{\Theta(n)}\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Every leaf subcube has codimension $\ge \mathrm{C}_{\min} = \Theta(n)$; and $\mathrm{DTsize} \le 2^{\mathrm{D}}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
+    <span class="tex">\(\deg(f)\)</span>
+  </a>
+
+                  <a href="../measures/deg.html">Exact degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Exact degree ignores the promise gap: symmetrising an exactly representing polynomial gives a univariate with $\Theta(n)$ forced roots. Against $\widetilde{\deg} = \Theta(1)$ this is the cleanest $\deg$-vs-$\widetilde{\deg}$ gap there is.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QE.html">Exact quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Exactness costs as much as determinism: $\mathrm{Q}_E \ge \deg/2$ and $\mathrm{Q}_E \le \mathrm{D}$. Against $\mathrm{Q} = \Theta(1)$, unbounded.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q0.html">Zero-error (Las Vegas) quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">The polynomial argument of <a href="../functions/GapMaj.html" class="xref function "><span class="tex">\(\mathrm{GapMaj}^{\delta}_{n}\)</span></a>: a zero-error algorithm's acceptance polynomial symmetrises to a non-negative univariate with $\Theta(n)$ roots. Against $\mathrm{Q} = \Theta(1)$, unbounded.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/ndeg.html" title="Nondeterministic degree">
+    <span class="tex">\(\mathrm{ndeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/ndeg.html">Nondeterministic degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Same symmetrisation applied to $p^2$; and $\mathrm{ndeg} \le \mathrm{C}^1$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/NQ.html" title="Nondeterministic quantum query complexity">
+    <span class="tex">\(\mathrm{NQ}(f)\)</span>
+  </a>
+
+                  <a href="../measures/NQ.html">Nondeterministic quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">$\mathrm{NQ} = \lceil\mathrm{ndeg}/2\rceil$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/rdeg.html" title="Rational degree">
+    <span class="tex">\(\mathrm{rdeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rdeg.html">Rational degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">$\mathrm{rdeg} = \max\{\mathrm{ndeg}(f),\mathrm{ndeg}(\bar f)\}$, the two sides being symmetric. Against $\mathrm{rdeg}_\varepsilon = \Theta(1)$ and $\mathrm{Q} = \Theta(1)$: on <em>partial</em> functions rational degree is unbounded in terms of everything bounded-error, which is why <a href="../open.html#open-rdeg" class="xref open ">What is the exponent of … versus …?</a> is a total-function question.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CG.html" title="Certificate game complexity (private coin)">
+    <span class="tex">\(\mathrm{CG}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CG.html">Certificate game complexity (private coin)</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Private coins, and unlike $\mathrm{CG}^{\mathrm{pub}} = \Theta(1)$ it does not shrink with the gap: see the two-sided argument at <a href="../functions/GapMaj.html" class="xref function "><span class="tex">\(\mathrm{GapMaj}^{\delta}_{n}\)</span></a>.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                  <a href="../measures/s.html">Sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(0\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">A single flip moves $|x|$ by one and the promise puts the two sides $n/2$ apart, so no promise input has a sensitive coordinate at all.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s0.html" title="0-sensitivity">
+    <span class="tex">\(\mathrm{s}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/s0.html">0-sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(0\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">See $\mathrm{s}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/s1.html" title="1-sensitivity">
+    <span class="tex">\(\mathrm{s}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/s1.html">1-sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(0\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">See $\mathrm{s}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                  <a href="../measures/lambda.html">Spectral sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(0\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">The sensitivity graph on the promise has no edges, so $\lambda = 0$ while $\deg = \Theta(n)$. Huang's $\deg \le \lambda^2$ is a total-function theorem and this breaks it as badly as arithmetic allows.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/D_prod.html" title="Product-distribution distributional complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/D_prod.html">Product-distribution distributional complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(0\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">The support of a product distribution is a subcube, whose realisable Hamming weights form an unbroken interval; an interval meeting both sides of the promise would have to contain the forbidden middle. So every product $\mu$ is one-sided.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/R.html">Bounded-error randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Sample $O(1)$ coordinates and take the empirical majority; $\Theta(1/\delta^2)$ at $\delta = 1/4$. Against $\mathrm{D} = \Theta(n)$ this is the standard proof that $\mathrm{D}$ is unbounded in terms of $\mathrm{R}$ on partial functions.
+<span class="refs"><a href="../refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs.html">Block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(1\)</span></td>
+              <td class="short">A sensitive block must move at least $2\delta n = n/2$ coordinates, and an input of weight $3n/4$ has room for exactly one such block.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs0.html" title="0-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^0(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs0.html">0-block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Symmetric under complementation; see $\mathrm{bs}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/bs1.html" title="1-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^1(f)\)</span>
+  </a>
+
+                  <a href="../measures/bs1.html">1-block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(1\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">See $\mathrm{bs}^0$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+
+                  <a href="../measures/fbs.html">Fractional block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">At most $1/(2\delta) = 2$ by the counting $2\delta n\sum_B w_B \le n$. So $\mathrm{fbs} = \Theta(1)$ against $\mathrm{C} = \Theta(n)$: the promise counterexample to $\mathrm{C} = O(\mathrm{fbs}^2)$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/RC.html" title="Randomized certificate complexity">
+    <span class="tex">\(\mathrm{RC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/RC.html">Randomized certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">$\mathrm{RC} = \Theta(\mathrm{fbs})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/FC.html" title="Fractional certificate complexity">
+    <span class="tex">\(\mathrm{FC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/FC.html">Fractional certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Equal to $\mathrm{fbs}$ by LP duality.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/cbs.html" title="Critical block sensitivity">
+    <span class="tex">\(\mathrm{cbs}(S)\)</span>
+  </a>
+
+                  <a href="../measures/cbs.html">Critical block sensitivity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Degenerate on a Boolean function: $\mathrm{cbs} = \mathrm{bs}$.
+<span class="refs"><a href="../refs.html#GoosPitassi14" class="xref ref ">GoosPitassi14</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Q.html">Bounded-error quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Amplitude estimation to additive $\delta$; at constant $\delta$, $O(1)$ queries.
+<span class="refs"><a href="../refs.html#NayakWu99" class="xref ref ">NayakWu99</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/adeg.html">Approximate degree</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">$\widetilde{\deg} \le 2\mathrm{Q} = O(1)$, and the Nayak-Wu counting bound is a degree bound.
+<span class="refs"><a href="../refs.html#NayakWu99" class="xref ref ">NayakWu99</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/noisyR.html" title="Noisy randomized query complexity">
+    <span class="tex">\(\mathrm{noisyR}(f)\)</span>
+  </a>
+
+                  <a href="../measures/noisyR.html">Noisy randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Equal to $\mathrm{R}$: buying bias buys nothing here. See <a href="../functions/GapMaj.html" class="xref function "><span class="tex">\(\mathrm{GapMaj}^{\delta}_{n}\)</span></a>.
+<span class="refs"><a href="../refs.html#CKMPSS23" class="xref ref ">CKMPSS23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rna.html">Non-adaptive randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Sampling is non-adaptive.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/noisyRna.html" title="Non-adaptive noisy randomized query complexity">
+    <span class="tex">\(\mathrm{noisyR}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/noisyRna.html">Non-adaptive noisy randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Every corner of the adaptive/noisy square costs $\Theta(1)$ here.
+<span class="refs"><a href="../refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rbar.html">Expected-cost randomized query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">$\bar{\mathrm{R}}_\varepsilon = \Theta(\mathrm{R}_\varepsilon)$ for every $f$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Dmu.html">Distributional query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">By Yao, $\max_\mu \mathrm{D}^\mu = \mathrm{R}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
+    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Np.html">Noisy decision tree complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Between $\mathrm{R}$ and $O(\mathrm{R})$: read each sampled coordinate $O(1)$ times and vote.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-randomized" href="../measures/psD.html" title="Pseudo-deterministic query complexity">
+    <span class="tex">\(\mathrm{psD}(S)\)</span>
+  </a>
+
+                  <a href="../measures/psD.html">Pseudo-deterministic query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Degenerate on a partial Boolean function: $\mathrm{psD} = \Theta(\mathrm{R})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/LR.html" title="Linearised randomized complexity">
+    <span class="tex">\(\mathrm{LR}(f)\)</span>
+  </a>
+
+                  <a href="../measures/LR.html">Linearised randomized complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">$\Omega(\sqrt{\mathrm{R}}) \le \mathrm{LR} \le \mathrm{R}$, and both ends are constant.
+<span class="refs"><a href="../refs.html#BBGM22" class="xref ref ">BBGM22</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/chibar.html" title="Max-conflict complexity">
+    <span class="tex">\(\bar{\chi}(f)\)</span>
+  </a>
+
+                  <a href="../measures/chibar.html">Max-conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span><span class="conf med" title="Medium confidence: statement believed correct, exact constants/logs not re-derived.">&#183;</span>
+</td>
+              <td class="short">Between $\Omega(\sqrt{\mathrm{R}})$ and $\mathrm{LR}$.
+<span class="refs"><a href="../refs.html#GLSS19" class="xref ref ">GLSS19</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/QC.html" title="Quantum certificate complexity">
+    <span class="tex">\(\mathrm{QC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/QC.html">Quantum certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">$\mathrm{QC} = \Theta(\sqrt{\mathrm{fbs}})$.
+<span class="refs"><a href="../refs.html#Aaronson08" class="xref ref ">Aaronson08</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Advpm.html" title="General (negative-weights) adversary bound">
+    <span class="tex">\(\mathrm{Adv}^{\pm}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Advpm.html">General (negative-weights) adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">$\mathrm{Adv}^{\pm} = \Theta(\mathrm{Q})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/MAdv.html" title="Multiplicative adversary">
+    <span class="tex">\(\mathrm{MAdv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/MAdv.html">Multiplicative adversary</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Between $\mathrm{Adv}^{\pm}$ and $\mathrm{Q}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/gamma2.html" title="Approximate gamma_2 norm">
+    <span class="tex">\(\gamma_2^{\alpha}(f)\)</span>
+  </a>
+
+                  <a href="../measures/gamma2.html">Approximate gamma_2 norm</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">$\gamma_2 = \Theta(\mathrm{Q})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CA.html" title="Classical adversary bound">
+    <span class="tex">\(\mathrm{CA}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CA.html">Classical adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Between $\mathrm{fbs}$ and $\mathrm{CG}^{\mathrm{pub}}$, both constant.
+<span class="refs"><a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGpub.html" title="Certificate game complexity (public coin)">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGpub.html">Certificate game complexity (public coin)</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Both players output the same uniformly random index; inputs of different value differ in $\ge n/2$ coordinates, so they win with probability $\ge 1/2$.
+<span class="refs"><a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGstar.html" title="Quantum certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{*}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGstar.html">Quantum certificate game complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">All of $\mathrm{CG}^{\mathrm{ns}},\mathrm{CG}^{*},\mathrm{CG}^{\mathrm{pub}}$ collapse to $\Theta(\mathrm{CA})$.
+<span class="refs"><a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/CGns.html" title="Non-signaling certificate game complexity">
+    <span class="tex">\(\mathrm{CG}^{\mathrm{ns}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/CGns.html">Non-signaling certificate game complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">See $\mathrm{CG}^{*}$.
+<span class="refs"><a href="../refs.html#CGLMSG23" class="xref ref ">CGLMSG23</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/robustQ.html" title="Robust quantum query complexity">
+    <span class="tex">\(\mathrm{Q}^{\mathrm{rob}}(f)\)</span>
+  </a>
+
+                  <a href="../measures/robustQ.html">Robust quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(1)\)</span></td>
+              <td class="short">Between $\mathrm{Q}$ and $O(\mathrm{Q}\log\mathrm{Q})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/sdeg.html" title="Sign degree">
+    <span class="tex">\(\mathrm{sdeg}(f)\)</span>
+  </a>
+
+                  <a href="../measures/sdeg.html">Sign degree</a>
+              </td>
+              <td class="val"><span class="tex">\(1\)</span></td>
+              <td class="short">$p(x) = \sum_i x_i - n/2$ has the right sign at every promise input. Against $\deg = \Theta(n)$: unbounded error trivialises gapped majority.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/odeg.html" title="One-sided approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{+}(f)\)</span>
+  </a>
+
+                  <a href="../measures/odeg.html">One-sided approximate degree</a>
+              </td>
+              <td class="val"><span class="tex">\(1\)</span></td>
+              <td class="short">At $\delta \ge 1/8$ a degree-$1$ one-sided approximation exists, so $\mathrm{odeg}$ meets $\mathrm{sdeg}$ at the bottom.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/ardeg.html" title="Approximate rational degree">
+    <span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/ardeg.html">Approximate rational degree</a>
+              </td>
+              <td class="val"><span class="tex">\(O(1)\)</span></td>
+              <td class="short">$\mathrm{rdeg}_\varepsilon \le \widetilde{\deg} = O(1)$. Contrast the exact $\mathrm{rdeg} = \Theta(n)$: on partial functions the two versions of rational degree are unboundedly far apart.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-quantum" href="../measures/PostQ.html" title="Post-selected quantum query complexity">
+    <span class="tex">\(\mathrm{PostQ}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/PostQ.html">Post-selected quantum query complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(O(1)\)</span></td>
+              <td class="short">$\mathrm{PostQ}_\varepsilon = \Theta(\mathrm{rdeg}_\varepsilon) = O(1)$.
+<span class="refs"><a href="../refs.html#MahadevdeWolf15" class="xref ref ">MahadevdeWolf15</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/Adv.html" title="Positive-weights adversary bound">
+    <span class="tex">\(\mathrm{Adv}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Adv.html">Positive-weights adversary bound</a>
+              </td>
+              <td class="val"><span class="tex">\(O(1)\)</span></td>
+              <td class="short">$\mathrm{Adv} \le \mathrm{Adv}^{\pm} = \Theta(\mathrm{Q})$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+
+                  <a href="../measures/chi.html">Conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(O(1)\)</span></td>
+              <td class="short">$\chi \le \bar\chi$. The total-function bound $\chi = \Omega(\mathrm{bs})$ is false here.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
+  </a>
+
+                  <a href="../measures/RS.html">Sabotage complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(O(1)\)</span></td>
+              <td class="short">$\mathrm{RS} = O(\bar\chi)$. Note $\mathrm{R} = O(\mathrm{RS}^2\log\mathrm{RS})$ is a total-function statement.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/Rstar.html" title="Asymptotic composition rate">
+    <span class="tex">\(\mathrm{R}^{*}(f)\)</span>
+  </a>
+
+                  <a href="../measures/Rstar.html">Asymptotic composition rate</a>
+              </td>
+              <td class="val"><span class="tex">\(O(1)\)</span></td>
+              <td class="short">$\mathrm{R}^{*} \le \mathrm{R}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-degree" href="../measures/cjdeg.html" title="Conical junta degree">
+    <span class="tex">\(\mathrm{cjdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/cjdeg.html">Conical junta degree</a>
+              </td>
+              <td class="val"><span class="tex">\(O(1)\)</span></td>
+              <td class="short">Between $\widetilde{\deg}$ and $\mathrm{R}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/prt.html" title="Partition bound">
+    <span class="tex">\(\mathrm{prt}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/prt.html">Partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(O(1)\)</span></td>
+              <td class="short">$\mathrm{prt}_\varepsilon \le 2\mathrm{R}_\varepsilon$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-adversary" href="../measures/rprt.html" title="Relaxed partition bound">
+    <span class="tex">\(\overline{\mathrm{prt}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                  <a href="../measures/rprt.html">Relaxed partition bound</a>
+              </td>
+              <td class="val"><span class="tex">\(O(1)\)</span></td>
+              <td class="short">$\overline{\mathrm{prt}} \le \mathrm{prt}$.
+</td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-combinatorial" href="../measures/EC.html" title="Expectational certificate complexity">
+    <span class="tex">\(\mathrm{EC}(f)\)</span>
+  </a>
+
+                  <a href="../measures/EC.html">Expectational certificate complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(O(\sqrt n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Uniform weights $w^x_i = (n/2)^{-1/2}$: two inputs of different value differ in $\ge n/2$ coordinates, so their weighted product is $\ge 1$, at total cost $\sqrt{2n}$. From below $\mathrm{EC} = \Omega(1)$ only, so this cell is not pinned -- but $O(\sqrt n)$ against $\mathrm{C} = \Theta(n)$ already refutes $\mathrm{EC} \le \mathrm{C}$-style tightness and, with $\mathrm{R}_0 = \Theta(n)$, refutes $\mathrm{R}_0 = O(\mathrm{EC}^2)$ on promises.
+</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Separations its values prove <span class="dim">— computed, not recorded</span></h2>
+        <p class="dim small">Read straight off the table above by comparing two values: no
+        relation record states these, and where one does and says more, the record wins and the
+        pair is not listed here. 372 in total,
+        strongest first.</p>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/Rna.html" title="Non-adaptive randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+              <a class="go" href="../pair.html?a=D&amp;b=Rna">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}(f_n) \to \infty \ \text{ while } \ \mathrm{R}^{\mathrm{na}}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}(f) = \Theta(n)\) against \(\mathrm{R}^{\mathrm{na}}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/PDT.html" title="Parity decision tree complexity">
+    <span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-deterministic" href="../measures/Dmu.html" title="Distributional query complexity">
+    <span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+              <a class="go" href="../pair.html?a=PDT&amp;b=Dmu">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\oplus}(f_n) \to \infty \ \text{ while } \ \mathrm{D}^{\mu}_{\varepsilon}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\oplus}(f) = \Theta(n)\) against \(\mathrm{D}^{\mu}_{\varepsilon}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+              <a class="go" href="../pair.html?a=C&amp;b=bs">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}(f_n) \to \infty \ \text{ while } \ \mathrm{bs}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}(f) = \Theta(n)\) against \(\mathrm{bs}(f) = 1\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+              <a class="go" href="../pair.html?a=C0&amp;b=fbs">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}^0(f_n) \to \infty \ \text{ while } \ \mathrm{fbs}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}^0(f) = \Theta(n)\) against \(\mathrm{fbs}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/C1.html" title="1-certificate complexity">
+    <span class="tex">\(\mathrm{C}^1(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/RC.html" title="Randomized certificate complexity">
+    <span class="tex">\(\mathrm{RC}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+              <a class="go" href="../pair.html?a=C1&amp;b=RC">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}^1(f_n) \to \infty \ \text{ while } \ \mathrm{RC}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}^1(f) = \Theta(n)\) against \(\mathrm{RC}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/Cmin.html" title="Minimum certificate complexity">
+    <span class="tex">\(\mathrm{C}_{\min}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/FC.html" title="Fractional certificate complexity">
+    <span class="tex">\(\mathrm{FC}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+              <a class="go" href="../pair.html?a=Cmin&amp;b=FC">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}_{\min}(f_n) \to \infty \ \text{ while } \ \mathrm{FC}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}_{\min}(f) = \Theta(n)\) against \(\mathrm{FC}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/UCmin.html" title="Minimum unambiguous certificate complexity">
+    <span class="tex">\(\mathrm{UC}_{\min}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+              <a class="go" href="../pair.html?a=UCmin&amp;b=R">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{UC}_{\min}(f_n) \to \infty \ \text{ while } \ \mathrm{R}_{\varepsilon}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{UC}_{\min}(f) = \Theta(n)\) against \(\mathrm{R}_{\varepsilon}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/rank.html" title="Decision tree rank">
+    <span class="tex">\(\mathrm{rank}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/Rbar.html" title="Expected-cost randomized query complexity">
+    <span class="tex">\(\bar{\mathrm{R}}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+              <a class="go" href="../pair.html?a=rank&amp;b=Rbar">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{rank}(f_n) \to \infty \ \text{ while } \ \bar{\mathrm{R}}_{\varepsilon}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{rank}(f) = \Theta(n)\) against \(\bar{\mathrm{R}}_{\varepsilon}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-deterministic" href="../measures/Dna.html" title="Non-adaptive deterministic query complexity">
+    <span class="tex">\(\mathrm{D}^{\mathrm{na}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-composition" href="../measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+              <a class="go" href="../pair.html?a=Dna&amp;b=RS">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{D}^{\mathrm{na}}(f_n) \to \infty \ \text{ while } \ \mathrm{RS}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{D}^{\mathrm{na}}(f) = \Theta(n)\) against \(\mathrm{RS}(f) = O(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+
+                <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+              <a class="go" href="../pair.html?a=R1&amp;b=chi">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{R}^{1}(f_n) \to \infty \ \text{ while } \ \chi(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{R}^{1}(f) = \Theta(n)\) against \(\chi(f) = O(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-composition" href="../measures/chibar.html" title="Max-conflict complexity">
+    <span class="tex">\(\bar{\chi}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+              <a class="go" href="../pair.html?a=QE&amp;b=chibar">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f_n) \to \infty \ \text{ while } \ \bar{\chi}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{Q}_{\mathrm{E}}(f) = \Theta(n)\) against \(\bar{\chi}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-quantum" href="../measures/Q0.html" title="Zero-error (Las Vegas) quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{0}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-composition" href="../measures/LR.html" title="Linearised randomized complexity">
+    <span class="tex">\(\mathrm{LR}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+              <a class="go" href="../pair.html?a=Q0&amp;b=LR">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{Q}_{0}(f_n) \to \infty \ \text{ while } \ \mathrm{LR}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{Q}_{0}(f) = \Theta(n)\) against \(\mathrm{LR}(f) = \Theta(1)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-quantum" href="../measures/NQ.html" title="Nondeterministic quantum query complexity">
+    <span class="tex">\(\mathrm{NQ}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/bs0.html" title="0-block sensitivity">
+    <span class="tex">\(\mathrm{bs}^0(f)\)</span>
+  </a>
+
+                <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+              <a class="go" href="../pair.html?a=NQ&amp;b=bs0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{NQ}(f_n) \to \infty \ \text{ while } \ \mathrm{bs}^0(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\mathrm{NQ}(f) = \Theta(n)\) against \(\mathrm{bs}^0(f) = 1\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
+    <span class="tex">\(\deg(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-composition" href="../measures/noisyRna.html" title="Non-adaptive noisy randomized query complexity">
+    <span class="tex">\(\mathrm{noisyR}^{\mathrm{na}}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+
+              <a class="go" href="../pair.html?a=deg&amp;b=noisyRna">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\deg(f_n) \to \infty \ \text{ while } \ \mathrm{noisyR}^{\mathrm{na}}(f_n) = O(1)\)</span></div>
+            <div class="refs dim">from \(\deg(f) = \Theta(n)\) against \(\mathrm{noisyR}^{\mathrm{na}}(f) = \Theta(1)\)</div>
+          </li>
+        </ul>
+        <p class="dim small">&hellip; and 358 more, all of them visible
+        in the <a href="../matrix.html">matrix</a> (widen it to all measures) and on the
+        pair pages.</p>
+      </section>
+
+      <section class="card">
+        <h2>Separations it witnesses</h2>
+        <ul class="witlist">
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-deterministic" href="../measures/D.html" title="Deterministic query complexity">
+    <span class="tex">\(\mathrm{D}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=D&amp;b=R">pair &rarr;</a>
+  <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+            </div>
+            <div class="stmt">Unbounded: $\mathrm{D} = \Theta(n)$ against $\mathrm{R} = \Theta(1)$. The standard example, now readable by the derived layer.</div>
+          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R.html" title="Bounded-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=R0&amp;b=R">pair &rarr;</a>
+  <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+            </div>
+            <div class="stmt">Unbounded: certainty forces a full certificate, $\mathrm{R}_0 = \Theta(n)$, while $\mathrm{R} = \Theta(1)$.</div>
+          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-quantum" href="../measures/Q.html" title="Bounded-error quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=QE&amp;b=Q">pair &rarr;</a>
+  <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+            </div>
+            <div class="stmt">Unbounded: $\mathrm{Q}_E = \Theta(n)$ against $\mathrm{Q} = \Theta(1)$. Same for $\mathrm{Q}_0$.</div>
+          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
+    <span class="tex">\(\deg(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/adeg.html" title="Approximate degree">
+    <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=deg&amp;b=adeg">pair &rarr;</a>
+  <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+            </div>
+            <div class="stmt">Unbounded: $\deg = \Theta(n)$ against $\widetilde{\deg} = \Theta(1)$, the promise gap being invisible to exact representation and free for approximate.</div>
+          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-degree" href="../measures/rdeg.html" title="Rational degree">
+    <span class="tex">\(\mathrm{rdeg}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/ardeg.html" title="Approximate rational degree">
+    <span class="tex">\(\mathrm{rdeg}_{\varepsilon}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=rdeg&amp;b=ardeg">pair &rarr;</a>
+  <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+            </div>
+            <div class="stmt">Unbounded: $\mathrm{rdeg} = \Theta(n)$ against $\mathrm{rdeg}_\varepsilon = O(1)$ -- and, since $\mathrm{rdeg} = \mathrm{PostQ}_{\mathrm{E}}$, exact and bounded-error post-selection are unboundedly far apart on promises.</div>
+          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/fbs.html" title="Fractional block sensitivity">
+    <span class="tex">\(\mathrm{fbs}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=C&amp;b=fbs">pair &rarr;</a>
+  <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+            </div>
+            <div class="stmt">Unbounded: $\mathrm{C} = \Theta(n)$ against $\mathrm{fbs} = \Theta(1)$; rounding a fractional certificate is a total-function argument.</div>
+          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/s.html" title="Sensitivity">
+    <span class="tex">\(\mathrm{s}(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=bs&amp;b=s">pair &rarr;</a>
+  <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+            </div>
+            <div class="stmt">Unbounded: $\mathrm{s} = 0$ identically while $\mathrm{bs} = 1$. Every measure above $\mathrm{s}$ is unbounded in terms of it on partial functions.</div>
+          </li>
+          <li>
+            <div class="wpair">
+                  <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
+    <span class="tex">\(\deg(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                <a class="go" href="../pair.html?a=deg&amp;b=lambda">pair &rarr;</a>
+  <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
+            </div>
+            <div class="stmt">Unbounded: $\lambda = 0$ while $\deg = \Theta(n)$, since the sensitivity graph on the promise has no edges at all.</div>
+          </li>
+        </ul>
+      </section>
+
+
+    </div>
+
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#BenDavidBlais20composition" class="xref ref ">[BenDavidBlais20composition]</a> <span class="dim">A Tight Composition Theorem for the Randomized Query Complexity of Partial Functions</span></li>
+            <li><a href="../refs.html#NayakWu99" class="xref ref ">[NayakWu99]</a> <span class="dim">The quantum query complexity of approximating the median and related statistics</span></li>
+            <li><a href="../refs.html#CGLMSG23" class="xref ref ">[CGLMSG23]</a> <span class="dim">Certificate Games (and Consequences for the Classical Adversary Bound)</span></li>
+        </ul>
+      </section>
+
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../functions/GapMaj.html" class="xref function "><span class="tex">\(\mathrm{GapMaj}^{\delta}_{n}\)</span></a></li><li><a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a></li><li><a href="../measures/R0.html" class="xref measure "><span class="tex">\(\mathrm{R}_{0}(f)\)</span></a></li><li><a href="../measures/QE.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span></a></li><li><a href="../measures/Q0.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{0}(f)\)</span></a></li><li><a href="../measures/adeg.html" class="xref measure "><span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/fbs.html" class="xref measure "><span class="tex">\(\mathrm{fbs}(f)\)</span></a></li><li><a href="../functions/ApproxIndex.html" class="xref function "><span class="tex">\(\mathrm{ApproxIndex}_k\)</span></a></li><li><a href="../concepts/settings.html" class="xref concept ">Total functions, partial functions, and relations</a></li></ul>
+      </section>
+
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/functions/04-partial-and-relations.yaml</code> &mdash; id <code>GapMajConst</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

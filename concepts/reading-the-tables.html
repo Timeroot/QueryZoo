@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to read this zoo &middot; The Query Complexity Zoo</title>
+<link rel="stylesheet" href="../static/style.css">
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      macros: {
+        R: "\\mathrm{R}", D: "\\mathrm{D}", Q: "\\mathrm{Q}",
+        bs: "\\mathrm{bs}", fbs: "\\mathrm{fbs}", RC: "\\mathrm{RC}",
+        deg: "\\mathrm{deg}", adeg: "\\widetilde{\\mathrm{deg}}",
+        E: "\\mathbb{E}", Pr: "\\mathbf{Pr}", one: "\\mathbf{1}",
+        poly: "\\mathrm{poly}", polylog: "\\mathrm{polylog}"
+      }
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code'],
+      // Matrix tooltips are hidden data; app.js typesets a clone on demand,
+      // which keeps ~600 extra expressions off the initial render of matrix.html.
+      // `mj-defer` marks a subtree that starts hidden (the full 67x67 grid):
+      // typesetting inside display:none mismeasures, so app.js drops the class
+      // and typesets it the first time it is shown.
+      ignoreHtmlClass: 'celltip|mj-defer'
+    },
+    chtml: { scale: 0.98 }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body data-root="../">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">Q</span>
+      <span class="brand-text">The Query Complexity Zoo</span>
+    </a>
+    <nav class="mainnav">
+      <a href="../index.html"
+         class="">Overview</a>
+      <a href="../matrix.html"
+         class="">Matrix</a>
+      <a href="../measures/index.html"
+         class="">Measures</a>
+      <a href="../relations.html"
+         class="">Relations</a>
+      <a href="../pair.html"
+         class="">Pairs</a>
+      <a href="../functions/index.html"
+         class="">Functions</a>
+      <a href="../concepts/index.html"
+         class="on">Concepts</a>
+      <a href="../open.html"
+         class="">Open</a>
+      <a href="../refs.html"
+         class="">References</a>
+      <a href="../editing.html"
+         class="">Editing</a>
+    </nav>
+    <div class="searchbox">
+      <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
+      <div id="results" class="results" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <div class="crumbs"><a href="../concepts/index.html">Concepts</a></div>
+  <header class="entryhead concept">
+    <div>
+      <h1>How to read this zoo</h1>
+      <p class="lede">Conventions: what O(.) means here, what a 'witness' is, and how confident each entry is.</p>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="main-col">
+      <article class="card prose">
+        <h3>Relations</h3>
+<p>Every relation page is about an ordered pair $(\mathrm{M}_1,\mathrm{M}_2)$
+in a fixed <strong>setting</strong> (total / partial / relation), and has two halves:</p>
+<ul>
+<li><strong>Upper bounds</strong> -- statements $\mathrm{M}_1(f)=O(g(\mathrm{M}_2(f)))$
+holding for <em>all</em> $f$ in that setting.</li>
+<li><strong>Lower bounds</strong> -- statements $\exists$ a family $f_n$ with
+$\mathrm{M}_1(f_n)=\Omega(g(\mathrm{M}_2(f_n)))$, together with the
+<strong>witness</strong> function family, which links to its own page.</li>
+</ul>
+<p>A relation is <code>settled</code> when the two match, <code>gap</code> when they do not,
+<code>open</code> when the upper bound is conjectural, and <code>fails</code> when no bound
+exists at all.</p>
+<h3>The exponent matrix</h3>
+<p>The big table records one exponent pair per ordered pair of measures: the
+cell in row $\mathrm{M}_1$, column $\mathrm{M}_2$ records $a,b$ meaning
+$$\mathrm{M}_1(f) = \Omega\big(\mathrm{M}_2(f)^{a}\big)\ \text{ is witnessed, and }\
+\mathrm{M}_1(f) = O\big(\mathrm{M}_2(f)^{b}\big)\ \text{ is a theorem}.$$
+A shaded cell means $a&lt;b$ (a gap). Exponents hide $n^{o(1)}$ factors; the
+per-pair pages carry the fine-grained statements with logs and constants.
+Each cell cites its sources; a star marks one whose exponent was worked out
+here, with the argument in the note.</p>
+<h3>Confidence</h3>
+<p>Entries carry <code>conf: high | medium | low</code>, reflecting how sure <em>the
+editor of this zoo</em> is that the statement and attribution are right --
+not how sure the community is. Anything marked <code>todo</code> is an admitted gap
+in this database, not in the literature.</p>
+
+      </article>
+    </div>
+    <aside class="side-col">
+      <section class="card tight">
+        <h2>See also</h2>
+        <ul class="chiplist"><li><a href="../concepts/settings.html" class="xref concept ">Total functions, partial functions, and relations</a></li><li><a href="../concepts/cost-conventions.html" class="xref concept ">Cost conventions: worst case, expected cost, zero error</a></li></ul>
+      </section>
+      <section class="card tight">
+        <h2>References</h2>
+        <ul class="reflist">
+            <li><a href="../refs.html#IJKKKSWW23" class="xref ref ">[IJKKKSWW23]</a> <span class="dim">On the Rational Degree of Boolean Functions and Applications</span></li>
+        </ul>
+      </section>
+      <section class="card tight src">
+        <h2>Source</h2>
+        <p><code>data/concepts.yaml</code> &mdash; id <code>reading-the-tables</code></p>
+      </section>
+    </aside>
+  </div>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>A browsable, editable catalogue of query-complexity measures and everything known about how they relate -- upper bounds with log factors, matching separations with witnesses, and the partial / total / relational distinctions.
+</p>
+    <p class="dim">Generated from the YAML sources in <code>data/</code> by <code>build.py</code>.
+       Corrections welcome &mdash; see <a href="../editing.html">Editing</a>.
+       Every claim here should be checked against its cited source before you rely on it.</p>
+  </div>
+</footer>
+
+<script src="../static/app.js"></script>
+</body>
+</html>
