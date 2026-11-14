@@ -126,7 +126,7 @@ the measures <a href="../measures/noisyR.html" class="xref measure "><span class
       <section class="card">
         <h2>Basic facts</h2>
         <ul class="facts">
-<li>$\mathrm{bs}(f) \le 3\,\mathrm{R}(f)$ and $\widetilde{\deg}(f) \le \mathrm{R}(f)$ [Nisan; BBCMdW01].</li><li>$\mathrm{D}(f) \le 27\,\mathrm{R}(f)^3$ [Nisan]. Best known separation is $\mathrm{D} = \tilde\Omega(\mathrm{R}^2)$ [<a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a>], so the truth is between $2$ and $3$.</li><li>Composition can <em>fail</em>: there are partial $f,g$ with $\mathrm{R}(f\circ g) \ll \mathrm{R}(f)\mathrm{R}(g)$ [<a href="../refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a>].</li><li>$\mathrm{R}_\varepsilon(f) = \max_\mu \mathrm{D}^\mu_\varepsilon(f)$ (Yao), for the worst-case-cost convention.</li>        </ul>
+<li>$\mathrm{bs}(f) \le 3\,\mathrm{R}(f)$ and $\widetilde{\deg}(f) \le \mathrm{R}(f)$ [Nisan; BBCMdW01].</li><li>$\mathrm{D}(f) \le 27\,\mathrm{R}(f)^3$ [Nisan]. Best known separation is $\mathrm{D} = \tilde\Omega(\mathrm{R}^2)$ [<a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a>], so the truth is between $2$ and $3$.</li><li>Composition can <em>fail</em>: there are partial $f,g$ with $\mathrm{R}(f\circ g) \ll \mathrm{R}(f)\mathrm{R}(g)$ [<a href="../refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a>].</li><li>$\mathrm{R}_\varepsilon(f) = \max_\mu \mathrm{D}^\mu_\varepsilon(f)$ (Yao), for the worst-case-cost convention.</li><li>Composition holds with an outer-input-size logarithmic loss, even for partial Boolean functions: $\mathrm{R}(f\circ g^n)=\Omega(\mathrm{R}(f)\mathrm{R}(g)/\log(n+1))$ [<a href="../refs.html#PednekarPodder26STOC" class="xref ref ">PednekarPodder26STOC</a>]. Constant-factor composition fails even for total functions [<a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a>]; see <a href="../pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a>.</li><li>The optimal total-function $\mathrm{R}$-versus-$\mathrm{Q}$ power is 4 [<a href="../refs.html#OpenAI26QuarticRQ" class="xref ref ">OpenAI26QuarticRQ</a>]. The new family rules out every power below 4, matching $\mathrm{R}\le\mathrm{D}=O(\mathrm{Q}^4)$ [<a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a>]; see <a href="../functions/OpenAIQuarticRQ.html" class="xref function "><span class="tex">\(F_{k,m}\)</span></a>.</li>        </ul>
       </section>
 
 
@@ -227,9 +227,9 @@ the measures <a href="../measures/noisyR.html" class="xref measure "><span class
 
                 <a href="../measures/Q.html">Bounded-error quantum query complexity</a></td>
               <td>  <a class="pairlink" href="../pair.html?a=R&amp;b=Q">
-      <span class="nbtok" title="Total functions: gap &middot; recorded relation is Gap">
-        <span class="minipill st-gap">total</span
-        ><span class="exp"><span class="a">3</span><span class="comma">,</span><span class="b">4</span></span>      </span>
+      <span class="nbtok" title="Total functions: settled &middot; recorded relation is Settled">
+        <span class="minipill st-settled">total</span
+        ><span class="exp"><span class="a">4</span><span class="comma">,</span><span class="b">4</span></span>      </span>
       <span class="nbtok" title="Partial functions: no bound exists &middot; recorded relation is No bound exists">
         <span class="minipill st-fails">partial</span
         ><span class="glyph g-unbounded">∞</span>      </span>
@@ -320,9 +320,9 @@ the measures <a href="../measures/noisyR.html" class="xref measure "><span class
 
                 <a href="../measures/noisyR.html">Noisy randomized query complexity</a></td>
               <td>  <a class="pairlink" href="../pair.html?a=R&amp;b=noisyR">
-      <span class="nbtok" title="Total functions: gap">
-        <span class="minipill">total</span
-        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
+      <span class="nbtok" title="Total functions: gap &middot; recorded relation is Gap">
+        <span class="minipill st-gap">total</span
+        ><span class="exp"><span class="a">1.1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
       <span class="nbtok" title="Partial functions: exponential only &middot; recorded relation is Gap">
         <span class="minipill st-gap">partial</span
         ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
@@ -2617,8 +2617,8 @@ the measures <a href="../measures/noisyR.html" class="xref measure "><span class
 
                 <a href="../measures/LR.html">Linearised randomized complexity</a></td>
               <td>  <a class="pairlink" href="../pair.html?a=R&amp;b=LR">
-      <span class="nbtok" title="Total functions: gap">
-        <span class="minipill">total</span
+      <span class="nbtok" title="Total functions: gap &middot; recorded relation is Gap">
+        <span class="minipill st-gap">total</span
         ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">2</span></span>      </span>
       <span class="nbtok" title="Partial functions: gap &middot; recorded relation is Settled">
         <span class="minipill st-settled">partial</span
@@ -3250,6 +3250,55 @@ the measures <a href="../measures/noisyR.html" class="xref measure "><span class
               <td class="short">Theorem 2.2 and the universal C = O(R²) bound.
 <span class="refs"><a href="../refs.html#AIK26" class="xref ref ">AIK26</a></span></td>
             </tr>
+            <tr>
+              <td class="nm"><a href="../functions/MeiburgParityPointer.html">Meiburg’s parity-pointer family</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(\Theta(q^3\log^2 q)\)</span></td>
+              <td class="short">
+<span class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/MeiburgMajorityPointer.html">Meiburg’s majority-pointer family</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(\Theta(q^3\log^2 q)\)</span></td>
+              <td class="short">
+<span class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/MeiburgMaskedPointer.html">Meiburg’s parity-masked majority family</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(\Theta(q^3\log^2q)\)</span></td>
+              <td class="short">
+<span class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/MeiburgNoisySeparation.html">Meiburg’s total noisy-query separation</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(\Omega(q^{11}\log q)\)</span></td>
+              <td class="short">Theorem 4.1: substitute u_q=Θ(q^4) and ℓ_q=Θ(log q) in its lower bound.
+<span class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/MeiburgCompositionRate.html">Meiburg’s maximal composition-rate separation</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(\Theta(q^5\log q)\)</span></td>
+              <td class="short">
+<span class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/OpenAIQuarticRQ.html">OpenAI’s nearly quartic randomized–quantum family</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(\Omega(m^{2-1/k}/\log^2m)\)</span></td>
+              <td class="short">Theorem 1.1, for each fixed k≥2.
+<span class="refs"><a href="../refs.html#OpenAI26QuarticRQ" class="xref ref ">OpenAI26QuarticRQ</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm"><a href="../functions/AIKDNFComplement.html">Complement of the Ambainis–Iraids–Kokainis DNF</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span></td>
+              <td class="short">Bounded-error randomized complexity is invariant under output complementation.
+<span class="refs"><a href="../refs.html#AIK26" class="xref ref ">AIK26</a></span></td>
+            </tr>
           </tbody>
         </table>
       </section>
@@ -3279,14 +3328,7 @@ the measures <a href="../measures/noisyR.html" class="xref measure "><span class
         <h2>Open problems</h2>
         <ul class="linklist">
           <li><a href="../open.html#open-D-vs-R">Is $\mathrm{D}(f) = \widetilde O(\mathrm{R}(f)^2)$?</a></li>
-          <li><a href="../open.html#open-R-vs-Q">Is the maximum quantum speedup for total functions cubic or quartic?</a></li>
-          <li><a href="../open.html#open-RS-vs-R">Is $\mathrm{RS}(f) = \Theta(\mathrm{R}(f))$ for total $f$?</a></li>
           <li><a href="../open.html#open-Dprod-vs-R">Is $\mathrm{R}(f)$ polynomially bounded by $\mathrm{D}^{\mathrm{prod}}(f)$ for total $f$?</a></li>
-          <li><a href="../open.html#open-aaronson-ambainis">The Aaronson-Ambainis conjecture</a></li>
-          <li><a href="../open.html#open-R-composition">Does randomized query complexity compose for total functions?</a></li>
-          <li><a href="../open.html#open-composition-log">Does randomized composition survive a $\log n$ loss?</a></li>
-          <li><a href="../open.html#open-noisyR-vs-R">Is $\mathrm{noisyR}(f) = \Omega(\mathrm{R}(f)/\log n)$?</a></li>
-          <li><a href="../open.html#open-Rstar">Is $\mathrm{R}^{*}(f) = \Theta(\mathrm{R}(f))$?</a></li>
           <li><a href="../open.html#open-direct-sum">How hard is it to solve $k$ copies?</a></li>
         </ul>
       </section>
@@ -3304,6 +3346,9 @@ the measures <a href="../measures/noisyR.html" class="xref measure "><span class
             <li><a href="../refs.html#BBCMdW01" class="xref ref ">[BBCMdW01]</a> <span class="dim">Quantum Lower Bounds by Polynomials</span></li>
             <li><a href="../refs.html#BdW02" class="xref ref ">[BdW02]</a> <span class="dim">Complexity measures and decision tree complexity: a survey</span></li>
             <li><a href="../refs.html#ABBLSS17" class="xref ref ">[ABBLSS17]</a> <span class="dim">Separations in Query Complexity Based on Pointer Functions</span></li>
+            <li><a href="../refs.html#PednekarPodder26STOC" class="xref ref ">[PednekarPodder26STOC]</a> <span class="dim">On the Composition Theorem for Approximate Degree, Randomized and Exact Quantum Query Complexity</span></li>
+            <li><a href="../refs.html#Meiburg26composition" class="xref ref ">[Meiburg26composition]</a> <span class="dim">No Perfect Randomized Composition</span></li>
+            <li><a href="../refs.html#OpenAI26QuarticRQ" class="xref ref ">[OpenAI26QuarticRQ]</a> <span class="dim">A Nearly Quartic Separation Between Randomized and Quantum Query Complexity</span></li>
         </ul>
       </section>
 

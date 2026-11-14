@@ -79,7 +79,7 @@
   measure values that make it interesting, and the separations it witnesses.</p>
 
   <nav class="jump">
-      <a href="#total">Total functions <span class="n">46</span></a>
+      <a href="#total">Total functions <span class="n">53</span></a>
       <a href="#partial">Partial functions <span class="n">17</span></a>
       <a href="#relation">Relations <span class="n">12</span></a>
   </nav>
@@ -223,7 +223,7 @@
             <td><span class="grouptag g-composed">composed</span></td>
             <td class="c"><span class="dot yes" title="formal definition present"></span>
 </td>
-            <td class="short">The witness for the &quot;$\wedge\circ\vee$&quot; cells: $\mathrm{D}=N$ but every combinatorial measure is $\sqrt N$.</td>
+            <td class="short">$\mathrm{D}=\mathrm{R}=\Theta(N)$ while $\mathrm{C}=\mathrm{bs}=\sqrt N$; also separates sabotage and max-conflict from conflict complexity.</td>
           </tr>
           <tr>
             <td class="sym"><a href="../functions/NANDtree.html">\(\bar{\wedge}\text{-tree}\)</a></td>
@@ -296,6 +296,69 @@
             <td class="c"><span class="dot yes" title="formal definition present"></span>
 </td>
             <td class="short">The unbalanced AND-OR tree, tuned so that Minsky-Papert's $\min\{m,\sqrt b\}$ is maximised: $\mathrm{sdeg} = \Theta(N^{1/3})$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/MeiburgParityPointer.html">\(P_q\)</a></td>
+            <td class="nm"><a href="../functions/MeiburgParityPointer.html">Meiburg’s parity-pointer family</a>
+              <div class="idtag">MeiburgParityPointer</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">A total logarithmic separation of sabotage from conflict, max-conflict, linearised and randomized query complexity.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/MeiburgMajorityPointer.html">\(M_q\)</a></td>
+            <td class="nm"><a href="../functions/MeiburgMajorityPointer.html">Meiburg’s majority-pointer family</a>
+              <div class="idtag">MeiburgMajorityPointer</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">A total logarithmic separation of randomized from linearised query complexity.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/MeiburgMaskedPointer.html">\(G_q\)</a></td>
+            <td class="nm"><a href="../functions/MeiburgMaskedPointer.html">Meiburg’s parity-masked majority family</a>
+              <div class="idtag">MeiburgMaskedPointer</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">A total square-root-logarithmic separation of linearised from max-conflict complexity.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/MeiburgNoisySeparation.html">\(W_q\)</a></td>
+            <td class="nm"><a href="../functions/MeiburgNoisySeparation.html">Meiburg’s total noisy-query separation</a>
+              <div class="idtag">MeiburgNoisySeparation</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">Total functions with $\mathrm{R}/\mathrm{noisyR}=\Omega((\log N)^{1/4}/\log\log\log N)$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/MeiburgCompositionRate.html">\(H_q\)</a></td>
+            <td class="nm"><a href="../functions/MeiburgCompositionRate.html">Meiburg’s maximal composition-rate separation</a>
+              <div class="idtag">MeiburgCompositionRate</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">$\mathrm{R}^{*}/\mathrm{R}=\Theta(\log\mathrm{R})$, the maximal logarithmic gap.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/OpenAIQuarticRQ.html">\(F_{k,m}\)</a></td>
+            <td class="nm"><a href="../functions/OpenAIQuarticRQ.html">OpenAI’s nearly quartic randomized–quantum family</a>
+              <div class="idtag">OpenAIQuarticRQ</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">Settles the optimal total-function $\mathrm{R}$-versus-$\mathrm{Q}$ exponent at $4$.</td>
+          </tr>
+          <tr>
+            <td class="sym"><a href="../functions/AIKDNFComplement.html">\(\overline f_{\mathrm{AIK}}\)</a></td>
+            <td class="nm"><a href="../functions/AIKDNFComplement.html">Complement of the Ambainis–Iraids–Kokainis DNF</a>
+              <div class="idtag">AIKDNFComplement</div></td>
+            <td><span class="grouptag g-composed">composed</span></td>
+            <td class="c"><span class="dot maybe" title="informal definition only"></span>
+</td>
+            <td class="short">Logarithm-free quadratic $\mathrm{C}$ versus certain-acceptance one-sided $\mathrm{R}^1$ separation.</td>
           </tr>
           <tr>
             <td class="sym"><a href="../functions/ElementDistinctness.html">\(\mathrm{ED}_n\)</a></td>

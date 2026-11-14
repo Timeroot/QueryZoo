@@ -974,19 +974,43 @@ $\mathrm{bs} = \Omega(\lambda^{2.127})$.</p>
                 <a class="go" href="../pair.html?a=bs&amp;b=lambda">pair &rarr;</a>
   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
             </div>
-            <div class="stmt">$\mathrm{bs}(f_n) = \Omega(\lambda(f_n)^{2.127})$, so the bs-vs-$\lambda$ exponent lies in $[2.127,\,4]$, not $\{2\}$ as [<a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a>] asked. The main result is formally verified in Lean.</div>
+            <div class="stmt">$\mathrm{bs}(f_n) = \Omega(\lambda(f_n)^{2.12697})$, an earlier rigorous separation of exponent approximately $2.12$, refuting the quadratic bound asked about in [<a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a>]. The main result is formally verified in Lean.</div>
 <div class="refs"><a href="../refs.html#Meiburg26" class="xref ref ">Meiburg26</a></div>          </li>
         </ul>
       </section>
 
+      <section class="card">
+        <h2>Cited as a witness by</h2>
+        <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/bs.html" title="Block sensitivity">
+    <span class="tex">\(\mathrm{bs}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/lambda.html" title="Spectral sensitivity">
+    <span class="tex">\(\lambda(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=bs&amp;b=lambda#recent-bs-vs-lambda-total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{bs}(f_d)=\Omega(\lambda(f_d)^{2.12697})\)</span></div>
+<div class="refs"><a href="../refs.html#Meiburg26" class="xref ref ">Meiburg26</a></div>          </li>
+        </ul>
+      </section>
 
       <section class="card">
         <h2>Notes</h2>
         <p>Numerical (non-rigorous) evidence in the same paper suggests a 1255-variable
 relative attains exponent $\approx 2.20$, and a 30-variable instance already
 beats exponent $2$ with an exactly computable $\lambda$.
-This is the single most recent change to the classical separation matrix:
-the $\mathrm{bs}$-vs-$\lambda$ cell moved from &quot;$2,4$&quot; to &quot;$2.127, 4$&quot;.</p>
+The rigorous exponent $2.12697356\ldots$ (approximately $2.12$, usually
+quoted as $2.127$) is weaker than the
+current $2.1308255793978239\ldots$ lower endpoint supplied by
+<a href="../functions/Prove2MeTournament.html" class="xref function ">Prove2Me’s refined tournament sensitivity family</a> [<a href="../refs.html#Prove2MeSensitivity26" class="xref ref ">Prove2MeSensitivity26</a>]. The numerical $2.20$
+value is not an established lower bound.</p>
 
       </section>
     </div>

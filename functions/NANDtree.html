@@ -1075,7 +1075,7 @@ and $f = f_d$ on $N=2^d$ variables.</p>
         <h2>Separations its values prove <span class="dim">— computed, not recorded</span></h2>
         <p class="dim small">Read straight off the table above by comparing two values: no
         relation record states these, and where one does and says more, the record wins and the
-        pair is not listed here. 137 in total,
+        pair is not listed here. 135 in total,
         strongest first.</p>
         <ul class="witlist compact">
           <li>
@@ -1160,22 +1160,6 @@ and $f = f_d$ on $N=2^d$ variables.</p>
           </li>
           <li>
             <div class="wpair">
-                <a class="chip cat-combinatorial" href="../measures/SP.html" title="Subcube partition complexity">
-    <span class="tex">\(\mathrm{SP}(f)\)</span>
-  </a>
- <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
-    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
-  </a>
-
-                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
-
-              <a class="go" href="../pair.html?a=SP&amp;b=R1">pair &rarr;</a>
-            </div>
-            <div class="stmt"><span class="tex">\(\mathrm{SP}(f_n) = \Omega\big(\mathrm{R}^{1}(f_n)^{1.32}\big)\)</span></div>
-            <div class="refs dim">from \(\mathrm{SP}(f) = N\) against \(\mathrm{R}^{1}(f) = \Theta\!\big(N^{\,0.753\ldots}\big)\)</div>
-          </li>
-          <li>
-            <div class="wpair">
                 <a class="chip cat-quantum" href="../measures/QE.html" title="Exact quantum query complexity">
     <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
   </a>
@@ -1211,32 +1195,32 @@ and $f = f_d$ on $N=2^d$ variables.</p>
                 <a class="chip cat-degree" href="../measures/deg2.html" title="Mod-2 degree">
     <span class="tex">\(\deg_2(f)\)</span>
   </a>
- <span class="vs">vs</span>   <a class="chip cat-composition" href="../measures/RS.html" title="Sabotage complexity">
-    <span class="tex">\(\mathrm{RS}(f)\)</span>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
   </a>
 
                 <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
 
-              <a class="go" href="../pair.html?a=deg2&amp;b=RS">pair &rarr;</a>
+              <a class="go" href="../pair.html?a=deg2&amp;b=R1">pair &rarr;</a>
             </div>
-            <div class="stmt"><span class="tex">\(\deg_2(f_n) = \Omega\big(\mathrm{RS}(f_n)^{1.32}\big)\)</span></div>
-            <div class="refs dim">from \(\deg_2(f) = N\) against \(\mathrm{RS}(f) = \Omega(\sqrt N),\ O\!\big(N^{\,0.753\ldots}\big)\)</div>
+            <div class="stmt"><span class="tex">\(\deg_2(f_n) = \Omega\big(\mathrm{R}^{1}(f_n)^{1.32}\big)\)</span></div>
+            <div class="refs dim">from \(\deg_2(f) = N\) against \(\mathrm{R}^{1}(f) = \Theta\!\big(N^{\,0.753\ldots}\big)\)</div>
           </li>
           <li>
             <div class="wpair">
                 <a class="chip cat-degree" href="../measures/degp.html" title="Mod-p degree">
     <span class="tex">\(\deg_p(f)\)</span>
   </a>
- <span class="vs">vs</span>   <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
-    <span class="tex">\(\chi(f)\)</span>
+ <span class="vs">vs</span>   <a class="chip cat-composition" href="../measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
   </a>
 
                 <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
 
-              <a class="go" href="../pair.html?a=degp&amp;b=chi">pair &rarr;</a>
+              <a class="go" href="../pair.html?a=degp&amp;b=RS">pair &rarr;</a>
             </div>
-            <div class="stmt"><span class="tex">\(\deg_p(f_n) = \Omega\big(\chi(f_n)^{1.32}\big)\)</span></div>
-            <div class="refs dim">from \(\deg_p(f) = N\) against \(\chi(f) = \Omega(\sqrt N),\ O\!\big(N^{\,0.753\ldots}\big)\)</div>
+            <div class="stmt"><span class="tex">\(\deg_p(f_n) = \Omega\big(\mathrm{RS}(f_n)^{1.32}\big)\)</span></div>
+            <div class="refs dim">from \(\deg_p(f) = N\) against \(\mathrm{RS}(f) = \Omega(\sqrt N),\ O\!\big(N^{\,0.753\ldots}\big)\)</div>
           </li>
           <li>
             <div class="wpair">
@@ -1302,8 +1286,24 @@ and $f = f_d$ on $N=2^d$ variables.</p>
             <div class="stmt"><span class="tex">\(\mathrm{D}^{\oplus}(f_n) = \Omega\big(\mathrm{D}^{\mu}_{\varepsilon}(f_n)^{1.32}\big)\)</span></div>
             <div class="refs dim">from \(\mathrm{D}^{\oplus}(f) = N\) against \(\mathrm{D}^{\mu}_{\varepsilon}(f) = \Theta\!\big(N^{\,0.753\ldots}\big)\)</div>
           </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/SP.html" title="Subcube partition complexity">
+    <span class="tex">\(\mathrm{SP}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-randomized" href="../measures/R0.html" title="Zero-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}_{0}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=SP&amp;b=R0">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{SP}(f_n) = \Omega\big(\mathrm{R}_{0}(f_n)^{1.32}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{SP}(f) = N\) against \(\mathrm{R}_{0}(f) = \Theta\!\big(N^{\,0.753\ldots}\big)\)</div>
+          </li>
         </ul>
-        <p class="dim small">&hellip; and 123 more, all of them visible
+        <p class="dim small">&hellip; and 121 more, all of them visible
         in the <a href="../matrix.html">matrix</a> (widen it to all measures) and on the
         pair pages.</p>
       </section>

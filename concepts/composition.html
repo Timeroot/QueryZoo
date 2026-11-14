@@ -123,13 +123,23 @@ $nm$ bits obtained by feeding $n$ disjoint copies of $g$ into $f$.</p>
 </tr>
 <tr>
   <td>$\mathrm{R}$</td>
-  <td><strong>NO</strong> for partial $f,g$; open for total</td>
-  <td>[<a href="../refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a>]</td>
+  <td>lower bound with $\log(n+1)$ loss, even for partial Boolean $f,g$; constants fail even for total functions</td>
+  <td>[<a href="../refs.html#PednekarPodder26STOC" class="xref ref ">PednekarPodder26STOC</a>, <a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a>]</td>
 </tr>
 <tr>
   <td>$\widetilde{\deg}$</td>
-  <td>upper bound yes, lower bound <strong>open</strong></td>
-  <td>[<a href="../refs.html#Sherstov12robust" class="xref ref ">Sherstov12robust</a>, <a href="../refs.html#CKMPSS23" class="xref ref ">CKMPSS23</a>]</td>
+  <td>up to constants for total Boolean $f,g$</td>
+  <td>[<a href="../refs.html#PednekarPodder26composition" class="xref ref ">PednekarPodder26composition</a>, <a href="../refs.html#Sherstov12robust" class="xref ref ">Sherstov12robust</a>]</td>
+</tr>
+<tr>
+  <td>$\mathrm{Q}_{\mathrm{E}}$</td>
+  <td>multiplicative lower bound fails on total functions</td>
+  <td>[<a href="../refs.html#PednekarPodder26composition" class="xref ref ">PednekarPodder26composition</a>, <a href="../refs.html#PednekarPodder26STOC" class="xref ref ">PednekarPodder26STOC</a>]</td>
+</tr>
+<tr>
+  <td>$\chi$</td>
+  <td>constant-factor multiplicative lower bound fails on total functions</td>
+  <td>[<a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a>]</td>
 </tr>
 <tr>
   <td>$\mathrm{s}$, $\mathrm{bs}$, $\mathrm{C}$</td>
@@ -153,23 +163,34 @@ partial information. This is what <a href="../measures/chi.html" class="xref mea
 <a href="../measures/LR.html" class="xref measure "><span class="tex">\(\mathrm{LR}(f)\)</span></a> measure, and $\mathrm{R}(f\circ g^n)=\Omega(\mathrm{R}(f)\mathrm{LR}(g))$
 is the optimal theorem of <em>that</em> shape.</li>
 </ol>
-<p>Neither optimal theorem implies the conjecture, and for partial functions
-the conjecture is simply false.</p>
+<p>The new bound $\mathrm{noisyR}(f)=\Omega(\mathrm{R}(f)/\log(n+1))$ [<a href="../refs.html#PednekarPodder26STOC" class="xref ref ">PednekarPodder26STOC</a>] combines with the outer theorem to settle composition with an input-size logarithmic loss. It applies to partial Boolean functions. The logarithm is of outer input length $n$, with no promised replacement by $\log\mathrm{R}(f)$. Constant-factor composition is false even for total functions [<a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a>].</p>
 <h3>The inner hierarchy</h3>
-<p>$$\chi \;\lesssim\; \mathrm{RS} \;\lesssim\; \bar\chi \;\lesssim\; \mathrm{LR} \;\lesssim\; \mathrm{R},
-\qquad \mathrm{LR} = \Omega(\sqrt{\mathrm{R}}).$$
-All known separations in this chain use <strong>partial</strong> functions. For total
-functions no separation is known anywhere in it -- including between
-$\mathrm{RS}$ and $\mathrm{R}$, which is <a href="../open.html#open-RS-vs-R" class="xref open ">Is … for total …?</a>.
-The easiest case of composition is an identity outer function, i.e. simply solving many
-copies -- see <a href="../concepts/direct-sum.html" class="xref concept ">Direct sum and direct product</a>, where even that is delicate for $\mathrm{R}$.</p>
+<p>$$\mathrm{RS}\lesssim\bar\chi\lesssim\mathrm{LR}\lesssim\mathrm{R},
+\qquad\chi\le\bar\chi,\qquad\mathrm{LR}=\Omega(\sqrt{\mathrm{R}}).$$
+Every adjacent pair in the first chain is separated on total functions
+[<a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a>]. The parity-pointer family separates $\bar\chi$ from
+$\mathrm{RS}$ by $\Omega(\log N)$; the masked family separates $\mathrm{LR}$
+from $\bar\chi$ by $\Omega(\sqrt{\log N})$; the majority family separates
+$\mathrm{R}$ from $\mathrm{LR}$ by $\Omega(\log N)$.
+Conflict and sabotage are incomparable: <a href="../functions/MeiburgParityPointer.html" class="xref function "><span class="tex">\(P_q\)</span></a> has
+$\chi/\mathrm{RS}=\Omega(\log N)$, while <a href="../functions/ANDOR.html" class="xref function "><span class="tex">\(\mathrm{AND}_n \circ \mathrm{OR}_n\)</span></a> has
+$\mathrm{RS}/\chi=\Omega(\sqrt{\log N})$.
+The same paper gives total functions with $\mathrm{R}/\mathrm{noisyR}$
+unbounded and <a href="../functions/MeiburgCompositionRate.html" class="xref function "><span class="tex">\(H_q\)</span></a> with
+$\mathrm{R}^{*}/\mathrm{R}=\Theta(\log\mathrm{R})$.</p>
+<p>The total–total randomized composition example saves
+$\Theta(\log\mathrm{R}(g))=\Theta(\log\log L)$ in composed input length $L$.
+It coexists with the new $\log(n+1)$ lower bound; the scales of the two
+logarithms are different.
+The easiest case of composition is an identity outer function, i.e. solving
+many copies — see <a href="../concepts/direct-sum.html" class="xref concept ">Direct sum and direct product</a>.</p>
 
       </article>
     </div>
     <aside class="side-col">
       <section class="card tight">
         <h2>See also</h2>
-        <ul class="chiplist"><li><a href="../pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a></li><li><a href="../pair.html?a=adeg&b=adeg#comp-adeg" class="xref relation ">comp-adeg</a></li><li><a href="../pair.html?a=deg&b=deg#comp-deg" class="xref relation ">comp-deg</a></li><li><a href="../pair.html?a=Q&b=Advpm#comp-Q" class="xref relation ">comp-Q</a></li><li><a href="../pair.html?a=D&b=D#comp-D" class="xref relation ">comp-D</a></li><li><a href="../pair.html?a=R&b=Rbar#comp-MAJ" class="xref relation ">comp-MAJ</a></li><li><a href="../measures/RS.html" class="xref measure "><span class="tex">\(\mathrm{RS}(f)\)</span></a></li><li><a href="../measures/chi.html" class="xref measure "><span class="tex">\(\chi(f)\)</span></a></li><li><a href="../measures/chibar.html" class="xref measure "><span class="tex">\(\bar{\chi}(f)\)</span></a></li><li><a href="../measures/LR.html" class="xref measure "><span class="tex">\(\mathrm{LR}(f)\)</span></a></li><li><a href="../measures/noisyR.html" class="xref measure "><span class="tex">\(\mathrm{noisyR}(f)\)</span></a></li><li><a href="../measures/Rstar.html" class="xref measure "><span class="tex">\(\mathrm{R}^{*}(f)\)</span></a></li><li><a href="../concepts/direct-sum.html" class="xref concept ">Direct sum and direct product</a></li></ul>
+        <ul class="chiplist"><li><a href="../pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a></li><li><a href="../pair.html?a=adeg&b=adeg#comp-adeg" class="xref relation ">comp-adeg</a></li><li><a href="../pair.html?a=deg&b=deg#comp-deg" class="xref relation ">comp-deg</a></li><li><a href="../pair.html?a=Q&b=Advpm#comp-Q" class="xref relation ">comp-Q</a></li><li><a href="../pair.html?a=D&b=D#comp-D" class="xref relation ">comp-D</a></li><li><a href="../pair.html?a=R&b=Rbar#comp-MAJ" class="xref relation ">comp-MAJ</a></li><li><a href="../measures/RS.html" class="xref measure "><span class="tex">\(\mathrm{RS}(f)\)</span></a></li><li><a href="../measures/chi.html" class="xref measure "><span class="tex">\(\chi(f)\)</span></a></li><li><a href="../measures/chibar.html" class="xref measure "><span class="tex">\(\bar{\chi}(f)\)</span></a></li><li><a href="../measures/LR.html" class="xref measure "><span class="tex">\(\mathrm{LR}(f)\)</span></a></li><li><a href="../measures/noisyR.html" class="xref measure "><span class="tex">\(\mathrm{noisyR}(f)\)</span></a></li><li><a href="../measures/Rstar.html" class="xref measure "><span class="tex">\(\mathrm{R}^{*}(f)\)</span></a></li><li><a href="../concepts/direct-sum.html" class="xref concept ">Direct sum and direct product</a></li><li><a href="../pair.html?a=QE&b=QE#comp-QE" class="xref relation ">comp-QE</a></li><li><a href="../pair.html?a=chi&b=chi#comp-chi" class="xref relation ">comp-chi</a></li><li><a href="../functions/MeiburgParityPointer.html" class="xref function "><span class="tex">\(P_q\)</span></a></li><li><a href="../functions/MeiburgMaskedPointer.html" class="xref function "><span class="tex">\(G_q\)</span></a></li><li><a href="../functions/MeiburgMajorityPointer.html" class="xref function "><span class="tex">\(M_q\)</span></a></li></ul>
       </section>
       <section class="card tight">
         <h2>References</h2>
@@ -184,6 +205,9 @@ copies -- see <a href="../concepts/direct-sum.html" class="xref concept ">Direct
             <li><a href="../refs.html#CKMPSS23" class="xref ref ">[CKMPSS23]</a> <span class="dim">On the Composition of Randomized Query Complexity and Approximate Degree</span></li>
             <li><a href="../refs.html#Savicky02" class="xref ref ">[Savicky02]</a> <span class="dim">On determinism versus unambiguous nondeterminism for decision trees</span></li>
             <li><a href="../refs.html#Montanaro14" class="xref ref ">[Montanaro14]</a> <span class="dim">A composition theorem for decision tree complexity</span></li>
+            <li><a href="../refs.html#PednekarPodder26composition" class="xref ref ">[PednekarPodder26composition]</a> <span class="dim">A General Composition Theorem for Approximate Degree</span></li>
+            <li><a href="../refs.html#PednekarPodder26STOC" class="xref ref ">[PednekarPodder26STOC]</a> <span class="dim">On the Composition Theorem for Approximate Degree, Randomized and Exact Quantum Query Complexity</span></li>
+            <li><a href="../refs.html#Meiburg26composition" class="xref ref ">[Meiburg26composition]</a> <span class="dim">No Perfect Randomized Composition</span></li>
         </ul>
       </section>
       <section class="card tight src">

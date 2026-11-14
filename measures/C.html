@@ -707,13 +707,13 @@ co-nondeterministic query complexities.</p>
 
                 <a href="../measures/R1.html">One-sided-error randomized query complexity</a></td>
               <td>  <a class="pairlink" href="../pair.html?a=C&amp;b=R1">
-      <span class="nbtok" title="Total functions: gap">
-        <span class="minipill">total</span
-        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">2</span></span>      </span>
+      <span class="nbtok" title="Total functions: settled &middot; recorded relation is Settled">
+        <span class="minipill st-settled">total</span
+        ><span class="exp"><span class="a">2</span><span class="comma">,</span><span class="b">2</span></span>      </span>
       <span class="nbtok" title="Partial functions: separation only">
         <span class="minipill">partial</span
-        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">?</span></span>      </span>
-<span class="norec" title="No relation record is written for this ordered pair in this direction. What is shown is derived; the pair view gives the chain.">derived</span>    <span class="go">open pair &rarr;</span>
+        ><span class="exp"><span class="a">2</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+    <span class="go">open pair &rarr;</span>
   </a>
 </td>
               <td>  <a class="pairlink" href="../pair.html?a=R1&amp;b=C">
@@ -2493,9 +2493,9 @@ co-nondeterministic query complexities.</p>
   </a>
 </td>
               <td>  <a class="pairlink" href="../pair.html?a=RS&amp;b=C">
-      <span class="nbtok" title="Total functions: gap">
+      <span class="nbtok" title="Total functions: settled">
         <span class="minipill">total</span
-        ><span class="exp"><span class="a">1.5</span><span class="comma">,</span><span class="b">2</span></span>      </span>
+        ><span class="exp"><span class="a">2</span><span class="comma">,</span><span class="b">2</span></span>      </span>
       <span class="nbtok" title="Partial functions: no bound exists">
         <span class="minipill">partial</span
         ><span class="glyph g-unbounded">∞</span>      </span>
@@ -2520,12 +2520,12 @@ co-nondeterministic query complexities.</p>
   </a>
 </td>
               <td>  <a class="pairlink" href="../pair.html?a=chi&amp;b=C">
-      <span class="nbtok" title="Total functions: gap &middot; recorded relation is Gap">
+      <span class="nbtok" title="Total functions: settled &middot; recorded relation is Gap">
         <span class="minipill st-gap">total</span
-        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">2</span></span>      </span>
+        ><span class="exp"><span class="a">2</span><span class="comma">,</span><span class="b">2</span></span>      </span>
       <span class="nbtok" title="Partial functions: separation only">
         <span class="minipill">partial</span
-        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">?</span></span>      </span>
+        ><span class="exp"><span class="a">2</span><span class="comma">,</span><span class="b">?</span></span>      </span>
     <span class="go">open pair &rarr;</span>
   </a>
 </td>
@@ -2547,9 +2547,9 @@ co-nondeterministic query complexities.</p>
   </a>
 </td>
               <td>  <a class="pairlink" href="../pair.html?a=chibar&amp;b=C">
-      <span class="nbtok" title="Total functions: gap">
+      <span class="nbtok" title="Total functions: settled">
         <span class="minipill">total</span
-        ><span class="exp"><span class="a">1.5</span><span class="comma">,</span><span class="b">2</span></span>      </span>
+        ><span class="exp"><span class="a">2</span><span class="comma">,</span><span class="b">2</span></span>      </span>
       <span class="nbtok" title="Partial functions: no bound exists">
         <span class="minipill">partial</span
         ><span class="glyph g-unbounded">∞</span>      </span>
@@ -2574,9 +2574,9 @@ co-nondeterministic query complexities.</p>
   </a>
 </td>
               <td>  <a class="pairlink" href="../pair.html?a=LR&amp;b=C">
-      <span class="nbtok" title="Total functions: gap">
+      <span class="nbtok" title="Total functions: settled">
         <span class="minipill">total</span
-        ><span class="exp"><span class="a">1.5</span><span class="comma">,</span><span class="b">2</span></span>      </span>
+        ><span class="exp"><span class="a">2</span><span class="comma">,</span><span class="b">2</span></span>      </span>
       <span class="nbtok" title="Partial functions: no bound exists">
         <span class="minipill">partial</span
         ><span class="glyph g-unbounded">∞</span>      </span>
@@ -3282,6 +3282,13 @@ co-nondeterministic query complexities.</p>
               <td class="short">At zero every bit is sensitive; C≥s and C≤m².
 <span class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
             </tr>
+            <tr>
+              <td class="nm"><a href="../functions/AIKDNFComplement.html">Complement of the Ambainis–Iraids–Kokainis DNF</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(\Theta(n^2)\)</span></td>
+              <td class="short">Certificate complexity is invariant under output complementation; Theorem 2.2.
+<span class="refs"><a href="../refs.html#AIK26" class="xref ref ">AIK26</a></span></td>
+            </tr>
           </tbody>
         </table>
       </section>
@@ -3311,7 +3318,7 @@ co-nondeterministic query complexities.</p>
         <h2>Open problems</h2>
         <ul class="linklist">
           <li><a href="../open.html#open-D-vs-bs">Is $\mathrm{D}(f) = O(\mathrm{bs}(f)^2)$?</a></li>
-          <li><a href="../open.html#open-chi-vs-C">Is $\chi(f) = \Omega(\mathrm{C}(f))$, or $\chi(f) = O(\mathrm{C}(f))$?</a></li>
+          <li><a href="../open.html#open-chi-vs-C">Is $\chi(f)=\Omega(\mathrm{C}(f))$ for total functions?</a></li>
           <li><a href="../open.html#open-R0-vs-fbs">Is $\mathrm{R}_0(f) = O(\mathrm{FC}(f)^2)$?</a></li>
         </ul>
       </section>

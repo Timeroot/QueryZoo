@@ -90,11 +90,7 @@
 
       <section class="card">
         <h2>Definition</h2>
-        <p>$$\mathrm{R}^*(f) \;=\; \lim_{k\to\infty} \mathrm{R}\!\left(f^{\circ k}\right)^{1/k}.$$
-The limit exists by submultiplicativity. Since composition of randomized query
-complexity is <em>not</em> perfect, $\mathrm{R}^*(f)$ can be strictly smaller than $\mathrm{R}(f)$.
-Characterising $\mathrm{R}^*$ by a simpler (ideally efficiently computable) measure is
-an open problem posed in [<a href="../refs.html#BBGM22" class="xref ref ">BBGM22</a>].</p>
+        <p>$\mathrm{R}^{*}(f)=\lim_{k\to\infty}\mathrm{R}(f^{\circ k})^{1/k}$ is the per-level cost of iterated composition. The limit exists; bounded-error amplification requires care, so it is not justified by plain submultiplicativity of R. The composition rate can exceed one-level complexity: <a href="../functions/MeiburgCompositionRate.html" class="xref function "><span class="tex">\(H_q\)</span></a> attains $\mathrm{R}^{*}/\mathrm{R}=\Theta(\log\mathrm{R})$ [<a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a>].</p>
 
       </section>
 
@@ -103,7 +99,7 @@ an open problem posed in [<a href="../refs.html#BBGM22" class="xref ref ">BBGM22
       <section class="card">
         <h2>Basic facts</h2>
         <ul class="facts">
-<li>$\mathrm{R}^*(f) \ge \Omega(\mathrm{LR}(f))$ [<a href="../refs.html#BBGM22" class="xref ref ">BBGM22</a>].</li><li>$\mathrm{R}^*(f) \ge \Omega(\mathrm{Q}(f))$, since quantum query complexity composes perfectly.</li><li>Whether either bound dominates the other is open.</li>        </ul>
+<li>$\mathrm{R}^*(f) \ge \Omega(\mathrm{LR}(f))$ [<a href="../refs.html#BBGM22" class="xref ref ">BBGM22</a>].</li><li>$\mathrm{R}^*(f) \ge \Omega(\mathrm{Q}(f))$, since quantum query complexity composes perfectly.</li><li>Whether either bound dominates the other is open.</li><li>General upper bound: $\mathrm{R}^{*}(f)=O(\mathrm{R}(f)\log(\mathrm{R}(f)+1))$; a total family attains it [<a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a>, Theorem 10.7].</li>        </ul>
       </section>
 
 
@@ -2908,6 +2904,13 @@ an open problem posed in [<a href="../refs.html#BBGM22" class="xref ref ">BBGM22
               <td class="short">Squeezed between $\mathrm{LR} = \Theta(m^2)$ and $\mathrm{R} = \Theta(m^2)$.
 </td>
             </tr>
+            <tr>
+              <td class="nm"><a href="../functions/MeiburgCompositionRate.html">Meiburg’s maximal composition-rate separation</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(\Theta(q^5\log^2 q)\)</span></td>
+              <td class="short">
+<span class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span></td>
+            </tr>
           </tbody>
         </table>
       </section>
@@ -2933,12 +2936,6 @@ an open problem posed in [<a href="../refs.html#BBGM22" class="xref ref ">BBGM22
         </ul>
       </section>
 
-      <section class="card tight">
-        <h2>Open problems</h2>
-        <ul class="linklist">
-          <li><a href="../open.html#open-Rstar">Is $\mathrm{R}^{*}(f) = \Theta(\mathrm{R}(f))$?</a></li>
-        </ul>
-      </section>
 
       <section class="card tight">
         <h2>See also</h2>
@@ -2950,6 +2947,7 @@ an open problem posed in [<a href="../refs.html#BBGM22" class="xref ref ">BBGM22
         <h2>References</h2>
         <ul class="reflist">
             <li><a href="../refs.html#BBGM22" class="xref ref ">[BBGM22]</a> <span class="dim">Randomised Composition and Small-Bias Minimax</span></li>
+            <li><a href="../refs.html#Meiburg26composition" class="xref ref ">[Meiburg26composition]</a> <span class="dim">No Perfect Randomized Composition</span></li>
         </ul>
       </section>
 

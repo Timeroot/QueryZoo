@@ -1232,7 +1232,7 @@
         </tr>
         <tr data-search="r r bounded-error randomized query complexity bounded-error randomized query complexity"
             data-sets="total partial relation"
-            data-statuses="settled fails settled ">
+            data-statuses="settled settled settled ">
           <td class="sym">  <a class="chip cat-randomized" href="measures/R.html" title="Bounded-error randomized query complexity">
     <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
   </a>
@@ -1246,7 +1246,7 @@
           <td class="stmtcell">
               <a href="pair.html?a=R&amp;b=R"><span class="tex">\(\text{Any } \gamma^3\mathrm{R}(f)k/11 \text{-query algorithm computes } f^{\otimes k} \text{ correctly with probability} &lt; (1/2+\gamma)^k\)</span></a>
           </td>
-          <td class="c">  <span class="pill st-fails" title="Proved that no bound of this form can hold in this setting.">No bound exists</span>
+          <td class="c">  <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
 </td>
           <td class="c">  <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
 </td>
@@ -1389,7 +1389,7 @@
         </tr>
         <tr data-search="r q bounded-error randomized query complexity bounded-error quantum query complexity"
             data-sets="total partial"
-            data-statuses="gap fails ">
+            data-statuses="settled fails ">
           <td class="sym">  <a class="chip cat-randomized" href="measures/R.html" title="Bounded-error randomized query complexity">
     <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
   </a>
@@ -1398,7 +1398,7 @@
     <span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span>
   </a>
 </td>
-          <td class="c">  <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+          <td class="c">  <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
 </td>
           <td class="stmtcell">
               <a href="pair.html?a=R&amp;b=Q"><span class="tex">\(\mathrm{R}(f) \le \mathrm{D}(f) = O(\mathrm{Q}(f)^4)\)</span></a>
@@ -1407,7 +1407,7 @@
 </td>
           <td class="c"></td>
           <td class="c">
-<a class="exp" href="pair.html?a=R&amp;b=Q"><span class="a">3</span>,<span class="b">4</span></a>          </td>
+<a class="exp" href="pair.html?a=R&amp;b=Q"><span class="a">4</span>,<span class="b">4</span></a>          </td>
         </tr>
         <tr data-search="r qe bounded-error randomized query complexity exact quantum query complexity"
             data-sets=""
@@ -1761,8 +1761,8 @@
           </td>
         </tr>
         <tr data-search="r lr bounded-error randomized query complexity linearised randomized complexity"
-            data-sets="partial"
-            data-statuses="settled ">
+            data-sets="total partial"
+            data-statuses="gap settled ">
           <td class="sym">  <a class="chip cat-randomized" href="measures/R.html" title="Bounded-error randomized query complexity">
     <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
   </a>
@@ -1771,7 +1771,8 @@
     <span class="tex">\(\mathrm{LR}(f)\)</span>
   </a>
 </td>
-          <td class="c"></td>
+          <td class="c">  <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+</td>
           <td class="stmtcell">
               <a href="pair.html?a=R&amp;b=LR"><span class="tex">\(\mathrm{R}(f) = O\big(\mathrm{LR}(f)^2\big)\)</span></a>
               <span class="minipill s-partial">partial</span>
@@ -1783,8 +1784,8 @@
           </td>
         </tr>
         <tr data-search="r noisyr bounded-error randomized query complexity noisy randomized query complexity"
-            data-sets="partial relation"
-            data-statuses="gap fails ">
+            data-sets="total partial relation"
+            data-statuses="gap gap fails ">
           <td class="sym">  <a class="chip cat-randomized" href="measures/R.html" title="Bounded-error randomized query complexity">
     <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
   </a>
@@ -1793,9 +1794,11 @@
     <span class="tex">\(\mathrm{noisyR}(f)\)</span>
   </a>
 </td>
-          <td class="c"></td>
+          <td class="c">  <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+</td>
           <td class="stmtcell">
-              <a class="dim" href="pair.html?a=R&amp;b=noisyR">separations only &rarr;</a>
+              <a href="pair.html?a=R&amp;b=noisyR"><span class="tex">\(\mathrm{R}(f)\le C\log(n+1)\mathrm{noisyR}(f)\)</span></a>
+              <span class="minipill s-partial">partial</span>
           </td>
           <td class="c">  <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
 </td>
@@ -3160,6 +3163,27 @@
           <td class="c"></td>
           <td class="c">
 <a class="exp" href="pair.html?a=QE&amp;b=Q"><span class="a">2</span>,<span class="b">4</span></a>          </td>
+        </tr>
+        <tr data-search="qe qe exact quantum query complexity exact quantum query complexity"
+            data-sets="total"
+            data-statuses="fails ">
+          <td class="sym">  <a class="chip cat-quantum" href="measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+</td>
+          <td class="sym">  <a class="chip cat-quantum" href="measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+</td>
+          <td class="c">  <span class="pill st-fails" title="Proved that no bound of this form can hold in this setting.">No bound exists</span>
+</td>
+          <td class="stmtcell">
+              <a href="pair.html?a=QE&amp;b=QE"><span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f\circ g)=O(\mathrm{Q}_{\mathrm{E}}(f)\mathrm{Q}_{\mathrm{E}}(g))\)</span></a>
+          </td>
+          <td class="c"></td>
+          <td class="c"></td>
+          <td class="c">
+          </td>
         </tr>
         <tr data-search="qe deg exact quantum query complexity exact degree"
             data-sets=""
@@ -4863,7 +4887,7 @@
         </tr>
         <tr data-search="adeg adeg approximate degree approximate degree"
             data-sets="total partial"
-            data-statuses="open settled ">
+            data-statuses="settled settled ">
           <td class="sym">  <a class="chip cat-degree" href="measures/adeg.html" title="Approximate degree">
     <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
   </a>
@@ -4872,7 +4896,7 @@
     <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
   </a>
 </td>
-          <td class="c">  <span class="pill st-open" title="No nontrivial bound in at least one direction.">Wide open</span>
+          <td class="c">  <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
 </td>
           <td class="stmtcell">
               <a href="pair.html?a=adeg&amp;b=adeg"><span class="tex">\(\widetilde{\deg}(f\circ g) = O\big(\widetilde{\deg}(f)\,\widetilde{\deg}(g)\big)\)</span></a>
@@ -8144,6 +8168,27 @@
           <td class="c">
 <a class="exp" href="pair.html?a=C&amp;b=R0"><span class="a">1</span>,<span class="b">1</span></a>          </td>
         </tr>
+        <tr data-search="c r1 certificate complexity one-sided-error randomized query complexity"
+            data-sets="total"
+            data-statuses="settled ">
+          <td class="sym">  <a class="chip cat-combinatorial" href="measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+</td>
+          <td class="sym">  <a class="chip cat-randomized" href="measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
+  </a>
+</td>
+          <td class="c">  <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
+</td>
+          <td class="stmtcell">
+              <a href="pair.html?a=C&amp;b=R1"><span class="tex">\(\mathrm{C}(f)=O(\mathrm{R}^{1}(f)^2)\)</span></a>
+          </td>
+          <td class="c"></td>
+          <td class="c"></td>
+          <td class="c">
+          </td>
+        </tr>
         <tr data-search="c r1rp certificate complexity one-sided randomized queries with certain rejection"
             data-sets="total"
             data-statuses="settled ">
@@ -9756,7 +9801,7 @@
         </tr>
         <tr data-search="maxinf adeg maximum influence approximate degree"
             data-sets="total"
-            data-statuses="open ">
+            data-statuses="settled ">
           <td class="sym">  <a class="chip cat-fourier" href="measures/MaxInf.html" title="Maximum influence">
     <span class="tex">\(\mathrm{MaxInf}(f)\)</span>
   </a>
@@ -9765,10 +9810,10 @@
     <span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span>
   </a>
 </td>
-          <td class="c">  <span class="pill st-open" title="No nontrivial bound in at least one direction.">Wide open</span>
+          <td class="c">  <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
 </td>
           <td class="stmtcell">
-              <a href="pair.html?a=MaxInf&amp;b=adeg"><span class="tex">\(\text{(conjectured) } \mathrm{MaxInf}(p) \ge \mathrm{poly}\big(\mathrm{Var}(p)/\deg(p)\big) \text{ for bounded } p\)</span></a>
+              <a href="pair.html?a=MaxInf&amp;b=adeg"><span class="tex">\(\max_i\mathrm{Inf}_i(p)\ge c\,\mathrm{Var}(p)^{5/2}/d^6,\qquad d=\deg(p)\ge1\)</span></a>
           </td>
           <td class="c"></td>
           <td class="c"></td>
@@ -11475,6 +11520,27 @@
           <td class="c">
           </td>
         </tr>
+        <tr data-search="rs chi sabotage complexity conflict complexity"
+            data-sets="total"
+            data-statuses="gap ">
+          <td class="sym">  <a class="chip cat-composition" href="measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
+  </a>
+</td>
+          <td class="sym">  <a class="chip cat-composition" href="measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+</td>
+          <td class="c">  <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+</td>
+          <td class="stmtcell">
+              <a class="dim" href="pair.html?a=RS&amp;b=chi">separations only &rarr;</a>
+          </td>
+          <td class="c"></td>
+          <td class="c"></td>
+          <td class="c">
+          </td>
+        </tr>
         <tr data-search="rs chibar sabotage complexity max-conflict complexity"
             data-sets="partial"
             data-statuses="settled ">
@@ -11603,6 +11669,48 @@
           <td class="c">
           </td>
         </tr>
+        <tr data-search="chi rs conflict complexity sabotage complexity"
+            data-sets="total"
+            data-statuses="gap ">
+          <td class="sym">  <a class="chip cat-composition" href="measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+</td>
+          <td class="sym">  <a class="chip cat-composition" href="measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
+  </a>
+</td>
+          <td class="c">  <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+</td>
+          <td class="stmtcell">
+              <a class="dim" href="pair.html?a=chi&amp;b=RS">separations only &rarr;</a>
+          </td>
+          <td class="c"></td>
+          <td class="c"></td>
+          <td class="c">
+          </td>
+        </tr>
+        <tr data-search="chi chi conflict complexity conflict complexity"
+            data-sets="total"
+            data-statuses="fails ">
+          <td class="sym">  <a class="chip cat-composition" href="measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+</td>
+          <td class="sym">  <a class="chip cat-composition" href="measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+</td>
+          <td class="c">  <span class="pill st-fails" title="Proved that no bound of this form can hold in this setting.">No bound exists</span>
+</td>
+          <td class="stmtcell">
+              <a class="dim" href="pair.html?a=chi&amp;b=chi">separations only &rarr;</a>
+          </td>
+          <td class="c"></td>
+          <td class="c"></td>
+          <td class="c">
+          </td>
+        </tr>
         <tr data-search="chi chibar conflict complexity max-conflict complexity"
             data-sets="partial"
             data-statuses="settled ">
@@ -11668,8 +11776,8 @@
           </td>
         </tr>
         <tr data-search="chibar rs max-conflict complexity sabotage complexity"
-            data-sets="partial"
-            data-statuses="fails ">
+            data-sets="total partial"
+            data-statuses="gap fails ">
           <td class="sym">  <a class="chip cat-composition" href="measures/chibar.html" title="Max-conflict complexity">
     <span class="tex">\(\bar{\chi}(f)\)</span>
   </a>
@@ -11678,13 +11786,35 @@
     <span class="tex">\(\mathrm{RS}(f)\)</span>
   </a>
 </td>
-          <td class="c"></td>
+          <td class="c">  <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+</td>
           <td class="stmtcell">
               <a href="pair.html?a=chibar&amp;b=RS"><span class="tex">\(\bar\chi(g) = \Omega(\mathrm{RS}(g))\)</span></a>
               <span class="minipill s-partial">partial</span>
           </td>
           <td class="c">  <span class="pill st-fails" title="Proved that no bound of this form can hold in this setting.">No bound exists</span>
 </td>
+          <td class="c"></td>
+          <td class="c">
+          </td>
+        </tr>
+        <tr data-search="chibar chi max-conflict complexity conflict complexity"
+            data-sets="total"
+            data-statuses="gap ">
+          <td class="sym">  <a class="chip cat-composition" href="measures/chibar.html" title="Max-conflict complexity">
+    <span class="tex">\(\bar{\chi}(f)\)</span>
+  </a>
+</td>
+          <td class="sym">  <a class="chip cat-composition" href="measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+</td>
+          <td class="c">  <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+</td>
+          <td class="stmtcell">
+              <a class="dim" href="pair.html?a=chibar&amp;b=chi">separations only &rarr;</a>
+          </td>
+          <td class="c"></td>
           <td class="c"></td>
           <td class="c">
           </td>
@@ -11776,8 +11906,8 @@
           </td>
         </tr>
         <tr data-search="lr chibar linearised randomized complexity max-conflict complexity"
-            data-sets="partial"
-            data-statuses="settled ">
+            data-sets="total partial"
+            data-statuses="gap settled ">
           <td class="sym">  <a class="chip cat-composition" href="measures/LR.html" title="Linearised randomized complexity">
     <span class="tex">\(\mathrm{LR}(f)\)</span>
   </a>
@@ -11786,7 +11916,8 @@
     <span class="tex">\(\bar{\chi}(f)\)</span>
   </a>
 </td>
-          <td class="c"></td>
+          <td class="c">  <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+</td>
           <td class="stmtcell">
               <a href="pair.html?a=LR&amp;b=chibar"><span class="tex">\(\bar\chi(g) = O(\mathrm{LR}(g))\)</span></a>
               <span class="minipill s-partial">partial</span>
@@ -12029,7 +12160,7 @@
           <td class="c">  <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
 </td>
           <td class="stmtcell">
-              <a href="pair.html?a=Rstar&amp;b=R"><span class="tex">\(\mathrm{R}^{*}(f) \le \mathrm{R}(f)\)</span></a>
+              <a href="pair.html?a=Rstar&amp;b=R"><span class="tex">\(\mathrm{R}^{*}(f)=O(\mathrm{R}(f)\log(\mathrm{R}(f)+1))\)</span></a>
               <span class="minipill s-partial">partial</span>
           </td>
           <td class="c">  <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
@@ -12152,6 +12283,19 @@
           <td class="short"><span class="tex">\(\mathrm{Q}(f\circ g) = \Theta\big(\mathrm{Q}(f)\,\mathrm{Q}(g)\big)\)</span></td>
         </tr>
         <tr>
+          <td><code><a href="pair.html?a=QE&amp;b=QE#comp-QE">comp-QE</a></code></td>
+          <td class="sym">  <a class="chip cat-quantum" href="measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+   <a class="chip cat-quantum" href="measures/QE.html" title="Exact quantum query complexity">
+    <span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span>
+  </a>
+</td>
+          <td>  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+</td>
+          <td class="short"><span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f\circ g)\not\asymp\mathrm{Q}_{\mathrm{E}}(f)\mathrm{Q}_{\mathrm{E}}(g)\)</span></td>
+        </tr>
+        <tr>
           <td><code><a href="pair.html?a=R&amp;b=R#comp-R">comp-R</a></code></td>
           <td class="sym">  <a class="chip cat-randomized" href="measures/R.html" title="Bounded-error randomized query complexity">
     <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
@@ -12162,7 +12306,7 @@
 </td>
           <td>  <span class="pill setting s-partial" title="f : Dom(f) -&gt; {0,1} with Dom(f) a proper subset of the cube (promise problems). Most polynomial relations FAIL here.">partial</span>
 </td>
-          <td class="short"><span class="tex">\(\mathrm{R}(f\circ g^n) \stackrel{?}{=} \tilde\Theta\big(\mathrm{R}(f)\,\mathrm{R}(g)\big)\)</span></td>
+          <td class="short"><span class="tex">\(\frac{\mathrm{R}(f)\mathrm{R}(g)}{\log(n+1)}\lesssim\mathrm{R}(f\circ g^n)\lesssim\mathrm{R}(f)\mathrm{R}(g)\log(\mathrm{R}(f)+1)\)</span></td>
         </tr>
         <tr>
           <td><code><a href="pair.html?a=adeg&amp;b=adeg#comp-adeg">comp-adeg</a></code></td>
@@ -12175,7 +12319,20 @@
 </td>
           <td>  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
 </td>
-          <td class="short"><span class="tex">\(\widetilde{\deg}(f\circ g) \stackrel{?}{=} \tilde\Theta\big(\widetilde{\deg}(f)\,\widetilde{\deg}(g)\big)\)</span></td>
+          <td class="short"><span class="tex">\(\widetilde{\deg}(f\circ g)=\Theta(\widetilde{\deg}(f)\widetilde{\deg}(g))\)</span></td>
+        </tr>
+        <tr>
+          <td><code><a href="pair.html?a=chi&amp;b=chi#comp-chi">comp-chi</a></code></td>
+          <td class="sym">  <a class="chip cat-composition" href="measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+   <a class="chip cat-composition" href="measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+</td>
+          <td>  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+</td>
+          <td class="short"><span class="tex">\(\chi(f\circ g)\not\asymp\chi(f)\chi(g)\)</span></td>
         </tr>
         <tr>
           <td><code><a href="pair.html?a=deg&amp;b=deg#comp-deg">comp-deg</a></code></td>
@@ -12457,6 +12614,19 @@
   </a>
    <a class="chip cat-randomized" href="measures/R.html" title="Bounded-error randomized query complexity">
     <span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span>
+  </a>
+</td>
+          <td>  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+</td>
+          <td class="short"></td>
+        </tr>
+        <tr>
+          <td><code><a href="pair.html?a=C&amp;b=R1#recent-C-vs-R1-total">recent-C-vs-R1-total</a></code></td>
+          <td class="sym">  <a class="chip cat-combinatorial" href="measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+   <a class="chip cat-randomized" href="measures/R1.html" title="One-sided-error randomized query complexity">
+    <span class="tex">\(\mathrm{R}^{1}(f)\)</span>
   </a>
 </td>
           <td>  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
@@ -13068,19 +13238,6 @@
   </a>
    <a class="chip cat-combinatorial" href="measures/lambda.html" title="Spectral sensitivity">
     <span class="tex">\(\lambda(f)\)</span>
-  </a>
-</td>
-          <td>  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
-</td>
-          <td class="short"></td>
-        </tr>
-        <tr>
-          <td><code><a href="pair.html?a=bs&amp;b=s#recent-bs-vs-s-total">recent-bs-vs-s-total</a></code></td>
-          <td class="sym">  <a class="chip cat-combinatorial" href="measures/bs.html" title="Block sensitivity">
-    <span class="tex">\(\mathrm{bs}(f)\)</span>
-  </a>
-   <a class="chip cat-combinatorial" href="measures/s.html" title="Sensitivity">
-    <span class="tex">\(\mathrm{s}(f)\)</span>
   </a>
 </td>
           <td>  <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>

@@ -103,7 +103,7 @@ cost of an algorithm that computes $f$ with error $\le 1/3$.</p>
       <section class="card">
         <h2>Basic facts</h2>
         <ul class="facts">
-<li>$\mathrm{noisyR}(f) \le \mathrm{R}(f)$ always, and the two are <em>not</em> within a constant: $\mathrm{R}$ can be exponentially larger for partial $f$ (<a href="../functions/ApproxIndex.html" class="xref function "><span class="tex">\(\mathrm{ApproxIndex}_k\)</span></a>). Whether $\mathrm{R} = 2^{O(\mathrm{noisyR})}$ in general is open.</li><li>$\mathrm{R}(f\circ g^n) = \Omega(\mathrm{noisyR}(f)\,\mathrm{R}(g))$, and $\mathrm{noisyR}$ is the largest measure with this property [<a href="../refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a>].</li><li>Characterisation: $\mathrm{noisyR}(f) = \Theta\!\big(\mathrm{R}(f\circ \mathrm{GapMaj}_n)/\mathrm{R}(\mathrm{GapMaj}_n)\big)$.</li><li>If $\mathrm{R}(f) = \Theta(n)$ then $\mathrm{noisyR}(f) = \Theta(\mathrm{R}(f))$.</li><li><strong>Lemma 37</strong> of [<a href="../refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a>]: $\mathrm{noisyR}(f) = \Omega(1)$ for every non-constant $f$, and more precisely distinguishing two inputs that differ on a block $B$ costs $\Omega(1)$ <em>inside $B$</em>. Both hold for relations with two inputs whose allowed output sets are disjoint.</li><li><strong>Lemma 38</strong>: $\mathrm{noisyR}(f) = \Omega(\mathrm{fbs}(f))$, by LP-weighting the previous item over the sensitive blocks. Composed with $\mathrm{R} = O(\mathrm{fbs}^3)$ this is the only general <em>upper</em> bound on $\mathrm{R}$ in terms of $\mathrm{noisyR}$ we have, and only for total $f$.</li><li><strong>Normal form</strong> (Lemmas 36, Theorem 39): an optimal noisy algorithm may be assumed to use only two bias values, $\gamma = 1$ and $\gamma = 1/\sqrt n$.</li>        </ul>
+<li>$\mathrm{noisyR}(f) \le \mathrm{R}(f)$ always, and the two are <em>not</em> within a constant: $\mathrm{R}$ can be exponentially larger for partial $f$ (<a href="../functions/ApproxIndex.html" class="xref function "><span class="tex">\(\mathrm{ApproxIndex}_k\)</span></a>). Whether $\mathrm{R} = 2^{O(\mathrm{noisyR})}$ in general is open.</li><li>$\mathrm{R}(f\circ g^n) = \Omega(\mathrm{noisyR}(f)\,\mathrm{R}(g))$, and $\mathrm{noisyR}$ is the largest measure with this property [<a href="../refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a>].</li><li>Characterisation: $\mathrm{noisyR}(f) = \Theta\!\big(\mathrm{R}(f\circ \mathrm{GapMaj}_n)/\mathrm{R}(\mathrm{GapMaj}_n)\big)$.</li><li>If $\mathrm{R}(f) = \Theta(n)$ then $\mathrm{noisyR}(f) = \Theta(\mathrm{R}(f))$.</li><li><strong>Lemma 37</strong> of [<a href="../refs.html#BenDavidBlais20composition" class="xref ref ">BenDavidBlais20composition</a>]: $\mathrm{noisyR}(f) = \Omega(1)$ for every non-constant $f$, and more precisely distinguishing two inputs that differ on a block $B$ costs $\Omega(1)$ <em>inside $B$</em>. Both hold for relations with two inputs whose allowed output sets are disjoint.</li><li><strong>Lemma 38</strong>: $\mathrm{noisyR}(f) = \Omega(\mathrm{fbs}(f))$, by LP-weighting the previous item over the sensitive blocks. Composed with $\mathrm{R} = O(\mathrm{fbs}^3)$ this gives a complexity-only bound for total $f$. The new input-size-dependent bound is $\mathrm{R}=O(\mathrm{noisyR}\log(n+1))$ for partial Boolean functions [<a href="../refs.html#PednekarPodder26STOC" class="xref ref ">PednekarPodder26STOC</a>].</li><li><strong>Normal form</strong> (Lemmas 36, Theorem 39): an optimal noisy algorithm may be assumed to use only two bias values, $\gamma = 1$ and $\gamma = 1/\sqrt n$.</li><li>For every nonconstant partial Boolean $f$ on $n$ bits, $\mathrm{R}(f)\le C\log(n+1)\mathrm{noisyR}(f)$ [<a href="../refs.html#PednekarPodder26STOC" class="xref ref ">PednekarPodder26STOC</a>, Theorem 31]. This closes <a href="../open.html#open-noisyR-vs-R" class="xref open ">Is …?</a>. Total functions nevertheless have $\mathrm{R}/\mathrm{noisyR}=\Omega((\log N)^{1/4}/\log\log\log N)$ [<a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a>, Theorem 4.1].</li>        </ul>
       </section>
 
 
@@ -151,9 +151,9 @@ cost of an algorithm that computes $f$ with error $\le 1/3$.</p>
   </a>
 </td>
               <td>  <a class="pairlink" href="../pair.html?a=R&amp;b=noisyR">
-      <span class="nbtok" title="Total functions: gap">
-        <span class="minipill">total</span
-        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
+      <span class="nbtok" title="Total functions: gap &middot; recorded relation is Gap">
+        <span class="minipill st-gap">total</span
+        ><span class="exp"><span class="a">1.1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
       <span class="nbtok" title="Partial functions: exponential only &middot; recorded relation is Gap">
         <span class="minipill st-gap">partial</span
         ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
@@ -213,7 +213,7 @@ cost of an algorithm that computes $f$ with error $\le 1/3$.</p>
               <td>  <a class="pairlink" href="../pair.html?a=Np&amp;b=noisyR">
       <span class="nbtok" title="Total functions: gap">
         <span class="minipill">total</span
-        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
+        ><span class="exp"><span class="a">1.1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
       <span class="nbtok" title="Partial functions: exponential only">
         <span class="minipill">partial</span
         ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
@@ -533,7 +533,7 @@ cost of an algorithm that computes $f$ with error $\le 1/3$.</p>
               <td>  <a class="pairlink" href="../pair.html?a=Dmu&amp;b=noisyR">
       <span class="nbtok" title="Total functions: gap">
         <span class="minipill">total</span
-        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
+        ><span class="exp"><span class="a">1.1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
       <span class="nbtok" title="Partial functions: exponential only">
         <span class="minipill">partial</span
         ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
@@ -566,7 +566,7 @@ cost of an algorithm that computes $f$ with error $\le 1/3$.</p>
               <td>  <a class="pairlink" href="../pair.html?a=Rbar&amp;b=noisyR">
       <span class="nbtok" title="Total functions: gap">
         <span class="minipill">total</span
-        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
+        ><span class="exp"><span class="a">1.1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
       <span class="nbtok" title="Partial functions: exponential only">
         <span class="minipill">partial</span
         ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
@@ -662,7 +662,7 @@ cost of an algorithm that computes $f$ with error $\le 1/3$.</p>
               <td>  <a class="pairlink" href="../pair.html?a=R1&amp;b=noisyR">
       <span class="nbtok" title="Total functions: gap">
         <span class="minipill">total</span
-        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
+        ><span class="exp"><span class="a">1.1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
       <span class="nbtok" title="Partial functions: no bound exists">
         <span class="minipill">partial</span
         ><span class="glyph g-unbounded">∞</span>      </span>
@@ -689,7 +689,7 @@ cost of an algorithm that computes $f$ with error $\le 1/3$.</p>
               <td>  <a class="pairlink" href="../pair.html?a=R1RP&amp;b=noisyR">
       <span class="nbtok" title="Total functions: gap">
         <span class="minipill">total</span
-        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
+        ><span class="exp"><span class="a">1.1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
       <span class="nbtok" title="Partial functions: exponential only">
         <span class="minipill">partial</span
         ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
@@ -719,7 +719,7 @@ cost of an algorithm that computes $f$ with error $\le 1/3$.</p>
               <td>  <a class="pairlink" href="../pair.html?a=psD&amp;b=noisyR">
       <span class="nbtok" title="Total functions: gap">
         <span class="minipill">total</span
-        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
+        ><span class="exp"><span class="a">1.1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
       <span class="nbtok" title="Partial functions: exponential only">
         <span class="minipill">partial</span
         ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
@@ -2693,7 +2693,7 @@ cost of an algorithm that computes $f$ with error $\le 1/3$.</p>
               <td>  <a class="pairlink" href="../pair.html?a=Corr&amp;b=noisyR">
       <span class="nbtok" title="Total functions: gap">
         <span class="minipill">total</span
-        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
+        ><span class="exp"><span class="a">1.1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
       <span class="nbtok" title="Partial functions: exponential only">
         <span class="minipill">partial</span
         ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
@@ -2720,7 +2720,7 @@ cost of an algorithm that computes $f$ with error $\le 1/3$.</p>
               <td>  <a class="pairlink" href="../pair.html?a=Sel&amp;b=noisyR">
       <span class="nbtok" title="Total functions: gap">
         <span class="minipill">total</span
-        ><span class="exp"><span class="a">1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
+        ><span class="exp"><span class="a">1.1</span><span class="comma">,</span><span class="b">3</span></span>      </span>
       <span class="nbtok" title="Partial functions: exponential only">
         <span class="minipill">partial</span
         ><span class="exp"><span class="a">exp</span><span class="comma">,</span><span class="b">?</span></span>      </span>
@@ -3058,6 +3058,13 @@ cost of an algorithm that computes $f$ with error $\le 1/3$.</p>
               <td class="short">The zoo's own <a href="../measures/noisyR.html" class="xref measure "><span class="tex">\(\mathrm{noisyR}(f)\)</span></a> vs <a href="../measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a> entry records $\mathrm{R}(f)=\Theta(n)\Rightarrow\mathrm{noisyR}(f)=\Theta(\mathrm{R}(f))$ [<a href="../refs.html#CKMPSS23" class="xref ref ">CKMPSS23</a>], and the recorded $\mathrm{R}$ is linear in the arity here -- connectivity is randomised-evasive up to a constant.
 <span class="refs"><a href="../refs.html#CKMPSS23" class="xref ref ">CKMPSS23</a></span></td>
             </tr>
+            <tr>
+              <td class="nm"><a href="../functions/MeiburgNoisySeparation.html">Meiburg’s total noisy-query separation</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(O(q^{10}\log q\log\log q)\)</span></td>
+              <td class="short">Theorem 4.1: its upper bound is O(ℓ_q log(ℓ_q+2) u_q² q²).
+<span class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span></td>
+            </tr>
           </tbody>
         </table>
       </section>
@@ -3083,14 +3090,6 @@ cost of an algorithm that computes $f$ with error $\le 1/3$.</p>
         </ul>
       </section>
 
-      <section class="card tight">
-        <h2>Open problems</h2>
-        <ul class="linklist">
-          <li><a href="../open.html#open-R-composition">Does randomized query complexity compose for total functions?</a></li>
-          <li><a href="../open.html#open-composition-log">Does randomized composition survive a $\log n$ loss?</a></li>
-          <li><a href="../open.html#open-noisyR-vs-R">Is $\mathrm{noisyR}(f) = \Omega(\mathrm{R}(f)/\log n)$?</a></li>
-        </ul>
-      </section>
 
       <section class="card tight">
         <h2>See also</h2>
@@ -3104,6 +3103,8 @@ cost of an algorithm that computes $f$ with error $\le 1/3$.</p>
             <li><a href="../refs.html#BenDavidBlais20minimax" class="xref ref ">[BenDavidBlais20minimax]</a> <span class="dim">A New Minimax Theorem for Randomized Algorithms</span></li>
             <li><a href="../refs.html#BenDavidBlais20composition" class="xref ref ">[BenDavidBlais20composition]</a> <span class="dim">A Tight Composition Theorem for the Randomized Query Complexity of Partial Functions</span></li>
             <li><a href="../refs.html#GoosMaystre21" class="xref ref ">[GoosMaystre21]</a> <span class="dim">A Majority Lemma for Randomised Query Complexity</span></li>
+            <li><a href="../refs.html#PednekarPodder26STOC" class="xref ref ">[PednekarPodder26STOC]</a> <span class="dim">On the Composition Theorem for Approximate Degree, Randomized and Exact Quantum Query Complexity</span></li>
+            <li><a href="../refs.html#Meiburg26composition" class="xref ref ">[Meiburg26composition]</a> <span class="dim">No Perfect Randomized Composition</span></li>
         </ul>
       </section>
 

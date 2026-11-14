@@ -121,7 +121,7 @@ classical majority voting, which is the source of several quantum/classical gaps
       <section class="card">
         <h2>Basic facts</h2>
         <ul class="facts">
-<li>$\widetilde{\deg}(f) \le 2\,\mathrm{Q}(f)$ [<a href="../refs.html#BBCMdW01" class="xref ref ">BBCMdW01</a>].</li><li>$\mathrm{D}(f) = O(\mathrm{Q}(f)^4)$ for total $f$ [<a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a>], improving $O(\mathrm{Q}^6)$; matching separation $\mathrm{D}=\tilde\Omega(\mathrm{Q}^4)$ [<a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a>], so the exponent is <strong>4, settled</strong>.</li><li>$\mathrm{R}(f) \le \mathrm{D}(f) = O(\mathrm{Q}(f)^4)$ for total $f$; best known separation $\mathrm{R}=\tilde\Omega(\mathrm{Q}^3)$ [<a href="../refs.html#BansalSinha21" class="xref ref ">BansalSinha21</a>, <a href="../refs.html#SSW21" class="xref ref ">SSW21</a>], so the $\mathrm{R}$-vs-$\mathrm{Q}$ exponent lies in $[3,4]$.</li><li>Quantum query complexity <strong>composes perfectly</strong>: $\mathrm{Q}(f\circ g) = \Theta(\mathrm{Q}(f)\mathrm{Q}(g))$.</li><li>For partial functions the gap with $\mathrm{R}$ is unbounded: $\mathrm{Q}=O(1)$ vs $\mathrm{R}=\tilde\Omega(n^{1-1/2k})$; exponential for Simon's problem.</li>        </ul>
+<li>$\widetilde{\deg}(f) \le 2\,\mathrm{Q}(f)$ [<a href="../refs.html#BBCMdW01" class="xref ref ">BBCMdW01</a>].</li><li>$\mathrm{D}(f) = O(\mathrm{Q}(f)^4)$ for total $f$ [<a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a>], improving $O(\mathrm{Q}^6)$; matching separation $\mathrm{D}=\tilde\Omega(\mathrm{Q}^4)$ [<a href="../refs.html#ABBLSS17" class="xref ref ">ABBLSS17</a>], so the exponent is <strong>4, settled</strong>.</li><li>Quantum query complexity <strong>composes perfectly</strong>: $\mathrm{Q}(f\circ g) = \Theta(\mathrm{Q}(f)\mathrm{Q}(g))$.</li><li>For partial functions the gap with $\mathrm{R}$ is unbounded: $\mathrm{Q}=O(1)$ vs $\mathrm{R}=\tilde\Omega(n^{1-1/2k})$; exponential for Simon's problem.</li><li>The optimal total-function $\mathrm{R}$-versus-$\mathrm{Q}$ power is 4 [<a href="../refs.html#OpenAI26QuarticRQ" class="xref ref ">OpenAI26QuarticRQ</a>]. The new family rules out every power below 4, matching $\mathrm{R}\le\mathrm{D}=O(\mathrm{Q}^4)$ [<a href="../refs.html#ABKRT21" class="xref ref ">ABKRT21</a>]; see <a href="../functions/OpenAIQuarticRQ.html" class="xref function "><span class="tex">\(F_{k,m}\)</span></a>.</li>        </ul>
       </section>
 
       <section class="card" id="equivalent">
@@ -246,9 +246,9 @@ classical majority voting, which is the source of several quantum/classical gaps
   </a>
 </td>
               <td>  <a class="pairlink" href="../pair.html?a=R&amp;b=Q">
-      <span class="nbtok" title="Total functions: gap &middot; recorded relation is Gap">
-        <span class="minipill st-gap">total</span
-        ><span class="exp"><span class="a">3</span><span class="comma">,</span><span class="b">4</span></span>      </span>
+      <span class="nbtok" title="Total functions: settled &middot; recorded relation is Settled">
+        <span class="minipill st-settled">total</span
+        ><span class="exp"><span class="a">4</span><span class="comma">,</span><span class="b">4</span></span>      </span>
       <span class="nbtok" title="Partial functions: no bound exists &middot; recorded relation is No bound exists">
         <span class="minipill st-fails">partial</span
         ><span class="glyph g-unbounded">∞</span>      </span>
@@ -3267,6 +3267,13 @@ classical majority voting, which is the source of several quantum/classical gaps
               <td class="short">Lemma 55 gives O(m). At the all-zero input, all m² single-bit flips reject, so bs=m² and Q=Ω(√bs).
 <span class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
             </tr>
+            <tr>
+              <td class="nm"><a href="../functions/OpenAIQuarticRQ.html">OpenAI’s nearly quartic randomized–quantum family</a>
+                <span class="kindtag k-total">total</span></td>
+              <td class="val"><span class="tex">\(\widetilde O(\sqrt m)\)</span></td>
+              <td class="short">For each fixed k, Q≤C_k sqrt(m)(log m)^{b_k}. Constants and the log exponent may depend on k.
+<span class="refs"><a href="../refs.html#OpenAI26QuarticRQ" class="xref ref ">OpenAI26QuarticRQ</a></span></td>
+            </tr>
           </tbody>
         </table>
       </section>
@@ -3296,11 +3303,7 @@ classical majority voting, which is the source of several quantum/classical gaps
         <h2>Open problems</h2>
         <ul class="linklist">
           <li><a href="../open.html#open-QE-vs-deg">Is $\mathrm{Q}_E(f) = O(\deg(f))$?</a></li>
-          <li><a href="../open.html#open-R-vs-Q">Is the maximum quantum speedup for total functions cubic or quartic?</a></li>
           <li><a href="../open.html#open-Advpm-vs-Adv">How much do negative weights buy the adversary?</a></li>
-          <li><a href="../open.html#open-adeg-composition">Does approximate degree compose?</a></li>
-          <li><a href="../open.html#open-aaronson-ambainis">The Aaronson-Ambainis conjecture</a></li>
-          <li><a href="../open.html#open-Rstar">Is $\mathrm{R}^{*}(f) = \Theta(\mathrm{R}(f))$?</a></li>
           <li><a href="../open.html#open-direct-sum">How hard is it to solve $k$ copies?</a></li>
           <li><a href="../open.html#open-QS-vs-Q">Do the quantum sabotage variants coincide, and how do they compare with Q?</a></li>
         </ul>
@@ -3321,6 +3324,7 @@ classical majority voting, which is the source of several quantum/classical gaps
             <li><a href="../refs.html#ABBLSS17" class="xref ref ">[ABBLSS17]</a> <span class="dim">Separations in Query Complexity Based on Pointer Functions</span></li>
             <li><a href="../refs.html#BansalSinha21" class="xref ref ">[BansalSinha21]</a> <span class="dim">k-Forrelation Optimally Separates Quantum and Classical Query Complexity</span></li>
             <li><a href="../refs.html#SSW21" class="xref ref ">[SSW21]</a> <span class="dim">An Optimal Separation of Randomized and Quantum Query Complexity</span></li>
+            <li><a href="../refs.html#OpenAI26QuarticRQ" class="xref ref ">[OpenAI26QuarticRQ]</a> <span class="dim">A Nearly Quartic Separation Between Randomized and Quantum Query Complexity</span></li>
         </ul>
       </section>
 

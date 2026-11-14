@@ -80,7 +80,7 @@
     <div class="bigsym">\(\mathrm{AND}_n \circ \mathrm{OR}_n\)</div>
     <div>
       <h1>AND-OR tree (depth 2)</h1>
-      <p class="lede">The witness for the &quot;$\wedge\circ\vee$&quot; cells: $\mathrm{D}=N$ but every combinatorial measure is $\sqrt N$.</p>
+      <p class="lede">$\mathrm{D}=\mathrm{R}=\Theta(N)$ while $\mathrm{C}=\mathrm{bs}=\sqrt N$; also separates sabotage and max-conflict from conflict complexity.</p>
       <p class="aliases">
         <span class="kindtag k-total">total</span>
         <span class="grouptag g-composed">composed</span>
@@ -701,19 +701,6 @@ contains at least one $1$.</p>
             </tr>
             <tr>
               <td class="nm">
-  <a class="chip cat-composition" href="../measures/RS.html" title="Sabotage complexity">
-    <span class="tex">\(\mathrm{RS}(f)\)</span>
-  </a>
-
-                  <a href="../measures/RS.html">Sabotage complexity</a>
-              </td>
-              <td class="val"><span class="tex">\(\Omega(\sqrt N),\ O(N)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
-</td>
-              <td class="short">Not pinned. Upper: $\mathrm{RS} \le \mathrm{R}/(1-2\varepsilon) = O(n^2)$. Lower: $\mathrm{RS} = \Omega(\mathrm{bs}) = \Omega(n)$ -- take $x$ with $\mathrm{bs}$ disjoint sensitive blocks, star out a uniformly random one of them, and note that every unstarred bit agrees with $x$, so an algorithm learns nothing until it queries inside the chosen block. (The generic $\mathrm{R} = O(\mathrm{RS}^2\log\mathrm{RS})$ gives the same $\widetilde\Omega(n)$.)
-</td>
-            </tr>
-            <tr>
-              <td class="nm">
   <a class="chip cat-degree" href="../measures/ndeg.html" title="Nondeterministic degree">
     <span class="tex">\(\mathrm{ndeg}(f)\)</span>
   </a>
@@ -889,42 +876,6 @@ contains at least one $1$.</p>
             </tr>
             <tr>
               <td class="nm">
-  <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
-    <span class="tex">\(\chi(f)\)</span>
-  </a>
-
-                  <a href="../measures/chi.html">Conflict complexity</a>
-              </td>
-              <td class="val"><span class="tex">\(\Omega(n),\ O(n^2)\)</span></td>
-              <td class="short">Conflict complexity obeys $\chi = \Omega(\mathrm{bs})$ [<a href="../refs.html#Li18" class="xref ref ">Li18</a>] with $\mathrm{bs} = n$, and $\chi \le \bar\chi = O(\mathrm{LR}) \le \mathrm{R} = O(n^2)$ from above. Closing this window would say exactly how much this gadget contributes as the <em>inner</em> function in $\mathrm{R}(F\circ f^m) = \Omega(\mathrm{R}(F)\chi(f))$ [<a href="../refs.html#Sanyal18" class="xref ref ">Sanyal18</a>].
-<span class="refs"><a href="../refs.html#Li18" class="xref ref ">Li18</a> <a href="../refs.html#Sanyal18" class="xref ref ">Sanyal18</a></span></td>
-            </tr>
-            <tr>
-              <td class="nm">
-  <a class="chip cat-composition" href="../measures/chibar.html" title="Max-conflict complexity">
-    <span class="tex">\(\bar{\chi}(f)\)</span>
-  </a>
-
-                  <a href="../measures/chibar.html">Max-conflict complexity</a>
-              </td>
-              <td class="val"><span class="tex">\(\Omega(n),\ O(n^2)\)</span></td>
-              <td class="short">Max-conflict complexity dominates $\chi = \Omega(\mathrm{bs}) = \Omega(n)$ and the recorded $\mathrm{RS} = \Omega(\sqrt N) = \Omega(n)$, and is dominated by $\mathrm{LR} \le \mathrm{R} = O(n^2)$ [<a href="../refs.html#GLSS19" class="xref ref ">GLSS19</a>].
-<span class="refs"><a href="../refs.html#GLSS19" class="xref ref ">GLSS19</a></span></td>
-            </tr>
-            <tr>
-              <td class="nm">
-  <a class="chip cat-composition" href="../measures/LR.html" title="Linearised randomized complexity">
-    <span class="tex">\(\mathrm{LR}(f)\)</span>
-  </a>
-
-                  <a href="../measures/LR.html">Linearised randomized complexity</a>
-              </td>
-              <td class="val"><span class="tex">\(\Omega(n),\ O(n^2)\)</span></td>
-              <td class="short">Linearised randomized complexity satisfies $\Omega(\sqrt{\mathrm{R}}) \le \mathrm{LR} \le \mathrm{R}$ [<a href="../refs.html#BBGM22" class="xref ref ">BBGM22</a>], which is exactly $\Omega(n)$ and $O(n^2)$ here; the alternative route $\mathrm{LR} = \Omega(\bar\chi) = \Omega(\mathrm{bs})$ gives the same lower end.
-<span class="refs"><a href="../refs.html#BBGM22" class="xref ref ">BBGM22</a></span></td>
-            </tr>
-            <tr>
-              <td class="nm">
   <a class="chip cat-deterministic" href="../measures/PDT.html" title="Parity decision tree complexity">
     <span class="tex">\(\mathrm{D}^{\oplus}(f)\)</span>
   </a>
@@ -1096,6 +1047,54 @@ contains at least one $1$.</p>
               <td class="short">Theorem 5 and QEcert=Θ(n).
 <span class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span></td>
             </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
+  </a>
+
+                  <a href="../measures/RS.html">Sabotage complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n^2)\)</span></td>
+              <td class="short">Theorem 9.1; for LR use max-conflict ≤ O(LR) ≤ O(R). The conflict bound is the theorem’s bracket, not the stronger introduction-table upper bound.
+<span class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/chibar.html" title="Max-conflict complexity">
+    <span class="tex">\(\bar{\chi}(f)\)</span>
+  </a>
+
+                  <a href="../measures/chibar.html">Max-conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n^2)\)</span></td>
+              <td class="short">Theorem 9.1; for LR use max-conflict ≤ O(LR) ≤ O(R). The conflict bound is the theorem’s bracket, not the stronger introduction-table upper bound.
+<span class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/LR.html" title="Linearised randomized complexity">
+    <span class="tex">\(\mathrm{LR}(f)\)</span>
+  </a>
+
+                  <a href="../measures/LR.html">Linearised randomized complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n^2)\)</span></td>
+              <td class="short">Theorem 9.1; for LR use max-conflict ≤ O(LR) ≤ O(R). The conflict bound is the theorem’s bracket, not the stronger introduction-table upper bound.
+<span class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
+  <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+
+                  <a href="../measures/chi.html">Conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Omega(n^2/\log^2 n),\ O(n^2/\log^{1/2}n)\)</span></td>
+              <td class="short">Theorem 9.1; for LR use max-conflict ≤ O(LR) ≤ O(R). The conflict bound is the theorem’s bracket, not the stronger introduction-table upper bound.
+<span class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span></td>
+            </tr>
           </tbody>
         </table>
       </section>
@@ -1104,7 +1103,7 @@ contains at least one $1$.</p>
         <h2>Separations its values prove <span class="dim">— computed, not recorded</span></h2>
         <p class="dim small">Read straight off the table above by comparing two values: no
         relation record states these, and where one does and says more, the record wins and the
-        pair is not listed here. 262 in total,
+        pair is not listed here. 326 in total,
         strongest first.</p>
         <ul class="witlist compact">
           <li>
@@ -1301,8 +1300,8 @@ contains at least one $1$.</p>
           </li>
           <li>
             <div class="wpair">
-                <a class="chip cat-composition" href="../measures/noisyR.html" title="Noisy randomized query complexity">
-    <span class="tex">\(\mathrm{noisyR}(f)\)</span>
+                <a class="chip cat-composition" href="../measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
   </a>
  <span class="vs">vs</span>   <a class="chip cat-adversary" href="../measures/CGpub.html" title="Certificate game complexity (public coin)">
     <span class="tex">\(\mathrm{CG}^{\mathrm{pub}}(f)\)</span>
@@ -1310,15 +1309,15 @@ contains at least one $1$.</p>
 
                 <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
 
-              <a class="go" href="../pair.html?a=noisyR&amp;b=CGpub">pair &rarr;</a>
+              <a class="go" href="../pair.html?a=RS&amp;b=CGpub">pair &rarr;</a>
             </div>
-            <div class="stmt"><span class="tex">\(\mathrm{noisyR}(f_n) = \Omega\big(\mathrm{CG}^{\mathrm{pub}}(f_n)^{2}\big)\)</span></div>
-            <div class="refs dim">from \(\mathrm{noisyR}(f) = \Theta(n^2)\) against \(\mathrm{CG}^{\mathrm{pub}}(f) = \Theta(n)\)</div>
+            <div class="stmt"><span class="tex">\(\mathrm{RS}(f_n) = \Omega\big(\mathrm{CG}^{\mathrm{pub}}(f_n)^{2}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{RS}(f) = \Theta(n^2)\) against \(\mathrm{CG}^{\mathrm{pub}}(f) = \Theta(n)\)</div>
           </li>
           <li>
             <div class="wpair">
-                <a class="chip cat-randomized" href="../measures/Np.html" title="Noisy decision tree complexity">
-    <span class="tex">\(\mathrm{N}_{p}(f)\)</span>
+                <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
   </a>
  <span class="vs">vs</span>   <a class="chip cat-adversary" href="../measures/CGstar.html" title="Quantum certificate game complexity">
     <span class="tex">\(\mathrm{CG}^{*}(f)\)</span>
@@ -1326,13 +1325,13 @@ contains at least one $1$.</p>
 
                 <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
 
-              <a class="go" href="../pair.html?a=Np&amp;b=CGstar">pair &rarr;</a>
+              <a class="go" href="../pair.html?a=chi&amp;b=CGstar">pair &rarr;</a>
             </div>
-            <div class="stmt"><span class="tex">\(\mathrm{N}_{p}(f_n) = \Omega\big(\mathrm{CG}^{*}(f_n)^{2}\big)\)</span></div>
-            <div class="refs dim">from \(\mathrm{N}_{p}(f) = \Omega(n^2),\ O(n^2\log n)\) against \(\mathrm{CG}^{*}(f) = \Theta(n)\)</div>
+            <div class="stmt"><span class="tex">\(\chi(f_n) = \Omega\big(\mathrm{CG}^{*}(f_n)^{2}\big)\)</span></div>
+            <div class="refs dim">from \(\chi(f) = \Omega(n^2/\log^2 n),\ O(n^2/\log^{1/2}n)\) against \(\mathrm{CG}^{*}(f) = \Theta(n)\)</div>
           </li>
         </ul>
-        <p class="dim small">&hellip; and 248 more, all of them visible
+        <p class="dim small">&hellip; and 312 more, all of them visible
         in the <a href="../matrix.html">matrix</a> (widen it to all measures) and on the
         pair pages.</p>
       </section>
@@ -1494,6 +1493,38 @@ contains at least one $1$.</p>
           </li>
           <li>
             <div class="wpair">
+                <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=chi&amp;b=C#chi__C__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\chi(F_n)=\Omega(\mathrm{C}(F_n)^2/\log^2\mathrm{C}(F_n))\)</span></div>
+<div class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-fails" title="Proved that no bound of this form can hold in this setting.">No bound exists</span>
+
+              <a class="go" href="../pair.html?a=chi&amp;b=chi#comp-chi">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\chi(\mathrm{AND}_n\circ\mathrm{OR}_n)=O\!\left(\frac{\chi(\mathrm{AND}_n)\chi(\mathrm{OR}_n)}{\sqrt{\log n}}\right)\)</span></div>
+<div class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></div>          </li>
+          <li>
+            <div class="wpair">
                 <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
     <span class="tex">\(\deg(f)\)</span>
   </a>
@@ -1508,9 +1539,46 @@ contains at least one $1$.</p>
             </div>
             <div class="stmt"><span class="tex">\(\deg(\mathrm{ANDOR}_{m^2})=\Theta((\overline{\deg}^{\mathrm{cert}}(\mathrm{ANDOR}_{m^2}))^2)\)</span></div>
 <div class="refs"><a href="../refs.html#KLLPV26" class="xref ref ">KLLPV26</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-composition" href="../measures/RS.html" title="Sabotage complexity">
+    <span class="tex">\(\mathrm{RS}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=RS&amp;b=chi#RS__chi__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{RS}(F_n)/\chi(F_n)=\Omega(\sqrt{\log N}),\qquad N=n^2\)</span></div>
+<div class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></div>          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-composition" href="../measures/chibar.html" title="Max-conflict complexity">
+    <span class="tex">\(\bar{\chi}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-gap" title="Best upper bound and best separation do not meet.">Gap</span>
+
+              <a class="go" href="../pair.html?a=chibar&amp;b=chi#chibar__chi__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\bar\chi(F_n)/\chi(F_n)=\Omega(\sqrt{\log N}),\qquad N=n^2\)</span></div>
+<div class="refs"><a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></div>          </li>
         </ul>
       </section>
 
+      <section class="card">
+        <h2>Notes</h2>
+        <p>[<a href="../refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a>, Theorem 9.1] gives $\mathrm{RS}=\bar\chi=\Theta(n^2)$ and $\Omega(n^2/\log^2 n)\le\chi\le O(n^2/\sqrt{\log n})$. Thus $\mathrm{RS}/\chi=\Omega(\sqrt{\log N})$, perfect conflict composition fails, and $\chi$ is not $O(\mathrm{C})$ (Corollaries 9.8, 9.9, 9.11).</p>
+
+      </section>
     </div>
 
     <aside class="side-col">
@@ -1522,6 +1590,7 @@ contains at least one $1$.</p>
             <li><a href="../refs.html#ABKRT21" class="xref ref ">[ABKRT21]</a> <span class="dim">Degree vs. Approximate Degree and Quantum Implications of Huang&#39;s Sensitivity Theorem</span></li>
             <li><a href="../refs.html#Huang19" class="xref ref ">[Huang19]</a> <span class="dim">Induced subgraphs of hypercubes and a proof of the Sensitivity Conjecture</span></li>
             <li><a href="../refs.html#MinskyPapert69" class="xref ref ">[MinskyPapert69]</a> <span class="dim">Perceptrons</span></li>
+            <li><a href="../refs.html#Meiburg26composition" class="xref ref ">[Meiburg26composition]</a> <span class="dim">No Perfect Randomized Composition</span></li>
         </ul>
       </section>
 
