@@ -2110,3 +2110,5 @@ OpenAI26QuarticRQ:
     functions. For every fixed k≥2, Q(F_{k,m})≤C_k sqrt(m)(log m)^{b_k}, R(F_{k,m})≥c_k m^{2−1/k}/(log
     m)^2, giving exponents 4−2/k with polylogarithmic losses. Letting k range rules out every universal
     exponent below 4. The statement is an optimal-exponent theorem, not a fixed-k literal Ω̃(Q^4) bound.
+    Will Cook provides a [great exposition](https://wcook04.github.io/quartic-query-lean/#/read/expert?v=lean&d=QuarticQuery.theorem_1_1_unconditional)
+    and a [Lean proof, with instructions for reproducing the formal checks](https://github.com/wcook04/quartic-query-lean#reproducing-the-formal-checks).

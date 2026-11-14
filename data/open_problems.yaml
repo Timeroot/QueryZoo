@@ -629,22 +629,30 @@ open_problems:
   title: "Does randomized query complexity compose for total functions?"
   order: 110
   setting: total
-  statement: Randomized composition holds up to logarithmic factors in input size, even for partial Boolean
-    functions [PednekarPodder26STOC]. Constant-factor composition fails even for total functions [Meiburg26composition].
-  status: Solved at the input-size polylogarithmic scale; constant-factor multiplicativity is false.
+  statement: |
+    Randomized composition holds with a $\log(n+1)$ loss, even for partial Boolean
+    functions [PednekarPodder26STOC]. **The polylogarithmic loss is in the outer
+    input size $n$, not in $\mathrm{R}(f)$**; the theorem does not guarantee a
+    $\log(\mathrm{R}(f)+1)$ loss.
+
+    Meiburg's work shows that **some polylogarithmic slack is necessary**, even
+    for total functions [Meiburg26composition]. His families save a factor
+    $\Theta(\log\mathrm{R}(g))=\Theta(\log\log L)$, where $L$ is the composed
+    input length, ruling out constant-factor multiplicative composition.
+  status: Solved up to polylogarithmic factors in n (outer input size), not R(f); some slack is necessary.
   best_known:
     - stmt: \mathrm{R}(f\circ g^n)=\Omega\!\left(\frac{\mathrm{R}(f)\mathrm{R}(g)}{\log(n+1)}\right)
       refs:
         - PednekarPodder26STOC
       conf: high
-      note: Here n is the outer input length, not R(f). Both f and g may be partial Boolean functions.
+      note: '**The logarithm is of the outer input length n, not R(f).** Both f and g may be partial Boolean functions.'
     - stmt: \mathrm{R}(f\circ g)=\Theta(\mathrm{R}(f)\mathrm{R}(g)/\log\mathrm{R}(g))
       refs:
         - Meiburg26composition
       conf: high
       note: Total separating families; the saving is Θ(log log L) in their composed input length L.
   why: Composition remains available for building query lower bounds with a logarithmic loss in outer input
-    size. The total-function counterexample rules out a uniform constant-factor theorem.
+    size. Meiburg's total-function counterexample shows that some polylogarithmic slack is necessary.
   refs: [BenDavidBlais20composition, BBGM22, CKMPSS23, BenDavidKothari18, PednekarPodder26STOC, Meiburg26composition]
   see_also: [comp-R, R, noisyR, LR, RS, composition, open-RS-vs-R, open-composition-log, open-noisyR-vs-R]
 

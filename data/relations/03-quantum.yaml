@@ -72,6 +72,8 @@ relations:
     Theorem 1.1], matching the known universal upper bound [ABKRT21] and refuting the conjectured cubic
     bound. The new family attains every exponent below 4, with polylogarithmic losses for each fixed k.
     The earlier cubic separation is retained below as a historical lower bound.
+    Will Cook provides a [great exposition](https://wcook04.github.io/quartic-query-lean/#/read/expert?v=lean&d=QuarticQuery.theorem_1_1_unconditional)
+    and a [Lean proof, with instructions for reproducing the formal checks](https://github.com/wcook04/quartic-query-lean#reproducing-the-formal-checks).
   see_also: [R, Q, kForrelation, cheatsheet, open-R-vs-Q, OpenAIQuarticRQ]
 
 # --------------------------------------------------------- Q vs deg

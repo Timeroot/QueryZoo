@@ -808,6 +808,8 @@ functions:
   notes: The fixed-k separation exponent is $4-2/k$ up to polylogarithmic factors. Varying k proves that
     the optimal universal power is 4; the paper does not state a fixed-k $\widetilde\Omega(\mathrm{Q}^4)$
     lower bound. The general upper bound is $\mathrm{R}\le\mathrm{D}=O(\mathrm{Q}^4)$ [ABKRT21].
+    Will Cook provides a [great exposition](https://wcook04.github.io/quartic-query-lean/#/read/expert?v=lean&d=QuarticQuery.theorem_1_1_unconditional)
+    and a [Lean proof, with instructions for reproducing the formal checks](https://github.com/wcook04/quartic-query-lean#reproducing-the-formal-checks).
   refs:
   - OpenAI26QuarticRQ
   - ABKRT21
