@@ -920,7 +920,14 @@ bounds by the dual polynomial method.</p>
     <h2>Does randomized query complexity compose for total functions?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
 
       <a class="anchor" href="#open-R-composition">#</a></h2>
-<p class="statusline">Solved at the input-size polylogarithmic scale; constant-factor multiplicativity is false.</p>    <div class="prose"><p>Randomized composition holds up to logarithmic factors in input size, even for partial Boolean functions [<a href="refs.html#PednekarPodder26STOC" class="xref ref ">PednekarPodder26STOC</a>]. Constant-factor composition fails even for total functions [<a href="refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a>].</p>
+<p class="statusline">Solved up to polylogarithmic factors in n (outer input size), not R(f); some slack is necessary.</p>    <div class="prose"><p>Randomized composition holds with a $\log(n+1)$ loss, even for partial Boolean
+functions [<a href="refs.html#PednekarPodder26STOC" class="xref ref ">PednekarPodder26STOC</a>]. <strong>The polylogarithmic loss is in the outer
+input size $n$, not in $\mathrm{R}(f)$</strong>; the theorem does not guarantee a
+$\log(\mathrm{R}(f)+1)$ loss.</p>
+<p>Meiburg's work shows that <strong>some polylogarithmic slack is necessary</strong>, even
+for total functions [<a href="refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a>]. His families save a factor
+$\Theta(\log\mathrm{R}(g))=\Theta(\log\log L)$, where $L$ is the composed
+input length, ruling out constant-factor multiplicative composition.</p>
 </div>
 
     <h3>Best known</h3>
@@ -929,7 +936,7 @@ bounds by the dual polynomial method.</p>
         <div class="stmt"><span class="tex">\(\mathrm{R}(f\circ g^n)=\Omega\!\left(\frac{\mathrm{R}(f)\mathrm{R}(g)}{\log(n+1)}\right)\)</span></div>
         <div class="meta">
 <span class="refs"><a href="refs.html#PednekarPodder26STOC" class="xref ref ">PednekarPodder26STOC</a></span>        </div>
-<div class="note">Here n is the outer input length, not R(f). Both f and g may be partial Boolean functions.</div>      </li>
+<div class="note"><strong>The logarithm is of the outer input length n, not R(f).</strong> Both f and g may be partial Boolean functions.</div>      </li>
       <li class="bnd">
         <div class="stmt"><span class="tex">\(\mathrm{R}(f\circ g)=\Theta(\mathrm{R}(f)\mathrm{R}(g)/\log\mathrm{R}(g))\)</span></div>
         <div class="meta">
@@ -937,7 +944,7 @@ bounds by the dual polynomial method.</p>
 <div class="note">Total separating families; the saving is Θ(log log L) in their composed input length L.</div>      </li>
     </ul>
 
-<h3>Why it matters</h3><div class="prose"><p>Composition remains available for building query lower bounds with a logarithmic loss in outer input size. The total-function counterexample rules out a uniform constant-factor theorem.</p>
+<h3>Why it matters</h3><div class="prose"><p>Composition remains available for building query lower bounds with a logarithmic loss in outer input size. Meiburg's total-function counterexample shows that some polylogarithmic slack is necessary.</p>
 </div>
     <footer class="relfoot">
 <span class="seealso">see also:
