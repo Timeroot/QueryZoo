@@ -606,26 +606,6 @@ relations:
       log: -12
     witness: AIKCheatSheet
     note: 'Theorem 2.1 discussion: R₀≥C=Ω(n²), Q=O(√n log³n).'
-- id: recent-bs-vs-s-total
-  from: bs
-  to: s
-  setting: total
-  status: gap
-  lower:
-  - stmt: \mathrm{bs}(f_j)=\Omega(\mathrm{s}(f_j)^{2.130825579397823})
-    refs:
-    - Prove2MeSensitivity26
-    conf: high
-    form:
-      exp: 2.130825579397823
-      kind: const
-    witness: Prove2MeTournament
-    note: The recorded decimal exponent is strictly below the exact endpoint $\alpha=\frac{\log(14055^8)}{\log(3738277295413674)}=2.1308255793978239\ldots$.
-      The source supplies every ε>0 and arbitrarily large sensitivity; choose a fixed ε small enough.
-      Direct separation.
-  notes: "The exact source statement is $\\mathrm{bs}\\ge\\mathrm{s}^{\alpha-\varepsilon}$ for every positive\
-    \ ε and arbitrarily large sensitivity. The lower numeric shadow is rounded down and asserts a literal\
-    \ fixed-power separation, not a polylogarithmic endpoint bound."
 - id: recent-fbs-vs-s-total
   from: fbs
   to: s
@@ -672,17 +652,33 @@ relations:
   setting: total
   status: gap
   lower:
-  - stmt: \mathrm{bs}(f_j)=\Omega(\lambda(f_j)^{2.130825579397823})
-    refs:
-    - Prove2MeSensitivity26
-    conf: high
-    form:
-      exp: 2.130825579397823
-      kind: const
-    witness: Prove2MeTournament
-    note: The recorded decimal exponent is strictly below the exact endpoint $\alpha=\frac{\log(14055^8)}{\log(3738277295413674)}=2.1308255793978239\ldots$.
-      The source supplies every ε>0 and arbitrarily large sensitivity; choose a fixed ε small enough.
-      Immediate consequence of bs≤fbs=Θ(RC) and λ≤s.
+    - stmt: \mathrm{bs}(f_d)=\Omega(\lambda(f_d)^{2.12697})
+      refs:
+        - Meiburg26
+      conf: high
+      form:
+        exp: 2.12697
+        kind: const
+      witness: MeiburgTournament
+      note: |
+        Earlier, weaker rigorous separation (exponent approximately $2.12$): the
+        base function has $\mathrm{bs}\ge14011$ and $\lambda\le89.0162$, and
+        self-composition gives exponent $\log(14011)/\log(89.0162)=2.12697356\ldots$ (usually quoted as $2.127$).
+        The main result is formally verified in Lean and refutes the quadratic
+        bound asked about in [ABKRT21]. The same paper reports numerical,
+        non-rigorous evidence for exponent approximately $2.20$ on a
+        1255-variable relative; that value is not an established lower bound.
+    - stmt: \mathrm{bs}(f_j)=\Omega(\lambda(f_j)^{2.130825579397823})
+      refs:
+        - Prove2MeSensitivity26
+      conf: high
+      form:
+        exp: 2.130825579397823
+        kind: const
+      witness: Prove2MeTournament
+      note: The recorded decimal exponent is strictly below the exact endpoint $\alpha=\frac{\log(14055^8)}{\log(3738277295413674)}=2.1308255793978239\ldots$.
+        The source supplies every ε>0 and arbitrarily large sensitivity; choose a fixed ε small enough.
+        Immediate consequence of bs≤fbs=Θ(RC) and λ≤s.
   notes: "The exact source statement is $\\mathrm{bs}\\ge\\mathrm{s}^{\alpha-\varepsilon}$ for every positive\
     \ ε and arbitrarily large sensitivity. The lower numeric shadow is rounded down and asserts a literal\
     \ fixed-power separation, not a polylogarithmic endpoint bound."
@@ -1210,3 +1206,126 @@ relations:
     conf: high
     note: Error-model inclusion; source notation R₁ means certain rejection. For expected-cost R₀, use
       a constant-factor truncation.
+- from: chibar
+  to: RS
+  setting: total
+  status: gap
+  lower:
+  - stmt: \bar\chi(P_q)/\mathrm{RS}(P_q)=\Omega(\log N_q)
+    refs:
+    - Meiburg26composition
+    conf: high
+    note: Theorem 7.5; N_q=Θ(q⁴ log q).
+    witness: MeiburgParityPointer
+  see_also:
+  - chibar
+  - RS
+  - MeiburgParityPointer
+- from: chi
+  to: RS
+  setting: total
+  status: gap
+  lower:
+  - stmt: \chi(P_q)/\mathrm{RS}(P_q)=\Omega(\log N_q)
+    refs:
+    - Meiburg26composition
+    conf: high
+    note: Theorem 7.5. Together with ANDOR this proves incomparability, not a universal inequality.
+    witness: MeiburgParityPointer
+  see_also:
+  - chi
+  - RS
+  - MeiburgParityPointer
+- from: LR
+  to: chibar
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{LR}(G_q)/\bar\chi(G_q)=\Omega(\sqrt{\log N_q})
+    refs:
+    - Meiburg26composition
+    conf: high
+    note: Theorem 8.3; only a lower bound on the LR gap is claimed.
+    witness: MeiburgMaskedPointer
+  see_also:
+  - LR
+  - chibar
+  - MeiburgMaskedPointer
+- from: R
+  to: LR
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{R}(M_q)/\mathrm{LR}(M_q)=\Omega(\log N_q)
+    refs:
+    - Meiburg26composition
+    conf: high
+    note: Theorem 3.5.
+    witness: MeiburgMajorityPointer
+  see_also:
+  - R
+  - LR
+  - MeiburgMajorityPointer
+- from: RS
+  to: chi
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{RS}(F_n)/\chi(F_n)=\Omega(\sqrt{\log N}),\qquad N=n^2
+    refs:
+    - Meiburg26composition
+    conf: high
+    note: Theorem 9.1 and Corollary 9.8. Opposite direction to the parity-pointer family.
+    witness: ANDOR
+  see_also:
+  - RS
+  - chi
+  - ANDOR
+- from: chibar
+  to: chi
+  setting: total
+  status: gap
+  lower:
+  - stmt: \bar\chi(F_n)/\chi(F_n)=\Omega(\sqrt{\log N}),\qquad N=n^2
+    refs:
+    - Meiburg26composition
+    conf: high
+    note: Theorem 9.1.
+    witness: ANDOR
+  see_also:
+  - chibar
+  - chi
+  - ANDOR
+- id: recent-C-vs-R1-total
+  from: C
+  to: R1
+  setting: total
+  status: settled
+  upper:
+  - stmt: \mathrm{C}(f)=O(\mathrm{R}^{1}(f)^2)
+    refs:
+    - Nisan91
+    conf: high
+    note: C=O(R²) and R≤R¹.
+    form:
+      exp: 2
+      kind: const
+  lower:
+  - stmt: \mathrm{C}(\overline f_n)=\Theta(\mathrm{R}^{1}(\overline f_n)^2)
+    refs:
+    - AIK26
+    conf: high
+    note: Theorem 2.2 applied to the complement of AIKDNF. The paper’s R₁ uses certain rejection; the
+      catalog’s legacy R¹ uses certain acceptance.
+    witness: AIKDNFComplement
+    form:
+      exp: 2
+      kind: const
+  notes: The logarithm-free total-function separation was already recorded for [[R1RP]]. Complementing
+    the witness explicitly fills the legacy [[R1]] column as well.
+  see_also:
+  - C
+  - R1
+  - R1RP
+  - AIKDNF
+  - AIKDNFComplement

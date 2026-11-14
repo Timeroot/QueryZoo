@@ -16,7 +16,8 @@ functions:
   kind: total
   arity: '$N = n^2$ bits ($n$ blocks of $n$)'
   scale: {var: n, subs: {N: 'n^2'}}
-  short: 'The witness for the "$\wedge\circ\vee$" cells: $\mathrm{D}=N$ but every combinatorial measure is $\sqrt N$.'
+  short: $\mathrm{D}=\mathrm{R}=\Theta(N)$ while $\mathrm{C}=\mathrm{bs}=\sqrt N$; also separates sabotage
+    and max-conflict from conflict complexity.
   definition: |
     Split the input into $n$ blocks of $n$ bits. Output $1$ iff *every* block
     contains at least one $1$.
@@ -72,7 +73,6 @@ functions:
     - {measure: CG,     value: '\Theta(n^2) = \Theta(N)', putative: true, note: 'Pinned by the correct sandwich $\max\{\mathrm{Adv}^2,\mathrm{R}_0,\mathrm{CA}\} \le \mathrm{CG} \le \min\{\mathrm{C}^0\mathrm{C}^1,\ O(\mathrm{EC}^2)\}$ -- note $\mathrm{CG}$ is *not* capped by $\mathrm{D}$. Lower: $\mathrm{Adv}^2 = \Theta(n^2)$. Upper: $\mathrm{C}^0\mathrm{C}^1 = n\cdot n = n^2$. So the private-coin certificate game costs the full $N$ while the public-coin one costs only $\sqrt N$ -- the [[CG]] vs [[CGpub]] gap is quadratic here.'}
     - {measure: QC,     value: '\Theta(\sqrt n) = \Theta(N^{1/4})', note: '$\mathrm{QC}(f) = \Theta(\sqrt{\mathrm{fbs}(f)})$ for every $f$ ([[QC]] vs [[fbs]]), and $\mathrm{fbs} = n$ here.'}
     - {measure: psD,    value: '\Theta(n^2) = \Theta(N)', note: 'For a Boolean-valued function pseudo-determinism is free -- the canonical answer is forced to be $f(x)$ -- so $\mathrm{psD}(f) = \Theta(\mathrm{R}(f))$, and $\mathrm{R} = \Theta(n^2)$ here.'}
-    - {measure: RS,     value: '\Omega(\sqrt N),\ O(N)', putative: true, note: 'Not pinned. Upper: $\mathrm{RS} \le \mathrm{R}/(1-2\varepsilon) = O(n^2)$. Lower: $\mathrm{RS} = \Omega(\mathrm{bs}) = \Omega(n)$ -- take $x$ with $\mathrm{bs}$ disjoint sensitive blocks, star out a uniformly random one of them, and note that every unstarred bit agrees with $x$, so an algorithm learns nothing until it queries inside the chosen block. (The generic $\mathrm{R} = O(\mathrm{RS}^2\log\mathrm{RS})$ gives the same $\widetilde\Omega(n)$.)'}
     - {measure: ndeg,   value: 'n = \sqrt N', refs: [IJKKKSWW23], note: 'Nondeterministic degree is multiplicative over the disjoint blocks of an AND: $\mathrm{ndeg}(\mathrm{AND}_n\circ g) = n\,\mathrm{ndeg}(g)$, and $\mathrm{ndeg}(\mathrm{OR}_n) = 1$ (the polynomial $\sum_i x_i$ is nonzero exactly on the $1$-inputs). This is the $\mathrm{ndeg}(f) = n$ half of the recorded [[rdeg]] value.'}
     - {measure: NQ,     value: '\Theta(n) = \Theta(\sqrt N)', note: 'De Wolf''s exact characterisation $\mathrm{NQ}(f) = \lceil \mathrm{ndeg}(f)/2\rceil$ applied to the [[ndeg]] entry. Nondeterministic quantum queries are thus quadratically cheaper than $\mathrm{D} = N$ and match $\mathrm{Q}$.'}
     - {measure: Inf1,   value: '\Theta(n^2 2^{-n})', putative: true, note: 'For Boolean-valued $f$ the $L_1$ and $L_2$ notions of total influence agree, $\mathrm{I}^1(f) = \mathrm{I}(f)$; they can differ only for bounded real-valued $p$. So this is the [[Inf]] entry verbatim.'}
@@ -87,9 +87,6 @@ functions:
     - {measure: Np,     value: '\Omega(n^2),\ O(n^2\log n)', refs: [FRPU94], note: 'A noisy-query algorithm is in particular randomized, so $\mathrm{N}_p \ge \mathrm{R} = \Omega(n^2)$; repeating each query of an optimal randomized tree $O(\log \mathrm{R})$ times and taking majorities gives $\mathrm{N}_p = O(\mathrm{R}\log \mathrm{R})$ [FRPU94]. Whether the logarithm is needed here is open -- it is provably needed for [[PARITY]].'}
     - {measure: noisyR, value: '\Theta(n^2)', refs: [CKMPSS23], note: 'Always $\mathrm{noisyR} \le \mathrm{R}$, and the recorded implication $\mathrm{R}(f) = \Theta(\text{arity}) \Rightarrow \mathrm{noisyR}(f) = \Theta(\mathrm{R}(f))$ applies, since $\mathrm{R} = \Theta(n^2) = \Theta(N)$. So the composition theorem $\mathrm{R}(F\circ f^m) = \Omega(\mathrm{noisyR}(F)\,\mathrm{R}(f))$ loses nothing when this function is the *outer* one.'}
     - {measure: robustQ, value: '\Theta(n) = \Theta(\sqrt N)', conf: medium, refs: [HoyerMoscadeWolf03, BNRdW05], note: 'Lower bound $\mathrm{Q}^{\mathrm{rob}} \ge \mathrm{Q} = \Theta(n)$. Upper bound: Grover search on *bounded-error* inputs costs $O(\sqrt m)$ calls with no logarithmic overhead [HoyerMoscadeWolf03], and noisy oracle access to a block can be turned into bounded-error access at constant amortised cost [BNRdW05]. Run robust search inside each $\mathrm{OR}_n$ block ($O(\sqrt n)$ noisy queries) and robust search again at the outer $\mathrm{AND}_n$ over the $n$ bounded-error block answers ($O(\sqrt n)$ calls): $O(n)$ in total.'}
-    - {measure: chi,    value: '\Omega(n),\ O(n^2)', refs: [Li18, Sanyal18], note: 'Conflict complexity obeys $\chi = \Omega(\mathrm{bs})$ [Li18] with $\mathrm{bs} = n$, and $\chi \le \bar\chi = O(\mathrm{LR}) \le \mathrm{R} = O(n^2)$ from above. Closing this window would say exactly how much this gadget contributes as the *inner* function in $\mathrm{R}(F\circ f^m) = \Omega(\mathrm{R}(F)\chi(f))$ [Sanyal18].'}
-    - {measure: chibar, value: '\Omega(n),\ O(n^2)', refs: [GLSS19], note: 'Max-conflict complexity dominates $\chi = \Omega(\mathrm{bs}) = \Omega(n)$ and the recorded $\mathrm{RS} = \Omega(\sqrt N) = \Omega(n)$, and is dominated by $\mathrm{LR} \le \mathrm{R} = O(n^2)$ [GLSS19].'}
-    - {measure: LR,     value: '\Omega(n),\ O(n^2)', refs: [BBGM22], note: 'Linearised randomized complexity satisfies $\Omega(\sqrt{\mathrm{R}}) \le \mathrm{LR} \le \mathrm{R}$ [BBGM22], which is exactly $\Omega(n)$ and $O(n^2)$ here; the alternative route $\mathrm{LR} = \Omega(\bar\chi) = \Omega(\mathrm{bs})$ gives the same lower end.'}
     - {measure: PDT,    value: 'N = n^2', putative: true, note: 'Parity queries buy nothing: $\deg_2 \le \mathrm{D}^{\oplus} \le \mathrm{D}$, and the recorded $\deg_2 = \mathrm{D} = N$ closes the sandwich.'}
     - {measure: NS,     value: '\Theta(n2^{-n})', putative: true, refs: [ODonnell14], note: 'For constant $\delta$ the noise sensitivity is within constants of the variance: in $\mathrm{NS}_\delta = \tfrac12\sum_{S\ne\emptyset}(1-(1-2\delta)^{|S|})\hat f(S)^2$ every factor lies in $[2\delta, 1]$, so $\delta\,\mathrm{Var}(f) \le \mathrm{NS}_\delta(f) \le \tfrac12\mathrm{Var}(f)$. Here $\Pr[f=1] = (1-2^{-n})^n = 1-\Theta(n2^{-n})$, hence $\mathrm{Var} = 4p(1-p) = \Theta(n2^{-n})$. Consistent with the recorded $\mathrm{I}(f) = \Theta(n^2 2^{-n})$ through $\mathrm{NS}_\delta \le \delta\,\mathrm{I}$.'}
     - {measure: Stab,   value: '1 - \Theta(n2^{-n})', putative: true, note: 'From $\mathrm{Stab}_\rho = 1 - 2\,\mathrm{NS}_{(1-\rho)/2}$ and the [[NS]] entry. The function is overwhelmingly biased towards $1$, so it is almost perfectly noise stable at every constant $\rho$ -- which is why the OSSS bound $\mathrm{D} \ge \mathrm{Var}/\mathrm{MaxInf}$ gives only $\Theta(n)$ here and not $\Theta(N)$.'}
@@ -104,6 +101,10 @@ functions:
     - {measure: degcert, value: n, note: 'KLLPV26, Proposition 52: certifying a fixed input reduces to AND or OR on n bits (the family has N=n² inputs).', refs: [KLLPV26]}
     - {measure: QEcert, value: \Theta(n), note: Certification costs at most its n-bit classical certificate; bounded degree certification n gives the quantum lower bound., refs: [KLLPV26]}
     - {measure: Q0cert, value: \Theta(n), note: Theorem 5 and QEcert=Θ(n)., refs: [KLLPV26]}
+    - {measure: RS, value: \Theta(n^2), refs: [Meiburg26composition], note: 'Theorem 9.1; for LR use max-conflict ≤ O(LR) ≤ O(R). The conflict bound is the theorem’s bracket, not the stronger introduction-table upper bound.'}
+    - {measure: chibar, value: \Theta(n^2), refs: [Meiburg26composition], note: 'Theorem 9.1; for LR use max-conflict ≤ O(LR) ≤ O(R). The conflict bound is the theorem’s bracket, not the stronger introduction-table upper bound.'}
+    - {measure: LR, value: \Theta(n^2), refs: [Meiburg26composition], note: 'Theorem 9.1; for LR use max-conflict ≤ O(LR) ≤ O(R). The conflict bound is the theorem’s bracket, not the stronger introduction-table upper bound.'}
+    - {measure: chi, value: '\Omega(n^2/\log^2 n),\ O(n^2/\log^{1/2}n)', refs: [Meiburg26composition], note: 'Theorem 9.1; for LR use max-conflict ≤ O(LR) ≤ O(R). The conflict bound is the theorem’s bracket, not the stronger introduction-table upper bound.'}
   witnesses:
     - {of: [Q0, Q],   setting: total, statement: 'Quadratic: $\mathrm{Q}_0 = \Theta(N)$ (forced by $\deg = N$) against $\mathrm{Q} = \Theta(\sqrt N)$ (robust quantum search). Zero error is exactly as expensive as no quantum at all here.'}
     - {of: [D, C],    setting: total, statement: '$\mathrm{D}=\mathrm{C}^2$; matches the upper bound $\mathrm{D}\le \mathrm{C}^0\mathrm{C}^1 \le \mathrm{C}^2$.', refs: [BlumImpagliazzo87, HartmanisHemachandra87, Tardos89]}
@@ -112,9 +113,12 @@ functions:
     - {of: [deg, s],  setting: total, statement: '$\deg = \mathrm{s}^2$; matches Huang''s $\deg \le \mathrm{s}^2$ exactly.', refs: [Huang19]}
     - {of: [deg, C],  setting: total, statement: '$\deg = \mathrm{C}^2$.'}
     - {of: [QE, C],   setting: total, statement: '$\mathrm{Q}_E = \mathrm{C}^2$.'}
-  refs: [SaksWigderson86, HoyerMoscadeWolf03, ABKRT21, Huang19, MinskyPapert69]
+  refs: [SaksWigderson86, HoyerMoscadeWolf03, ABKRT21, Huang19, MinskyPapert69, Meiburg26composition]
   see_also: [OR, AND, NANDtree, ANDEH]
 
+  notes: ' [Meiburg26composition, Theorem 9.1] gives $\mathrm{RS}=\bar\chi=\Theta(n^2)$ and $\Omega(n^2/\log^2
+    n)\le\chi\le O(n^2/\sqrt{\log n})$. Thus $\mathrm{RS}/\chi=\Omega(\sqrt{\log N})$, perfect conflict
+    composition fails, and $\chi$ is not $O(\mathrm{C})$ (Corollaries 9.8, 9.9, 9.11).'
 - id: NANDtree
   name: NAND tree (balanced AND-OR formula)
   symbol: '\bar{\wedge}\text{-tree}'
@@ -818,12 +822,23 @@ functions:
     - {measure: ardeg,  value: '\le 7923.9^{\,d}', putative: true, note: '$\mathrm{rdeg}_{1/3} \le \widetilde{\deg} \le \deg \le 7923.9^{\,d}$.'}
     - {measure: PostQ,  value: 'O(7923.9^{\,d})', putative: true, refs: [MahadevdeWolf15], note: '$\mathrm{PostQ}_\varepsilon = \Theta(\mathrm{rdeg}_\varepsilon)$ [MahadevdeWolf15], bounded by the [[ardeg]] entry. Contrast the recorded $\mathrm{Q} = \Omega(118.3^{\,d})$: post-selection is not known to help or hurt on this family.'}
   witnesses:
-    - {of: [bs, lambda], setting: total, statement: '$\mathrm{bs}(f_n) = \Omega(\lambda(f_n)^{2.127})$, so the bs-vs-$\lambda$ exponent lies in $[2.127,\,4]$, not $\{2\}$ as [ABKRT21] asked. The main result is formally verified in Lean.', refs: [Meiburg26]}
+    - of:
+        - bs
+        - lambda
+      setting: total
+      statement: $\mathrm{bs}(f_n) = \Omega(\lambda(f_n)^{2.12697})$, an earlier rigorous separation of
+        exponent approximately $2.12$, refuting the quadratic bound asked about in [ABKRT21]. The main result
+        is formally verified in Lean.
+      refs:
+        - Meiburg26
   notes: |
     Numerical (non-rigorous) evidence in the same paper suggests a 1255-variable
     relative attains exponent $\approx 2.20$, and a 30-variable instance already
     beats exponent $2$ with an exactly computable $\lambda$.
-    This is the single most recent change to the classical separation matrix:
-    the $\mathrm{bs}$-vs-$\lambda$ cell moved from "$2,4$" to "$2.127, 4$".
+    The rigorous exponent $2.12697356\ldots$ (approximately $2.12$, usually
+    quoted as $2.127$) is weaker than the
+    current $2.1308255793978239\ldots$ lower endpoint supplied by
+    [[Prove2MeTournament]] [Prove2MeSensitivity26]. The numerical $2.20$
+    value is not an established lower bound.
   refs: [Meiburg26, ABKRT21]
   see_also: [bs, lambda, AND]

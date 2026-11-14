@@ -1204,7 +1204,7 @@ Sherstov12robust:
   venue: "STOC 2012; Theory of Computing 9:593-615 (2013)"
   year: 2012
   doi: "10.4086/toc.2013.v009a018"
-  note: "Every bounded degree-d polynomial has a degree-O(d) robust version, giving the approximate-degree composition UPPER bound deg~(f o g) = O(deg~(f) deg~(g)). The matching lower bound is open in general."
+  note: "Every bounded degree-d polynomial has a degree-O(d) robust version, giving the approximate-degree composition UPPER bound deg~(f o g) = O(deg~(f) deg~(g)). The matching lower bound is now proved for total Boolean functions [PednekarPodder26composition]."
 
 CKMPSS23:
   authors: [Chakraborty, S., Kayal, C., Mittal, R., Paraashar, M., Sanyal, S., Saurabh, N.]
@@ -2022,3 +2022,91 @@ Prove2MeSensitivity26:
     threshold S≥2. Attribution to Robin Kothari and OpenAI’s earlier construction is retained in the proof
     source. Verification status is reported by Prove2Me; the zoo did not independently replay the Lean
     proof.'
+
+PednekarPodder26composition:
+  authors:
+  - Pednekar, S.
+  - Podder, S.
+  title: A General Composition Theorem for Approximate Degree
+  year: 2026
+  arxiv: '2609.30139'
+  note: Read v2 (October 23, 2026). Proves constant-factor composition of approximate degree for all total
+    Boolean functions and refutes multiplicative exact quantum query composition. The expanded STOC 2027
+    submission [PednekarPodder26STOC] also proves randomized composition with a log(n+1) loss for possibly
+    partial Boolean functions.
+PednekarPodder26STOC:
+  authors:
+  - Pednekar, S.
+  - Podder, S.
+  title: On the Composition Theorem for Approximate Degree, Randomized and Exact Quantum Query Complexity
+  year: 2026
+  venue: STOC 2027 submission
+  url: https://github.com/sigact-stoc/stoc2027/releases/download/papers-2/1312.pdf
+  note: 'Expanded submission version of [PednekarPodder26composition], paper 1312. Theorem 31: R(f) ≤
+    C log(n+1) noisyR(f) for nonconstant partial Boolean f on n bits, hence R(f∘g) = Ω(R(f)R(g)/log(n+1))
+    for possibly partial Boolean f,g. The loss depends on the outer input size, not R(f). Theorem 33 refutes
+    constant-factor exact quantum query composition on total functions.'
+Meiburg26composition:
+  authors:
+  - Meiburg, A.
+  title: No Perfect Randomized Composition
+  year: 2026
+  arxiv: '2610.31638'
+  note: Read v1 (October 22, 2026). Total–total R composition loses Θ(log R(g)) = Θ(log log L), where
+    L is the composed input length (Theorem 1.1). Separates every adjacent pair RS, max-conflict, LR,
+    R on total functions; separates noisyR from R; makes conflict and sabotage incomparable. For AND-of-ORs
+    use the proved Theorem 9.1 bracket Ω(m²/log²m) ≤ χ ≤ O(m²/√log m), rather than the stronger upper
+    bound printed in the introduction table. Also proves χ is not O(C) and a maximal R* / R = Θ(log R)
+    gap.
+PSI26AaronsonAmbainis:
+  authors:
+  - Physical Superintelligence (PSI)
+  title: The Aaronson–Ambainis conjecture
+  year: 2026
+  url: https://psi.inc/research/aaronson-ambainis/
+  note: 'PSI announcement and proof attribution. David Turturean discovered the proof using PSI’s research
+    system. Original paper: [Turturean26]. Cleaner expositions: [BDST26AA] (arXiv:2611.11626) and [HMP26AA]
+    (arXiv:2611.12795).'
+Turturean26:
+  authors:
+  - Turturean, D.
+  title: A Proof of the Aaronson–Ambainis Conjecture
+  year: 2026
+  arxiv: '2611.09773'
+  note: PSI’s original proof. For bounded degree-d functions, max influence ≥ c Var(f)^(5/2)/d^6 with
+    an absolute c>0, using the paper’s influence normalization. In the [0,1]-valued formulation this yields
+    an influence ≥ (Var(f)/d)^7. Cleaner expositions appear in [BDST26AA] (arXiv:2611.11626) and [HMP26AA]
+    (arXiv:2611.12795); the latter gives a completion-based proof and an O(Q^6/(εδ)^2) simulation for
+    a domain of density δ.
+BDST26AA:
+  authors:
+  - Blanc, G.
+  - Docter, J.
+  - Strassle, C.
+  - Tan, L.-Y.
+  title: 'Proof of the Aaronson–Ambainis Conjecture: An Exposition'
+  year: 2026
+  arxiv: '2611.11626'
+  note: Cleaner exposition of the PSI/Turturean proof, organized into four steps. Parameters are not optimized.
+HMP26AA:
+  authors:
+  - Huffstutler, T.
+  - Miloschewsky, D.
+  - Podder, S.
+  title: A short proof of the Aaronson-Ambainis Conjecture via the completion framework
+  year: 2026
+  arxiv: '2611.12795'
+  note: Shorter completion-based exposition. For partial Boolean f with domain density δ, obtains a deterministic
+    O(Q(f)^6/(εδ)^2)-query algorithm correct on at least a 1−ε fraction of the domain. Also derives the
+    bounded-polynomial influence formulation.
+
+OpenAI26QuarticRQ:
+  authors:
+  - OpenAI
+  title: A Nearly Quartic Separation Between Randomized and Quantum Query Complexity
+  year: 2026
+  url: https://github.com/openai/math/blob/main/preprints/A-Nearly-Quartic-Separation-Between-Randomized-and-Quantum-Query-Complexity-October-5-2026/quartic-query-separation.pdf
+  note: October 5, 2026 preprint. Theorem 1.1 settles the optimal R-versus-Q power at 4 for total Boolean
+    functions. For every fixed k≥2, Q(F_{k,m})≤C_k sqrt(m)(log m)^{b_k}, R(F_{k,m})≥c_k m^{2−1/k}/(log
+    m)^2, giving exponents 4−2/k with polylogarithmic losses. Letting k range rules out every universal
+    exponent below 4. The statement is an optimal-exponent theorem, not a fixed-k literal Ω̃(Q^4) bound.

@@ -69,11 +69,11 @@ measures:
     - 'Paturi: for symmetric $f$, $\widetilde{\deg}(f)=\Theta(\sqrt{n(n-\Gamma(f))})$ where $\Gamma(f)=\min\{|2k-n+1| : f_k\ne f_{k+1}\}$.'
     - 'Read-once formulas: $\widetilde{\deg}(f)=\Theta(\sqrt n)$ [ABKRT21, Thm 6].'
     - '$\lambda(f)=O(\widetilde{\deg}(f))$.'
-  refs: [NS94, BBCMdW01, ABKRT21, Paturi92, BT22, KulkarniTal16]
+    - 'For total Boolean $f,g$, $\widetilde{\deg}(f\circ g)=\Theta(\widetilde{\deg}(f)\widetilde{\deg}(g))$: composition holds up to constants [PednekarPodder26composition, Sherstov12robust].'
+  refs: [NS94, BBCMdW01, ABKRT21, Paturi92, BT22, KulkarniTal16, PednekarPodder26composition, Sherstov12robust]
   related: [deg, Q, sdeg, ardeg, lambda, C]
   see_also: [deg, Q, sdeg, ardeg, lambda]
   confidence: high
-
 - id: sdeg
   name: Sign degree
   symbol: '\mathrm{sdeg}(f)'

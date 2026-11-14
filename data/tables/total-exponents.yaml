@@ -34,10 +34,9 @@ setting: total
 convention: >
   An entry $a, b$ in row $M_1$ and column $M_2$ means that there exists a
   function $g$ with $M_1(g) \ge M_2(g)^{a-o(1)}$, and that for all total
-  functions $f$, $M_1(f) \le M_2(f)^{b+o(1)}$. For example, the $3,4$ entry at
-  row $\mathrm{R}$ and column $\mathrm{Q}$ means that the maximum possible
-  separation between $\mathrm{R}$ and $\mathrm{Q}$ is at least cubic and at most
-  quartic.
+  functions $f$, $M_1(f) \le M_2(f)^{b+o(1)}$. For example, the $4,4$ entry at
+  row $\mathrm{R}$ and column $\mathrm{Q}$ means that the optimal universal
+  separation exponent is quartic [OpenAI26QuarticRQ, ABKRT21].
 
 shading: >
   Cells are shown "tight" (light) if the relationship is optimal
@@ -119,7 +118,7 @@ cells:
     lambda: {a: 4,   b: 6, tight: false, refs: [ABBLSS17]}
     QE:     {a: 1.5, b: 3, tight: false, refs: [ABBLSS17], note: 'The $3/2$ entry: $\mathrm{R}(g)\ge \mathrm{Q}_E(g)^{3/2-o(1)}$.'}
     deg:    {a: 2,   b: 3, tight: false, refs: [GJPW18]}
-    Q:      {a: 3,   b: 4, tight: false, refs: [BansalSinha21, SSW21, ABK16], note: 'Cubic separation from $k$-Forrelation + cheat sheets; the $\mathrm{R}=O(\mathrm{Q}^4)$ upper bound is [BBCMdW01]. **The** headline open problem of the total-function theory.'}
+    Q: {a: 4, b: 4, tight: true, w: OpenAIQuarticRQ, refs: [OpenAI26QuarticRQ, ABKRT21], note: 'Optimal exponent 4 (OpenAI Theorem 1.1). For each fixed k, lower exponent 4−2/k with polylogarithmic factors; varying k rules out every smaller universal power. This table records a−o(1) endpoints, not a fixed-k literal Ω̃(Q⁴) bound.'}
     adeg:   {a: 4,   b: 4, tight: true,  refs: [ABBLSS17]}
     rdeg:   {a: 2,   b: 4, tight: false, w: ANDEH, refs: [KKWY26, IJKKKSWW23], note: 'Through $\mathrm{D}\le16\,\mathrm{rdeg}^4$ [KKWY26].'}
 

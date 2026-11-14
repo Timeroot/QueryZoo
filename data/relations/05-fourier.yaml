@@ -118,21 +118,22 @@ relations:
 - from: MaxInf
   to: adeg
   setting: total
-  status: open
+  status: settled
   upper:
-    - stmt: '\text{(conjectured) } \mathrm{MaxInf}(p) \ge \mathrm{poly}\big(\mathrm{Var}(p)/\deg(p)\big) \text{ for bounded } p'
-      refs: [AaronsonAmbainis14]
-      note: '**The Aaronson-Ambainis conjecture.** A bounded degree-$d$ real polynomial with variance $\ge\varepsilon$ should have a variable of influence $\ge \mathrm{poly}(\varepsilon/d)$.'
+    - stmt: \max_i\mathrm{Inf}_i(p)\ge c\,\mathrm{Var}(p)^{5/2}/d^6,\qquad d=\deg(p)\ge1
+      refs:
+        - PSI26AaronsonAmbainis
+        - Turturean26
       conf: high
-      todo: 'open'
-  notes: |
-    Consequence if true: $\mathrm{R}(f) = \mathrm{poly}(\mathrm{Q}(f))$ for all
-    **total** $f$ -- and more generally, every bounded-error quantum query
-    algorithm on a product distribution can be simulated classically with
-    polynomially many queries. This is the main structural conjecture behind
-    "quantum speedups need structure".
+      note: 'For bounded $p:\{-1,1\}^n\to[-1,1]$ and an absolute $c>0$, with influence normalized as in
+        the paper. PSI/Turturean proves the Aaronson–Ambainis conjecture. Cleaner expositions: [BDST26AA]
+        (arXiv:2611.11626) and [HMP26AA] (arXiv:2611.12795).'
+  notes: Every quantum query algorithm has a classical simulation using polynomially many queries that approximates
+    its acceptance probability on all but a small fraction of uniformly random inputs. For a partial Boolean
+    problem with domain density $\delta$, [HMP26AA] gives a deterministic $O(\mathrm{Q}(f)^6/(\varepsilon\delta)^2)$-query
+    algorithm correct on at least a $1-\varepsilon$ fraction of the domain. This is an average-case simulation
+    guarantee.
   see_also: [MaxInf, adeg, Q, R, Inf1, open-aaronson-ambainis]
-
 - from: Inf1
   to: deg
   setting: total

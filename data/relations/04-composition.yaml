@@ -16,59 +16,89 @@ relations:
   kind: composition
   id: comp-R
   setting: partial
-  status: fails
-  headline: '\mathrm{R}(f\circ g^n) \stackrel{?}{=} \tilde\Theta\big(\mathrm{R}(f)\,\mathrm{R}(g)\big)'
+  status: settled
+  headline: \frac{\mathrm{R}(f)\mathrm{R}(g)}{\log(n+1)}\lesssim\mathrm{R}(f\circ g^n)\lesssim\mathrm{R}(f)\mathrm{R}(g)\log(\mathrm{R}(f)+1)
   upper:
     - stmt: '\mathrm{R}_{1/3}(f\circ g^n) = O\big(\mathrm{R}(f)\,\mathrm{R}_{1/(3\mathrm{R}(f))}(g)\big) = O\big(\mathrm{R}(f)\,\mathrm{R}(g)\log \mathrm{R}(f)\big)'
       note: 'Folklore: run the outer algorithm and amplify each inner call to error $1/(3\mathrm{R}(f))$, then union bound. The $\log$ comes purely from amplification, which is why $\bar{\mathrm{R}}_\varepsilon$ and the $\varepsilon$-dependence of $\mathrm{R}$ matter so much here.'
       conf: high
   lower:
+    - stmt: \mathrm{R}(f\circ g^n)=\Omega\!\left(\frac{\mathrm{R}(f)\mathrm{R}(g)}{\log(n+1)}\right)
+      refs:
+        - PednekarPodder26STOC
+      conf: high
+      note: Both f and g may be partial Boolean functions. Here n is the outer input length; replacing log(n+1)
+        by log(R(f)+1) is not justified. Follows from Theorem 31 and the optimal outer composition theorem.
     - stmt: '\text{FALSE in general: } \exists \text{ partial } f,g:\ \mathrm{R}(f\circ g) = O\big(\mathrm{R}(f)^{2/3}\mathrm{R}(g)^{2/3}\log^{2/3}\mathrm{R}(f)\big)'
-      refs: [BenDavidBlais20composition]
+      refs:
+        - BenDavidBlais20composition
       note: |
         Theorem 1: the randomized composition conjecture is **refuted** for partial functions,
         by a polynomial margin. Take $f = $ [[ApproxIndex]]$_k$ and $g = \mathrm{GapMaj}_k$;
         then $\mathrm{R}(f) = \Theta(\sqrt{k\log k})$, $\mathrm{R}(g) = \Theta(k)$ and
         $\mathrm{R}(f\circ g) = \Theta(k\log k)$, against a conjectured
         $\tilde\Theta(k^{3/2})$. Note that both $\mathrm{R}(f)$ and $\mathrm{R}(g)$ are only
-        *logarithmic* in the input size $n = k + 2^k$ of $f$, which is exactly the loophole
-        [[open-composition-log]] leaves open.
+        *logarithmic* in the input size $n = k + 2^k$ of $f$, which is why the theorem with a $\log(n+1)$ loss can coexist with this counterexample.
       conf: high
-    - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{noisyR}(f)\,\mathrm{R}(g)\big)'
-      refs: [BenDavidBlais20composition]
-      note: 'Theorem 3, the optimal *outer* composition theorem: by Lemma 6, if $\mathrm{R}(f\circ g^n)=\Omega(M(f)\mathrm{R}(g))$ for all $f,g$ then $M(f) = O(\mathrm{noisyR}(f))$ -- so no measure can do better. Holds even when $f$ is a relation. The proof of optimality is one line given the characterisation $\mathrm{noisyR}(f) = \Theta(\mathrm{R}(f\circ\mathrm{GapMaj}_n)/n)$: take $g = \mathrm{GapMaj}_n$.'
+    - stmt: \mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{noisyR}(f)\,\mathrm{R}(g)\big)
+      refs:
+        - BenDavidBlais20composition
+      note: 'Theorem 3, the optimal *outer* composition theorem: by Lemma 6, if $\mathrm{R}(f\circ g^n)=\Omega(M(f)\mathrm{R}(g))$
+        for all $f,g$ then $M(f) = O(\mathrm{noisyR}(f))$ -- so no measure can do better. Holds even when
+        $f$ is a relation. The proof of optimality is one line given the characterisation $\mathrm{noisyR}(f)
+        = \Theta(\mathrm{R}(f\circ\mathrm{GapMaj}_n)/n)$: take $g = \mathrm{GapMaj}_n$.'
       conf: high
-    - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{fbs}(f)\,\mathrm{R}(g)\big)'
-      refs: [BDGHMT20, BenDavidBlais20composition]
-      note: 'Proved independently and concurrently by [BDGHMT20]; it also follows from the $\mathrm{noisyR}$ theorem above together with $\mathrm{noisyR}(f) = \Omega(\mathrm{fbs}(f))$ (Lemma 38 of [BenDavidBlais20composition]) -- see the $\mathrm{fbs}\to\mathrm{noisyR}$ record. It strictly strengthens the sensitivity version below, since $\mathrm{fbs} \ge \mathrm{s}$.'
+    - stmt: \mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{fbs}(f)\,\mathrm{R}(g)\big)
+      refs:
+        - BDGHMT20
+        - BenDavidBlais20composition
+      note: Proved independently and concurrently by [BDGHMT20]; it also follows from the $\mathrm{noisyR}$
+        theorem above together with $\mathrm{noisyR}(f) = \Omega(\mathrm{fbs}(f))$ (Lemma 38 of [BenDavidBlais20composition])
+        -- see the $\mathrm{fbs}\to\mathrm{noisyR}$ record. It strictly strengthens the sensitivity version
+        below, since $\mathrm{fbs} \ge \mathrm{s}$.
       conf: high
-    - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{R}(f)\,\sqrt{\mathrm{R}(g)}\big)'
-      refs: [GLSS19]
-      note: 'Holds for **relational** outer $f$ and partial inner $g$ -- the strongest thing that survives the relational counterexample, which rules out the full $\mathrm{R}(f)\mathrm{R}(g)$ at that generality. It is the composition-theorem form of $\bar\chi(g) = \Omega(\sqrt{\mathrm{R}(g)})$.'
+    - stmt: \mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{R}(f)\,\sqrt{\mathrm{R}(g)}\big)
+      refs:
+        - GLSS19
+      note: Holds for **relational** outer $f$ and partial inner $g$ -- the strongest thing that survives
+        the relational counterexample, which rules out the full $\mathrm{R}(f)\mathrm{R}(g)$ at that generality.
+        It is the composition-theorem form of $\bar\chi(g) = \Omega(\sqrt{\mathrm{R}(g)})$.
       conf: high
-    - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{s}(f)\,\mathrm{R}(g)\big)'
-      refs: [GJPW18]
-      note: 'The generalisation of $\mathrm{R}(\mathrm{AND}_n\circ g) = \Omega(n\,\mathrm{R}(g))$. Subsumed by the $\mathrm{fbs}$ and $\mathrm{noisyR}$ versions, but it was the first outer composition theorem with a nontrivial outer measure.'
+    - stmt: \mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{s}(f)\,\mathrm{R}(g)\big)
+      refs:
+        - GJPW18
+      note: The generalisation of $\mathrm{R}(\mathrm{AND}_n\circ g) = \Omega(n\,\mathrm{R}(g))$. Subsumed
+        by the $\mathrm{fbs}$ and $\mathrm{noisyR}$ versions, but it was the first outer composition theorem
+        with a nontrivial outer measure.
       conf: high
-    - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{R}(f)\,\mathrm{LR}(g)\big)'
-      refs: [BBGM22]
+    - stmt: \mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{R}(f)\,\mathrm{LR}(g)\big)
+      refs:
+        - BBGM22
       note: 'Optimal *inner* composition theorem: $\mathrm{LR}$ is the largest measure with this property.'
       conf: high
-    - stmt: '\mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{R}(f)\,\bar\chi(g)\big) = \Omega\big(\mathrm{R}(f)\,\mathrm{RS}(g)\big) = \Omega\big(\mathrm{R}(f)\,\chi(g)\big)'
-      refs: [GLSS19, BenDavidKothari18, Sanyal18, AGJKLMSS17]
-      note: 'The historical sequence of inner measures: $\mathrm{RS}$ [BenDavidKothari18], then $\chi$ [Sanyal18], then $\bar\chi$ [GLSS19], then $\mathrm{LR}$ [BBGM22]. Each *composition theorem* subsumes the previous one, but that is not the same as a pointwise chain: what is actually recorded is $\chi \le \bar\chi$ and $\bar\chi = \Omega(\mathrm{RS})$ and $\bar\chi \le \mathrm{LR} \le \mathrm{R}$. The zoo has **no** pairwise comparison between $\chi$ and $\mathrm{RS}$ in either direction -- do not read one off this list.'
+    - stmt: \mathrm{R}(f\circ g^n) = \Omega\big(\mathrm{R}(f)\,\bar\chi(g)\big) = \Omega\big(\mathrm{R}(f)\,\mathrm{RS}(g)\big)
+        = \Omega\big(\mathrm{R}(f)\,\chi(g)\big)
+      refs:
+        - GLSS19
+        - BenDavidKothari18
+        - Sanyal18
+        - AGJKLMSS17
+      note: 'The historical sequence of inner measures: $\mathrm{RS}$ [BenDavidKothari18], then $\chi$ [Sanyal18],
+        then $\bar\chi$ [GLSS19], then $\mathrm{LR}$ [BBGM22]. Each *composition theorem* subsumes the previous
+        one, but that is not the same as a pointwise chain: what is actually recorded is $\chi \le \bar\chi$
+        and $\bar\chi = \Omega(\mathrm{RS})$ and $\bar\chi \le \mathrm{LR} \le \mathrm{R}$. The zoo has
+        **no** pairwise comparison between $\chi$ and $\mathrm{RS}$ in either direction -- do not read one
+        off this list.'
       conf: high
-    - stmt: '\mathrm{R}(f\circ g^n) = \tilde\Omega\big(\mathrm{R}(f)\,\mathrm{D}^{\mathrm{prod}}(g)\big)'
-      refs: [Sanyal24]
+    - stmt: \mathrm{R}(f\circ g^n) = \tilde\Omega\big(\mathrm{R}(f)\,\mathrm{D}^{\mathrm{prod}}(g)\big)
+      refs:
+        - Sanyal24
       conf: high
   notes: |
     **Status by setting.**
 
-    * *Partial functions*: the conjecture is **false** [BenDavidBlais20composition].
-    * *Total functions*: **open**. No total $f$ is known with
-      $\mathrm{noisyR}(f) = o(\mathrm{R}(f))$, and no total $g$ is known with
-      $\mathrm{RS}(g) = o(\mathrm{R}(g))$; if either stayed true in general the
-      conjecture would follow for total functions.
+    * *Partial Boolean functions*: constant-factor composition is false [BenDavidBlais20composition], but the $\log(n+1)$ lower bound is now proved [PednekarPodder26STOC].
+    * *Total functions*: constant-factor composition is false [Meiburg26composition]; composition up to a logarithm of outer input size holds by the partial-Boolean theorem.
     * *Relations*: **false**, and this was known first. [GLSS19] give relations
       $f_n$ with $\mathrm{R}(f_n)=\Theta(\sqrt n)$ and partial functions $g_n$ with
       $\mathrm{R}(g_n)=\Theta(n)$ but $\mathrm{R}(f_n\circ g_n)=\Theta(n) \ll n^{3/2}$;
@@ -76,12 +106,11 @@ relations:
       [[GapMaj]]. Sanyal's theorem nevertheless allows the outer object to be a
       relation [Sanyal24], as does Theorem 3 above.
 
-    Both known counterexamples -- the relational one of [GLSS19] and the partial-function
+    The earlier counterexamples -- the relational one of [GLSS19] and the partial-function
     one of [BenDavidBlais20composition] -- use $\mathrm{GapMaj}$ (or a close variant) as the
     inner function, and both work for the same reason: the outer object only needs its bits
     to bias $1/\sqrt m$, and buying bias $1/\sqrt m$ from a $\mathrm{GapMaj}_m$ gadget costs
-    $1$ query rather than $m$. In that sense $g=\mathrm{GapMaj}$ is the only interesting
-    inner function for this question.
+    $1$ query rather than $m$. The total-function counterexample instead uses an encoded pointer inner function [Meiburg26composition].
 
     **Sufficient conditions for composition (all with arbitrary inner $g$).**
 
@@ -108,12 +137,12 @@ relations:
     [JainKlauckSantha10], direct product [[dirprod-R]] [Drucker12] and strong direct sum
     [BlaisBrody19] for $\mathrm{R}$.
 
-    **The conjecture, as usually stated.** $\mathrm{R}(f\circ g) = \Omega(\mathrm{R}(f)\mathrm{R}(g))$
-    for all Boolean $f,g$ -- Conjecture 1 of [BDGHMT20], where it is recorded as *still open for
-    total functions* after the partial-function counterexample. Note the conjectured direction:
-    the upper bound with a $\log$ is folklore, so the content is the lower bound.
+    **Total-function counterexample.** [Meiburg26composition, Theorem 1.1] gives
+    $\mathrm{R}(f\circ g)=\Theta(\mathrm{R}(f)\mathrm{R}(g)/\log\mathrm{R}(g))$.
+    For outer length $N$ and inner length $n$, $N=2^{\Theta(n^{4/5})}$, so the
+    saving is $\Theta(\log n)=\Theta(\log\log L)$ in composed input length $L=Nn$.
+    This refutes constant-factor composition and is consistent with the logarithmic-loss theorem.
   see_also: [R, noisyR, LR, RS, chi, chibar, D_prod, Rbar, composition, AgreeString, fbs, s, comp-D, dirsum-R, dirprod-R, direct-sum]
-
 - from: D
   to: D
   kind: composition
@@ -193,24 +222,29 @@ relations:
   kind: composition
   id: comp-adeg
   setting: total
-  status: open
-  headline: '\widetilde{\deg}(f\circ g) \stackrel{?}{=} \tilde\Theta\big(\widetilde{\deg}(f)\,\widetilde{\deg}(g)\big)'
+  status: settled
+  headline: \widetilde{\deg}(f\circ g)=\Theta(\widetilde{\deg}(f)\widetilde{\deg}(g))
   upper:
     - stmt: '\widetilde{\deg}(f\circ g) = O\big(\widetilde{\deg}(f)\,\widetilde{\deg}(g)\big)'
       refs: [Sherstov12robust]
       note: 'Robustification: every bounded polynomial of degree $d$ has a degree-$O(d)$ version that is robust to noisy inputs, so the outer approximating polynomial can be fed noisy copies of the inner ones for free.'
       conf: high
   lower:
-    - stmt: '\widetilde{\deg}(f\circ g) = \tilde\Omega\big(\sqrt{\mathrm{bs}(f)}\cdot\widetilde{\deg}(g)\big)'
-      refs: [CKMPSS23]
-      note: 'The first inner composition theorem for approximate degree with a nontrivial outer measure. It gives composition whenever $\widetilde{\deg}(f) = \Theta(\sqrt{\mathrm{bs}(f)})$.'
+    - stmt: \widetilde{\deg}(f\circ g)=\Omega(\widetilde{\deg}(f)\widetilde{\deg}(g))
+      refs:
+        - PednekarPodder26composition
       conf: high
-  notes: |
-    Open in general, in both the total and partial settings. Known for
-    symmetric outer $f$, and for the special pairs used in the AC$^0$
-    approximate-degree literature (via dual block composition).
+      note: For arbitrary total Boolean f and g at constant approximation error; no logarithmic loss.
+    - stmt: \widetilde{\deg}(f\circ g) = \tilde\Omega\big(\sqrt{\mathrm{bs}(f)}\cdot\widetilde{\deg}(g)\big)
+      refs:
+        - CKMPSS23
+      note: The first inner composition theorem for approximate degree with a nontrivial outer measure.
+        It gives composition whenever $\widetilde{\deg}(f) = \Theta(\sqrt{\mathrm{bs}(f)})$.
+      conf: high
+  notes: Constant-factor multiplicative composition is settled for all total Boolean functions [PednekarPodder26composition,
+    Sherstov12robust]. The totality hypothesis is part of the theorem; this result makes no claim about
+    arbitrary partial functions.
   see_also: [adeg, deg, bs, comp-R, open-adeg-composition]
-
 - from: deg
   to: deg
   kind: composition
@@ -433,13 +467,14 @@ relations:
       note: 'Theorem 32, total $f$ only. "Quadratically tight."'
       conf: high
   lower:
-    - stmt: '\text{No total } f \text{ with } \mathrm{RS}(f)=o(\mathrm{R}(f)) \text{ is known.}'
-      refs: [BenDavidKothari18]
+    - stmt: \mathrm{R}(P_q)/\mathrm{RS}(P_q)=\Omega(\log N_q)
+      refs:
+        - Meiburg26composition
       conf: high
-  notes: |
-    Whether $\mathrm{RS}(f)=\Theta(\mathrm{R}(f))$ for all total $f$ is a
-    well-known open question; a positive answer would prove the randomized
-    composition conjecture for total functions.
+      note: Theorem 7.5; P_q is total.
+      witness: MeiburgParityPointer
+  notes: Constant-factor equality of sabotage and randomized query complexity is refuted on total functions
+    [Meiburg26composition]. The classical upper bound remains, leaving a quantitative gap.
   see_also: [RS, R, comp-R, open-RS-vs-R]
 
 # The partial-function half of the same cell. It is the *reason* the total
@@ -508,22 +543,11 @@ relations:
       refs: [GLSS19, BenDavidKothari18]
       note: 'Two published facts, one step apart. [GLSS19, Thm 6] give $\chi(g) = \Omega(\sqrt{\mathrm{R}_{1/3}(g)})$ for partial $g$, hence $\bar\chi \ge \chi = \Omega(\sqrt{\mathrm{R}})$; and [BenDavidKothari18, Sec. 1.4] observe $\mathrm{RS}(\mathrm{COL}_n) = O(1)$ against $\mathrm{R}(\mathrm{COL}_n) = \Theta(\sqrt n)$. So $\bar\chi = \Omega(n^{1/4})$ where $\mathrm{RS} = \Theta(1)$.'
       conf: high
-  notes: |
-    $\bar\chi$ is not bounded by any function of $\mathrm{RS}$ on partial
-    functions, and this is exactly why max-conflict complexity was worth
-    defining: it sits above $\mathrm{RS}$ *and*, unlike $\mathrm{RS}$, it stays
-    within a square of $\mathrm{R}$ off the promise.  Neither half of the
-    argument is stated as a separation in either source -- [GLSS19] prove the
-    two inequalities and use them to strengthen composition -- so the pairing
-    is assembled here rather than quoted.  The same witness separates
-    $\mathrm{LR}$ from $\mathrm{RS}$, by the same route
-    ($\mathrm{LR} \ge \bar\chi$).
-
-    For **total** $g$ no separation is known between any of
-    $\mathrm{RS}$, $\bar\chi$, $\mathrm{LR}$ and $\mathrm{R}$, and whether
-    $\mathrm{RS} = \Theta(\mathrm{R})$ there is [[open-RS-vs-R]].
+  notes: On partial functions, max-conflict is not bounded by any function of sabotage complexity; [[Collision]]
+    witnesses this via $\bar\chi=\Omega(\sqrt{\mathrm{R}})$ and $\mathrm{RS}=\Theta(1)$. On total functions
+    [Meiburg26composition] now separates every adjacent pair in $\mathrm{RS}\lesssim\bar\chi\lesssim\mathrm{LR}\lesssim\mathrm{R}$;
+    see [[MeiburgParityPointer]], [[MeiburgMaskedPointer]], and [[MeiburgMajorityPointer]].
   see_also: [chibar, RS, LR, chi, R, Collision, open-RS-vs-R]
-
 - from: LR
   to: chibar
   setting: partial
@@ -609,12 +633,22 @@ relations:
       refs: [Li18]
       note: 'Section 4: $\chi \le \mathrm{D} \le \mathrm{C}^2$. With Theorem 1 and $\mathrm{C}\le\mathrm{bs}^2$ this sandwiches $\chi$ as $\tfrac12(\sqrt{\mathrm{C}}+1) \le \chi \le \mathrm{C}^2$.'
       conf: high
-  notes: |
-    Which end is right is [[open-chi-vs-C]], the question [Li18] closes with;
-    the same question is open for [[chibar]]. The recorded separation
-    $\chi = \Omega(\mathrm{C})$ is only a witness family ([[OR]], where both
-    are $\Theta(n)$), not the universal bound the question asks for.
+  notes: 'The universal lower bound $\chi=\Omega(\mathrm{C})$ remains [[open-chi-vs-C]]. The proposed upper
+    bound $\chi=O(\mathrm{C})$ is false: [[ANDOR]] has $\chi=\Omega(\mathrm{C}^2/\log^2\mathrm{C})$ [Meiburg26composition,
+    Corollary 9.11]. The corresponding upper-bound claim for max-conflict is also false on this family,
+    where $\bar\chi=\Theta(\mathrm{C}^2)$.'
   see_also: [chi, C, bs, D, chibar, open-chi-vs-C]
+  lower:
+    - stmt: \chi(F_n)=\Omega(\mathrm{C}(F_n)^2/\log^2\mathrm{C}(F_n))
+      refs:
+        - Meiburg26composition
+      conf: high
+      note: Corollary 9.11; C(F_n)=n.
+      witness: ANDOR
+      form:
+        exp: 2
+        log: -2
+        kind: const
 
 # =========================================== many samples of the same input
 - from: Corr
@@ -713,24 +747,10 @@ relations:
         multiple of) a feasible solution to the fractional block sensitivity LP at $x$, and
         $\mathrm{fbs}(f) \le O(\sum_i p_i) = O(\mathrm{noisyR}(f))$.
       conf: high
-  notes: |
-    The only general lower bound on $\mathrm{noisyR}$ that is known, and the reason
-    $\mathrm{R}(f\circ g) = \Omega(\mathrm{fbs}(f)\mathrm{R}(g))$ falls out of the
-    composition theorem. [BenDavidBlais20composition] expect the truth to be much
-    larger -- see [[open-noisyR-vs-R]].
-
-    Its main downstream consequence in this zoo is the *only* upper bound we have on
-    $\mathrm{R}$ in terms of $\mathrm{noisyR}$: chaining with
-    $\mathrm{R} \le \mathrm{R}_0 \le \mathrm{D} = O(\mathrm{fbs}^3)$ gives
-    $\mathrm{R}(f) = O(\mathrm{noisyR}(f)^3)$ for **total** $f$. That chain is
-    total-only at its first link, which is why the partial-function cell stays empty
-    and the exponential separation there is not a contradiction.
-
-    Lemma 37 itself ($\mathrm{noisyR}(f) = \Omega(1)$ for non-constant $f$) survives for
-    relations that have two inputs with disjoint allowed output sets, but
-    $\mathrm{fbs}$ is not defined for relations, so this record stops at partial.
+  notes: The fractional-block lower bound supplies one outer randomized composition theorem. The stronger
+    input-size-dependent comparison $\mathrm{noisyR}(f)=\Omega(\mathrm{R}(f)/\log(n+1))$ is now proved for
+    partial Boolean functions [PednekarPodder26STOC].
   see_also: [fbs, noisyR, R, D, comp-R, open-noisyR-vs-R]
-
 - from: noisyR
   to: R
   setting: partial
@@ -758,17 +778,11 @@ relations:
     - stmt: '\mathrm{R}(f)=\Theta(n)\ \Rightarrow\ \mathrm{noisyR}(f)=\Theta(\mathrm{R}(f))'
       refs: [CKMPSS23]
       conf: high
-  notes: |
-    Do not confuse $\mathrm{noisyR}$ with $\mathrm{N}_p$: see
-    [[noisy-models]] for the distinction between *bias-purchasing* and
-    *faulty-oracle* noise. They are different measures with different
-    behaviour (e.g. $\mathrm{N}_p(\mathrm{PARITY})=\Theta(n\log n)$ but
-    $\mathrm{noisyR}(\mathrm{PARITY})=\Theta(n)$).
-
-    The inequality is very far from tight on partial functions: see the
-    reverse pair for the [[ApproxIndex]] separation.
+  notes: Noisy complexity is the optimal outer measure in randomized composition [BenDavidBlais20composition].
+    For partial Boolean f on n bits, it is now at least $\Omega(\mathrm{R}(f)/\log(n+1))$ [PednekarPodder26STOC].
+    Constant-factor equality is false even for total functions [Meiburg26composition], as [[MeiburgNoisySeparation]]
+    shows. The non-adaptive pair remains equivalent within constants.
   see_also: [noisyR, R, Np, GapMaj, noisy-models, ApproxIndex]
-
 - from: R
   to: noisyR
   setting: partial
@@ -787,26 +801,20 @@ relations:
         $\mathrm{noisyR} = O(\log k)$. So $k = 2^{\Omega(\mathrm{noisyR})}$ and
         $\mathrm{R} = \Omega(\sqrt{k})$.
       conf: high
-  notes: |
-    A slack lower bound is all we can do here: buying a bit at bias $\gamma$ costs
-    $\gamma^2$, so the noisy model gets $k$ bits of bias $\sqrt{\log k / k}$ for
-    $\log k$ -- a *statistical* budget the query model has no way to spend, since its
-    only move is to read a bit exactly.
-
-    **No upper bound on $\mathrm{R}$ in terms of $\mathrm{noisyR}$ is known** for partial
-    $f$ beyond the trivial $\mathrm{R} \le n$; whether $\mathrm{R} = 2^{O(\mathrm{noisyR})}$
-    holds in general seems to be open. For *total* functions there is one, and only one:
-    $\mathrm{noisyR} = \Omega(\mathrm{fbs})$ (Lemma 38) chained with
-    $\mathrm{D} = O(\mathrm{fbs}^3)$ gives $\mathrm{R}(f) = O(\mathrm{noisyR}(f)^3)$ --
-    see the total-function cell, which the zoo derives rather than states. Conjecturally
-    the truth is $\mathrm{R} = \Theta(\mathrm{noisyR})$ for total $f$: no total $f$ with
-    $\mathrm{noisyR}(f) = o(\mathrm{R}(f))$ is known, and if none exists the randomized
-    composition conjecture follows for total functions ([[composition]]).
-
-    Non-adaptively the question is settled in the affirmative even for partial $f$:
-    $\mathrm{R}^{\mathrm{na}} = \Theta(\mathrm{noisyR}^{\mathrm{na}})$ [BenDavidBlais20composition, Thm. 8].
+  notes: 'The input-size-dependent theorem $\mathrm{R}(f)=O(\mathrm{noisyR}(f)\log(n+1))$ [PednekarPodder26STOC]
+    holds for partial Boolean functions. The logarithm cannot in general be replaced by a logarithm of query
+    complexity: [[ApproxIndex]] still has an exponential R-versus-noisyR gap. Total functions also have
+    unbounded R/noisyR [Meiburg26composition]; see [[MeiburgNoisySeparation]]. Non-adaptively, the two measures
+    remain equivalent within constants.'
   see_also: [noisyR, R, ApproxIndex, GapMaj, composition, fbs, noisyRna, open-noisyR-vs-R]
 
+  upper:
+    - stmt: \mathrm{R}(f)\le C\log(n+1)\mathrm{noisyR}(f)
+      refs:
+        - PednekarPodder26STOC
+      conf: high
+      note: 'Theorem 31, for nonconstant partial Boolean f on n bits. No form is recorded: the logarithm
+        is of input length, not noisyR.'
 - from: R
   to: noisyR
   setting: relation
@@ -938,10 +946,9 @@ relations:
     - stmt: '\mathrm{R}^{*}(f) = \Omega(\mathrm{LR}(f))'
       refs: [BBGM22]
       conf: high
-  notes: |
-    Whether $\mathrm{R}^{*}(f)=\Theta(\mathrm{R}(f))$ -- i.e. whether $\mathrm{R}$
-    composes with *itself* -- is open even for total functions, and is a weaker
-    question than full composition.
+  notes: 'The quantum and linearised lower bounds survive. Constant-factor equality between composition
+    rate and one-level randomized complexity is false even for total functions: [[MeiburgCompositionRate]]
+    attains $\mathrm{R}^{*}/\mathrm{R}=\Theta(\log\mathrm{R})$ [Meiburg26composition, Theorem 10.7].'
   see_also: [Rstar, Q, LR, R]
 
 # =========================================== noisy oracles
@@ -1045,3 +1052,71 @@ relations:
     behaves differently: $\mathrm{Q}^{\mathrm{rob}}(\mathrm{PARITY}_n)=\Theta(n)$
     with no log [BNRdW05].
   see_also: [Np, R, robustQ, Inf, PARITY, noisy-models]
+- id: comp-QE
+  from: QE
+  to: QE
+  kind: composition
+  setting: total
+  status: fails
+  headline: \mathrm{Q}_{\mathrm{E}}(f\circ g)\not\asymp\mathrm{Q}_{\mathrm{E}}(f)\mathrm{Q}_{\mathrm{E}}(g)
+  upper:
+  - stmt: \mathrm{Q}_{\mathrm{E}}(f\circ g)=O(\mathrm{Q}_{\mathrm{E}}(f)\mathrm{Q}_{\mathrm{E}}(g))
+    refs:
+    - PednekarPodder26STOC
+    conf: high
+    note: Execute the exact inner algorithm for each query of the outer algorithm.
+  lower:
+  - stmt: \frac{\mathrm{Q}_{\mathrm{E}}(f_k\circ\mathrm{OR}_{m_k})}{\mathrm{Q}_{\mathrm{E}}(f_k)\mathrm{Q}_{\mathrm{E}}(\mathrm{OR}_{m_k})}\longrightarrow0
+    refs:
+    - PednekarPodder26composition
+    - PednekarPodder26STOC
+    conf: high
+    note: 'Theorem 33 of the STOC submission: total functions; a polynomial saving relative to the product.
+      The outer f_k is the k-fold composition of the four-bit function used in the exact-query/degree
+      separation; the inner function is OR.'
+  notes: Exact quantum query complexity fails to compose within constant factors even for total functions.
+    This does not change the exact composition of deterministic query complexity [[comp-D]] or polynomial
+    degree [[comp-deg]], or constant-factor composition of bounded-error quantum queries [[comp-Q]].
+  see_also:
+  - QE
+  - OR
+  - comp-Q
+  - comp-deg
+  - Ambainis13fn
+
+- id: comp-chi
+  from: chi
+  to: chi
+  kind: composition
+  setting: total
+  status: fails
+  headline: \chi(f\circ g)\not\asymp\chi(f)\chi(g)
+  lower:
+  - stmt: \chi(\mathrm{AND}_n\circ\mathrm{OR}_n)=O\!\left(\frac{\chi(\mathrm{AND}_n)\chi(\mathrm{OR}_n)}{\sqrt{\log
+      n}}\right)
+    refs:
+    - Meiburg26composition
+    conf: high
+    note: Corollary 9.9. This refutes constant-factor multiplicative lower bounds; composition allowing
+      polylogarithmic losses is not refuted.
+    witness: ANDOR
+  see_also:
+  - chi
+  - RS
+  - chibar
+  - ANDOR
+- from: R
+  to: noisyR
+  setting: total
+  status: gap
+  lower:
+  - stmt: \mathrm{R}(W_q)/\mathrm{noisyR}(W_q)=\Omega((\log N_q)^{1/4}/\log\log\log N_q)
+    refs:
+    - Meiburg26composition
+    conf: high
+    note: Theorem 4.1; input-length polylogarithmic gap.
+    witness: MeiburgNoisySeparation
+  see_also:
+  - R
+  - noisyR
+  - MeiburgNoisySeparation

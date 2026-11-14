@@ -267,8 +267,10 @@ concepts:
     | $\mathrm{Q}$ | up to constants, even for partial $f,g$ | [LMRSS11, Reichardt11] |
     | $\mathrm{Adv}^{\pm}$ | **exactly** (SDP) | [HLS07] |
     | $\mathrm{RS}$ | perfect lower bound $\mathrm{RS}(f\circ g)\ge\mathrm{RS}(f)\mathrm{RS}(g)$ | [BenDavidKothari18] |
-    | $\mathrm{R}$ | **NO** for partial $f,g$; open for total | [BenDavidBlais20composition] |
-    | $\widetilde{\deg}$ | upper bound yes, lower bound **open** | [Sherstov12robust, CKMPSS23] |
+    | $\mathrm{R}$ | lower bound with $\log(n+1)$ loss, even for partial Boolean $f,g$; constants fail even for total functions | [PednekarPodder26STOC, Meiburg26composition] |
+    | $\widetilde{\deg}$ | up to constants for total Boolean $f,g$ | [PednekarPodder26composition, Sherstov12robust] |
+    | $\mathrm{Q}_{\mathrm{E}}$ | multiplicative lower bound fails on total functions | [PednekarPodder26composition, PednekarPodder26STOC] |
+    | $\chi$ | constant-factor multiplicative lower bound fails on total functions | [Meiburg26composition] |
     | $\mathrm{s}$, $\mathrm{bs}$, $\mathrm{C}$ | up to constants | [Tal13] |
 
     ### Why $\mathrm{R}$ is hard
@@ -286,20 +288,31 @@ concepts:
        [[LR]] measure, and $\mathrm{R}(f\circ g^n)=\Omega(\mathrm{R}(f)\mathrm{LR}(g))$
        is the optimal theorem of *that* shape.
 
-    Neither optimal theorem implies the conjecture, and for partial functions
-    the conjecture is simply false.
+    The new bound $\mathrm{noisyR}(f)=\Omega(\mathrm{R}(f)/\log(n+1))$ [PednekarPodder26STOC] combines with the outer theorem to settle composition with an input-size logarithmic loss. It applies to partial Boolean functions. The logarithm is of outer input length $n$, with no promised replacement by $\log\mathrm{R}(f)$. Constant-factor composition is false even for total functions [Meiburg26composition].
 
     ### The inner hierarchy
-    $$\chi \;\lesssim\; \mathrm{RS} \;\lesssim\; \bar\chi \;\lesssim\; \mathrm{LR} \;\lesssim\; \mathrm{R},
-    \qquad \mathrm{LR} = \Omega(\sqrt{\mathrm{R}}).$$
-    All known separations in this chain use **partial** functions. For total
-    functions no separation is known anywhere in it -- including between
-    $\mathrm{RS}$ and $\mathrm{R}$, which is [[open-RS-vs-R]].
-    The easiest case of composition is an identity outer function, i.e. simply solving many
-    copies -- see [[direct-sum]], where even that is delicate for $\mathrm{R}$.
-  refs: [BenDavidKothari18, BenDavidBlais20composition, BBGM22, GLSS19, Sanyal18, Tal13, Sherstov12robust, CKMPSS23, Savicky02, Montanaro14]
-  see_also: [comp-R, comp-adeg, comp-deg, comp-Q, comp-D, comp-MAJ, RS, chi, chibar, LR, noisyR, Rstar, direct-sum]
+    $$\mathrm{RS}\lesssim\bar\chi\lesssim\mathrm{LR}\lesssim\mathrm{R},
+    \qquad\chi\le\bar\chi,\qquad\mathrm{LR}=\Omega(\sqrt{\mathrm{R}}).$$
+    Every adjacent pair in the first chain is separated on total functions
+    [Meiburg26composition]. The parity-pointer family separates $\bar\chi$ from
+    $\mathrm{RS}$ by $\Omega(\log N)$; the masked family separates $\mathrm{LR}$
+    from $\bar\chi$ by $\Omega(\sqrt{\log N})$; the majority family separates
+    $\mathrm{R}$ from $\mathrm{LR}$ by $\Omega(\log N)$.
+    Conflict and sabotage are incomparable: [[MeiburgParityPointer]] has
+    $\chi/\mathrm{RS}=\Omega(\log N)$, while [[ANDOR]] has
+    $\mathrm{RS}/\chi=\Omega(\sqrt{\log N})$.
+    The same paper gives total functions with $\mathrm{R}/\mathrm{noisyR}$
+    unbounded and [[MeiburgCompositionRate]] with
+    $\mathrm{R}^{*}/\mathrm{R}=\Theta(\log\mathrm{R})$.
 
+    The total–total randomized composition example saves
+    $\Theta(\log\mathrm{R}(g))=\Theta(\log\log L)$ in composed input length $L$.
+    It coexists with the new $\log(n+1)$ lower bound; the scales of the two
+    logarithms are different.
+    The easiest case of composition is an identity outer function, i.e. solving
+    many copies — see [[direct-sum]].
+  refs: [BenDavidKothari18, BenDavidBlais20composition, BBGM22, GLSS19, Sanyal18, Tal13, Sherstov12robust, CKMPSS23, Savicky02, Montanaro14, PednekarPodder26composition, PednekarPodder26STOC, Meiburg26composition]
+  see_also: [comp-R, comp-adeg, comp-deg, comp-Q, comp-D, comp-MAJ, RS, chi, chibar, LR, noisyR, Rstar, direct-sum, comp-QE, comp-chi, MeiburgParityPointer, MeiburgMaskedPointer, MeiburgMajorityPointer]
 - id: direct-sum
   title: "Direct sum and direct product"
   order: 45

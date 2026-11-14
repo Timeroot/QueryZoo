@@ -447,6 +447,8 @@ class Zoo:
 
         # open problems referenced from measures
         for o in self.open_problems:
+            if o.get("resolved"):
+                continue
             for sid in o["see_also"] + [m for p in o["pairs"] for m in p]:
                 if sid in self.measure:
                     ops = self.measure[sid].setdefault("open_problems", [])
@@ -1792,7 +1794,7 @@ class Builder:
             "pairs": len(z.pairs),
             "refs": len(z.refs),
             "concepts": len(z.concepts),
-            "open": len(z.open_problems),
+            "open": sum(not o.get("resolved", False) for o in z.open_problems),
             "cells": sum(len(v) for v in (z.matrix or {}).get("cells", {}).values()),
         }
         self.write("index.html", "index.html", by_cat=by_cat, stats=stats)
@@ -2164,9 +2166,11 @@ class Builder:
                              c["title"], c.get("blurb", ""), c.get("body", ""))
 
     def page_open(self):
-        ops = sorted(self.zoo.open_problems, key=lambda o: (o["order"], o["id"]))
-        self.write("open.html", "open.html", ops=ops)
-        for o in ops:
+        questions = sorted(self.zoo.open_problems, key=lambda o: (o["order"], o["id"]))
+        ops = [o for o in questions if not o.get("resolved")]
+        resolved_ops = [o for o in questions if o.get("resolved")]
+        self.write("open.html", "open.html", ops=ops, resolved_ops=resolved_ops)
+        for o in questions:
             self.index_entry(f"open.html#{o['id']}", "open",
                              o["title"], o.get("status", ""), o.get("statement", ""))
 
@@ -2246,6 +2250,8 @@ class Builder:
         # among their see_also counts.
         op_cells = {}
         for o in z.open_problems:
+            if o.get("resolved"):
+                continue
             named = re.fullmatch(r"open-(\w+)-vs-(\w+)", o["id"])
             if named and all(named.group(i) in z.measure for i in (1, 2)):
                 cells = [(named.group(1), named.group(2))]

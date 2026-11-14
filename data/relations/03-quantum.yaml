@@ -41,27 +41,38 @@ relations:
 - from: R
   to: Q
   setting: total
-  status: gap
+  status: settled
   upper:
     - stmt: '\mathrm{R}(f) \le \mathrm{D}(f) = O(\mathrm{Q}(f)^4)'
       form: {exp: 4, kind: const}
       refs: [ABKRT21]
       conf: high
   lower:
-    - stmt: '\mathrm{R}(f_n) = \widetilde\Omega(\mathrm{Q}(f_n)^3)'
-      form: {exp: 3, kind: tilde}
-      refs: [BansalSinha21, SSW21, ABK16]
-      witness: kForrelation
-      note: 'Take $k$-Forrelation ($\mathrm{Q}=k$, $\mathrm{R}=\widetilde\Theta(n^{1-1/2k})$, a *partial* function) and totalise it with a cheat sheet [ABK16].'
+    - stmt: \forall\alpha<4\ \exists k:\ \frac{\mathrm{R}(F_{k,m})}{(1+\mathrm{Q}(F_{k,m}))^\alpha}\longrightarrow\infty
+      refs:
+        - OpenAI26QuarticRQ
       conf: high
-  notes: |
-    **The headline open problem.** Is the maximum randomized-to-quantum
-    speedup for total functions cubic or quartic? The upper bound is quartic
-    (inherited from $\mathrm{D}$); the best separation is cubic.
-    A quartic $\mathrm{R}$-vs-$\mathrm{Q}$ separation would require a total
-    function that is *simultaneously* extremal for $\mathrm{R}$-vs-$\widetilde{\deg}$
-    and for the $\deg$-vs-$\widetilde{\deg}$ step.
-  see_also: [R, Q, kForrelation, cheatsheet, open-R-vs-Q]
+      note: 'Theorem 1.1: for each fixed k≥2, R≥c_k m^(2−1/k)/log²m and Q≤C_k sqrt(m)(log m)^{b_k}. Thus
+        the optimal power is 4. The fixed-k lower exponent is 4−2/k; no literal fixed-k Ω̃(Q⁴) shadow is
+        asserted.'
+      witness: OpenAIQuarticRQ
+    - stmt: \mathrm{R}(f_n) = \widetilde\Omega(\mathrm{Q}(f_n)^3)
+      form:
+        exp: 3
+        kind: tilde
+      refs:
+        - BansalSinha21
+        - SSW21
+        - ABK16
+      witness: kForrelation
+      note: Take $k$-Forrelation ($\mathrm{Q}=k$, $\mathrm{R}=\widetilde\Theta(n^{1-1/2k})$, a *partial*
+        function) and totalise it with a cheat sheet [ABK16].
+      conf: high
+  notes: The optimal randomized-to-quantum power for total Boolean functions is now 4 [OpenAI26QuarticRQ,
+    Theorem 1.1], matching the known universal upper bound [ABKRT21] and refuting the conjectured cubic
+    bound. The new family attains every exponent below 4, with polylogarithmic losses for each fixed k.
+    The earlier cubic separation is retained below as a historical lower bound.
+  see_also: [R, Q, kForrelation, cheatsheet, open-R-vs-Q, OpenAIQuarticRQ]
 
 # --------------------------------------------------------- Q vs deg
 - from: Q

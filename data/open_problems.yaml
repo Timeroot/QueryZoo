@@ -289,25 +289,32 @@ open_problems:
   title: "Is the maximum quantum speedup for total functions cubic or quartic?"
   order: 50
   setting: total
-  statement: |
-    $\mathrm{R}(f)\le\mathrm{D}(f)=O(\mathrm{Q}(f)^4)$ [ABKRT21], and there are
-    total functions with $\mathrm{R}(f)=\tilde\Omega(\mathrm{Q}(f)^3)$.
-    Which exponent is right?
-  status: "Gap between exponents 3 and 4."
+  statement: OpenAI’s construction rules out every universal upper bound $\mathrm{R}=O((1+\mathrm{Q})^\alpha)$
+    with $\alpha<4$. Combined with $\mathrm{R}\le\mathrm{D}=O(\mathrm{Q}^4)$, the optimal power is quartic
+    [OpenAI26QuarticRQ, ABKRT21].
+  status: 'Solved in October 2026: the optimal exponent is 4.'
   best_known:
-    - stmt: '\mathrm{R}(f) = O(\mathrm{Q}(f)^4)'
-      refs: [ABKRT21]
-    - stmt: '\mathrm{R}(f_n) = \tilde\Omega(\mathrm{Q}(f_n)^3)'
-      refs: [BansalSinha21, SSW21, ABK16]
+    - stmt: \mathrm{R}(f) = O(\mathrm{Q}(f)^4)
+      refs:
+        - ABKRT21
+    - stmt: \forall\alpha<4\ \exists k:\ \mathrm{R}(F_{k,m})/(1+\mathrm{Q}(F_{k,m}))^\alpha\to\infty
+      refs:
+        - OpenAI26QuarticRQ
+      conf: high
+      note: Theorem 1.1; fixed-k exponent 4−2/k with polylogarithmic factors.
+      witness: OpenAIQuarticRQ
+    - stmt: \mathrm{R}(f_n) = \tilde\Omega(\mathrm{Q}(f_n)^3)
+      refs:
+        - BansalSinha21
+        - SSW21
+        - ABK16
       witness: kForrelation
-      note: 'Via $k$-Forrelation plus a cheat sheet.'
-  why: |
-    The single most-quoted number in query complexity. Note the
-    $\mathrm{D}$-vs-$\mathrm{Q}$ version *is* settled at $4$ [ABBLSS17,
-    ABKRT21]; the open part is specifically about bounded-error randomized.
-  refs: [ABKRT21, BansalSinha21, SSW21, ABK16, ABBLSS17]
-  see_also: [R, Q, D, kForrelation, cheatsheet, cheat-sheets]
-
+      note: Via $k$-Forrelation plus a cheat sheet.
+  why: This settles the maximal polynomial quantum speedup for total Boolean functions at the exponent level
+    and refutes the cubic conjecture.
+  refs: [ABKRT21, BansalSinha21, SSW21, ABK16, ABBLSS17, OpenAI26QuarticRQ]
+  see_also: [R, Q, D, kForrelation, cheatsheet, cheat-sheets, OpenAIQuarticRQ]
+  resolved: true
 - id: open-Advpm-vs-Adv
   title: "How much do negative weights buy the adversary?"
   order: 55
@@ -453,24 +460,27 @@ open_problems:
   title: "Is $\\mathrm{RS}(f) = \\Theta(\\mathrm{R}(f))$ for total $f$?"
   order: 70
   setting: total
-  statement: |
-    Sabotage complexity is a lower bound on randomized query complexity that
-    composes perfectly. No total function is known where it is asymptotically
-    smaller.
-  status: "Open. Quadratically tight: $\\mathrm{R}(f)=O(\\mathrm{RS}(f)^2\\log\\mathrm{RS}(f))$."
+  statement: Constant-factor equality is false even on total functions. The parity-pointer family $P_q$
+    has $\mathrm{R}(P_q)=\Theta(m_q\log q)$ and $\mathrm{RS}(P_q)=O(m_q)$, where $m_q=q^3\log q$ and input
+    length $N_q=\Theta(q^4\log q)$ [Meiburg26composition, Theorem 7.5].
+  status: 'Refuted in 2026: a logarithmic separation on total functions.'
   best_known:
-    - stmt: '\mathrm{RS}(f) \le \mathrm{R}(f) = O\big(\mathrm{RS}(f)^2\log \mathrm{RS}(f)\big)'
-      refs: [BenDavidKothari18]
-    - stmt: '\mathrm{RS}(\mathrm{COL}_n) = \Theta(1) \quad\text{against}\quad \mathrm{R}(\mathrm{COL}_n) = \Theta(\sqrt n)'
-      refs: [BenDavidKothari18]
-      note: 'So the answer is emphatically *no* for partial functions, and the question is a question about totality. The obstruction is general: any promise whose two sides are far apart in Hamming distance has $\mathrm{RS} = O(1)$, because every sabotaged input is then riddled with stars [BenDavidKothari18, Sec. 1.4]. The same witness puts $\bar\chi$ and $\mathrm{LR}$ unboundedly above $\mathrm{RS}$, since both are $\Omega(\sqrt{\mathrm{R}})$ even off the promise [GLSS19, Thm 6].'
-  why: |
-    A positive answer immediately proves the **randomized composition
-    conjecture for total functions**, since
-    $\mathrm{R}(f\circ g)=\Omega(\mathrm{R}(f)\mathrm{RS}(g))$.
-  refs: [BenDavidKothari18, GLSS19, BBGM22]
+    - stmt: \mathrm{R}(P_q)/\mathrm{RS}(P_q)=\Omega(\log N_q)
+      refs:
+        - Meiburg26composition
+      conf: high
+      note: Theorem 7.5.
+      witness: MeiburgParityPointer
+    - stmt: \mathrm{R}(f)=O(\mathrm{RS}(f)^2\log\mathrm{RS}(f))
+      refs:
+        - BenDavidKothari18
+      conf: high
+  why: This refutes one proposed route to constant-factor randomized composition. The optimal separation
+    between sabotage and randomized complexity remains a quantitative question.
+  refs: [BenDavidKothari18, GLSS19, BBGM22, Meiburg26composition]
   see_also: [RS, R, chibar, LR, composition, comp-R]
 
+  resolved: true
 - id: open-Dprod-vs-R
   title: "Is $\\mathrm{R}(f)$ polynomially bounded by $\\mathrm{D}^{\\mathrm{prod}}(f)$ for total $f$?"
   order: 71
@@ -516,83 +526,85 @@ open_problems:
   see_also: [D_prod, R, RS, Dmu, NANDtree, MinskyPapert, open-RS-vs-R, composition]
 
 - id: open-chi-vs-C
-  title: "Is $\\chi(f) = \\Omega(\\mathrm{C}(f))$, or $\\chi(f) = O(\\mathrm{C}(f))$?"
+  title: Is $\chi(f)=\Omega(\mathrm{C}(f))$ for total functions?
   order: 75
   setting: total
-  statement: |
-    Conflict complexity is pinned between the square root of certificate
-    complexity and its square: $\tfrac12(\sqrt{\mathrm{C}(f)}+1) \le \chi(f) \le \mathrm{C}(f)^2$.
-    Li asks which side, if either, is the truth -- and notes that the answer
-    could be neither.
-  status: "Open. Posed in the discussion section of [Li18], for $\\chi$ and for $\\bar\\chi$ alike."
+  statement: 'The lower-bound branch remains open. The opposite proposed inequality $\chi=O(\mathrm{C})$
+    is false: on $F_m=\mathrm{AND}_m\circ\mathrm{OR}_m$, $\chi(F_m)=\Omega(\mathrm{C}(F_m)^2/\log^2\mathrm{C}(F_m))$
+    [Meiburg26composition, Corollary 9.11].'
+  status: Lower-bound branch open; the O(C) branch is refuted.
   best_known:
-    - stmt: '\chi(f) \ge \tfrac12\big(\mathrm{bs}(f)+1\big)'
-      refs: [Li18]
-      note: 'Theorem 1, replacing the $\Omega(\sqrt{\mathrm{R}(f)})$ floor that came with the measure [Sanyal18].'
-    - stmt: '\chi(f) \le \mathrm{D}(f)'
-      refs: [Li18]
-      note: 'Immediate from the definition -- the random walk stops if it reaches a last query node -- and hence $\chi \le \mathrm{C}^2$ and $\chi \le \mathrm{bs}^3$.'
-    - stmt: '\chi(g) = \Omega\big(\sqrt{\mathrm{R}(g)}\big) \text{ for partial } g'
-      refs: [Sanyal18, AGJKLMSS17]
-  why: |
-    The two answers pull in opposite directions and both are worth having.
-    $\chi = \Omega(\mathrm{C})$ would upgrade the randomized composition
-    theorem to $\mathrm{R}(f\circ g^n) = \Omega(\mathrm{R}(f)\sqrt{\mathrm{D}(g)})$,
-    beating the $\sqrt{\mathrm{R}(g)}$ that all of these measures currently
-    share. $\chi = O(\mathrm{C})$ would go the other way: on
-    $\wedge_n\circ\vee_n$ it forces $\chi = O(n) = O(\sqrt{\mathrm{R}})$, so
-    $\chi$ would not compose perfectly and the square-root floor would be tight.
-    Either way it also moves [[chi]] against [[bs]], where the recorded gap runs
-    from $1$ to $3$ for want of anything sharper than $\chi\le\mathrm{D}\le\mathrm{bs}^3$.
-  refs: [Li18, Sanyal18, GLSS19, AGJKLMSS17]
+    - stmt: \chi(f) \ge \tfrac12\big(\mathrm{bs}(f)+1\big)
+      refs:
+        - Li18
+      note: Theorem 1, replacing the $\Omega(\sqrt{\mathrm{R}(f)})$ floor that came with the measure [Sanyal18].
+    - stmt: \chi(f) \le \mathrm{D}(f)
+      refs:
+        - Li18
+      note: Immediate from the definition -- the random walk stops if it reaches a last query node -- and
+        hence $\chi \le \mathrm{C}^2$ and $\chi \le \mathrm{bs}^3$.
+    - stmt: \chi(g) = \Omega\big(\sqrt{\mathrm{R}(g)}\big) \text{ for partial } g
+      refs:
+        - Sanyal18
+        - AGJKLMSS17
+    - stmt: \chi(F_m)=\Omega(\mathrm{C}(F_m)^2/\log^2\mathrm{C}(F_m))
+      refs:
+        - Meiburg26composition
+      conf: high
+      note: C(F_m)=m.
+      witness: ANDOR
+  why: A proof of $\chi=\Omega(\mathrm{C})$ would strengthen the inner randomized composition lower bound
+    to $\Omega(\mathrm{R}(f)\sqrt{\mathrm{D}(g)})$. The near-quadratic separation in the other direction
+    does not decide this branch.
+  refs: [Li18, Sanyal18, GLSS19, AGJKLMSS17, Meiburg26composition]
   see_also: [chi, chibar, C, bs, D, ANDOR, comp-R, open-RS-vs-R]
-
 - id: open-adeg-composition
   title: "Does approximate degree compose?"
   order: 80
   setting: total
-  statement: |
-    Is $\widetilde{\deg}(f\circ g) = \tilde\Theta(\widetilde{\deg}(f)\widetilde{\deg}(g))$?
-    The upper bound is known; the lower bound is open.
-  status: "Upper bound settled; lower bound known only for restricted outer functions."
+  statement: For all total Boolean $f,g$, $\widetilde{\deg}(f\circ g)=\Theta(\widetilde{\deg}(f)\widetilde{\deg}(g))$.
+    Pednekar and Podder prove the matching multiplicative lower bound; Sherstov supplies the upper bound.
+    There is no logarithmic loss.
+  status: 'Solved in 2026: constant-factor composition for total Boolean functions.'
   best_known:
-    - stmt: '\widetilde{\deg}(f\circ g) = O(\widetilde{\deg}(f)\widetilde{\deg}(g))'
-      refs: [Sherstov12robust]
-    - stmt: '\widetilde{\deg}(f\circ g) = \tilde\Omega\big(\sqrt{\mathrm{bs}(f)}\,\widetilde{\deg}(g)\big)'
-      refs: [CKMPSS23]
-    - stmt: '\text{Composition holds for symmetric outer } f'
-      refs: [CKMPSS23]
+    - stmt: \widetilde{\deg}(f\circ g)=\Theta(\widetilde{\deg}(f)\widetilde{\deg}(g))
+      refs:
+        - PednekarPodder26composition
+        - Sherstov12robust
+      conf: high
   why: |
     Approximate degree composition is the main tool for proving
     $\mathsf{AC}^0$ approximate-degree lower bounds and quantum query lower
     bounds by the dual polynomial method.
-  refs: [Sherstov12robust, CKMPSS23, BT22]
+  refs: [Sherstov12robust, CKMPSS23, BT22, PednekarPodder26composition]
   see_also: [adeg, comp-adeg, composition, bs, Q]
 
+  resolved: true
 - id: open-aaronson-ambainis
   title: "The Aaronson-Ambainis conjecture"
   order: 90
   setting: total
-  statement: |
-    Every bounded degree-$d$ polynomial $p:\{-1,1\}^n\to[-1,1]$ with
-    $\mathrm{Var}(p)\ge\varepsilon$ has a variable with influence at least
-    $\mathrm{poly}(\varepsilon/d)$.
-  status: "Open. The decision-tree analogue (OSSS) is a theorem."
+  statement: Every bounded degree-$d$ polynomial $p:\{-1,1\}^n\to[-1,1]$ has a variable of influence at
+    least $c\,\mathrm{Var}(p)^{5/2}/d^6$, for an absolute $c>0$. PSI/Turturean proves the Aaronson–Ambainis
+    conjecture [PSI26AaronsonAmbainis, Turturean26]. Cleaner expositions are available in [BDST26AA] and
+    [HMP26AA].
+  status: Proved in November 2026 by David Turturean at Physical Superintelligence (PSI).
   best_known:
-    - stmt: '\mathrm{Var}(f) \le \sum_i \delta_i(T)\,\mathrm{Inf}_i(f) \text{ for every decision tree } T'
-      refs: [OSSS05]
-      note: 'The decision-tree version, which *is* known.'
-    - stmt: '\mathrm{I}^{1}(p) = O(\deg(p)^2) \text{ for bounded } p'
-      refs: [FHKL16]
-      note: 'A related, weaker statement that is known.'
-  why: |
-    If true, $\mathrm{R}(f)=\mathrm{poly}(\mathrm{Q}(f))$ for all **total** $f$,
-    and more generally every bounded-error quantum query algorithm can be
-    simulated classically with polynomially many queries on product
-    distributions. "Quantum speedups need structure."
-  refs: [AaronsonAmbainis14, OSSS05, FHKL16, BackursBavarian14]
+    - stmt: \max_i\mathrm{Inf}_i(p)\ge c\,\mathrm{Var}(p)^{5/2}/d^6
+      refs:
+        - PSI26AaronsonAmbainis
+        - Turturean26
+      conf: high
+      note: 'Influence normalization is as in the paper. Cleaner expositions: [BDST26AA] (arXiv:2611.11626)
+        and [HMP26AA] (arXiv:2611.12795).'
+  why: Quantum query algorithms can be simulated with polynomially many classical queries on most uniformly
+    random inputs. For a partial Boolean function whose domain has density $\delta$, [HMP26AA] obtains a
+    deterministic $O(\mathrm{Q}(f)^6/(\varepsilon\delta)^2)$-query algorithm correct on at least a $1-\varepsilon$
+    fraction of its domain. This is an average-case guarantee.
+  refs: [AaronsonAmbainis14, OSSS05, FHKL16, BackursBavarian14, PSI26AaronsonAmbainis, Turturean26, BDST26AA, HMP26AA]
   see_also: [MaxInf, Inf, Inf1, adeg, Q, R]
 
+  resolved: true
 - id: open-log-rank
   title: "Parity decision trees vs Fourier sparsity (query log-rank)"
   order: 100
@@ -617,105 +629,93 @@ open_problems:
   title: "Does randomized query complexity compose for total functions?"
   order: 110
   setting: total
-  statement: |
-    Is $\mathrm{R}(f\circ g^n) = \tilde\Omega(\mathrm{R}(f)\mathrm{R}(g))$ for all
-    total $f$ and $g$?
-  status: "**False for partial functions** [BenDavidBlais20composition]; open for total."
+  statement: Randomized composition holds up to logarithmic factors in input size, even for partial Boolean
+    functions [PednekarPodder26STOC]. Constant-factor composition fails even for total functions [Meiburg26composition].
+  status: Solved at the input-size polylogarithmic scale; constant-factor multiplicativity is false.
   best_known:
-    - stmt: '\mathrm{R}(f\circ g^n) = \Omega(\mathrm{noisyR}(f)\,\mathrm{R}(g))'
-      refs: [BenDavidBlais20composition]
-    - stmt: '\mathrm{R}(f\circ g^n) = \Omega(\mathrm{R}(f)\,\mathrm{LR}(g))'
-      refs: [BBGM22]
-    - stmt: '\text{Holds when } \mathrm{R}(f)=\Theta(n) \text{ or } f \text{ is (weakly) symmetric}'
-      refs: [CKMPSS23]
-  why: |
-    Composition is the basic tool for building hard functions out of easy
-    ones; its failure for partial functions was a genuine surprise.
-  refs: [BenDavidBlais20composition, BBGM22, CKMPSS23, BenDavidKothari18]
+    - stmt: \mathrm{R}(f\circ g^n)=\Omega\!\left(\frac{\mathrm{R}(f)\mathrm{R}(g)}{\log(n+1)}\right)
+      refs:
+        - PednekarPodder26STOC
+      conf: high
+      note: Here n is the outer input length, not R(f). Both f and g may be partial Boolean functions.
+    - stmt: \mathrm{R}(f\circ g)=\Theta(\mathrm{R}(f)\mathrm{R}(g)/\log\mathrm{R}(g))
+      refs:
+        - Meiburg26composition
+      conf: high
+      note: Total separating families; the saving is Θ(log log L) in their composed input length L.
+  why: Composition remains available for building query lower bounds with a logarithmic loss in outer input
+    size. The total-function counterexample rules out a uniform constant-factor theorem.
+  refs: [BenDavidBlais20composition, BBGM22, CKMPSS23, BenDavidKothari18, PednekarPodder26STOC, Meiburg26composition]
   see_also: [comp-R, R, noisyR, LR, RS, composition, open-RS-vs-R, open-composition-log, open-noisyR-vs-R]
 
+  resolved: true
 - id: open-composition-log
   title: "Does randomized composition survive a $\\log n$ loss?"
   order: 111
   setting: partial
-  statement: |
-    **Conjecture 2 of [BenDavidBlais20composition].** For all partial Boolean $f$ and $g$,
-    $$\mathrm{R}(f\circ g) \;=\; \Omega\!\left(\frac{\mathrm{R}(f)\,\mathrm{R}(g)}{\log n}\right),$$
-    where $n$ is the input size of $f$ (*not* $\mathrm{R}(f)$).
-
-    This is what is left of the randomized composition conjecture after Theorem 1
-    refutes it. The refutation is not gentle -- the loss is
-    $\mathrm{R}(f)^{1/3}\mathrm{R}(g)^{1/3}$, a polynomial factor -- but in the
-    counterexample $\mathrm{R}(f)$ and $\mathrm{R}(g)$ are both only *logarithmic in
-    the input size of $f$*, because $f$ carries an array of length $2^m$. So a
-    $\log n$ slack absorbs it, and might absorb everything.
-  status: "Open. Equivalent to [[open-noisyR-vs-R]]."
+  statement: Conjecture 2 of [BenDavidBlais20composition] is proved for all possibly partial Boolean $f,g$
+    [PednekarPodder26STOC]. The lower bound loses $\log(n+1)$, where $n$ is the outer input length. The
+    known counterexamples to constant-factor composition are consistent with this theorem.
+  status: 'Proved in the STOC 2027 submission: logarithmic loss in outer input size.'
   best_known:
-    - stmt: '\mathrm{R}(f\circ g) = \Omega\big(\mathrm{noisyR}(f)\,\mathrm{R}(g)\big)'
-      refs: [BenDavidBlais20composition]
-      note: 'The conjecture is exactly this bound plus $\mathrm{noisyR}(f) = \Omega(\mathrm{R}(f)/\log n)$.'
-    - stmt: '\exists \text{ partial } f,g:\ \mathrm{R}(f\circ g) = O\big(\mathrm{R}(f)^{2/3}\mathrm{R}(g)^{2/3}\log^{2/3}\mathrm{R}(f)\big)'
-      refs: [BenDavidBlais20composition]
-      note: 'Theorem 1, the counterexample. It does not touch the conjecture above.'
-  why: |
-    Every application of composition the author of a lower bound actually wants --
-    amplifying a hard function by composing it with itself -- can afford a $\log n$.
-    A proof would restore the tool in essentially full strength; a refutation would
-    have to find hardness that is not merely hiding in a huge input.
-  refs: [BenDavidBlais20composition, GLSS19]
+    - stmt: \mathrm{R}(f\circ g^n)=\Omega\!\left(\frac{\mathrm{R}(f)\mathrm{R}(g)}{\log(n+1)}\right)
+      refs:
+        - PednekarPodder26STOC
+      conf: high
+      note: Here n is the outer input length, not R(f). Both f and g may be partial Boolean functions.
+  why: The theorem restores randomized composition as a lower-bound tool up to an input-size logarithm.
+    The loss is not guaranteed to be polylogarithmic in R(f).
+  refs: [BenDavidBlais20composition, GLSS19, PednekarPodder26STOC]
   see_also: [comp-R, R, noisyR, ApproxIndex, GapMaj, open-R-composition, open-noisyR-vs-R]
 
+  resolved: true
 - id: open-noisyR-vs-R
   title: "Is $\\mathrm{noisyR}(f) = \\Omega(\\mathrm{R}(f)/\\log n)$?"
   order: 112
   setting: partial
-  statement: |
-    **Conjecture 7 of [BenDavidBlais20composition]**, and equivalent to
-    [[open-composition-log]]: for every (possibly partial) Boolean $f$ on $n$ bits,
-    is buying cheap bias only a $\log n$ better than reading bits?
-
-    The equivalence runs through the two halves of the theory: Theorem 3
-    ($\mathrm{R}(f\circ g) = \Omega(\mathrm{noisyR}(f)\mathrm{R}(g))$) gives one
-    direction, and Lemma 6 (no measure beats $\mathrm{noisyR}$ in an outer
-    composition theorem), applied with $M(f) = \mathrm{R}(f)/\log n$, gives the other.
-  status: "Open. Known: $\\mathrm{noisyR} = \\Omega(\\mathrm{fbs})$, which is all."
+  statement: 'Conjecture 7 of [BenDavidBlais20composition] is proved: every nonconstant partial Boolean
+    $f$ on $n$ bits satisfies $\mathrm{R}(f)\le C\log(n+1)\mathrm{noisyR}(f)$ [PednekarPodder26STOC, Theorem
+    31]. It implies [[open-composition-log]] via the optimal outer composition theorem. Constant-factor
+    equality still fails on total functions [Meiburg26composition].'
+  status: Proved in the STOC 2027 submission for partial Boolean functions.
   best_known:
-    - stmt: '\mathrm{noisyR}(f) = \Omega(\mathrm{fbs}(f))'
-      refs: [BenDavidBlais20composition]
-      note: 'Lemma 38. For total $f$ this already gives $\mathrm{R}(f) = O(\mathrm{noisyR}(f)^3)$ via $\mathrm{D} = O(\mathrm{fbs}^3)$; for partial $f$ it gives nothing, since $\mathrm{R}$ is unbounded in terms of $\mathrm{fbs}$ there.'
-    - stmt: '\mathrm{R}(f) = 2^{\Omega(\mathrm{noisyR}(f))} \text{ for some partial } f'
-      refs: [BenDavidBlais20composition]
-      note: 'On [[ApproxIndex]]. Note $\log n = \Theta(\mathrm{R}(f))$ there, so this is consistent with the conjecture -- it is the same example as in Theorem 1, seen through $\mathrm{noisyR}$.'
-    - stmt: '\mathrm{noisyR}^{\mathrm{na}}(f) = \Theta(\mathrm{R}^{\mathrm{na}}(f))'
-      refs: [BenDavidBlais20composition]
-      note: 'Theorem 8: the non-adaptive version is true, with no $\log$ at all.'
-  why: |
-    **The relational barrier.** The conjecture is *false* for relations: on
-    [[AgreeString]], $\mathrm{noisyR} = \Theta(1)$ while $\mathrm{R} = \Theta(\sqrt n)$.
-    So any proof must use the fact that $f$ has Boolean output -- and essentially no
-    technique in query complexity does. The one proof that manages it is Theorem 8, in
-    the non-adaptive setting, where the Boolean-ness enters at the very last step
-    (turning conditional entropy into error probability, which has no relational
-    analogue). Whether that trick can be made adaptive is the question.
-  refs: [BenDavidBlais20composition, GLSS19, Samorodnitsky16, PolyanskiyWu17]
+    - stmt: \mathrm{R}(f)\le C\log(n+1)\mathrm{noisyR}(f)
+      refs:
+        - PednekarPodder26STOC
+      conf: high
+      note: Input-size logarithm; no general replacement by log R(f).
+    - stmt: \frac{\mathrm{R}(W_q)}{\mathrm{noisyR}(W_q)}=\Omega\!\left(\frac{(\log N_q)^{1/4}}{\log\log\log
+        N_q}\right)
+      refs:
+        - Meiburg26composition
+      conf: high
+      note: Theorem 4.1; W_q is total.
+  why: 'The theorem uses Boolean output. It remains false for relations: [[AgreeString]] has constant noisy
+    complexity and randomized complexity Θ(√n).'
+  refs: [BenDavidBlais20composition, GLSS19, Samorodnitsky16, PolyanskiyWu17, PednekarPodder26STOC, Meiburg26composition]
   see_also: [noisyR, R, fbs, noisyRna, Rna, AgreeString, ApproxIndex, open-composition-log, open-R-composition]
 
+  resolved: true
 - id: open-Rstar
   title: "Is $\\mathrm{R}^{*}(f) = \\Theta(\\mathrm{R}(f))$?"
   order: 120
   setting: total
-  statement: |
-    Does randomized query complexity compose with *itself*? I.e. is
-    $\lim_k \mathrm{R}(f^{\circ k})^{1/k} = \Theta(\mathrm{R}(f))$?
-  status: "Open even for total functions; strictly weaker than full composition."
+  statement: Constant-factor equality is false on total functions. [Meiburg26composition, Theorem 10.7]
+    gives a total family $H_q$ with $\mathrm{R}^{*}(H_q)/\mathrm{R}(H_q)=\Theta(\log\mathrm{R}(H_q))$, attaining
+    the general upper bound. The composition rate is larger than the one-level randomized complexity on
+    this family.
+  status: 'Refuted in 2026: the maximal logarithmic gap is attained.'
   best_known:
-    - stmt: '\mathrm{R}^{*}(f) = \Omega\big(\max(\mathrm{Q}(f), \mathrm{LR}(f))\big)'
-      refs: [BBGM22]
-    - stmt: '\text{Whether } \mathrm{Q} \text{ or } \mathrm{LR} \text{ dominates is itself open.}'
-      refs: [BBGM22]
-  refs: [BBGM22]
+    - stmt: \mathrm{R}^{*}(H_q)=\Theta(\mathrm{R}(H_q)\log\mathrm{R}(H_q))
+      refs:
+        - Meiburg26composition
+      conf: high
+      note: Theorem 10.7.
+      witness: MeiburgCompositionRate
+  refs: [BBGM22, Meiburg26composition]
   see_also: [Rstar, R, Q, LR, composition]
 
+  resolved: true
 - id: open-fbs-vs-bs
   title: "Is $\\mathrm{fbs}(f) = O(\\mathrm{bs}(f)^{3/2})$?"
   order: 130

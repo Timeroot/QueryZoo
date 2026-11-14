@@ -39,14 +39,13 @@ measures:
   facts:
     - '$\widetilde{\deg}(f) \le 2\,\mathrm{Q}(f)$ [BBCMdW01].'
     - '$\mathrm{D}(f) = O(\mathrm{Q}(f)^4)$ for total $f$ [ABKRT21], improving $O(\mathrm{Q}^6)$; matching separation $\mathrm{D}=\tilde\Omega(\mathrm{Q}^4)$ [ABBLSS17], so the exponent is **4, settled**.'
-    - '$\mathrm{R}(f) \le \mathrm{D}(f) = O(\mathrm{Q}(f)^4)$ for total $f$; best known separation $\mathrm{R}=\tilde\Omega(\mathrm{Q}^3)$ [BansalSinha21, SSW21], so the $\mathrm{R}$-vs-$\mathrm{Q}$ exponent lies in $[3,4]$.'
     - 'Quantum query complexity **composes perfectly**: $\mathrm{Q}(f\circ g) = \Theta(\mathrm{Q}(f)\mathrm{Q}(g))$.'
     - 'For partial functions the gap with $\mathrm{R}$ is unbounded: $\mathrm{Q}=O(1)$ vs $\mathrm{R}=\tilde\Omega(n^{1-1/2k})$; exponential for Simon''s problem.'
-  refs: [BBCMdW01, Reichardt11, ABKRT21, ABBLSS17, BansalSinha21, SSW21]
+    - The optimal total-function $\mathrm{R}$-versus-$\mathrm{Q}$ power is 4 [OpenAI26QuarticRQ]. The new family rules out every power below 4, matching $\mathrm{R}\le\mathrm{D}=O(\mathrm{Q}^4)$ [ABKRT21]; see [[OpenAIQuarticRQ]].
+  refs: [BBCMdW01, Reichardt11, ABKRT21, ABBLSS17, BansalSinha21, SSW21, OpenAI26QuarticRQ]
   related: [QE, Q0, R, adeg, Advpm, D]
   see_also: [QE, Q0, Advpm, adeg, R, D, lambda]
   confidence: high
-
 - id: QE
   name: Exact quantum query complexity
   symbol: '\mathrm{Q}_{\mathrm{E}}(f)'
@@ -66,11 +65,11 @@ measures:
     - '$\mathrm{Q}_{\mathrm{E}}(\mathrm{PARITY}_n) = \lceil n/2\rceil$: the only known factor-2 speedup style behaviour for total functions.'
     - 'First superlinear-advantage total function: $\mathrm{Q}_{\mathrm{E}}(f) = O(\mathrm{D}(f)^{0.8675\ldots})$ [Ambainis13], giving the $1.15$ exponents in the $\mathrm{Q}_{\mathrm{E}}$ column.'
     - 'It is open whether $\mathrm{Q}_{\mathrm{E}}(f) = O(\deg(f))$ for total $f$ [BdW02, Open problem 4].'
-  refs: [BBCMdW01, Ambainis13, BdW02, AmbainisGruslysEtAl16]
+    - 'Exact quantum query complexity does not compose within constant factors on total functions: $\mathrm{Q}_{\mathrm{E}}(f_k\circ\mathrm{OR}_{m_k})=o(\mathrm{Q}_{\mathrm{E}}(f_k)\mathrm{Q}_{\mathrm{E}}(\mathrm{OR}_{m_k}))$ [PednekarPodder26composition, PednekarPodder26STOC]. See [[comp-QE]].'
+  refs: [BBCMdW01, Ambainis13, BdW02, AmbainisGruslysEtAl16, PednekarPodder26composition, PednekarPodder26STOC]
   related: [Q, Q0, deg, D, R0]
   see_also: [Q, Q0, deg, D]
   confidence: high
-
 - id: Q0
   name: Zero-error (Las Vegas) quantum query complexity
   symbol: '\mathrm{Q}_{0}(f)'

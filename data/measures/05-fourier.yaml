@@ -101,12 +101,11 @@ measures:
     - '$\mathrm{I}^1(p) = O(\deg(p)^3)$ for bounded $p$; $O(\deg(p)^2)$ for homogeneous $p$ [Backurs-Bavarian].'
     - 'Improved to $O(\deg(p)^2)$ in general and $O(d\log d)$ for homogeneous $p$ [FHKL16], with a matching example for monotone functions.'
     - 'A quantum algorithm making $T$ queries has acceptance probability $p$ with $\deg(p)\le 2T$, so these bounds transfer directly to query complexity.'
-    - 'Related open problem (Aaronson-Ambainis): every bounded degree-$d$ $p$ with $\mathrm{Var}(p)\ge\varepsilon$ has a variable with influence $\ge \mathrm{poly}(\varepsilon/d)$. Would imply $\mathrm{R}(f)=\mathrm{poly}(\mathrm{Q}(f))$ for all *total* $f$ ... and more.'
-  refs: [BackursBavarian14, FHKL16, AaronsonAmbainis14]
+    - 'The Aaronson–Ambainis conjecture is proved: bounded degree-$d$ polynomials have $\max_i\mathrm{Inf}_i(p)\ge c\,\mathrm{Var}(p)^{5/2}/d^6$ [PSI26AaronsonAmbainis, Turturean26]. This gives classical simulation of quantum query algorithms on most uniformly random inputs. Cleaner expositions: [BDST26AA] and [HMP26AA].'
+  refs: [BackursBavarian14, FHKL16, AaronsonAmbainis14, PSI26AaronsonAmbainis, Turturean26, BDST26AA, HMP26AA]
   related: [Inf, MaxInf, adeg, Q]
   see_also: [Inf, MaxInf, adeg, Q]
   confidence: high
-
 - id: MaxInf
   name: Maximum influence
   symbol: '\mathrm{MaxInf}(f)'
@@ -140,12 +139,11 @@ measures:
     - '$\mathrm{D}(f)\ge \mathrm{Var}(f)/\mathrm{MaxInf}(f)$ (OSSS). Recorded as the measure [[osss]].'
     - '$\mathrm{MaxInf}(f)\le\mathrm{Var}(f)$ always, so the ratio above is never below $1$; equality for $\oplus_n$ and for a dictator.'
     - '**KKL:** $\mathrm{MaxInf}(f)\ge\Omega(\mathrm{Var}(f)\log n/n)$, so the ratio never exceeds $O(n/\log n)$; [[TRIBES]] attains it.'
-    - 'For a bounded degree-$d$ function, $\mathrm{MaxInf} \ge \mathrm{Var}/(\text{something in } d)$ is the Aaronson-Ambainis conjecture -- open.'
-  refs: [OSSS05, AaronsonAmbainis14, KKL88]
+    - 'The Aaronson–Ambainis conjecture is proved: bounded degree-$d$ polynomials have $\max_i\mathrm{Inf}_i(p)\ge c\,\mathrm{Var}(p)^{5/2}/d^6$ [PSI26AaronsonAmbainis, Turturean26]. This gives classical simulation of quantum query algorithms on most uniformly random inputs. Cleaner expositions: [BDST26AA] and [HMP26AA].'
+  refs: [OSSS05, AaronsonAmbainis14, KKL88, PSI26AaronsonAmbainis, Turturean26, BDST26AA, HMP26AA]
   related: [Inf, Var, osss, Inf1, D]
   see_also: [osss, Var, Inf, Inf1, D, normalization]
   confidence: high
-
 - id: osss
   name: OSSS number
   symbol: '\mathrm{osss}(f)'

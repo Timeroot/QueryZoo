@@ -5,14 +5,17 @@
 {% block body %}
 <div class="wrap">
   <h1 class="pagetitle">Open problems</h1>
-  <p class="lede">The gaps that people actually care about, with the best known bounds on each
-  side. If you close one, please edit <code>data/open_problems.yaml</code>.</p>
+  <p class="lede">Active questions with the best known bounds on each side.
+  Recent resolutions are recorded below.</p>
 
+  {% for label, group in [('Open problems', ops), ('Resolved questions', resolved_ops)] %}
+  {% if group %}
+  {% if label == 'Resolved questions' %}<h2 id="resolved">Resolved questions</h2>{% endif %}
   <nav class="jump">
-    {% for o in ops %}<a href="#{{ o.id }}">{{ o.id | replace('open-', '') }}</a>{% endfor %}
+    {% for o in group %}<a href="#{{ o.id }}">{{ o.id | replace('open-', '') }}</a>{% endfor %}
   </nav>
 
-  {% for o in ops %}
+  {% for o in group %}
   <section class="card openp" id="{{ o.id }}">
     <h2>{{ o.title | mdi }} {{ setting_pill(o.setting) }}
       <a class="anchor" href="#{{ o.id }}">#</a></h2>
@@ -43,6 +46,8 @@
       {% if o.refs %}<span class="refs">{{ o.refs | cites }}</span>{% endif %}
     </footer>
   </section>
+  {% endfor %}
+  {% endif %}
   {% endfor %}
 </div>
 {% endblock %}

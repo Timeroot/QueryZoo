@@ -300,32 +300,58 @@ relations:
   setting: total
   status: gap
   upper:
-    - stmt: '\mathrm{bs}(f) \le 2\deg(f)^2 \le 2\,\mathrm{s}(f)^4'
-      form: {exp: 4, kind: const}
-      refs: [NS94, Huang19]
-      note: 'The first polynomial bound; Huang''s theorem $\deg\le\mathrm{s}^2$ supplied the missing step in 2019.'
+    - stmt: \mathrm{bs}(f) \le 2\deg(f)^2 \le 2\,\mathrm{s}(f)^4
+      form:
+        exp: 4
+        kind: const
+      refs:
+        - NS94
+        - Huang19
+      note: The first polynomial bound; Huang's theorem $\deg\le\mathrm{s}^2$ supplied the missing step
+        in 2019.
       conf: high
-    - stmt: '\mathrm{bs}_\ell(f) = O(\mathrm{s}(f)^\ell)'
-      refs: [KenyonKutin04]
-      note: '$\ell$-block sensitivity (blocks of size $\le \ell$); for $\ell = 2$ this is $O(\mathrm{s}^2)$; the analogous quadratic bound for unrestricted block size was refuted in 2026 [OpenAISensitivity26].'
+    - stmt: \mathrm{bs}_\ell(f) = O(\mathrm{s}(f)^\ell)
+      refs:
+        - KenyonKutin04
+      note: $\ell$-block sensitivity (blocks of size $\le \ell$); for $\ell = 2$ this is $O(\mathrm{s}^2)$.
       conf: high
   lower:
-    - stmt: '\mathrm{bs}(f_n) \ge \tfrac12\,\mathrm{s}(f_n)^2'
-      form: {exp: 2, kind: const}
+    - stmt: \mathrm{bs}(f_n) \ge \tfrac12\,\mathrm{s}(f_n)^2
+      form:
+        exp: 2
+        kind: const
       witness: Rubinstein
-      refs: [Rubinstein95]
+      refs:
+        - Rubinstein95
       note: 'On $n = 4k^2$ variables: $\mathrm{s}=\sqrt n$, $\mathrm{bs}=n/2$.'
       conf: high
-    - stmt: '\mathrm{bs}(f_n) \ge \tfrac23\,\mathrm{s}(f_n)^2 - \tfrac13\,\mathrm{s}(f_n)'
-      form: {exp: 2, kind: const}
-      refs: [AmbainisSun11]
-      note: 'Record constant for the classical quadratic construction; superquadratic families are now known [OpenAISensitivity26, Prove2MeSensitivity26].'
+    - stmt: \mathrm{bs}(f_n) \ge \tfrac23\,\mathrm{s}(f_n)^2 - \tfrac13\,\mathrm{s}(f_n)
+      form:
+        exp: 2
+        kind: const
+      refs:
+        - AmbainisSun11
+      note: Record constant for the classical quadratic construction.
       conf: high
+    - stmt: \mathrm{bs}(f_j)=\Omega(\mathrm{s}(f_j)^{2.130825579397823})
+      refs:
+        - Prove2MeSensitivity26
+      conf: high
+      form:
+        exp: 2.130825579397823
+        kind: const
+      witness: Prove2MeTournament
+      note: The recorded decimal exponent is strictly below the exact endpoint $\alpha=\frac{\log(14055^8)}{\log(3738277295413674)}=2.1308255793978239\ldots$.
+        The source supplies every ε>0 and arbitrarily large sensitivity; choose a fixed ε small enough.
+        Direct separation.
   notes: |
     **The sensitivity-vs-block-sensitivity question** now has a superquadratic
     lower bound. [OpenAISensitivity26] refutes every universal quadratic bound;
     [Prove2MeSensitivity26] improves the lower endpoint to
     $2.1308255793978239\ldots$. The quartic universal upper bound remains.
+    The exact source statement is $\mathrm{bs}\ge\mathrm{s}^{\alpha-\varepsilon}$
+    for every $\varepsilon>0$ and arbitrarily large sensitivity. The displayed
+    decimal exponent is rounded down to give a fixed-power separation.
     See [[open-bs-vs-s]] for the exact endpoint and its quantifiers.
   see_also: [s, bs, Rubinstein, open-bs-vs-s]
 

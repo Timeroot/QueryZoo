@@ -46,11 +46,12 @@ measures:
     - '$\mathrm{D}(f) \le 27\,\mathrm{R}(f)^3$ [Nisan]. Best known separation is $\mathrm{D} = \tilde\Omega(\mathrm{R}^2)$ [ABBLSS17], so the truth is between $2$ and $3$.'
     - 'Composition can *fail*: there are partial $f,g$ with $\mathrm{R}(f\circ g) \ll \mathrm{R}(f)\mathrm{R}(g)$ [BenDavidBlais20composition].'
     - '$\mathrm{R}_\varepsilon(f) = \max_\mu \mathrm{D}^\mu_\varepsilon(f)$ (Yao), for the worst-case-cost convention.'
-  refs: [Nisan91, BBCMdW01, BdW02, ABBLSS17]
+    - 'Composition holds with an outer-input-size logarithmic loss, even for partial Boolean functions: $\mathrm{R}(f\circ g^n)=\Omega(\mathrm{R}(f)\mathrm{R}(g)/\log(n+1))$ [PednekarPodder26STOC]. Constant-factor composition fails even for total functions [Meiburg26composition]; see [[comp-R]].'
+    - The optimal total-function $\mathrm{R}$-versus-$\mathrm{Q}$ power is 4 [OpenAI26QuarticRQ]. The new family rules out every power below 4, matching $\mathrm{R}\le\mathrm{D}=O(\mathrm{Q}^4)$ [ABKRT21]; see [[OpenAIQuarticRQ]].
+  refs: [Nisan91, BBCMdW01, BdW02, ABBLSS17, PednekarPodder26STOC, Meiburg26composition, OpenAI26QuarticRQ]
   related: [R0, D, Q, Rbar, RS, noisyR]
   see_also: [R0, Rbar, D, Q, noisyR, LR, RS]
   confidence: high
-
 - id: Rbar
   name: Expected-cost randomized query complexity
   symbol: '\bar{\mathrm{R}}_{\varepsilon}(f)'
@@ -124,11 +125,11 @@ measures:
   facts:
     - '$\mathrm{R}^1(f) \ge \mathrm{C}^1(f)$: a certain "yes" must exhibit a 1-certificate.'
     - '$\mathrm{R}(f) \le \mathrm{R}^1(f) \le \mathrm{R}_0(f) \le \mathrm{D}(f)$.'
-  refs: [BdW02]
+    - The total complement [[AIKDNFComplement]] has $\mathrm{C}=\Theta((\mathrm{R}^{1})^2)$ with no logarithmic loss [AIK26, Theorem 2.2]. The original [[AIKDNF]] uses the paper’s certain-rejection $\mathrm{R}_1$, recorded here as [[R1RP]].
+  refs: [BdW02, AIK26]
   related: [R, R0, C1, Rbar]
-  see_also: [R, R0, C1]
+  see_also: [R, R0, C1, R1RP, AIKDNFComplement]
   confidence: medium
-
 - id: RS
   name: Sabotage complexity
   symbol: '\mathrm{RS}(f)'
@@ -149,16 +150,16 @@ measures:
     - '$\mathrm{RS}(f\circ g) \ge \mathrm{RS}(f)\,\mathrm{RS}(g)$ -- perfect composition [BenDavidKothari18, Thm 19].'
     - '$\mathrm{R}(f\circ g^n) = \Omega(\mathrm{R}(f)\,\mathrm{RS}(g))$ [BenDavidKothari18, Thm 21].'
     - '$\mathrm{R}_\varepsilon(f) \ge \bar{\mathrm{R}}_\varepsilon(f) \ge (1-2\varepsilon)\,\mathrm{RS}(f)$ [BenDavidKothari18, Thm 12].'
-    - '**Quadratically tight for total $f$:** $\mathrm{R}(f) = O(\mathrm{RS}(f)^2\log \mathrm{RS}(f))$ [BenDavidKothari18, Thm 32]. No total $f$ with $\mathrm{RS}(f) = o(\mathrm{R}(f))$ is known.'
+    - '**Quadratically tight for total $f$:** $\mathrm{R}(f) = O(\mathrm{RS}(f)^2\log \mathrm{RS}(f))$ [BenDavidKothari18, Thm 32].'
     - '$\mathrm{RS}$ can be quadratically larger than the partition bound, and $\mathrm{RS}(f) = \tilde\Omega(\mathrm{Q}(f)^{2.5})$ for some total $f$ [BenDavidKothari18, Thm 30].'
     - '$\mathrm{RS}(g) = \tilde\Omega(\mathrm{D}^{\mathrm{prod}}(g))$ for total $g$, and the gap is polynomial (NAND-tree) [Sanyal24].'
     - '**The quadratic tightness above is total-only, and badly so.** On partial functions $\mathrm{R}$ is *unbounded* in terms of $\mathrm{RS}$: any promise whose two sides are far apart in Hamming distance has $\mathrm{RS} = O(1)$ whatever its randomized complexity, because every sabotaged input is then riddled with stars. The collision problem is the clean instance -- $\mathrm{RS}(\mathrm{COL}_n) = \Theta(1)$ against $\mathrm{R} = \Theta(\sqrt n)$ [BenDavidKothari18, Sec. 1.4]. See [[Collision]].'
     - '$\bar{\chi}(g) = \Omega(\mathrm{RS}(g))$ for all partial $g$ [GLSS19, Thm 7]; the same collision witness makes that gap unbounded. Repairing the partial-function collapse is what $\chi$, $\bar\chi$ and $\mathrm{LR}$ are for: each is $\Omega(\sqrt{\mathrm{R}})$ even off the promise, and $\mathrm{RS}$ is not.'
-  refs: [BenDavidKothari18, GLSS19, Sanyal24]
+    - 'Total functions now separate sabotage and randomized complexity by $\Omega(\log N)$ [Meiburg26composition]; [[MeiburgParityPointer]] is a witness. Conflict and sabotage are incomparable on total functions: the opposite directions use that family and [[ANDOR]].'
+  refs: [BenDavidKothari18, GLSS19, Sanyal24, Meiburg26composition]
   related: [R, chibar, chi, LR, D_prod, noisyR]
   see_also: [R, chi, chibar, LR, noisyR, Collision, open-RS-vs-R]
   confidence: high
-
 - id: chi
   name: Conflict complexity
   symbol: '\chi(f)'
@@ -179,11 +180,11 @@ measures:
     - '$\chi(g) = \Omega(\sqrt{\mathrm{R}(g)})$.'
     - '$\chi(g)\le\mathrm{D}(g)$ [Li18, Sec. 2] is the *only* upper bound proved directly for $\chi$; everything else runs through $\chi\le\bar\chi\le\mathrm{LR}\le\mathrm{R}$. It gives $\chi\le\mathrm{C}^2$ and $\chi\le\mathrm{bs}^3$, so the $\mathrm{bs}$ cell is a gap $[1,3]$ and the $\mathrm{C}$ cell a gap $[1,2]$ -- both inherited from $\mathrm{D}$, neither touched since.'
     - 'Whether $\chi=\Omega(\mathrm{C})$ or $\chi=O(\mathrm{C})$ -- or neither -- is [[open-chi-vs-C]].'
-  refs: [Sanyal18, AGJKLMSS17, Li18]
+    - Conflict and sabotage are incomparable on total functions. [[MeiburgParityPointer]] gives $\chi/\mathrm{RS}=\Omega(\log N)$; [[ANDOR]] gives $\mathrm{RS}/\chi=\Omega(\sqrt{\log N})$. Also $\chi$ is not $O(\mathrm{C})$ and fails perfect composition [Meiburg26composition].
+  refs: [Sanyal18, AGJKLMSS17, Li18, Meiburg26composition]
   related: [chibar, RS, LR, R, bs]
   see_also: [chibar, RS, LR, R, bs, C, D, open-chi-vs-C]
   confidence: medium
-
 - id: chibar
   name: Max-conflict complexity
   symbol: '\bar{\chi}(f)'
@@ -200,11 +201,11 @@ measures:
     - '$\bar{\chi}(g) = \Omega(\sqrt{\mathrm{R}(g)})$ even for partial $g$ [GLSS19, Thm 6] -- proved there for the smaller measure $\chi$, so it holds a fortiori for $\bar\chi$.'
     - '$\bar{\chi}(g) = \Omega(\mathrm{RS}(g))$ for all partial $g$ [GLSS19, Thm 7]. The two facts together make the gap *unbounded* on partial functions: the collision problem has $\mathrm{RS} = \Theta(1)$ but $\mathrm{R} = \Theta(\sqrt n)$, hence $\bar\chi = \Omega(n^{1/4})$. Not being able to collapse that way is the whole point of the measure.'
     - 'Ordering: $\mathrm{RS} \lesssim \bar{\chi} \lesssim \mathrm{LR} \lesssim \mathrm{R}$; no asymptotic separation among the first three is known for *total* functions.'
-  refs: [GLSS19, BBGM22, BenDavidKothari18]
+    - Total families separate $\bar\chi$ from sabotage by $\Omega(\log N)$ and linearised complexity from $\bar\chi$ by $\Omega(\sqrt{\log N})$ [Meiburg26composition]; see [[MeiburgParityPointer]] and [[MeiburgMaskedPointer]].
+  refs: [GLSS19, BBGM22, BenDavidKothari18, Meiburg26composition]
   related: [chi, RS, LR, R]
   see_also: [chi, RS, LR, R, Collision]
   confidence: high
-
 - id: LR
   name: Linearised randomized complexity
   symbol: '\mathrm{LR}(f)'
@@ -225,11 +226,11 @@ measures:
     - '$\Omega(\sqrt{\mathrm{R}(f)}) \le \mathrm{LR}(f) \le \mathrm{R}(f)$.'
     - '$\mathrm{LR}$ can be polynomially larger than $\bar{\chi}$ [BBGM22].'
     - '$\mathrm{R}^*(f) \ge \Omega(\mathrm{LR}(f))$.'
-  refs: [BBGM22]
+    - Total functions have $\mathrm{R}/\mathrm{LR}=\Omega(\log N)$ and $\mathrm{LR}/\bar\chi=\Omega(\sqrt{\log N})$ [Meiburg26composition]; see [[MeiburgMajorityPointer]] and [[MeiburgMaskedPointer]].
+  refs: [BBGM22, Meiburg26composition]
   related: [chibar, RS, R, Rstar, noisyR]
   see_also: [chibar, RS, noisyR, Rstar, R]
   confidence: high
-
 - id: noisyR
   name: Noisy randomized query complexity
   symbol: '\mathrm{noisyR}(f)'
@@ -253,13 +254,13 @@ measures:
     - 'Characterisation: $\mathrm{noisyR}(f) = \Theta\!\big(\mathrm{R}(f\circ \mathrm{GapMaj}_n)/\mathrm{R}(\mathrm{GapMaj}_n)\big)$.'
     - 'If $\mathrm{R}(f) = \Theta(n)$ then $\mathrm{noisyR}(f) = \Theta(\mathrm{R}(f))$.'
     - '**Lemma 37** of [BenDavidBlais20composition]: $\mathrm{noisyR}(f) = \Omega(1)$ for every non-constant $f$, and more precisely distinguishing two inputs that differ on a block $B$ costs $\Omega(1)$ *inside $B$*. Both hold for relations with two inputs whose allowed output sets are disjoint.'
-    - '**Lemma 38**: $\mathrm{noisyR}(f) = \Omega(\mathrm{fbs}(f))$, by LP-weighting the previous item over the sensitive blocks. Composed with $\mathrm{R} = O(\mathrm{fbs}^3)$ this is the only general *upper* bound on $\mathrm{R}$ in terms of $\mathrm{noisyR}$ we have, and only for total $f$.'
+    - '**Lemma 38**: $\mathrm{noisyR}(f) = \Omega(\mathrm{fbs}(f))$, by LP-weighting the previous item over the sensitive blocks. Composed with $\mathrm{R} = O(\mathrm{fbs}^3)$ this gives a complexity-only bound for total $f$. The new input-size-dependent bound is $\mathrm{R}=O(\mathrm{noisyR}\log(n+1))$ for partial Boolean functions [PednekarPodder26STOC].'
     - '**Normal form** (Lemmas 36, Theorem 39): an optimal noisy algorithm may be assumed to use only two bias values, $\gamma = 1$ and $\gamma = 1/\sqrt n$.'
-  refs: [BenDavidBlais20minimax, BenDavidBlais20composition, GoosMaystre21]
+    - For every nonconstant partial Boolean $f$ on $n$ bits, $\mathrm{R}(f)\le C\log(n+1)\mathrm{noisyR}(f)$ [PednekarPodder26STOC, Theorem 31]. This closes [[open-noisyR-vs-R]]. Total functions nevertheless have $\mathrm{R}/\mathrm{noisyR}=\Omega((\log N)^{1/4}/\log\log\log N)$ [Meiburg26composition, Theorem 4.1].
+  refs: [BenDavidBlais20minimax, BenDavidBlais20composition, GoosMaystre21, PednekarPodder26STOC, Meiburg26composition]
   related: [R, LR, Np, noisyRna, Rstar, fbs]
   see_also: [R, LR, Rstar, Np, noisyRna, fbs]
   confidence: high
-
 - id: noisyRna
   name: Non-adaptive noisy randomized query complexity
   symbol: '\mathrm{noisyR}^{\mathrm{na}}(f)'
@@ -376,22 +377,20 @@ measures:
   category: composition
   order: 39
   short: 'lim_k R(f^{o k})^{1/k}: the per-level cost of composing f with itself many times.'
-  definition: |
-    $$\mathrm{R}^*(f) \;=\; \lim_{k\to\infty} \mathrm{R}\!\left(f^{\circ k}\right)^{1/k}.$$
-    The limit exists by submultiplicativity. Since composition of randomized query
-    complexity is *not* perfect, $\mathrm{R}^*(f)$ can be strictly smaller than $\mathrm{R}(f)$.
-    Characterising $\mathrm{R}^*$ by a simpler (ideally efficiently computable) measure is
-    an open problem posed in [BBGM22].
+  definition: '$\mathrm{R}^{*}(f)=\lim_{k\to\infty}\mathrm{R}(f^{\circ k})^{1/k}$ is the per-level cost
+    of iterated composition. The limit exists; bounded-error amplification requires care, so it is not justified
+    by plain submultiplicativity of R. The composition rate can exceed one-level complexity: [[MeiburgCompositionRate]]
+    attains $\mathrm{R}^{*}/\mathrm{R}=\Theta(\log\mathrm{R})$ [Meiburg26composition].'
   settings: {total: {defined: yes}, partial: {defined: yes}, relation: {defined: no}}
   facts:
     - '$\mathrm{R}^*(f) \ge \Omega(\mathrm{LR}(f))$ [BBGM22].'
     - '$\mathrm{R}^*(f) \ge \Omega(\mathrm{Q}(f))$, since quantum query complexity composes perfectly.'
     - 'Whether either bound dominates the other is open.'
-  refs: [BBGM22]
+    - 'General upper bound: $\mathrm{R}^{*}(f)=O(\mathrm{R}(f)\log(\mathrm{R}(f)+1))$; a total family attains it [Meiburg26composition, Theorem 10.7].'
+  refs: [BBGM22, Meiburg26composition]
   related: [R, Q, LR, noisyR]
   see_also: [LR, Q, R, noisyR]
   confidence: high
-
 - id: Np
   name: Noisy decision tree complexity
   symbol: '\mathrm{N}_{p}(f)'

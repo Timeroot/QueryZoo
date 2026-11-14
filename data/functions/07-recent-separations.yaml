@@ -575,3 +575,290 @@ functions:
     refs:
     - KLLPV26
     note: degcert=O(osdeg) and osdeg=O(Q₀).
+- group: composed
+  kind: total
+  scale:
+    var: q
+  refs:
+  - Meiburg26composition
+  id: MeiburgParityPointer
+  name: Meiburg’s parity-pointer family
+  symbol: P_q
+  order: 70
+  arity: $N_q=\Theta(q^4\log q)$ bits
+  short: A total logarithmic separation of sabotage from conflict, max-conflict, linearised and randomized
+    query complexity.
+  definition: The encoded pointer block $g_q$ is the succinct total pointer function in [Meiburg26composition,
+    Section 3], with an exact one-sided detector. Write $m_q=q^3\log q$; $q$ is odd for the majority families.
+    The parity family is $P_q=\mathrm{XOR}_q\circ g_q^q$.
+  values:
+  - measure: RS
+    value: O(q^3\log q)
+    refs:
+    - Meiburg26composition
+  - measure: chi
+    value: \Theta(q^3\log^2 q)
+    refs:
+    - Meiburg26composition
+  - measure: chibar
+    value: \Theta(q^3\log^2 q)
+    refs:
+    - Meiburg26composition
+  - measure: LR
+    value: \Theta(q^3\log^2 q)
+    refs:
+    - Meiburg26composition
+  - measure: R
+    value: \Theta(q^3\log^2 q)
+    refs:
+    - Meiburg26composition
+  notes: 'Theorem 7.5: $\chi(P_q)/\mathrm{RS}(P_q)=\Omega(\log N_q)$. The same family separates each of
+    the larger measures from sabotage.'
+  see_also:
+  - RS
+  - chi
+  - chibar
+  - LR
+  - R
+  - MeiburgMajorityPointer
+- group: composed
+  kind: total
+  scale:
+    var: q
+  refs:
+  - Meiburg26composition
+  id: MeiburgMajorityPointer
+  name: Meiburg’s majority-pointer family
+  symbol: M_q
+  order: 71
+  arity: $N_q=\Theta(q^4\log q)$ bits
+  short: A total logarithmic separation of randomized from linearised query complexity.
+  definition: The encoded pointer block $g_q$ is the succinct total pointer function in [Meiburg26composition,
+    Section 3], with an exact one-sided detector. Write $m_q=q^3\log q$; $q$ is odd for the majority families.
+    The majority family is $M_q=\mathrm{MAJ}_q\circ g_q^q$.
+  values:
+  - measure: RS
+    value: O(q^3\log q)
+    refs:
+    - Meiburg26composition
+  - measure: chi
+    value: O(q^3\log q)
+    refs:
+    - Meiburg26composition
+  - measure: chibar
+    value: O(q^3\log q)
+    refs:
+    - Meiburg26composition
+  - measure: LR
+    value: O(q^3\log q)
+    refs:
+    - Meiburg26composition
+  - measure: R
+    value: \Theta(q^3\log^2 q)
+    refs:
+    - Meiburg26composition
+  notes: 'Theorem 3.5: $\mathrm{R}(M_q)/\mathrm{LR}(M_q)=\Omega(\log N_q)$. The bounds on the smaller
+    measures are upper bounds, not asserted equalities.'
+  see_also:
+  - RS
+  - chi
+  - chibar
+  - LR
+  - R
+  - MeiburgParityPointer
+- group: composed
+  kind: total
+  scale:
+    var: q
+  refs:
+  - Meiburg26composition
+  id: MeiburgMaskedPointer
+  name: Meiburg’s parity-masked majority family
+  symbol: G_q
+  order: 72
+  arity: $N_q=\Theta(q^4\log q)$ bits
+  short: A total square-root-logarithmic separation of linearised from max-conflict complexity.
+  definition: 'The encoded pointer block $g_q$ is the succinct total pointer function in [Meiburg26composition,
+    Section 3], with an exact one-sided detector. Write $m_q=q^3\log q$; $q$ is odd for the majority families.
+    Add a parity mask to the majority family: $G_q(x,z)=M_q(x)\oplus\mathrm{XOR}_t(z)$, with $t=\Theta(m_q)$.'
+  values:
+  - measure: RS
+    value: \Theta(q^3\log q)
+    refs:
+    - Meiburg26composition
+  - measure: chibar
+    value: \Theta(q^3\log q)
+    refs:
+    - Meiburg26composition
+  - measure: LR
+    value: \Omega(q^3\log^{3/2}q),\ O(q^3\log^2q)
+    refs:
+    - Meiburg26composition
+  - measure: R
+    value: \Theta(q^3\log^2q)
+    refs:
+    - Meiburg26composition
+  notes: 'Theorem 8.3: $\mathrm{LR}(G_q)/\bar\chi(G_q)=\Omega(\sqrt{\log N_q})$. The LR value is a bracket;
+    the paper does not prove a matching upper bound at its lower endpoint.'
+  see_also:
+  - RS
+  - chibar
+  - LR
+  - R
+  - MeiburgMajorityPointer
+- group: composed
+  kind: total
+  scale:
+    var: q
+  refs:
+  - Meiburg26composition
+  id: MeiburgNoisySeparation
+  name: Meiburg’s total noisy-query separation
+  symbol: W_q
+  order: 73
+  arity: $\log N_q=\Theta(q^4)$
+  short: Total functions with $\mathrm{R}/\mathrm{noisyR}=\Omega((\log N)^{1/4}/\log\log\log N)$.
+  definition: The certificate-array totalization of an AND-of-ORs of approximate-index seed problems,
+    using short encoded certificates and a large address table [Meiburg26composition, Section 4].
+  values:
+  - measure: R
+    value: \Omega(q^{11}\log q)
+    refs:
+    - Meiburg26composition
+    note: 'Theorem 4.1: substitute u_q=Θ(q^4) and ℓ_q=Θ(log q) in its lower bound.'
+  - measure: noisyR
+    value: O(q^{10}\log q\log\log q)
+    refs:
+    - Meiburg26composition
+    note: 'Theorem 4.1: its upper bound is O(ℓ_q log(ℓ_q+2) u_q² q²).'
+  notes: The separation is polylogarithmic in input size, since $\log N_q=\Theta(q^4)$. It refutes constant-factor
+    equality on total functions while remaining consistent with $\mathrm{R}=O(\mathrm{noisyR}\log(N_q+1))$
+    [PednekarPodder26STOC].
+  see_also:
+  - R
+  - noisyR
+  - comp-R
+  - open-noisyR-vs-R
+- group: composed
+  kind: total
+  scale:
+    var: q
+  refs:
+  - Meiburg26composition
+  id: MeiburgCompositionRate
+  name: Meiburg’s maximal composition-rate separation
+  symbol: H_q
+  order: 74
+  arity: $N_q=\Theta(q^6\log q)$ bits
+  short: $\mathrm{R}^{*}/\mathrm{R}=\Theta(\log\mathrm{R})$, the maximal logarithmic gap.
+  definition: The encoded pointer block $g_q$ is the succinct total pointer function in [Meiburg26composition,
+    Section 3], with an exact one-sided detector. Write $m_q=q^3\log q$; $q$ is odd for the majority families.
+    Let $A_q=\mathrm{AND}_{q^2}\circ\mathrm{MAJ}_q$, on $q^3$ bits. The rotated composition is $H_q=g_q\circ
+    A_q$.
+  values:
+  - measure: R
+    value: \Theta(q^5\log q)
+    refs:
+    - Meiburg26composition
+  - measure: Rstar
+    value: \Theta(q^5\log^2 q)
+    refs:
+    - Meiburg26composition
+  notes: 'Theorem 10.7: $\mathrm{R}^{*}(H_q)/\mathrm{R}(H_q)=\Theta(\log q)=\Theta(\log N_q)=\Theta(\log\mathrm{R}(H_q))$.
+    Here the limit exceeds one-level randomized complexity.'
+  see_also:
+  - R
+  - Rstar
+  - open-Rstar
+  - composition
+
+- id: OpenAIQuarticRQ
+  name: OpenAI’s nearly quartic randomized–quantum family
+  symbol: F_{k,m}
+  group: composed
+  order: 75
+  kind: total
+  arity: A winner-column construction on $m$ columns, with address and certificate arrays; $k\ge2$ is
+    fixed and $m$ ranges over sufficiently large powers of four.
+  short: Settles the optimal total-function $\mathrm{R}$-versus-$\mathrm{Q}$ exponent at $4$.
+  definition: Each column contains an $m$-bit string and an address-indexed certificate array. A unique
+    winner has an all-one string and a valid certificate pointing to a zero in every other column. Addresses
+    are computed by instances of the Bansal–Sinha partial-function separation. A quantum tournament finds
+    a short list containing the winner; a randomized algorithm must find an erased zero or the correctly
+    addressed filled cell [OpenAI26QuarticRQ, Sections 2–4].
+  values:
+  - measure: Q
+    value: \widetilde O(\sqrt m)
+    refs:
+    - OpenAI26QuarticRQ
+    note: For each fixed k, Q≤C_k sqrt(m)(log m)^{b_k}. Constants and the log exponent may depend on k.
+  - measure: R
+    value: \Omega(m^{2-1/k}/\log^2m)
+    refs:
+    - OpenAI26QuarticRQ
+    note: Theorem 1.1, for each fixed k≥2.
+  witnesses:
+  - of:
+    - R
+    - Q
+    setting: total
+    statement: For every $\alpha<4$, there is a fixed $k$ for which $\mathrm{R}(F_{k,m})/(1+\mathrm{Q}(F_{k,m}))^\alpha\to\infty$.
+    refs:
+    - OpenAI26QuarticRQ
+  notes: The fixed-k separation exponent is $4-2/k$ up to polylogarithmic factors. Varying k proves that
+    the optimal universal power is 4; the paper does not state a fixed-k $\widetilde\Omega(\mathrm{Q}^4)$
+    lower bound. The general upper bound is $\mathrm{R}\le\mathrm{D}=O(\mathrm{Q}^4)$ [ABKRT21].
+  refs:
+  - OpenAI26QuarticRQ
+  - ABKRT21
+  see_also:
+  - R
+  - Q
+  - open-R-vs-Q
+  - kForrelation
+  - AIKCheatSheet
+- id: AIKDNFComplement
+  name: Complement of the Ambainis–Iraids–Kokainis DNF
+  symbol: \overline f_{\mathrm{AIK}}
+  group: composed
+  order: 76
+  kind: total
+  arity: $N=n^2$ bits
+  scale:
+    var: n
+    subs:
+      N: n^2
+  short: Logarithm-free quadratic $\mathrm{C}$ versus certain-acceptance one-sided $\mathrm{R}^1$ separation.
+  definition: Take the Boolean complement of [[AIKDNF]]. The AIK one-sided algorithm rejects every negative
+    DNF input with certainty and accepts positive inputs with probability at least 2/3. Flipping its answer
+    gives an algorithm with certain acceptance on every positive input of the complement, matching this
+    catalog’s [[R1]] convention.
+  values:
+  - measure: C
+    value: \Theta(n^2)
+    refs:
+    - AIK26
+    note: Certificate complexity is invariant under output complementation; Theorem 2.2.
+  - measure: R
+    value: \Theta(n)
+    refs:
+    - AIK26
+    note: Bounded-error randomized complexity is invariant under output complementation.
+  - measure: R1
+    value: \Theta(n)
+    refs:
+    - AIK26
+    note: R¹(¬f)=R_RP(f) under the catalog conventions. Theorem 2.2 gives the upper bound; C=O(R²) gives
+      the matching lower bound.
+  notes: The paper calls its certain-rejection measure $\mathrm{R}_1$; this catalog calls it [[R1RP]].
+    The legacy [[R1]] entry fixes the other output side. The original and complementary DNF witnesses
+    therefore settle both one-sided columns without identifying the two measures on the same function.
+  refs:
+  - AIK26
+  - Nisan91
+  see_also:
+  - C
+  - R
+  - R1
+  - R1RP
+  - AIKDNF
