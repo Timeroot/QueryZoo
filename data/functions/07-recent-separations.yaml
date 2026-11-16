@@ -86,6 +86,7 @@ functions:
     Only these checked fields need valid encodings; no promise is imposed on other fields.'
 - id: AIKDNF
   name: Ambainis–Iraids–Kokainis unambiguous DNF
+  symbol: '\mathrm{AIKuD}'
   group: separating-total
   kind: total
   order: 102

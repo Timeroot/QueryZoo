@@ -1422,6 +1422,10 @@ _ORIGIN_TAG = {"recorded": "rec", "setting": "inh", "values": "val",
 
 def _plain_fact(z, f):
     b = f["b"]
+    if f["kind"] == "subpoly":
+        sign = "-" if f["side"] == "lower" else "+"
+        cmp = ">=" if f["side"] == "lower" else "<="
+        return f"{f['a']} {cmp} {b}^({fmt_exp(f['exp'])}{sign}o(1))"
     pw = "" if abs(f["exp"] - 1) < 1e-9 else f"^{fmt_exp(f['exp'])}"
     lg = ""
     if f["log"]:
@@ -2288,6 +2292,35 @@ class Builder:
                     slot = (z.best.get((a, b)) or {}).get(s) or {}
                     up, lo = slot.get("up"), slot.get("lo")
                     verdict = slot.get("verdict", "bare")
+                    # The matrix also reads the exponent table, whose endpoints
+                    # need not have polynomial/logarithmic `form:` shadows
+                    # (e.g. OpenAI's limiting R-versus-Q exponent 4). Merge
+                    # stronger endpoints here too, preserving their o(1) slack
+                    # rather than claiming a fixed-power or polylog bound.
+                    cell = (pair or {}).get("cell") if s == "total" else None
+                    table_used = False
+                    if cell and verdict not in ("unbounded", "exp", "log"):
+                        for side, field, old in (("upper", "b", up), ("lower", "a", lo)):
+                            exp = _numeric(cell.get(field))
+                            if exp is None:
+                                continue
+                            if old:
+                                stronger = (exp < old["exp"] - 1e-9 if side == "upper"
+                                            else exp > old["exp"] + 1e-9)
+                                if not stronger:
+                                    continue
+                            fact = {"a": a, "b": b, "side": side, "exp": exp,
+                                    "log": 0, "kind": "subpoly", "origin": "table",
+                                    "witness": cell.get("w") if side == "lower" else None}
+                            if side == "upper":
+                                up = fact
+                            else:
+                                lo = fact
+                            table_used = True
+                        if table_used:
+                            # Use the matrix's verdict, including its treatment
+                            # of rounded table exponents such as 1.63.
+                            verdict = _token(z, a, b, s, cell)["verdict"]
                     # The verdict is set by the non-polynomial statements when
                     # there are any, so the row has to quote those and not the
                     # best exponent underneath them: a cell whose separation is
@@ -2308,7 +2341,8 @@ class Builder:
                     if verdict == "settled" and up and lo:
                         loose = (up["log"] > lo["log"] + 1e-9
                                  or (up["kind"] == "tilde" and lo["kind"] != "tilde"))
-                        key = "polylog" if loose else "settled"
+                        key = ("subpoly" if table_used else
+                               "polylog" if loose else "settled")
                     o_score = OPEN.get(key, 0.0)
                     if verdict == "gap" and up and lo and up["exp"] > 0:
                         r = max(0.0, min(1.0, lo["exp"] / up["exp"]))
@@ -2322,7 +2356,8 @@ class Builder:
                     if soft:
                         score *= P["soft_definition"]
                     recs = (pair or {}).get("by_setting", {}).get(s) or []
-                    if not recs:
+                    undoc = not recs and not cell
+                    if undoc:
                         score *= P["undocumented_weight"]
 
                     rows.append({
@@ -2336,7 +2371,7 @@ class Builder:
                         "lo_src": _plain_origin(lo) if lo else "",
                         "wit": (lo or {}).get("witness") or "",
                         "recs": len(recs),
-                        "undoc": not recs, "soft": soft, "op": op_id,
+                        "undoc": undoc, "soft": soft, "op": op_id,
                     })
         rows.sort(key=lambda r: (-r["score"], r["a"], r["b"], r["setting"]))
         for i, r in enumerate(rows, 1):
@@ -2352,6 +2387,7 @@ class Builder:
         # let the page draw the slice it is showing.
         payload = [[r["rank"], r["score"], r["a"], r["b"], r["setting"],
                     ("polylog slack" if r["key"] == "polylog" else
+                     "subpolynomial slack" if r["key"] == "subpoly" else
                      "nothing at all" if r["key"] == "bare" and r["undoc"] else
                      VERDICT_WORD[r["verdict"]]),
                     r["key"], r["up"], r["up_src"], r["lo"], r["lo_src"],

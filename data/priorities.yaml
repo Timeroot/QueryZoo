@@ -121,6 +121,7 @@ openness:
   gap: 3          # both sides known, exponents differ -- see gap_curve
   exp: 2.5        # exponential separation, no polynomial bound: how far up?
   polylog: 1.5    # exponents agree, log factors do not
+  subpoly: 1.5    # exponents agree; a table endpoint has o(1) slack
   unbounded: 0    # answered: no bound exists (a proved impossibility)
   settled: 0      # answered
 

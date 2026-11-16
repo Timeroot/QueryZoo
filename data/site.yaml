@@ -115,7 +115,6 @@ nav:
   - {label: "Concepts",    href: "concepts/index.html"}
   - {label: "Open",        href: "open.html"}
   - {label: "References",  href: "refs.html"}
-  - {label: "Editing",     href: "editing.html"}
 
 # Status vocabulary used by relations. Order = severity for display.
 statuses:

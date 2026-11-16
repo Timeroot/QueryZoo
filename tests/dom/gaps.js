@@ -4,6 +4,12 @@ const { load, done } = require("./harness");
 
 const { window, doc, errs, html } = load("gaps.html", { runScripts: "dangerously" });
 const bad = [];
+const data = JSON.parse(doc.getElementById("gapdata").textContent);
+const rq = data.find(r => r[2] === "R" && r[3] === "Q" && r[4] === "total");
+if (!rq || rq[6] !== "subpoly" || rq[7] !== "R = O(Q^4)" ||
+    rq[9] !== "R >= Q^(4-o(1))" || rq[10] !== "table" || rq[11] !== "OpenAIQuarticRQ") {
+  bad.push("R versus Q must use the quartic table endpoint with subpolynomial slack");
+}
 const rows = () => doc.querySelectorAll("#gbody tr").length;
 const count = () => doc.getElementById("gcount").textContent;
 /* the table draws at most a page of rows, so the count line reads
