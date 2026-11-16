@@ -25,6 +25,7 @@ CHECKS = [
     ("dom", "check_dom", "drive the built pages under jsdom"),
     ("blanks", "check_blanks", "census of what the matrix cells hold"),
     ("coverage", "check_coverage", "pairs with no separation of any kind"),
+    ("propagation", "check_propagation", "exact equivalences and propagated upper bounds"),
     ("values", "check_values", "recorded values against the zoo's unit bounds"),
     ("smalln", "smalln.check_smalln", "brute-force all small functions [slow]"),
 ]

@@ -165,6 +165,7 @@ functions:
     note: A disjoint DNF equals the sum of its term indicators, each of degree ≤9n.
 - id: AIKCheatSheet
   name: Ambainis–Iraids–Kokainis certificate cheat sheet
+  symbol: '\mathrm{AIKCS}'
   group: separating-total
   kind: total
   order: 103
@@ -369,6 +370,7 @@ functions:
     $$G(x,p,K)=\bigvee_{z\in[n^2]}\big(V(x,K_z)\wedge[p_{a_1}=z]\big).$$'
 - id: PabbarajuCubicSensitivity
   name: Pabbaraju’s certificate–sensitivity separator
+  symbol: '\mathrm{PabCS}'
   group: separating-total
   kind: total
   order: 106

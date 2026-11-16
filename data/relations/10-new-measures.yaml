@@ -143,6 +143,19 @@ relations:
       conf: high
   see_also: [UCmin, UC, C, D, fbs]
 
+- from: D
+  to: UCmin
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{D}(f) \le \mathrm{UC}_{\min}(f)^2'
+      form: {exp: 2, kind: exact}
+      refs: [BHT17]
+      note: 'Section 2.7.2, query-side proof due to Goos. This bound is for total functions;
+        it is recorded here so all measures upper-bounded by D inherit it.'
+      conf: high
+  see_also: [UCmin, UC, C, R, Q]
+
 # ================================================ one-sided sensitivity
 
 - from: bs0

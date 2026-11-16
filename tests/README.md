@@ -20,6 +20,7 @@ first, so a stale or missing build is reported before that time is spent.
 | `dom` | loads the built pages in jsdom and drives them: the scope and view buttons, the ladder ordering and crosshair, the gap-report filters, six rendered pair pages, and the neighbour fold on a measure page (the hand-picked `related:` rows plus every other measure behind "Show all"). Skipped, not failed, when node or jsdom is missing. |
 | `blanks` | a census of what the matrix cells actually hold, per setting, ratcheted. |
 | `coverage` | ordered pairs with no separation of any kind, per setting, ratcheted. |
+| `propagation` | exact equivalences work in both directions, and known total-function bounds propagate through sensitivity certification and minimum unambiguous certificates. |
 | `values` | recorded function values against the zoo's own unit-exponent bounds -- a value that violates a bound the zoo asserts is either the value or the bound being wrong. |
 | `smalln` | brute-forces every function on n <= 4 variables and tests the total-setting bounds against them. Slow, and only needed after a definition changes. |
 

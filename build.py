@@ -528,7 +528,9 @@ class Zoo:
                              from_theta=True, flipped=True, chain=[g])
 
         # `equivalent:` blocks on measure pages, where they carry a form.
-        # kind: theta there means M1 = Theta(M2^e), i.e. an edge each way.
+        # Both theta and exact equivalences give an edge each way. On a
+        # relation bullet `exact` only means <=; inside `equivalent:` it is
+        # an equality, such as lambdacert = sqrt(s).
         for m in self.measures:
             for eq in (m.get("equivalent") or []):
                 form, other = eq.get("form"), eq.get("measure")
@@ -536,7 +538,8 @@ class Zoo:
                     continue
                 s = eq["setting"]
                 f = fact(m["id"], other, s, "upper", form, eq, equiv=True)
-                if form["kind"] == "theta" and form["exp"] > 0:
+                if (form["kind"] in ("theta", "exact") and form["exp"] > 0
+                        and not form["log"]):
                     back = dict(form, exp=1.0 / form["exp"])
                     g = fact(other, m["id"], s, "upper", back, eq, equiv=True,
                              note=(eq.get("note") or "") or None, flipped=True)
