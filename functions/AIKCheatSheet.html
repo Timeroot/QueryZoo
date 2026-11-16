@@ -61,8 +61,6 @@
          class="">Open</a>
       <a href="../refs.html"
          class="">References</a>
-      <a href="../editing.html"
-         class="">Editing</a>
     </nav>
     <div class="searchbox">
       <input type="search" id="q" placeholder="Search  /" autocomplete="off" spellcheck="false">
@@ -94,14 +92,14 @@
 
       <section class="card">
         <h2>Description</h2>
-        <p>Use <a href="../functions/AIKDNF.html" class="xref function ">Ambainis–Iraids–Kokainis unambiguous DNF</a> to specify a partial function $H(x,y)$: if its unique satisfied term is $T_{i,S}$, return $\bigvee_{p\in S}y_i(p)$; otherwise $H$ is undefined. Take $r=\lfloor\log_2\tau_n\rfloor+1$ copies of $H$, where $\tau_n=n(\lceil n/2\rceil+1)$, and a $2^r$-cell array of certificate descriptions. Their $H$ outputs address a cell. The total function accepts iff all $H$ inputs lie in their domains and the addressed cell contains valid local certificates for those outputs. Section 3.2 of [<a href="../refs.html#AIK26" class="xref ref ">AIK26</a>] specifies the checks and all malformed encodings.</p>
+        <p>Use <a href="../functions/AIKDNF.html" class="xref function "><span class="tex">\(\mathrm{AIKuD}\)</span></a> to specify a partial function $H(x,y)$: if its unique satisfied term is $T_{i,S}$, return $\bigvee_{p\in S}y_i(p)$; otherwise $H$ is undefined. Take $r=\lfloor\log_2\tau_n\rfloor+1$ copies of $H$, where $\tau_n=n(\lceil n/2\rceil+1)$, and a $2^r$-cell array of certificate descriptions. Their $H$ outputs address a cell. The total function accepts iff all $H$ inputs lie in their domains and the addressed cell contains valid local certificates for those outputs. Section 3.2 of [<a href="../refs.html#AIK26" class="xref ref ">AIK26</a>] specifies the checks and all malformed encodings.</p>
 
       </section>
 
       <section class="card">
         <h2>Formal definition</h2>
         <p>Let $H(x,y)=\bigvee_{p\in S}y_i(p)$ if $x$ satisfies the unique term
-$T_{i,S}$ of <a href="../functions/AIKDNF.html" class="xref function ">Ambainis–Iraids–Kokainis unambiguous DNF</a>, and leave $H$ undefined otherwise.
+$T_{i,S}$ of <a href="../functions/AIKDNF.html" class="xref function "><span class="tex">\(\mathrm{AIKuD}\)</span></a>, and leave $H$ undefined otherwise.
 Fix the verifier $A(x,y,\beta,z)$ from [<a href="../refs.html#AIK26" class="xref ref ">AIK26</a>, Lemma 3.3 and Appendix D.1],
 $\tau_n=n(\lceil n/2\rceil+1)$ and $r=\lfloor\log_2\tau_n\rfloor+1$.
 An input has $r$ pairs $(x^{(t)},y^{(t)})$ and $2^r$ cells, each holding $r$ descriptions.
@@ -334,7 +332,7 @@ the source's bit encoding and verifier are part of this definition.</p>
 
       <section class="card tight">
         <h2>See also</h2>
-        <ul class="chiplist"><li><a href="../measures/C.html" class="xref measure "><span class="tex">\(\mathrm{C}(f)\)</span></a></li><li><a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/QE.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span></a></li><li><a href="../measures/Q0.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{0}(f)\)</span></a></li><li><a href="../measures/R0.html" class="xref measure "><span class="tex">\(\mathrm{R}_{0}(f)\)</span></a></li><li><a href="../measures/adeg.html" class="xref measure "><span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span></a></li><li><a href="../functions/AIKDNF.html" class="xref function ">Ambainis–Iraids–Kokainis unambiguous DNF</a></li><li><a href="../functions/Champion.html" class="xref function ">Ben-David–Kothari championship function</a></li></ul>
+        <ul class="chiplist"><li><a href="../measures/C.html" class="xref measure "><span class="tex">\(\mathrm{C}(f)\)</span></a></li><li><a href="../measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a></li><li><a href="../measures/QE.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\mathrm{E}}(f)\)</span></a></li><li><a href="../measures/Q0.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{0}(f)\)</span></a></li><li><a href="../measures/R0.html" class="xref measure "><span class="tex">\(\mathrm{R}_{0}(f)\)</span></a></li><li><a href="../measures/adeg.html" class="xref measure "><span class="tex">\(\widetilde{\deg}_{\varepsilon}(f)\)</span></a></li><li><a href="../functions/AIKDNF.html" class="xref function "><span class="tex">\(\mathrm{AIKuD}\)</span></a></li><li><a href="../functions/Champion.html" class="xref function ">Ben-David–Kothari championship function</a></li></ul>
       </section>
 
       <section class="card tight src">
