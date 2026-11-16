@@ -141,6 +141,12 @@ functions:
     refs:
     - AIK26
     note: Theorem 2.2; accepts only after a term is verified.
+  - measure: chi
+    value: '\Theta(n)'
+    refs: [AIK26, Nisan91, Li18, BBGM22]
+    putative: true
+    note: 'Derived: AIK26 gives C=Θ(n²), R=Θ(n). The chain χ≤χ̄=O(LR)=O(R) gives χ=O(n);
+      C≤bs² and χ≥(bs+1)/2 give χ=Ω(n). Thus C=Θ(χ²), refuting χ=Ω(C).'
   - measure: UCmin
     value: O(n)
     refs:

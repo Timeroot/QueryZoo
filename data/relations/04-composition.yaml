@@ -597,13 +597,14 @@ relations:
       note: |
         Stated in the introduction of [Li18] as the ceiling its Theorem 1 is
         pushing against: $\chi \le \mathrm{D}$ and $\mathrm{D} \le \mathrm{bs}^3$.
-        Nothing better is known, and nothing rules out $\chi = \Theta(\mathrm{bs})$.
+        The universal upper exponent remains 3.
       conf: high
   notes: |
-    So the cell runs from $1$ to $3$, and the width is inherited whole from
-    [[open-D-vs-bs]] -- no argument specific to conflict complexity has ever
-    been used on the upper side. [[open-chi-vs-C]] is the sharper question in
-    the same direction.
+    The upper exponent 3 is inherited from [[open-D-vs-bs]]. [[ANDOR]] gives
+    a lower exponent 2 up to logarithms [Meiburg26composition]. The related
+    certificate comparison [[open-chi-vs-C]] is resolved: AIK26 and the
+    standard inequalities refute $\chi=\Omega(\mathrm{C})$, while the AND-OR
+    family refutes $\chi=O(\mathrm{C})$.
   see_also: [chi, chibar, bs, D, C, open-chi-vs-C, open-D-vs-bs]
 
 - from: chi
@@ -626,17 +627,20 @@ relations:
 - from: chi
   to: C
   setting: total
-  status: gap
+  status: settled
   upper:
     - stmt: '\chi(g) \le \mathrm{C}(g)^2'
       form: {exp: 2, kind: const}
       refs: [Li18]
       note: 'Section 4: $\chi \le \mathrm{D} \le \mathrm{C}^2$. With Theorem 1 and $\mathrm{C}\le\mathrm{bs}^2$ this sandwiches $\chi$ as $\tfrac12(\sqrt{\mathrm{C}}+1) \le \chi \le \mathrm{C}^2$.'
       conf: high
-  notes: 'The universal lower bound $\chi=\Omega(\mathrm{C})$ remains [[open-chi-vs-C]]. The proposed upper
-    bound $\chi=O(\mathrm{C})$ is false: [[ANDOR]] has $\chi=\Omega(\mathrm{C}^2/\log^2\mathrm{C})$ [Meiburg26composition,
-    Corollary 9.11]. The corresponding upper-bound claim for max-conflict is also false on this family,
-    where $\bar\chi=\Theta(\mathrm{C}^2)$.'
+  notes: |
+    Both constant-factor comparisons in [[open-chi-vs-C]] are refuted.
+    [[AIKDNF]] has $\mathrm{C}=\Theta(\chi^2)$, using AIK26's
+    $\mathrm{C}=\Theta(\mathrm{R}^2)$ separation and the standard inequalities.
+    In the other direction, [[ANDOR]] has
+    $\chi=\Omega(\mathrm{C}^2/\log^2\mathrm{C})$ [Meiburg26composition,
+    Corollary 9.11], so the χ-versus-C exponent is 2 up to logarithms.
   see_also: [chi, C, bs, D, chibar, open-chi-vs-C]
   lower:
     - stmt: \chi(F_n)=\Omega(\mathrm{C}(F_n)^2/\log^2\mathrm{C}(F_n))
@@ -649,6 +653,26 @@ relations:
         exp: 2
         log: -2
         kind: const
+
+# ------------------------------------------------------- C vs chi (total)
+- from: C
+  to: chi
+  setting: total
+  status: settled
+  upper:
+    - stmt: '\mathrm{C}(f)\le\mathrm{bs}(f)^2\le4\chi(f)^2'
+      form: {exp: 2, kind: const}
+      refs: [Nisan91, Li18]
+      conf: high
+  lower:
+    - stmt: '\mathrm{C}(f_n)=\Theta(\chi(f_n)^2)'
+      form: {exp: 2, kind: const}
+      refs: [AIK26, Nisan91, Li18, BBGM22]
+      witness: AIKDNF
+      putative: true
+      conf: high
+      note: 'Derived: C=Θ(n²) and R=Θ(n) in AIK26. Since χ=O(R) and C=O(χ²), χ=Θ(n).'
+  see_also: [C, chi, bs, R, AIKDNF, open-chi-vs-C]
 
 # =========================================== many samples of the same input
 - from: Corr

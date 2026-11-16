@@ -178,10 +178,10 @@ measures:
     - '$\mathrm{R}(f\circ g^n) = \Omega(\mathrm{R}(f)\,\chi(g))$ [Sanyal18; AGJKLMSS17].'
     - '$\chi(g) = \Omega(\mathrm{bs}(g))$ -- more precisely $\chi(f)\ge(\mathrm{bs}(f)+1)/2$ for total $f$ [Li18, Thm 1].'
     - '$\chi(g) = \Omega(\sqrt{\mathrm{R}(g)})$.'
-    - '$\chi(g)\le\mathrm{D}(g)$ [Li18, Sec. 2] is the *only* upper bound proved directly for $\chi$; everything else runs through $\chi\le\bar\chi\le\mathrm{LR}\le\mathrm{R}$. It gives $\chi\le\mathrm{C}^2$ and $\chi\le\mathrm{bs}^3$, so the $\mathrm{bs}$ cell is a gap $[1,3]$ and the $\mathrm{C}$ cell a gap $[1,2]$ -- both inherited from $\mathrm{D}$, neither touched since.'
-    - 'Whether $\chi=\Omega(\mathrm{C})$ or $\chi=O(\mathrm{C})$ -- or neither -- is [[open-chi-vs-C]].'
+    - '$\chi\le\mathrm{D}$ gives $\chi\le\mathrm{C}^2$ and $\chi\le\mathrm{bs}^3$. The standard chain $\chi\le\bar\chi\le O(\mathrm{LR})\le O(\mathrm{R})$ also upper-bounds conflict complexity.'
+    - 'Both comparisons in [[open-chi-vs-C]] are refuted. [[AIKDNF]] has $\mathrm{C}=\Theta(\chi^2)$, derived from [AIK26] and the standard inequalities; [[ANDOR]] has $\chi=\Omega(\mathrm{C}^2/\log^2\mathrm{C})$ [Meiburg26composition].'
     - Conflict and sabotage are incomparable on total functions. [[MeiburgParityPointer]] gives $\chi/\mathrm{RS}=\Omega(\log N)$; [[ANDOR]] gives $\mathrm{RS}/\chi=\Omega(\sqrt{\log N})$. Also $\chi$ is not $O(\mathrm{C})$ and fails perfect composition [Meiburg26composition].
-  refs: [Sanyal18, AGJKLMSS17, Li18, Meiburg26composition]
+  refs: [Sanyal18, AGJKLMSS17, Li18, Meiburg26composition, AIK26, Nisan91, BBGM22]
   related: [chibar, RS, LR, R, bs]
   see_also: [chibar, RS, LR, R, bs, C, D, open-chi-vs-C]
   confidence: medium

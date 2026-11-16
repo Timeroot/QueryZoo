@@ -529,11 +529,29 @@ open_problems:
   title: Is $\chi(f)=\Omega(\mathrm{C}(f))$ for total functions?
   order: 75
   setting: total
-  statement: 'The lower-bound branch remains open. The opposite proposed inequality $\chi=O(\mathrm{C})$
-    is false: on $F_m=\mathrm{AND}_m\circ\mathrm{OR}_m$, $\chi(F_m)=\Omega(\mathrm{C}(F_m)^2/\log^2\mathrm{C}(F_m))$
-    [Meiburg26composition, Corollary 9.11].'
-  status: Lower-bound branch open; the O(C) branch is refuted.
+  statement: |
+    Both proposed comparisons are false on total functions. The AIK26 DNF has
+    $\mathrm{C}(f_n)=\Theta(n^2)$ and $\mathrm{R}(f_n)=\Theta(n)$ [AIK26,
+    Theorem 2.2]. Since $\chi=O(\mathrm{R})$, it has
+    $\chi(f_n)=O(\sqrt{\mathrm{C}(f_n)})=o(\mathrm{C}(f_n))$, refuting
+    the proposed universal lower bound $\chi=\Omega(\mathrm{C})$.
+    Moreover, $\mathrm{C}\le\mathrm{bs}^2$ [Nisan91] and
+    $\chi\ge(\mathrm{bs}+1)/2$ [Li18] give $\mathrm{C}=O(\chi^2)$,
+    so this family has $\mathrm{C}(f_n)=\Theta(\chi(f_n)^2)$.
+    This is a consequence of AIK26 and the standard inequalities, rather than
+    a conflict-complexity theorem stated in that paper.
+
+    The opposite proposed bound $\chi=O(\mathrm{C})$ is also false:
+    on $F_m=\mathrm{AND}_m\circ\mathrm{OR}_m$,
+    $\chi(F_m)=\Omega(\mathrm{C}(F_m)^2/\log^2\mathrm{C}(F_m))$
+    [Meiburg26composition, Corollary 9.11].
+  status: Resolved in 2026; both the Ω(C) and O(C) comparisons are refuted.
   best_known:
+    - stmt: '\mathrm{C}(f_n)=\Theta(\chi(f_n)^2)'
+      refs: [AIK26, Nisan91, Li18, BBGM22]
+      witness: AIKDNF
+      putative: true
+      note: 'Derived: C=Θ(n²), R=Θ(n), χ=O(R), and C≤bs²≤4χ².'
     - stmt: \chi(f) \ge \tfrac12\big(\mathrm{bs}(f)+1\big)
       refs:
         - Li18
@@ -553,11 +571,11 @@ open_problems:
       conf: high
       note: C(F_m)=m.
       witness: ANDOR
-  why: A proof of $\chi=\Omega(\mathrm{C})$ would strengthen the inner randomized composition lower bound
-    to $\Omega(\mathrm{R}(f)\sqrt{\mathrm{D}(g)})$. The near-quadratic separation in the other direction
-    does not decide this branch.
-  refs: [Li18, Sanyal18, GLSS19, AGJKLMSS17, Meiburg26composition]
-  see_also: [chi, chibar, C, bs, D, ANDOR, comp-R, open-RS-vs-R]
+  why: Conflict and certificate complexity are incomparable within constant factors. The C-versus-χ
+    exponent is exactly 2, while the χ-versus-C exponent is 2 up to logarithmic factors.
+  refs: [Li18, Sanyal18, GLSS19, AGJKLMSS17, Meiburg26composition, AIK26, Nisan91, BBGM22]
+  see_also: [chi, chibar, C, bs, D, AIKDNF, ANDOR, comp-R, open-RS-vs-R]
+  resolved: true
 - id: open-adeg-composition
   title: "Does approximate degree compose?"
   order: 80
