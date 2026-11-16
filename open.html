@@ -78,7 +78,7 @@
   Recent resolutions are recorded below.</p>
 
   <nav class="jump">
-<a href="#open-D-vs-R">D-vs-R</a><a href="#open-D-vs-bs">D-vs-bs</a><a href="#open-bs-vs-s">bs-vs-s</a><a href="#open-D-vs-s">D-vs-s</a><a href="#open-D-vs-deg">D-vs-deg</a><a href="#open-D-vs-QE">D-vs-QE</a><a href="#open-QE-vs-deg">QE-vs-deg</a><a href="#open-Advpm-vs-Adv">Advpm-vs-Adv</a><a href="#open-rdeg">rdeg</a><a href="#open-Dprod-vs-R">Dprod-vs-R</a><a href="#open-chi-vs-C">chi-vs-C</a><a href="#open-log-rank">log-rank</a><a href="#open-fbs-vs-bs">fbs-vs-bs</a><a href="#open-R0-vs-fbs">R0-vs-fbs</a><a href="#open-direct-sum">direct-sum</a><a href="#open-QS-vs-Q">QS-vs-Q</a>  </nav>
+<a href="#open-D-vs-R">D-vs-R</a><a href="#open-D-vs-bs">D-vs-bs</a><a href="#open-bs-vs-s">bs-vs-s</a><a href="#open-D-vs-s">D-vs-s</a><a href="#open-D-vs-deg">D-vs-deg</a><a href="#open-D-vs-QE">D-vs-QE</a><a href="#open-QE-vs-deg">QE-vs-deg</a><a href="#open-Advpm-vs-Adv">Advpm-vs-Adv</a><a href="#open-rdeg">rdeg</a><a href="#open-Dprod-vs-R">Dprod-vs-R</a><a href="#open-log-rank">log-rank</a><a href="#open-fbs-vs-bs">fbs-vs-bs</a><a href="#open-R0-vs-fbs">R0-vs-fbs</a><a href="#open-direct-sum">direct-sum</a><a href="#open-QS-vs-Q">QS-vs-Q</a>  </nav>
 
   <section class="card openp" id="open-D-vs-R">
     <h2>Is $\mathrm{D}(f) = \widetilde O(\mathrm{R}(f)^2)$?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
@@ -585,43 +585,6 @@ the polynomial relation will have to be deep rather than wide -- on the depth-$2
 <span class="seealso">see also:
 <a href="measures/D_prod.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\mathrm{prod}}(f)\)</span></a>, <a href="measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>, <a href="measures/RS.html" class="xref measure "><span class="tex">\(\mathrm{RS}(f)\)</span></a>, <a href="measures/Dmu.html" class="xref measure "><span class="tex">\(\mathrm{D}^{\mu}_{\varepsilon}(f)\)</span></a>, <a href="functions/NANDtree.html" class="xref function "><span class="tex">\(\bar{\wedge}\text{-tree}\)</span></a>, <a href="functions/MinskyPapert.html" class="xref function "><span class="tex">\(\mathrm{MP}_m\)</span></a>, <a href="open.html#open-RS-vs-R" class="xref open ">Is … for total …?</a>, <a href="concepts/composition.html" class="xref concept ">Composition</a></span><span class="refs"><a href="refs.html#Sanyal24" class="xref ref ">Sanyal24</a> <a href="refs.html#Yao77" class="xref ref ">Yao77</a> <a href="refs.html#SaksWigderson86" class="xref ref ">SaksWigderson86</a> <a href="refs.html#Santha95" class="xref ref ">Santha95</a> <a href="refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a></span>    </footer>
   </section>
-  <section class="card openp" id="open-chi-vs-C">
-    <h2>Is $\chi(f)=\Omega(\mathrm{C}(f))$ for total functions?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
-
-      <a class="anchor" href="#open-chi-vs-C">#</a></h2>
-<p class="statusline">Lower-bound branch open; the O(C) branch is refuted.</p>    <div class="prose"><p>The lower-bound branch remains open. The opposite proposed inequality $\chi=O(\mathrm{C})$ is false: on $F_m=\mathrm{AND}_m\circ\mathrm{OR}_m$, $\chi(F_m)=\Omega(\mathrm{C}(F_m)^2/\log^2\mathrm{C}(F_m))$ [<a href="refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a>, Corollary 9.11].</p>
-</div>
-
-    <h3>Best known</h3>
-    <ul class="bounds">
-      <li class="bnd">
-        <div class="stmt"><span class="tex">\(\chi(f) \ge \tfrac12\big(\mathrm{bs}(f)+1\big)\)</span></div>
-        <div class="meta">
-<span class="refs"><a href="refs.html#Li18" class="xref ref ">Li18</a></span>        </div>
-<div class="note">Theorem 1, replacing the $\Omega(\sqrt{\mathrm{R}(f)})$ floor that came with the measure [<a href="refs.html#Sanyal18" class="xref ref ">Sanyal18</a>].</div>      </li>
-      <li class="bnd">
-        <div class="stmt"><span class="tex">\(\chi(f) \le \mathrm{D}(f)\)</span></div>
-        <div class="meta">
-<span class="refs"><a href="refs.html#Li18" class="xref ref ">Li18</a></span>        </div>
-<div class="note">Immediate from the definition -- the random walk stops if it reaches a last query node -- and hence $\chi \le \mathrm{C}^2$ and $\chi \le \mathrm{bs}^3$.</div>      </li>
-      <li class="bnd">
-        <div class="stmt"><span class="tex">\(\chi(g) = \Omega\big(\sqrt{\mathrm{R}(g)}\big) \text{ for partial } g\)</span></div>
-        <div class="meta">
-<span class="refs"><a href="refs.html#Sanyal18" class="xref ref ">Sanyal18</a> <a href="refs.html#AGJKLMSS17" class="xref ref ">AGJKLMSS17</a></span>        </div>
-      </li>
-      <li class="bnd">
-        <div class="stmt"><span class="tex">\(\chi(F_m)=\Omega(\mathrm{C}(F_m)^2/\log^2\mathrm{C}(F_m))\)</span></div>
-        <div class="meta">
-<span class="wit">witness: <a href="functions/ANDOR.html" class="xref function "><span class="tex">\(\mathrm{AND}_n \circ \mathrm{OR}_n\)</span></a></span><span class="refs"><a href="refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span>        </div>
-<div class="note">C(F_m)=m.</div>      </li>
-    </ul>
-
-<h3>Why it matters</h3><div class="prose"><p>A proof of $\chi=\Omega(\mathrm{C})$ would strengthen the inner randomized composition lower bound to $\Omega(\mathrm{R}(f)\sqrt{\mathrm{D}(g)})$. The near-quadratic separation in the other direction does not decide this branch.</p>
-</div>
-    <footer class="relfoot">
-<span class="seealso">see also:
-<a href="measures/chi.html" class="xref measure "><span class="tex">\(\chi(f)\)</span></a>, <a href="measures/chibar.html" class="xref measure "><span class="tex">\(\bar{\chi}(f)\)</span></a>, <a href="measures/C.html" class="xref measure "><span class="tex">\(\mathrm{C}(f)\)</span></a>, <a href="measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a>, <a href="measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a>, <a href="functions/ANDOR.html" class="xref function "><span class="tex">\(\mathrm{AND}_n \circ \mathrm{OR}_n\)</span></a>, <a href="pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a>, <a href="open.html#open-RS-vs-R" class="xref open ">Is … for total …?</a></span><span class="refs"><a href="refs.html#Li18" class="xref ref ">Li18</a> <a href="refs.html#Sanyal18" class="xref ref ">Sanyal18</a> <a href="refs.html#GLSS19" class="xref ref ">GLSS19</a> <a href="refs.html#AGJKLMSS17" class="xref ref ">AGJKLMSS17</a> <a href="refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span>    </footer>
-  </section>
   <section class="card openp" id="open-log-rank">
     <h2>Parity decision trees vs Fourier sparsity (query log-rank)   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
 
@@ -809,7 +772,7 @@ and expected cost unavoidable topics -- see <a href="concepts/direct-sum.html" c
 <a href="measures/QSweak.html" class="xref measure "><span class="tex">\(\mathrm{QS}_{\mathrm{weak}}(f)\)</span></a>, <a href="measures/QSstr.html" class="xref measure "><span class="tex">\(\mathrm{QS}_{\mathrm{str}}(f)\)</span></a>, <a href="measures/QSweakind.html" class="xref measure "><span class="tex">\(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{weak}}(f)\)</span></a>, <a href="measures/QSstrind.html" class="xref measure "><span class="tex">\(\mathrm{QS}^{\mathrm{ind}}_{\mathrm{str}}(f)\)</span></a>, <a href="measures/Q.html" class="xref measure "><span class="tex">\(\mathrm{Q}_{\varepsilon}(f)\)</span></a>, <a href="measures/QC.html" class="xref measure "><span class="tex">\(\mathrm{QC}(f)\)</span></a>, <a href="concepts/quantum-sabotage.html" class="xref concept ">Quantum sabotage: four variants</a>, <a href="concepts/certification.html" class="xref concept ">Operational certification complexity</a></span><span class="refs"><a href="refs.html#CMP24" class="xref ref ">CMP24</a> <a href="refs.html#KLLPV26" class="xref ref ">KLLPV26</a></span>    </footer>
   </section>
 <h2 id="resolved">Resolved questions</h2>  <nav class="jump">
-<a href="#open-R-vs-Q">R-vs-Q</a><a href="#open-RS-vs-R">RS-vs-R</a><a href="#open-adeg-composition">adeg-composition</a><a href="#open-aaronson-ambainis">aaronson-ambainis</a><a href="#open-R-composition">R-composition</a><a href="#open-composition-log">composition-log</a><a href="#open-noisyR-vs-R">noisyR-vs-R</a><a href="#open-Rstar">Rstar</a>  </nav>
+<a href="#open-R-vs-Q">R-vs-Q</a><a href="#open-RS-vs-R">RS-vs-R</a><a href="#open-chi-vs-C">chi-vs-C</a><a href="#open-adeg-composition">adeg-composition</a><a href="#open-aaronson-ambainis">aaronson-ambainis</a><a href="#open-R-composition">R-composition</a><a href="#open-composition-log">composition-log</a><a href="#open-noisyR-vs-R">noisyR-vs-R</a><a href="#open-Rstar">Rstar</a>  </nav>
 
   <section class="card openp" id="open-R-vs-Q">
     <h2>Is the maximum quantum speedup for total functions cubic or quartic?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
@@ -869,6 +832,61 @@ and expected cost unavoidable topics -- see <a href="concepts/direct-sum.html" c
     <footer class="relfoot">
 <span class="seealso">see also:
 <a href="measures/RS.html" class="xref measure "><span class="tex">\(\mathrm{RS}(f)\)</span></a>, <a href="measures/R.html" class="xref measure "><span class="tex">\(\mathrm{R}_{\varepsilon}(f)\)</span></a>, <a href="measures/chibar.html" class="xref measure "><span class="tex">\(\bar{\chi}(f)\)</span></a>, <a href="measures/LR.html" class="xref measure "><span class="tex">\(\mathrm{LR}(f)\)</span></a>, <a href="concepts/composition.html" class="xref concept ">Composition</a>, <a href="pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a></span><span class="refs"><a href="refs.html#BenDavidKothari18" class="xref ref ">BenDavidKothari18</a> <a href="refs.html#GLSS19" class="xref ref ">GLSS19</a> <a href="refs.html#BBGM22" class="xref ref ">BBGM22</a> <a href="refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span>    </footer>
+  </section>
+  <section class="card openp" id="open-chi-vs-C">
+    <h2>Is $\chi(f)=\Omega(\mathrm{C}(f))$ for total functions?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+      <a class="anchor" href="#open-chi-vs-C">#</a></h2>
+<p class="statusline">Resolved in 2026; both the Ω(C) and O(C) comparisons are refuted.</p>    <div class="prose"><p>Both proposed comparisons are false on total functions. The AIK26 DNF has
+$\mathrm{C}(f_n)=\Theta(n^2)$ and $\mathrm{R}(f_n)=\Theta(n)$ [AIK26,
+Theorem 2.2]. Since $\chi=O(\mathrm{R})$, it has
+$\chi(f_n)=O(\sqrt{\mathrm{C}(f_n)})=o(\mathrm{C}(f_n))$, refuting
+the proposed universal lower bound $\chi=\Omega(\mathrm{C})$.
+Moreover, $\mathrm{C}\le\mathrm{bs}^2$ [<a href="refs.html#Nisan91" class="xref ref ">Nisan91</a>] and
+$\chi\ge(\mathrm{bs}+1)/2$ [<a href="refs.html#Li18" class="xref ref ">Li18</a>] give $\mathrm{C}=O(\chi^2)$,
+so this family has $\mathrm{C}(f_n)=\Theta(\chi(f_n)^2)$.
+This is a consequence of AIK26 and the standard inequalities, rather than
+a conflict-complexity theorem stated in that paper.</p>
+<p>The opposite proposed bound $\chi=O(\mathrm{C})$ is also false:
+on $F_m=\mathrm{AND}_m\circ\mathrm{OR}_m$,
+$\chi(F_m)=\Omega(\mathrm{C}(F_m)^2/\log^2\mathrm{C}(F_m))$
+[<a href="refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a>, Corollary 9.11].</p>
+</div>
+
+    <h3>Best known</h3>
+    <ul class="bounds">
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\mathrm{C}(f_n)=\Theta(\chi(f_n)^2)\)</span></div>
+        <div class="meta">
+<span class="wit">witness: <a href="functions/AIKDNF.html" class="xref function ">Ambainis–Iraids–Kokainis unambiguous DNF</a></span><span class="refs"><a href="refs.html#AIK26" class="xref ref ">AIK26</a> <a href="refs.html#Nisan91" class="xref ref ">Nisan91</a> <a href="refs.html#Li18" class="xref ref ">Li18</a> <a href="refs.html#BBGM22" class="xref ref ">BBGM22</a></span>        </div>
+<div class="note">Derived: C=Θ(n²), R=Θ(n), χ=O(R), and C≤bs²≤4χ².</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\chi(f) \ge \tfrac12\big(\mathrm{bs}(f)+1\big)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Li18" class="xref ref ">Li18</a></span>        </div>
+<div class="note">Theorem 1, replacing the $\Omega(\sqrt{\mathrm{R}(f)})$ floor that came with the measure [<a href="refs.html#Sanyal18" class="xref ref ">Sanyal18</a>].</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\chi(f) \le \mathrm{D}(f)\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Li18" class="xref ref ">Li18</a></span>        </div>
+<div class="note">Immediate from the definition -- the random walk stops if it reaches a last query node -- and hence $\chi \le \mathrm{C}^2$ and $\chi \le \mathrm{bs}^3$.</div>      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\chi(g) = \Omega\big(\sqrt{\mathrm{R}(g)}\big) \text{ for partial } g\)</span></div>
+        <div class="meta">
+<span class="refs"><a href="refs.html#Sanyal18" class="xref ref ">Sanyal18</a> <a href="refs.html#AGJKLMSS17" class="xref ref ">AGJKLMSS17</a></span>        </div>
+      </li>
+      <li class="bnd">
+        <div class="stmt"><span class="tex">\(\chi(F_m)=\Omega(\mathrm{C}(F_m)^2/\log^2\mathrm{C}(F_m))\)</span></div>
+        <div class="meta">
+<span class="wit">witness: <a href="functions/ANDOR.html" class="xref function "><span class="tex">\(\mathrm{AND}_n \circ \mathrm{OR}_n\)</span></a></span><span class="refs"><a href="refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a></span>        </div>
+<div class="note">C(F_m)=m.</div>      </li>
+    </ul>
+
+<h3>Why it matters</h3><div class="prose"><p>Conflict and certificate complexity are incomparable within constant factors. The C-versus-χ exponent is exactly 2, while the χ-versus-C exponent is 2 up to logarithmic factors.</p>
+</div>
+    <footer class="relfoot">
+<span class="seealso">see also:
+<a href="measures/chi.html" class="xref measure "><span class="tex">\(\chi(f)\)</span></a>, <a href="measures/chibar.html" class="xref measure "><span class="tex">\(\bar{\chi}(f)\)</span></a>, <a href="measures/C.html" class="xref measure "><span class="tex">\(\mathrm{C}(f)\)</span></a>, <a href="measures/bs.html" class="xref measure "><span class="tex">\(\mathrm{bs}(f)\)</span></a>, <a href="measures/D.html" class="xref measure "><span class="tex">\(\mathrm{D}(f)\)</span></a>, <a href="functions/AIKDNF.html" class="xref function ">Ambainis–Iraids–Kokainis unambiguous DNF</a>, <a href="functions/ANDOR.html" class="xref function "><span class="tex">\(\mathrm{AND}_n \circ \mathrm{OR}_n\)</span></a>, <a href="pair.html?a=R&b=R#comp-R" class="xref relation ">comp-R</a>, <a href="open.html#open-RS-vs-R" class="xref open ">Is … for total …?</a></span><span class="refs"><a href="refs.html#Li18" class="xref ref ">Li18</a> <a href="refs.html#Sanyal18" class="xref ref ">Sanyal18</a> <a href="refs.html#GLSS19" class="xref ref ">GLSS19</a> <a href="refs.html#AGJKLMSS17" class="xref ref ">AGJKLMSS17</a> <a href="refs.html#Meiburg26composition" class="xref ref ">Meiburg26composition</a> <a href="refs.html#AIK26" class="xref ref ">AIK26</a> <a href="refs.html#Nisan91" class="xref ref ">Nisan91</a> <a href="refs.html#BBGM22" class="xref ref ">BBGM22</a></span>    </footer>
   </section>
   <section class="card openp" id="open-adeg-composition">
     <h2>Does approximate degree compose?   <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>

@@ -165,6 +165,19 @@ $$T_{i,S}(x)=\left(\bigwedge_{p\in S}x_i(p)\right)
             </tr>
             <tr>
               <td class="nm">
+  <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+
+                  <a href="../measures/chi.html">Conflict complexity</a>
+              </td>
+              <td class="val"><span class="tex">\(\Theta(n)\)</span>  <span class="tag putative" title="Putative: no source states this value, so it was worked out for this catalogue. The argument is in the note; treat it as unrefereed.">putative</span>
+</td>
+              <td class="short">Derived: AIK26 gives C=Θ(n²), R=Θ(n). The chain χ≤χ̄=O(LR)=O(R) gives χ=O(n); C≤bs² and χ≥(bs+1)/2 give χ=Ω(n). Thus C=Θ(χ²), refuting χ=Ω(C).
+<span class="refs"><a href="../refs.html#AIK26" class="xref ref ">AIK26</a> <a href="../refs.html#Nisan91" class="xref ref ">Nisan91</a> <a href="../refs.html#Li18" class="xref ref ">Li18</a> <a href="../refs.html#BBGM22" class="xref ref ">BBGM22</a></span></td>
+            </tr>
+            <tr>
+              <td class="nm">
   <a class="chip cat-combinatorial" href="../measures/UCmin.html" title="Minimum unambiguous certificate complexity">
     <span class="tex">\(\mathrm{UC}_{\min}(f)\)</span>
   </a>
@@ -207,7 +220,7 @@ $$T_{i,S}(x)=\left(\bigwedge_{p\in S}x_i(p)\right)
         <h2>Separations its values prove <span class="dim">— computed, not recorded</span></h2>
         <p class="dim small">Read straight off the table above by comparing two values: no
         relation record states these, and where one does and says more, the record wins and the
-        pair is not listed here. 4 in total.</p>
+        pair is not listed here. 5 in total.</p>
         <ul class="witlist compact">
           <li>
             <div class="wpair">
@@ -230,16 +243,16 @@ $$T_{i,S}(x)=\left(\bigwedge_{p\in S}x_i(p)\right)
                 <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
     <span class="tex">\(\mathrm{C}^0(f)\)</span>
   </a>
- <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
-    <span class="tex">\(\deg(f)\)</span>
+ <span class="vs">vs</span>   <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
   </a>
 
                 <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
 
-              <a class="go" href="../pair.html?a=C0&amp;b=deg">pair &rarr;</a>
+              <a class="go" href="../pair.html?a=C0&amp;b=chi">pair &rarr;</a>
             </div>
-            <div class="stmt"><span class="tex">\(\mathrm{C}^0(f_n) = \Omega\big(\deg(f_n)^{2}\big)\)</span></div>
-            <div class="refs dim">from \(\mathrm{C}^0(f) = \Theta(n^2)\) against \(\deg(f) = O(n)\)</div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}^0(f_n) = \Omega\big(\chi(f_n)^{2}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}^0(f) = \Theta(n^2)\) against \(\chi(f) = \Theta(n)\)</div>
           </li>
           <li>
             <div class="wpair">
@@ -256,6 +269,22 @@ $$T_{i,S}(x)=\left(\bigwedge_{p\in S}x_i(p)\right)
             </div>
             <div class="stmt"><span class="tex">\(\mathrm{C}^0(f_n) = \Omega\big(\mathrm{UC}_{\min}(f_n)^{2}\big)\)</span></div>
             <div class="refs dim">from \(\mathrm{C}^0(f) = \Theta(n^2)\) against \(\mathrm{UC}_{\min}(f) = O(n)\)</div>
+          </li>
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/C0.html" title="0-certificate complexity">
+    <span class="tex">\(\mathrm{C}^0(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-degree" href="../measures/deg.html" title="Exact degree">
+    <span class="tex">\(\deg(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+
+              <a class="go" href="../pair.html?a=C0&amp;b=deg">pair &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}^0(f_n) = \Omega\big(\deg(f_n)^{2}\big)\)</span></div>
+            <div class="refs dim">from \(\mathrm{C}^0(f) = \Theta(n^2)\) against \(\deg(f) = O(n)\)</div>
           </li>
           <li>
             <div class="wpair">
@@ -280,6 +309,22 @@ $$T_{i,S}(x)=\left(\bigwedge_{p\in S}x_i(p)\right)
       <section class="card">
         <h2>Cited as a witness by</h2>
         <ul class="witlist compact">
+          <li>
+            <div class="wpair">
+                <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
+    <span class="tex">\(\mathrm{C}(f)\)</span>
+  </a>
+ <span class="vs">vs</span>   <a class="chip cat-composition" href="../measures/chi.html" title="Conflict complexity">
+    <span class="tex">\(\chi(f)\)</span>
+  </a>
+
+                <span class="pill setting s-total" title="f : {0,1}^n -&gt; {0,1} defined on the whole cube. Where all measures are polynomially related.">total</span>
+   <span class="pill st-settled" title="Upper bound and separation match (up to the stated slack).">Settled</span>
+
+              <a class="go" href="../pair.html?a=C&amp;b=chi#C__chi__total">open &rarr;</a>
+            </div>
+            <div class="stmt"><span class="tex">\(\mathrm{C}(f_n)=\Theta(\chi(f_n)^2)\)</span></div>
+<div class="refs"><a href="../refs.html#AIK26" class="xref ref ">AIK26</a> <a href="../refs.html#Nisan91" class="xref ref ">Nisan91</a> <a href="../refs.html#Li18" class="xref ref ">Li18</a> <a href="../refs.html#BBGM22" class="xref ref ">BBGM22</a></div>          </li>
           <li>
             <div class="wpair">
                 <a class="chip cat-combinatorial" href="../measures/C.html" title="Certificate complexity">
